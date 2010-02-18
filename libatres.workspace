@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Workspace Name="libatres" Database="./libatres.tags">
+  <Project Name="libatres" Path="libatres.project" Active="No"/>
+  <Project Name="glut_simple" Path="demos/glut_simple/glut_simple.project" Active="Yes"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
+      <Project Name="libatres" ConfigName="Debug"/>
+      <Project Name="glut_simple" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release" Selected="yes">
+      <Project Name="libatres" ConfigName="Release"/>
+      <Project Name="glut_simple" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>
