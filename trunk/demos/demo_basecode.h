@@ -18,46 +18,32 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 *************************************************************************************/
-#include "../demo_basecode.h"
-#include <string>
+#ifdef _WIN32
+#include <windows.h>
+#endif
+#include <string.h>
+#include <stdio.h>
 
-unsigned int tex_id;
+#ifndef __APPLE__
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+#else
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#endif
 
-std::string window_name="glut_simple";
-int window_w=800,window_h=600;
+#ifndef _WIN32
+unsigned long GetTickCount();
+#endif
 
-void draw()
-{
-	glBindTexture(GL_TEXTURE_2D,tex_id);
+void psleep(int milliseconds);
+int nextPow2(int x);
+void drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a);
+void drawWiredQuad(float x,float y,float w,float h,float r,float g,float b,float a);
+void drawTexturedQuad(float x,float y,float w,float h,float sw,float sh);
+void drawTexturedQuad(float x,float y,float w,float h,float sx,float sy,float sw,float sh);
+unsigned int loadTexture(const char* name);
 
-	drawTexturedQuad(0,0,800,600,1,1);
-}
-
-void update(float time_increase)
-{
-
-}
-
-void OnKeyPress(int key)
-{
- 
-}
-
-void OnClick(float x,float y)
-{
-
-}
-
-void setDebugTitle(char* out)
-{
-}
-
-void init()
-{
-	tex_id=loadTexture("../media/arial.tga");
-}
-
-void destroy()
-{
-
-}
+unsigned int createTexture(int w,int h,unsigned int format=GL_RGB);
