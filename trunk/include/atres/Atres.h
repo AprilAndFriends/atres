@@ -25,12 +25,34 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace Atres
 {
+	enum Alignment
+	{
+		LEFT,RIGHT,CENTER
+	};
+
+	enum Effect
+	{
+		NONE,SHADOW,BORDER
+	};
+	
 	class Font;
+	class RenderInterface;
 
     void init();
     void destroy();
+	
+	float drawText(float x,float y,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	float drawWrappedText(float x,float y,float w_max,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	float drawText(std::string font_name,float x,float y,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	float drawWrappedText(std::string font_name,float x,float y,float w_max,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	float getTextWidth(std::string font_name,std::string text,Alignment alignment=LEFT);
+	float getWrappedTextHeight(std::string font_name,float w_max,std::string text,Alignment alignment=LEFT);
 
-    void loadFont(std::string filename);
+	void setRenderInterface(RenderInterface* iface);
+	RenderInterface* getRenderInterface();
+
+	void setDefaultFont(std::string name);
+	void loadFont(std::string filename);
     Font* getFont(std::string name);
 };
 
