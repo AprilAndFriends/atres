@@ -24,6 +24,10 @@ http://www.gnu.org/copyleft/lesser.txt.
 namespace Atres
 {
     std::map<std::string,Font*> fonts;
+	
+	RenderInterface* render_iface=0;
+	
+	Font* default_font=0;
 
     void init()
     {
@@ -32,20 +36,97 @@ namespace Atres
     
     void destroy()
     {
-        
+        for (std::map<std::string,Font*>::iterator it=fonts.begin();it!=fonts.end();it++)
+		{
+			delete it->second;
+		}
     }
+
+	float drawText(std::string font_name,float x,float y,std::string text,float r,float g,float b,float a,Alignment alignment,Effect effect)
+	{
+		float w;
+		Font* f=getFont(font_name);
+		if (effect == SHADOW || effect == BORDER)
+			f->render(x+1,y+1,100000,alignment,text,1,0,0,0,a,0,0);
+		if (effect == BORDER)
+		{
+			f->render(x-1,y-1,100000,alignment,text,1,0,0,0,a,0,0);
+			f->render(x+1,y-1,100000,alignment,text,1,0,0,0,a,0,0);
+			f->render(x-1,y+1,100000,alignment,text,1,0,0,0,a,0,0);
+		}
+		f->render(x, y, 100000, alignment,text,1,r,g,b,a,&w,0);
+		return w;
+	}
+
+	float drawWrappedText(std::string font_name,float x,float y,float w_max,std::string text,float r,float g,float b,float a,Alignment alignment,Effect effect)
+	{
+		float h;
+		Font* f=getFont(font_name);
+		if (effect == SHADOW || effect == BORDER)
+			f->render(x+1,y+1,w_max,alignment,text,1,0,0,0,a,0,0);
+		if (effect == BORDER)
+		{
+			f->render(x-1,y-1,w_max,alignment,text,1,0,0,0,a,0,0);
+			f->render(x+1,y-1,w_max,alignment,text,1,0,0,0,a,0,0);
+			f->render(x-1,y+1,w_max,alignment,text,1,0,0,0,a,0,0);
+		}
+		f->render(x,y,w_max,alignment,text,1,r,g,b,a,0,&h);
+		return h;
+	}
+
+	float drawText(float x,float y,std::string text,float r,float g,float b,float a,Alignment alignment,Effect effect)
+	{
+		return drawText("",x,y,text,r,g,b,a,alignment,effect);
+	}
+
+	float drawWrappedText(float x,float y,float w_max,std::string text,float r,float g,float b,float a,Alignment alignment,Effect effect)
+	{
+		return drawWrappedText("",x,y,w_max,text,r,g,b,a,alignment,effect);
+	}
+
+	float getTextWidth(std::string font_name,std::string text,Alignment alignment)
+	{
+		float w;
+
+		getFont(font_name)->render(0,0, 100000, alignment,text,0,1,1,1,1,&w,0);
+		return w;
+	}
+
+	float getWrappedTextHeight(std::string font_name,float w_max,std::string text,Alignment alignment)
+	{
+		float h;
+		getFont(font_name)->render(0,0,w_max,alignment,text,0,1,1,1,1,0,&h);
+		return h;
+	}
+	
+	void setDefaultFont(std::string name)
+	{
+		default_font=fonts[name];
+	}
     
     void loadFont(std::string filename)
     {
         Font* f=new Font(filename);
         fonts[f->getName()]=f;
+		if (default_font == 0) default_font=f;
     }
     
     Font* getFont(std::string name)
     {
+		if (name == "" && default_font != 0) return default_font;
         Font* f=fonts[name];
-        if (!f) throw 0;
+        if (!f) throw "Font "+name+" does not exist!";
         
         return f;
     }
+	
+	void setRenderInterface(RenderInterface* iface)
+	{
+		render_iface=iface;
+	}
+	
+	RenderInterface* getRenderInterface()
+	{
+		return render_iface;
+	}
 }

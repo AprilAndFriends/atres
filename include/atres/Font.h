@@ -23,6 +23,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <map>
 #include <string>
+#include "Atres.h"
 
 namespace Atres
 {
@@ -31,37 +32,21 @@ namespace Atres
 		float x,y,w,aw;
 	};
 
-	enum FontAlignment
-	{
-		LEFT,RIGHT,CENTER
-	};
-
-	enum FontEffect
-	{
-		NONE,SHADOW,BORDER
-	};
-
 	class Font
 	{
 		std::map<unsigned int,FontCharDef> mChars;
 		float mWScale,mHScale;
-		std::string mName;
+		std::string mName,mResource;
 		float mHeight;
 
-		// todo: make sure to include reference counting if you clone a font!
-		void textfunc(float x,float y,float max_w,FontAlignment alignment,std::string text,bool draw,float r,float g,float b,float a,float* w_out,float* h_out);
 		
 	public:
 		Font(std::string filename);
 		Font(Font& f,float scale=1);
 		~Font();
-		
-		float drawText(float x,float y,std::string text,float r=1,float g=1,float b=1,float a=1,FontAlignment alignment=LEFT,FontEffect effect=NONE);
-		float drawWrappedText(float x,float y,float w_max,std::string text,float r=1,float g=1,float b=1,float a=1,FontAlignment alignment=LEFT,FontEffect effect=NONE);
-		
-		float getTextWidth(std::string text,FontAlignment alignment=LEFT);
-		float getWrappedTextHeight(float w_max,std::string text,FontAlignment alignment=LEFT);
-		
+
+		void render(float x,float y,float max_w,Alignment alignment,std::string text,bool draw,float r,float g,float b,float a,float* w_out,float* h_out);
+
 		float getHeight() { return mHeight*mHScale; }
 		float getWidthScale() { return mWScale; }
 		float getHeightScale() { return mHScale; }

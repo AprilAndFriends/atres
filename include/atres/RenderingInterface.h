@@ -21,6 +21,20 @@ http://www.gnu.org/copyleft/lesser.txt.
 #ifndef ATRES_RENDERING_IFACE_H
 #define ATRES_RENDERING_IFACE_H
 
+#include <string>
+
+namespace Atres
+{
+	class RenderInterface
+	{
+		RenderInterface();
+		virtual ~RenderInterface();
+		
+		virtual void loadResource(std::string filename);
+		
+		virtual void render();
+	};
+}
 
 #endif
 

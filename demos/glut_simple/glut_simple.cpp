@@ -20,6 +20,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 *************************************************************************************/
 #include "../demo_basecode.h"
 #include <string>
+#include "atres/Atres.h"
 
 unsigned int tex_id;
 
@@ -30,7 +31,7 @@ void draw()
 {
 	glBindTexture(GL_TEXTURE_2D,tex_id);
 
-	drawTexturedQuad(0,0,800,600,1,1);
+	//drawTexturedQuad(0,0,800,600,1,1);
 }
 
 void update(float time_increase)
@@ -55,9 +56,10 @@ void setDebugTitle(char* out)
 void init()
 {
 	tex_id=loadTexture("../media/arial.tga");
+	Atres::loadFont("../media/arial.font");
 }
 
 void destroy()
 {
-
+	Atres::destroy();
 }
