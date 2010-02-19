@@ -38,7 +38,7 @@ namespace Atres
 	class Font;
 	class RenderInterface;
 
-    void init();
+    void init(RenderInterface* iface);
     void destroy();
 	
 	float drawText(float x,float y,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);

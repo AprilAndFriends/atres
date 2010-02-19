@@ -33,6 +33,20 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <OpenGL/glu.h>
 #include <GLUT/glut.h>
 #endif
+#include "atres/RenderingInterface.h"
+#include <map>
+
+class AtresOpenGLInterface : public Atres::RenderInterface
+{
+public:
+	AtresOpenGLInterface();
+	~AtresOpenGLInterface();
+	
+	unsigned int loadResource(std::string filename);
+	void render(Atres::CharacterRenderOp* rops,int n);
+};
+
+
 
 #ifndef _WIN32
 unsigned long GetTickCount();
@@ -47,3 +61,5 @@ void drawTexturedQuad(float x,float y,float w,float h,float sx,float sy,float sw
 unsigned int loadTexture(const char* name);
 
 unsigned int createTexture(int w,int h,unsigned int format=GL_RGB);
+
+extern AtresOpenGLInterface ogl_iface;

@@ -35,6 +35,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <GLUT/glut.h>
 #endif
 
+#include "demo_basecode.h"
+
 
 #ifndef _WIN32
 #ifndef __APPLE__
@@ -51,6 +53,7 @@ unsigned long GetTickCount()
 #endif
 
 #include <string>
+
 #ifdef _WIN32
 #pragma warning( disable: 4996 ) // MSVC++
 #endif
@@ -60,6 +63,43 @@ extern int window_w,window_h;
 float mx=0,my=0;
 
 
+
+AtresOpenGLInterface::AtresOpenGLInterface()
+{
+	
+}
+
+AtresOpenGLInterface::~AtresOpenGLInterface()
+{
+	
+}
+
+unsigned int AtresOpenGLInterface::loadResource(std::string filename)
+{
+	return loadTexture(filename.c_str());
+}
+
+void AtresOpenGLInterface::render(Atres::CharacterRenderOp* rops,int n)
+{
+	glBindTexture(GL_TEXTURE_2D,rops[0].resource);
+	glColor4f(rops[0].r/255.0f,
+			  rops[0].g/255.0f,
+			  rops[0].b/255.0f,
+			  rops[0].a/255.0f);
+	
+	glBegin(GL_QUADS);
+	float w=512,h=1024;
+	for (Atres::CharacterRenderOp* op=rops;op < rops+n;op++)
+	{
+		glTexCoord2d(op->sx/w,op->sy/h);                   glVertex2f(op->dx,op->dy);
+		glTexCoord2d((op->sx+op->sw)/w,op->sy/h);          glVertex2f(op->dx+op->dw,op->dy);
+		glTexCoord2d((op->sx+op->sw)/w,(op->sy+op->sh)/h); glVertex2f(op->dx+op->dw,op->dy+op->dh);
+		glTexCoord2d(op->sx/w,(op->sy+op->sh)/h);          glVertex2f(op->dx,op->dy+op->dh);
+	}
+	glEnd();
+}
+
+AtresOpenGLInterface ogl_iface;
 
 void init();
 void destroy();
@@ -163,7 +203,7 @@ unsigned int loadTexture(const char* name)
 }
 
 
-unsigned int createTexture(int w,int h,unsigned int format=GL_RGB)
+unsigned int createTexture(int w,int h,unsigned int format)
 {
 	unsigned int tex_id;
 	glGenTextures(1,&tex_id);
@@ -306,7 +346,3 @@ int main(int argc,char** argv)
 
 	return 0;
 }
-
-
-
-

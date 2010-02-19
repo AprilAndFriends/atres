@@ -36,7 +36,8 @@ namespace Atres
 	{
 		std::map<unsigned int,FontCharDef> mChars;
 		float mWScale,mHScale;
-		std::string mName,mResource;
+		std::string mName;
+		unsigned int mResource;
 		float mHeight;
 
 		
