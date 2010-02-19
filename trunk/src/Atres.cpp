@@ -29,9 +29,9 @@ namespace Atres
 	
 	Font* default_font=0;
 
-    void init()
+    void init(RenderInterface* iface)
     {
-        
+		render_iface=iface;
     }
     
     void destroy()

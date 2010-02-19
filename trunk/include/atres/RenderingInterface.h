@@ -25,14 +25,22 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace Atres
 {
+	struct CharacterRenderOp
+	{
+		unsigned int resource;
+		unsigned short sx,sy,sw,sh;
+		float dx,dy,dw,dh;
+		unsigned char r,g,b,a, italic, underline, strikethrough;
+	};
+	
 	class RenderInterface
 	{
+	public:
 		RenderInterface();
 		virtual ~RenderInterface();
 		
-		virtual void loadResource(std::string filename);
-		
-		virtual void render();
+		virtual unsigned int loadResource(std::string filename)=0;
+		virtual void render(CharacterRenderOp* rops,int n)=0;
 	};
 }
 

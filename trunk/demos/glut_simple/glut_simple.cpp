@@ -22,15 +22,17 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <string>
 #include "atres/Atres.h"
 
-unsigned int tex_id;
+//unsigned int tex_id;
 
 std::string window_name="glut_simple";
 int window_w=800,window_h=600;
 
 void draw()
 {
-	glBindTexture(GL_TEXTURE_2D,tex_id);
+	//glBindTexture(GL_TEXTURE_2D,tex_id);
 
+	Atres::drawText(100,100,"drawText() call");
+	Atres::drawWrappedText(200,200,230,"drawWrappedText() call wraps text into multiple lines",1,1,0);
 	//drawTexturedQuad(0,0,800,600,1,1);
 }
 
@@ -55,8 +57,10 @@ void setDebugTitle(char* out)
 
 void init()
 {
-	tex_id=loadTexture("../media/arial.tga");
+	//tex_id=loadTexture("../media/arial.tga");
+	Atres::init(&ogl_iface);
 	Atres::loadFont("../media/arial.font");
+	glDisable(GL_CULL_FACE);
 }
 
 void destroy()

@@ -24,8 +24,22 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "Font.h"
 #include "RenderingInterface.h"
 
+#define CHR_BUFFER_MAX 2048
+
 namespace Atres
 {
+	CharacterRenderOp rops[CHR_BUFFER_MAX];
+	int nOps=0;
+	
+	void flushRenderOperations()
+	{
+		if (nOps)
+		{
+			getRenderInterface()->render(rops,nOps);
+			nOps=0;
+		}
+	}
+	
 	Font::Font(std::string filename)
 	{
 		std::ifstream f(filename.c_str());
@@ -38,18 +52,22 @@ namespace Atres
 		{
 			f.getline(line,512);
 			if (strstr(line,"Name=")) mName=line+5;
-			if (strstr(line,"Resource=")) mResource=line+9;
+			if (strstr(line,"Resource="))
+				mResource=getRenderInterface()->loadResource(line+9);
 			if (strstr(line,"Height=")) mHeight=atof(line+7);
 			//if (strstr(line,"Scale="));
 			if (line[0] == '#') continue;
 			if (line[0] == '-') break;
 		}
+		mHScale=1;
+		mWScale=mHScale;
 		
 		FontCharDef c; unsigned int code;
 		while (!f.eof())
 		{
 			f >> code;
 			f >> c.x; f >> c.y; f >> c.w; f >> c.aw;
+			if (c.aw == 0) c.aw=c.w;
 			mChars[code]=c;
 		}
 		 
@@ -103,18 +121,14 @@ namespace Atres
 		int len=text.size(),i=0,j=0,last_j;
 		unsigned int c=0,pc;
 		
-		/*static TexturedVertex *vertices=0;*/
-		//TexturedVertex *v;
+		unsigned char byte_r=r*255,byte_g=g*255,byte_b=b*255,byte_a=a*255;
+
 		float offset=0,width,h=mHeight*mHScale,text_w=0,text_h=0;
 		FontCharDef chr;
 		
-		/*if (draw)
-		{
-			if (vertices) delete vertices;
-			vertices=new TexturedVertex[len*6];
-			v=vertices;
-		}
-		*/
+		nOps=0;
+		CharacterRenderOp* op=rops;
+
 		for (;s[i] != 0;)
 		{
 			int char_len;
@@ -150,13 +164,23 @@ namespace Atres
 				chr=mChars[c];
 				if (draw && c != ' ')
 				{
-	 /*               v->x=offset;               v->y=y;   v->u=chr.x;       v->v=chr.y; v++;
+					op->resource=mResource;
+					op->r=byte_r; op->g=byte_g; op->b=byte_b; op->a=byte_a;
+					op->italic=op->underline=op->strikethrough=0;
+					op->sx=chr.x; op->sy=chr.y; op->sw=chr.w; op->sh=mHeight;
+					op->dx=offset; op->dw=chr.w*mWScale; op->dy=y; op->dh=h;
+					op++;
+					nOps++;
+					if (nOps >= CHR_BUFFER_MAX) { flushRenderOperations(); op=rops; }
+					
+	 /*             v->x=offset;               v->y=y;   v->u=chr.x;       v->v=chr.y; v++;
 					v->x=offset+chr.w*mWScale; v->y=y;   v->u=chr.x+chr.w; v->v=chr.y; v++;
 					v->x=offset;               v->y=y+h; v->u=chr.x;       v->v=chr.y+mHeight; v++;
 
 					v->x=offset+chr.w*mWScale; v->y=y;   v->u=chr.x+chr.w; v->v=chr.y; v++;
 					v->x=offset+chr.w*mWScale; v->y=y+h; v->u=chr.x+chr.w; v->v=chr.y+mHeight; v++;
-					v->x=offset;               v->y=y+h; v->u=chr.x;       v->v=chr.y+mHeight; v++;*/
+					v->x=offset;               v->y=y+h; v->u=chr.x;       v->v=chr.y+mHeight; v++;
+	  */
 				}
 				offset+=chr.aw*mWScale;
 			}
@@ -172,6 +196,7 @@ namespace Atres
 			
 			//delete v;
 		}*/
+		flushRenderOperations();
 		if (w_out) *w_out=text_w;
 		if (h_out) *h_out=text_h;
 	}

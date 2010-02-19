@@ -19,3 +19,14 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 *************************************************************************************/
 #include "RenderingInterface.h"
+
+namespace Atres
+{
+	RenderInterface::RenderInterface()
+	{
+	}
+
+	RenderInterface::~RenderInterface()
+	{
+	}
+}
