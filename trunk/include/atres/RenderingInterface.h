@@ -22,10 +22,11 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define ATRES_RENDERING_IFACE_H
 
 #include <string>
+#include "AtresExport.h"
 
 namespace Atres
 {
-	struct CharacterRenderOp
+	struct AtresExport CharacterRenderOp
 	{
 		unsigned int resource;
 		unsigned short sx,sy,sw,sh;
@@ -33,7 +34,7 @@ namespace Atres
 		unsigned char r,g,b,a, italic, underline, strikethrough;
 	};
 	
-	class RenderInterface
+	class AtresExport RenderInterface
 	{
 	public:
 		RenderInterface();

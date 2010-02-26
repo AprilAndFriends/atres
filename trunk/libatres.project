@@ -11,12 +11,14 @@
     <File Name="src/Atres.cpp"/>
     <File Name="src/Font.cpp"/>
     <File Name="src/RenderingInterface.cpp"/>
+    <File Name="src/Exception.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/atres/Atres.h"/>
     <File Name="include/atres/Font.h"/>
     <File Name="include/atres/RenderingInterface.h"/>
     <File Name="include/atres/AtresExport.h"/>
+    <File Name="include/atres/Exception.h"/>
   </VirtualDirectory>
   <Dependencies Name="Release"/>
   <Settings Type="Dynamic Library">
@@ -80,7 +82,7 @@
       <Compiler Options="">
         <IncludePath Value="./include/atres"/>
         <Preprocessor Value="_WIN32"/>
-        <Preprocessor Value="LIBATRES_EXPORTS"/>
+        <Preprocessor Value="ATRES_EXPORTS"/>
       </Compiler>
       <Linker Options=""/>
       <ResourceCompiler Options=""/>

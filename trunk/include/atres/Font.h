@@ -24,18 +24,19 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <map>
 #include <string>
 #include "Atres.h"
+#include "AtresExport.h"
 
 namespace Atres
 {
-	struct FontCharDef
+	struct AtresExport FontCharDef
 	{
 		float x,y,w,aw;
 	};
 
-	class Font
+	class AtresExport Font
 	{
 		std::map<unsigned int,FontCharDef> mChars;
-		float mWScale,mHScale;
+		float mScale,mDefaultScale;
 		std::string mName;
 		unsigned int mResource;
 		float mHeight;
@@ -48,9 +49,9 @@ namespace Atres
 
 		void render(float x,float y,float max_w,Alignment alignment,std::string text,bool draw,float r,float g,float b,float a,float* w_out,float* h_out);
 
-		float getHeight() { return mHeight*mHScale; }
-		float getWidthScale() { return mWScale; }
-		float getHeightScale() { return mHScale; }
+		float getHeight() { return mHeight*mScale; }
+		float getScale() { return mScale; }
+		void setScale(float scale);
 		std::string getName() { return mName; }
 	};
 }

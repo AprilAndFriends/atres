@@ -47,6 +47,7 @@ namespace Atres
 		if (!f.is_open())
 			throw "Can't open Font file"+filename+"!";
 		
+		mScale=mDefaultScale=1;
 		char line[512];
 		while (!f.eof())
 		{
@@ -55,12 +56,12 @@ namespace Atres
 			if (strstr(line,"Resource="))
 				mResource=getRenderInterface()->loadResource(line+9);
 			if (strstr(line,"Height=")) mHeight=atof(line+7);
+			if (strstr(line,"Scale=")) mScale=mDefaultScale=atof(line+6);
 			//if (strstr(line,"Scale="));
 			if (line[0] == '#') continue;
 			if (line[0] == '-') break;
 		}
-		mHScale=1;
-		mWScale=mHScale;
+		
 		
 		FontCharDef c; unsigned int code;
 		while (!f.eof())
@@ -82,6 +83,12 @@ namespace Atres
 	Font::~Font()
 	{
 		mChars.clear();
+	}
+	
+	void Font::setScale(float scale)
+	{
+		if (scale == 0) mScale=mDefaultScale;
+		else mScale=scale;
 	}
 
 	unsigned int utf8_getchar(const char* s,int& char_len_out)
@@ -123,7 +130,7 @@ namespace Atres
 		
 		unsigned char byte_r=r*255,byte_g=g*255,byte_b=b*255,byte_a=a*255;
 
-		float offset=0,width,h=mHeight*mHScale,text_w=0,text_h=0;
+		float offset=0,width,h=mHeight*mScale,text_w=0,text_h=0;
 		FontCharDef chr;
 		
 		nOps=0;
@@ -142,7 +149,7 @@ namespace Atres
 				{
 					offset=width; last_j=j;
 				}
-				width+=mChars[c].aw*mWScale;
+				width+=mChars[c].aw*mScale;
 				if (c == 0) break;
 				if ((pc == ',' || pc == '.' || pc == '!' || pc == '?') && c != ' ') { offset=width; last_j=j; }
 				
@@ -168,7 +175,7 @@ namespace Atres
 					op->r=byte_r; op->g=byte_g; op->b=byte_b; op->a=byte_a;
 					op->italic=op->underline=op->strikethrough=0;
 					op->sx=chr.x; op->sy=chr.y; op->sw=chr.w; op->sh=mHeight;
-					op->dx=offset; op->dw=chr.w*mWScale; op->dy=y; op->dh=h;
+					op->dx=offset; op->dw=chr.w*mScale; op->dy=y; op->dh=h;
 					op++;
 					nOps++;
 					if (nOps >= CHR_BUFFER_MAX) { flushRenderOperations(); op=rops; }
@@ -182,7 +189,7 @@ namespace Atres
 					v->x=offset;               v->y=y+h; v->u=chr.x;       v->v=chr.y+mHeight; v++;
 	  */
 				}
-				offset+=chr.aw*mWScale;
+				offset+=chr.aw*mScale;
 			}
 			y+=h;
 			text_h+=h;
