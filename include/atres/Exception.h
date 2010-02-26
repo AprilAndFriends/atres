@@ -18,53 +18,22 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 *************************************************************************************/
-#include "../demo_basecode.h"
+#ifndef ATRES_EXCEPTION_H
+#define ATRES_EXCEPTION_H
+
 #include <string>
-#include "atres/Atres.h"
+#include "AtresExport.h"
 
-//unsigned int tex_id;
-
-std::string window_name="glut_simple";
-int window_w=800,window_h=600;
-
-void draw()
+namespace Atres
 {
-	//glBindTexture(GL_TEXTURE_2D,tex_id);
-
-	Atres::drawText("Arial:0.5",10,500,"a scaled font");
-	Atres::drawText(100,100,"drawText() call");
-	Atres::drawWrappedText(200,200,230,"drawWrappedText() call wraps text into multiple lines",1,1,0);
-	//drawTexturedQuad(0,0,800,600,1,1);
+	class AtresExport FontNotFoundException
+	{
+		std::string mErrText;
+	public:
+		FontNotFoundException(const std::string& errorText);
+		std::string repr();
+		const std::string& getErrorText() { return mErrText; }
+	};
 }
 
-void update(float time_increase)
-{
-
-}
-
-void OnKeyPress(int key)
-{
- 
-}
-
-void OnClick(float x,float y)
-{
-
-}
-
-void setDebugTitle(char* out)
-{
-}
-
-void init()
-{
-	//tex_id=loadTexture("../media/arial.tga");
-	Atres::init(&ogl_iface);
-	Atres::loadFont("../media/arial.font");
-	glDisable(GL_CULL_FACE);
-}
-
-void destroy()
-{
-	Atres::destroy();
-}
+#endif

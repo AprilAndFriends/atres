@@ -22,6 +22,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define ATRES_H
 
 #include <string>
+#include "AtresExport.h"
 
 namespace Atres
 {
@@ -38,22 +39,22 @@ namespace Atres
 	class Font;
 	class RenderInterface;
 
-    void init(RenderInterface* iface);
-    void destroy();
+    void AtresExport init(RenderInterface* iface);
+    void AtresExport destroy();
 	
-	float drawText(float x,float y,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
-	float drawWrappedText(float x,float y,float w_max,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
-	float drawText(std::string font_name,float x,float y,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
-	float drawWrappedText(std::string font_name,float x,float y,float w_max,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
-	float getTextWidth(std::string font_name,std::string text,Alignment alignment=LEFT);
-	float getWrappedTextHeight(std::string font_name,float w_max,std::string text,Alignment alignment=LEFT);
+	float AtresExport drawText(float x,float y,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	float AtresExport drawWrappedText(float x,float y,float w_max,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	float AtresExport drawText(std::string font_name,float x,float y,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	float AtresExport drawWrappedText(std::string font_name,float x,float y,float w_max,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	float AtresExport getTextWidth(std::string font_name,std::string text,Alignment alignment=LEFT);
+	float AtresExport getWrappedTextHeight(std::string font_name,float w_max,std::string text,Alignment alignment=LEFT);
 
-	void setRenderInterface(RenderInterface* iface);
-	RenderInterface* getRenderInterface();
+	void AtresExport setRenderInterface(RenderInterface* iface);
+	RenderInterface* AtresExport getRenderInterface();
 
-	void setDefaultFont(std::string name);
-	void loadFont(std::string filename);
-    Font* getFont(std::string name);
+	void AtresExport setDefaultFont(std::string name);
+	void AtresExport loadFont(std::string filename);
+    Font* AtresExport getFont(std::string name);
 };
 
 #endif

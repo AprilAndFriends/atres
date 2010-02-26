@@ -2,9 +2,10 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="libatres"
-	ProjectGUID="{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}"
-	RootNamespace="libatres"
+	Name="glut_simple"
+	ProjectGUID="{8ED4ED15-7C0E-411F-BCC6-E96882CC73F3}"
+	RootNamespace="glut_simple"
+	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -19,8 +20,8 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			CharacterSet="2"
+			ConfigurationType="1"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -40,11 +41,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="include/atres"
-				PreprocessorDefinitions="_DEBUG;_STATICLIB;ATRES_EXPORTS;_WIN32"
+				AdditionalIncludeDirectories="../../include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_STATICLIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -58,11 +60,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\$(ProjectName)_d.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libatres_d.lib DevIL.lib"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="../../lib;../../Debug"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -74,6 +84,9 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -81,8 +94,8 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			CharacterSet="2"
+			ConfigurationType="1"
+			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -104,10 +117,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="include/atres"
-				PreprocessorDefinitions="_STATICLIB;ATRES_EXPORTS;_WIN32"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_STATICLIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -121,11 +134,21 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\$(ProjectName)_d.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libatres.lib DevIL.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../lib;../../Release"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -135,6 +158,9 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -150,19 +176,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\src\Atres.cpp"
+				RelativePath="..\demo_basecode.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Exception.cpp"
+				RelativePath="..\demo_basecode.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Font.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\RenderingInterface.cpp"
+				RelativePath=".\glut_simple.cpp"
 				>
 			</File>
 		</Filter>
@@ -171,26 +193,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\include\atres\Atres.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\atres\AtresExport.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\atres\Exception.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\atres\Font.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\atres\RenderingInterface.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

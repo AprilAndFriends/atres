@@ -20,6 +20,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 *************************************************************************************/
 #include "Atres.h"
 #include "Font.h"
+#include "Exception.h"
+#include <stdlib.h>
 
 namespace Atres
 {
@@ -113,10 +115,28 @@ namespace Atres
     
     Font* getFont(std::string name)
     {
-		if (name == "" && default_font != 0) return default_font;
-        Font* f=fonts[name];
-        if (!f) throw "Font "+name+" does not exist!";
-        
+		if (name == "" && default_font != 0)
+		{
+			default_font->setScale(0);
+			return default_font;
+		}
+		
+        Font* f;
+        if (fonts.find(name) == fonts.end())
+		{
+			int pos=name.find(":");
+			if (pos != -1)
+			{
+				f=getFont(name.substr(0,pos));
+				f->setScale(atof(name.substr(pos+1,10).c_str()));
+			}
+			else throw FontNotFoundException("Font "+name+" does not exist!");
+		}
+		else
+		{
+			f=fonts[name];
+			f->setScale(0);
+		}
         return f;
     }
 	

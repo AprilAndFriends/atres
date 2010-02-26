@@ -21,17 +21,19 @@ http://www.gnu.org/copyleft/lesser.txt.
 #ifndef ATRES_EXPORT_H
 #define ATRES_EXPORT_H
 
-#ifdef _WIN32
-#ifdef ATRES_EXPORTS
-#define AtresExport __declspec(dllexport)
-#else
-#define AtresExport __declspec(dllimport)
-#endif
-#else
-
-#define AtresExport __attribute__ ((visibility("default")))
-
-#endif
+	#ifdef _STATICLIB
+		#define AtresExport
+	#else
+		#ifdef _WIN32
+			#ifdef ATRES_EXPORTS
+				#define AtresExport __declspec(dllexport)
+			#else
+				#define AtresExport __declspec(dllimport)
+			#endif
+		#else
+			#define AtresExport __attribute__ ((visibility("default")))
+		#endif
+	#endif
 
 #endif
 
