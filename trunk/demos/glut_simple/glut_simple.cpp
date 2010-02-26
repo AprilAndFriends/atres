@@ -27,13 +27,33 @@ http://www.gnu.org/copyleft/lesser.txt.
 std::string window_name="glut_simple";
 int window_w=800,window_h=600;
 
+void drawRect(float x,float y,float w,float h)
+{
+	glBindTexture(GL_TEXTURE_2D,0);
+	
+	glBegin(GL_LINE_LOOP);
+	
+	glVertex3f(x,y,0);
+	glVertex3f(x+w,y,0);
+	glVertex3f(x+w,y+h,0);
+	glVertex3f(x,y+h,0);
+	
+	
+	glEnd();
+}
+
 void draw()
 {
 	//glBindTexture(GL_TEXTURE_2D,tex_id);
 
+	glColor3f(1,1,1);
+
+	char mltext[]="1\n22\n333\n4444\n55555\n666666\n7777777\nthis is some multiline text that gets wrapped into multiple lines";
+	drawRect(200,200,230,Atres::getWrappedTextHeight("",230,mltext));
+
 	Atres::drawText("Arial:0.5",10,500,"a scaled font");
 	Atres::drawText(100,100,"drawText() call");
-	Atres::drawWrappedText(200,200,230,"drawWrappedText() call wraps text into multiple lines",1,1,0);
+	Atres::drawWrappedText(200+230/2,200,230,mltext,1,1,0,1,Atres::CENTER);
 	//drawTexturedQuad(0,0,800,600,1,1);
 }
 
