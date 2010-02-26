@@ -46,8 +46,8 @@ namespace Atres
 	float AtresExport drawWrappedText(float x,float y,float w_max,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
 	float AtresExport drawText(std::string font_name,float x,float y,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
 	float AtresExport drawWrappedText(std::string font_name,float x,float y,float w_max,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
-	float AtresExport getTextWidth(std::string font_name,std::string text,Alignment alignment=LEFT);
-	float AtresExport getWrappedTextHeight(std::string font_name,float w_max,std::string text,Alignment alignment=LEFT);
+	float AtresExport getTextWidth(std::string font_name,std::string text);
+	float AtresExport getWrappedTextHeight(std::string font_name,float w_max,std::string text);
 
 	void AtresExport setRenderInterface(RenderInterface* iface);
 	RenderInterface* AtresExport getRenderInterface();

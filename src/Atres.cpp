@@ -86,18 +86,18 @@ namespace Atres
 		return drawWrappedText("",x,y,w_max,text,r,g,b,a,alignment,effect);
 	}
 
-	float getTextWidth(std::string font_name,std::string text,Alignment alignment)
+	float getTextWidth(std::string font_name,std::string text)
 	{
 		float w;
 
-		getFont(font_name)->render(0,0, 100000, alignment,text,0,1,1,1,1,&w,0);
+		getFont(font_name)->render(0,0, 100000,LEFT,text,0,1,1,1,1,&w,0);
 		return w;
 	}
 
-	float getWrappedTextHeight(std::string font_name,float w_max,std::string text,Alignment alignment)
+	float getWrappedTextHeight(std::string font_name,float w_max,std::string text)
 	{
 		float h;
-		getFont(font_name)->render(0,0,w_max,alignment,text,0,1,1,1,1,0,&h);
+		getFont(font_name)->render(0,0,w_max,LEFT,text,0,1,1,1,1,0,&h);
 		return h;
 	}
 	
