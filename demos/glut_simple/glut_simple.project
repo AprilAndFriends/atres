@@ -76,9 +76,11 @@
     <GlobalSettings>
       <Compiler Options="">
         <IncludePath Value="../../include"/>
+        <IncludePath Value="../../../include"/>
       </Compiler>
       <Linker Options="">
         <LibraryPath Value="../../lib"/>
+        <LibraryPath Value="../../../lib"/>
         <Library Value="libOpenGL32"/>
         <Library Value="libglu32"/>
         <Library Value="libglut32"/>
