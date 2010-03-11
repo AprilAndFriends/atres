@@ -3,13 +3,17 @@
   <Project Name="libatres" Path="libatres.project" Active="No"/>
   <Project Name="glut_simple" Path="demos/glut_simple/glut_simple.project" Active="Yes"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="yes">
+    <WorkspaceConfiguration Name="Debug" Selected="no">
       <Project Name="libatres" ConfigName="Debug"/>
       <Project Name="glut_simple" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="yes">
+    <WorkspaceConfiguration Name="Release" Selected="no">
       <Project Name="libatres" ConfigName="Release"/>
       <Project Name="glut_simple" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Linux_Debug" Selected="yes">
+      <Project Name="libatres" ConfigName="Linux_Debug"/>
+      <Project Name="glut_simple" ConfigName="Linux_Debug"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>
