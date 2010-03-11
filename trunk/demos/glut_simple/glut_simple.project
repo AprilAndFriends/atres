@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Project Name="glut_simple" InternalType="Console">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00020001N0005Debug0000000000000001N0011Linux_Debug000000000000]]>
+    </Plugin>
+  </Plugins>
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
@@ -10,6 +15,9 @@
   <Dependencies Name="Release">
     <Project Name="libatres"/>
   </Dependencies>
+  <Dependencies Name="Debug">
+    <Project Name="libatres"/>
+  </Dependencies>
   <Settings Type="Executable">
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
@@ -18,9 +26,46 @@
       <Linker Options="" Required="yes">
         <LibraryPath Value="../../bin/Debug"/>
         <Library Value="libatres_d"/>
+        <Library Value="libOpenGL32"/>
+        <Library Value="libglu32"/>
+        <Library Value="libglut32"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/Debug" Command="../../bin/Debug/$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Linux_Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g" Required="yes" PreCompiledHeader="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="" Required="yes">
+        <LibraryPath Value="../../bin/Linux_Debug"/>
+        <Library Value="libatres_d"/>
+        <Library Value="libGL"/>
+        <Library Value="libGLU"/>
+        <Library Value="libglut"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/Linux_Debug" Command="$(IntermediateDirectory)/$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
         <StartupCommands/>
@@ -81,14 +126,9 @@
       <Linker Options="">
         <LibraryPath Value="../../lib"/>
         <LibraryPath Value="../../../lib"/>
-        <Library Value="libOpenGL32"/>
-        <Library Value="libglu32"/>
-        <Library Value="libglut32"/>
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
-  <Dependencies Name="Debug">
-    <Project Name="libatres"/>
-  </Dependencies>
+  <Dependencies Name="Linux_Debug"/>
 </CodeLite_Project>

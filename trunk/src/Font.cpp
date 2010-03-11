@@ -52,6 +52,10 @@ namespace Atres
 		while (!f.eof())
 		{
 			f.getline(line,512);
+#ifndef _WIN32
+			int len=strlen(line);
+			if (line[len-1] == '\r') line[len-1]=0;
+#endif
 			if (strstr(line,"Name=")) mName=line+5;
 			if (strstr(line,"Resource="))
 				mResource=getRenderInterface()->loadResource(line+9);
