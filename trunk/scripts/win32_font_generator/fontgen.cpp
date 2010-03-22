@@ -190,19 +190,26 @@ void WriteXML()
 {
 	FILE* f=fopen("normal.font","w");
 
-	fprintf(f,"<?xml version=\"1.0\" ?>\n");
-	fprintf(f,"<Font name=\"normal\" texture=\"normal.png\" h=\"%d\">\n",fonth);
+	fprintf(f,"# -----------------------------------\n");
+	fprintf(f,"# ATRES Font definition file\n");
+	fprintf(f,"# -----------------------------------\n");
+	fprintf(f,"Name=normal\n");
+	fprintf(f,"Resource=normal.png\n");
+	fprintf(f,"Height=%d\n",fonth);
+	fprintf(f,"Scale=1.0\n");
+	fprintf(f,"# -----------------------------------\n");
+	fprintf(f,"# Code|X|Y|Width|Height|Advance Width\n");
+	fprintf(f,"-------------------------------------\n");
 
 	CHARACTER* c;
 	for (int i=0;i<nCharacters;i++)
 	{
 		c=&characters[i];
-		fprintf(f,"    <chr code=\"%d\" x=\"%d\" y=\"%d\" w=\"%d\"",c->CharCode,c->x,c->y,c->w);
-		if (c->w == c->dw) fprintf(f,"/>\n");
-		else               fprintf(f," aw=\"%d\"/>\n",c->dw);
+		fprintf(f,"%d %d %d %d ",c->CharCode,c->x,c->y,c->w,c->dw);
+		if (c->w == c->dw) fprintf(f,"0\n");
+		else               fprintf(f,"%d\n",c->dw);
 	}
 
-	fprintf(f,"</Font>\n");
 	fclose(f);
 }
 
