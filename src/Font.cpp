@@ -49,6 +49,7 @@ namespace Atres
 		
 		mScale=mDefaultScale=1;
 		char line[512];
+		mLineHeight=0;
 		while (!f.eof())
 		{
 			f.getline(line,512);
@@ -56,16 +57,17 @@ namespace Atres
 			int len=strlen(line);
 			if (line[len-1] == '\r') line[len-1]=0;
 #endif
-			if (strstr(line,"Name=")) mName=line+5;
-			if (strstr(line,"Resource="))
-				mResource=getRenderInterface()->loadResource(line+9);
-			if (strstr(line,"Height=")) mHeight=atof(line+7);
-			if (strstr(line,"Scale=")) mScale=mDefaultScale=atof(line+6);
+			if      (strstr(line,"Name=")) mName=line+5;
+			else if (strstr(line,"Resource="))
+				    mResource=getRenderInterface()->loadResource(line+9);
+			else if (strstr(line,"LineHeight=")) mLineHeight=atof(line+11);
+			else if (strstr(line,"Height=")) mHeight=atof(line+7);
+			else if (strstr(line,"Scale=")) mScale=mDefaultScale=atof(line+6);
 			//if (strstr(line,"Scale="));
 			if (line[0] == '#') continue;
 			if (line[0] == '-') break;
 		}
-		
+		if (mLineHeight == 0) mLineHeight=mHeight;
 		
 		FontCharDef c; unsigned int code;
 		while (!f.eof())
@@ -134,7 +136,7 @@ namespace Atres
 		
 		unsigned char byte_r=r*255,byte_g=g*255,byte_b=b*255,byte_a=a*255;
 
-		float offset=0,width,h=mHeight*mScale,text_w=0,text_h=0;
+		float offset=0,width,h=mHeight*mScale,text_w=0,starty=y;
 		FontCharDef chr;
 		
 		nOps=0;
@@ -195,8 +197,7 @@ namespace Atres
 				}
 				offset+=chr.aw*mScale;
 			}
-			y+=h;
-			text_h+=h;
+			y+=mLineHeight*mScale;
 		}
 		
 	/*    if (draw)
@@ -209,6 +210,6 @@ namespace Atres
 		}*/
 		flushRenderOperations();
 		if (w_out) *w_out=text_w;
-		if (h_out) *h_out=text_h;
+		if (h_out) *h_out=y-starty;
 	}
 }
