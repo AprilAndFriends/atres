@@ -39,7 +39,7 @@ namespace Atres
 		float mScale,mDefaultScale;
 		std::string mName;
 		unsigned int mResource;
-		float mHeight;
+		float mHeight,mLineHeight;
 
 		
 	public:
