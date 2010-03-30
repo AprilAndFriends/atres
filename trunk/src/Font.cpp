@@ -153,13 +153,17 @@ namespace Atres
 				if (c == '\n') { j++; offset=width; break; }
 				if (c == ' ' || c == 0)
 				{
-					offset=width; last_j=j;
+					offset=width; last_j=j+(c == ' ');
 				}
 				width+=mChars[c].aw*mScale;
 				if (c == 0) break;
 				if ((pc == ',' || pc == '.' || pc == '!' || pc == '?') && c != ' ') { offset=width; last_j=j; }
 				
-				if (width > max_w) break;
+				if (width > max_w)
+				{
+					if (offset == 0) { offset=width-mChars[c].aw*mScale; last_j=j; }
+					break;
+				}
 				
 			}
 			if (offset > text_w) text_w=offset;

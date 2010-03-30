@@ -48,7 +48,7 @@ void draw()
 
 	glColor3f(1,1,1);
 
-	char mltext[]="1\n22\n333\n4444\n55555\n666666\n7777777\nthis is some multiline text that gets wrapped into multiple lines";
+	char mltext[]="Label7: V_Warden_1_DAMAGE";
 	drawRect(200,200,230,Atres::getWrappedTextHeight("",230,mltext));
 
 	Atres::drawText("Arial:0.5",10,500,"a scaled font");

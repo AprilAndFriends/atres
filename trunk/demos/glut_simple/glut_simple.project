@@ -63,6 +63,8 @@
         <Library Value="libGL"/>
         <Library Value="libGLU"/>
         <Library Value="libglut"/>
+        <Library Value="libIL"/>
+        <Library Value="libILUT"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/Linux_Debug" Command="$(IntermediateDirectory)/$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
@@ -130,5 +132,7 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
-  <Dependencies Name="Linux_Debug"/>
+  <Dependencies Name="Linux_Debug">
+    <Project Name="libatres"/>
+  </Dependencies>
 </CodeLite_Project>
