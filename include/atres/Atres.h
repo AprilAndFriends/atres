@@ -39,22 +39,22 @@ namespace Atres
 	class Font;
 	class RenderInterface;
 
-    void AtresExport init(RenderInterface* iface);
-    void AtresExport destroy();
+    void AtresFnExport init(RenderInterface* iface);
+    void AtresFnExport destroy();
 	
-	float AtresExport drawText(float x,float y,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
-	float AtresExport drawWrappedText(float x,float y,float w_max,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
-	float AtresExport drawText(std::string font_name,float x,float y,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
-	float AtresExport drawWrappedText(std::string font_name,float x,float y,float w_max,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
-	float AtresExport getTextWidth(std::string font_name,std::string text);
-	float AtresExport getWrappedTextHeight(std::string font_name,float w_max,std::string text);
+	float AtresFnExport drawText(float x,float y,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	float AtresFnExport drawWrappedText(float x,float y,float w_max,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	float AtresFnExport drawText(std::string font_name,float x,float y,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	float AtresFnExport drawWrappedText(std::string font_name,float x,float y,float w_max,std::string text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	float AtresFnExport getTextWidth(std::string font_name,std::string text);
+	float AtresFnExport getWrappedTextHeight(std::string font_name,float w_max,std::string text);
 
-	void AtresExport setRenderInterface(RenderInterface* iface);
-	RenderInterface* AtresExport getRenderInterface();
+	void AtresFnExport setRenderInterface(RenderInterface* iface);
+	RenderInterface* AtresFnExport getRenderInterface();
 
-	void AtresExport setDefaultFont(std::string name);
-	void AtresExport loadFont(std::string filename);
-    Font* AtresExport getFont(std::string name);
+	void AtresFnExport setDefaultFont(std::string name);
+	void AtresFnExport loadFont(std::string filename);
+    Font* AtresFnExport getFont(std::string name);
 };
 
 #endif
