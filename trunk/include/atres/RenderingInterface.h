@@ -40,7 +40,7 @@ namespace Atres
 		RenderInterface();
 		virtual ~RenderInterface();
 		
-		virtual unsigned int loadResource(std::string filename)=0;
+		virtual unsigned int loadResource(const char* filename)=0;
 		virtual void render(CharacterRenderOp* rops,int n)=0;
 	};
 }
