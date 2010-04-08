@@ -60,9 +60,9 @@ namespace Atres
 			if      (strstr(line,"Name=")) mName=line+5;
 			else if (strstr(line,"Resource="))
 				    mResource=getRenderInterface()->loadResource(line+9);
-			else if (strstr(line,"LineHeight=")) mLineHeight=atof(line+11);
-			else if (strstr(line,"Height=")) mHeight=atof(line+7);
-			else if (strstr(line,"Scale=")) mScale=mDefaultScale=atof(line+6);
+			else if (strstr(line,"LineHeight=")) mLineHeight=(float)atof(line+11);
+			else if (strstr(line,"Height=")) mHeight=(float)atof(line+7);
+			else if (strstr(line,"Scale=")) mScale=mDefaultScale=(float)atof(line+6);
 			//if (strstr(line,"Scale="));
 			if (line[0] == '#') continue;
 			if (line[0] == '-') break;
@@ -134,7 +134,7 @@ namespace Atres
 		int len=text.size(),i=0,j=0,last_j;
 		unsigned int c=0,pc;
 		
-		unsigned char byte_r=r*255,byte_g=g*255,byte_b=b*255,byte_a=a*255;
+		unsigned char byte_r=(unsigned char)r*255,byte_g=(unsigned char)g*255,byte_b=(unsigned char)b*255,byte_a=(unsigned char)a*255;
 
 		float offset=0,width,h=mHeight*mScale,text_w=0,starty=y;
 		FontCharDef chr;
@@ -184,7 +184,7 @@ namespace Atres
 					op->resource=mResource;
 					op->r=byte_r; op->g=byte_g; op->b=byte_b; op->a=byte_a;
 					op->italic=op->underline=op->strikethrough=0;
-					op->sx=chr.x; op->sy=chr.y; op->sw=chr.w; op->sh=mHeight;
+					op->sx=(unsigned short)chr.x; op->sy=(unsigned short)chr.y; op->sw=(unsigned short)chr.w; op->sh=(unsigned short)mHeight;
 					op->dx=offset; op->dw=chr.w*mScale; op->dy=y; op->dh=h;
 					op++;
 					nOps++;
