@@ -134,7 +134,7 @@ namespace Atres
 		int len=text.size(),i=0,j=0,last_j;
 		unsigned int c=0,pc;
 		
-		unsigned char byte_r=(unsigned char)r*255,byte_g=(unsigned char)g*255,byte_b=(unsigned char)b*255,byte_a=(unsigned char)a*255;
+		unsigned char byte_r=(unsigned char)(r*255),byte_g=(unsigned char)(g*255),byte_b=(unsigned char)(b*255),byte_a=(unsigned char)(a*255);
 
 		float offset=0,width,h=mHeight*mScale,text_w=0,starty=y;
 		FontCharDef chr;
