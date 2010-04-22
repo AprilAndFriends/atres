@@ -10,18 +10,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glut_simple", "demos\glut_s
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Win32 = Debug|Win32
-		Release|Win32 = Release|Win32
+		win32_Debug|Win32 = win32_Debug|Win32
+		win32_Release|Win32 = win32_Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}.Debug|Win32.Build.0 = Debug|Win32
-		{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}.Release|Win32.ActiveCfg = Release|Win32
-		{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}.Release|Win32.Build.0 = Release|Win32
-		{8ED4ED15-7C0E-411F-BCC6-E96882CC73F3}.Debug|Win32.ActiveCfg = Debug|Win32
-		{8ED4ED15-7C0E-411F-BCC6-E96882CC73F3}.Debug|Win32.Build.0 = Debug|Win32
-		{8ED4ED15-7C0E-411F-BCC6-E96882CC73F3}.Release|Win32.ActiveCfg = Release|Win32
-		{8ED4ED15-7C0E-411F-BCC6-E96882CC73F3}.Release|Win32.Build.0 = Release|Win32
+		{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}.win32_Debug|Win32.ActiveCfg = win32_Debug|Win32
+		{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}.win32_Debug|Win32.Build.0 = win32_Debug|Win32
+		{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}.win32_Release|Win32.ActiveCfg = win32_Release|Win32
+		{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}.win32_Release|Win32.Build.0 = win32_Release|Win32
+		{8ED4ED15-7C0E-411F-BCC6-E96882CC73F3}.win32_Debug|Win32.ActiveCfg = win32_Debug|Win32
+		{8ED4ED15-7C0E-411F-BCC6-E96882CC73F3}.win32_Debug|Win32.Build.0 = win32_Debug|Win32
+		{8ED4ED15-7C0E-411F-BCC6-E96882CC73F3}.win32_Release|Win32.ActiveCfg = win32_Release|Win32
+		{8ED4ED15-7C0E-411F-BCC6-E96882CC73F3}.win32_Release|Win32.Build.0 = win32_Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
