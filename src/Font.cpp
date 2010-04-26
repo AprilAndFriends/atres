@@ -148,9 +148,20 @@ namespace Atres
 				if (c == 0) break;
 				if ((pc == ',' || pc == '.' || pc == '!' || pc == '?') && c != ' ') { offset=width; last_j=j; }
 				
-				if (width > max_w)
+				if (width > max_w) // line must have at least one character
 				{
-					if (offset == 0) { offset=width-mChars[c].aw*mScale; last_j=j; }
+					if (offset == 0)
+					{
+						offset=width-mChars[c].aw*mScale;
+						if (offset == 0) // this happens when max_w is smaller then the character width
+						{
+							// in that case, allow one character through, even though
+							// it will break the max_w limit
+							offset=width;
+							j+=char_len;
+						}
+						last_j=j;
+					}
 					break;
 				}
 				
