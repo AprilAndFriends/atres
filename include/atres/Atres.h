@@ -22,7 +22,7 @@ namespace Atres
 
 	enum Effect
 	{
-		NONE,SHADOW,BORDER
+		NONE,SHADOW,BORDER,BORDER_EX
 	};
 	
 	class Font;

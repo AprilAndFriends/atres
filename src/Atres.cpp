@@ -37,13 +37,20 @@ namespace Atres
 	{
 		float w;
 		Font* f=getFont(font_name);
-		if (effect == SHADOW || effect == BORDER)
+		if (effect == SHADOW || effect == BORDER || effect == BORDER_EX)
 			f->render(x+1,y+1,100000,alignment,text,1,0,0,0,a,0,0);
-		if (effect == BORDER)
+		if (effect == BORDER || effect == BORDER_EX)
 		{
 			f->render(x-1,y-1,100000,alignment,text,1,0,0,0,a,0,0);
 			f->render(x+1,y-1,100000,alignment,text,1,0,0,0,a,0,0);
 			f->render(x-1,y+1,100000,alignment,text,1,0,0,0,a,0,0);
+		}
+		if (effect == BORDER_EX)
+		{
+			f->render(x,y-1,100000,alignment,text,1,0,0,0,a,0,0);
+			f->render(x,y+1,100000,alignment,text,1,0,0,0,a,0,0);
+			f->render(x+1,y,100000,alignment,text,1,0,0,0,a,0,0);
+			f->render(x-1,y,100000,alignment,text,1,0,0,0,a,0,0);
 		}
 		f->render(x, y, 100000, alignment,text,1,r,g,b,a,&w,0);
 		return w;
@@ -53,13 +60,20 @@ namespace Atres
 	{
 		float h;
 		Font* f=getFont(font_name);
-		if (effect == SHADOW || effect == BORDER)
+		if (effect == SHADOW || effect == BORDER || effect == BORDER_EX)
 			f->render(x+1,y+1,w_max,alignment,text,1,0,0,0,a,0,0);
-		if (effect == BORDER)
+		if (effect == BORDER || effect == BORDER_EX)
 		{
 			f->render(x-1,y-1,w_max,alignment,text,1,0,0,0,a,0,0);
 			f->render(x+1,y-1,w_max,alignment,text,1,0,0,0,a,0,0);
 			f->render(x-1,y+1,w_max,alignment,text,1,0,0,0,a,0,0);
+		}
+		if (effect == BORDER_EX)
+		{
+			f->render(x,y-1,w_max,alignment,text,1,0,0,0,a,0,0);
+			f->render(x,y+1,w_max,alignment,text,1,0,0,0,a,0,0);
+			f->render(x+1,y,w_max,alignment,text,1,0,0,0,a,0,0);
+			f->render(x-1,y,w_max,alignment,text,1,0,0,0,a,0,0);
 		}
 		f->render(x,y,w_max,alignment,text,1,r,g,b,a,0,&h);
 		return h;
