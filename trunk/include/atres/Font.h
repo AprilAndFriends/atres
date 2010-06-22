@@ -11,7 +11,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #define ATRES_FONT_H
 
 #include <map>
-#include <string>
+#include <hltypes/hstring.h>
 #include "Atres.h"
 #include "AtresExport.h"
 
@@ -26,22 +26,22 @@ namespace Atres
 	{
 		std::map<unsigned int,FontCharDef> mChars;
 		float mScale,mDefaultScale;
-		std::string mName;
+		hstr mName;
 		unsigned int mResource;
 		float mHeight,mLineHeight;
 
 		
 	public:
-		Font(std::string filename);
+		Font(chstr filename);
 		Font(Font& f,float scale=1);
 		~Font();
 
-		void render(float x,float y,float max_w,Alignment alignment,std::string text,bool draw,float r,float g,float b,float a,float* w_out,float* h_out);
+		void render(float x,float y,float max_w,Alignment alignment,chstr text,bool draw,float r,float g,float b,float a,float* w_out,float* h_out);
 
 		float getHeight() { return mHeight*mScale; }
 		float getScale() { return mScale; }
 		void setScale(float scale);
-		std::string getName() { return mName; }
+		hstr getName() { return mName; }
 	};
 }
 

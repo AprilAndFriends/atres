@@ -2,16 +2,20 @@
 <CodeLite_Workspace Name="libatres" Database="./libatres.tags">
   <Project Name="libatres" Path="libatres.project" Active="No"/>
   <Project Name="glut_simple" Path="demos/glut_simple/glut_simple.project" Active="Yes"/>
+  <Project Name="libhltypes" Path="../hltypes/libhltypes.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Project Name="libatres" ConfigName="Debug"/>
       <Project Name="glut_simple" ConfigName="Debug"/>
+      <Project Name="libhltypes" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Release" Selected="no">
-      <Project Name="libatres" ConfigName="Release"/>
-      <Project Name="glut_simple" ConfigName="Release"/>
+      <Project Name="libhltypes" ConfigName="Release_Win32"/>
+      <Project Name="libatres" ConfigName="Release_Win32"/>
+      <Project Name="glut_simple" ConfigName="Release_Win32"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Linux_Debug" Selected="no">
+      <Project Name="libhltypes" ConfigName="Linux_Debug"/>
       <Project Name="libatres" ConfigName="Linux_Debug"/>
       <Project Name="glut_simple" ConfigName="Linux_Debug"/>
     </WorkspaceConfiguration>

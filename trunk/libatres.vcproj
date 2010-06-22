@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="include/atres"
+				AdditionalIncludeDirectories="include/atres;../hltypes/include"
 				PreprocessorDefinitions="_DEBUG;ATRES_EXPORTS;_WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -59,7 +59,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="libhltypes_d.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
+				AdditionalLibraryDirectories="..\hltypes\bin\$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				ImportLibrary="$(TargetDir)\$(TargetName).lib"
 			/>
@@ -83,6 +85,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy ..\hltypes\bin\$(ConfigurationName)\*.dll bin\$(ConfigurationName)&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -112,7 +115,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="include/atres"
+				AdditionalIncludeDirectories="include/atres;../hltypes/include"
 				PreprocessorDefinitions="ATRES_EXPORTS;_WIN32"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -130,6 +133,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="libhltypes.lib"
+				AdditionalLibraryDirectories="..\hltypes\bin\$(ConfigurationName)"
 			/>
 			<Tool
 				Name="VCALinkTool"

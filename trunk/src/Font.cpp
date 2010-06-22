@@ -29,7 +29,7 @@ namespace Atres
 		}
 	}
 	
-	Font::Font(std::string filename)
+	Font::Font(chstr filename)
 	{
 		std::ifstream f(filename.c_str());
 		
@@ -116,7 +116,7 @@ namespace Atres
 		}
 	}
 
-	void Font::render(float x,float y,float max_w,Alignment alignment,std::string text,bool draw,float r,float g,float b,float a,float* w_out,float* h_out)
+	void Font::render(float x,float y,float max_w,Alignment alignment,chstr text,bool draw,float r,float g,float b,float a,float* w_out,float* h_out)
 	{
 		// ascii only at the moment
 		const char* s=text.c_str();

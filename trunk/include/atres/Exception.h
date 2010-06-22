@@ -10,18 +10,18 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #ifndef ATRES_EXCEPTION_H
 #define ATRES_EXCEPTION_H
 
-#include <string>
+#include <hltypes/hstring.h>
 #include "AtresExport.h"
 
 namespace Atres
 {
 	class AtresExport FontNotFoundException
 	{
-		std::string mErrText;
+		hstr mErrText;
 	public:
-		FontNotFoundException(const std::string& errorText);
-		std::string repr();
-		const std::string& getErrorText() { return mErrText; }
+		FontNotFoundException(chstr errorText);
+		hstr repr();
+		chstr getErrorText() { return mErrText; }
 	};
 }
 

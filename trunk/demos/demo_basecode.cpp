@@ -41,12 +41,12 @@ unsigned long GetTickCount()
 }
 #endif
 
-#include <string>
+#include <hltypes/hstring.h>
 
 #ifdef _WIN32
 #pragma warning( disable: 4996 ) // MSVC++
 #endif
-extern std::string window_name;
+extern hstr window_name;
 extern int window_w,window_h;
 
 float mx=0,my=0;

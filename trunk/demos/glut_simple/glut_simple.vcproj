@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\include;..\..\..\include"
+				AdditionalIncludeDirectories="..\..\include;..\..\..\include;..\..\..\hltypes\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_STATICLIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libatres_d.lib DevIL.lib"
+				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libhltypes_d.lib libatres_d.lib DevIL.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\lib;..\..\bin\win32_Debug"
+				AdditionalLibraryDirectories="..\..\..\lib;..\..\bin\$(ConfigurationName);..\..\..\hltypes\bin\$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -88,6 +88,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -117,7 +118,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\..\include;..\..\..\include"
+				AdditionalIncludeDirectories="..\..\include;..\..\..\include;..\..\..\hltypes\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_STATICLIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -136,9 +137,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libatres.lib DevIL.lib"
+				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libhltypes.lib libatres.lib DevIL.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\lib;..\..\bin\win32_Release"
+				AdditionalLibraryDirectories="..\..\..\lib;..\..\bin\$(ConfigurationName);..\..\..\hltypes\bin\$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
