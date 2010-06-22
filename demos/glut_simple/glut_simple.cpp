@@ -7,13 +7,13 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
+#include <hltypes/hstring.h>
 #include "../demo_basecode.h"
-#include <string>
 #include "atres/Atres.h"
 
 //unsigned int tex_id;
 
-std::string window_name="glut_simple";
+hstr window_name="glut_simple";
 int window_w=800,window_h=600;
 
 void drawRect(float x,float y,float w,float h)

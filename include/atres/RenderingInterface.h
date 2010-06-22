@@ -10,7 +10,6 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #ifndef ATRES_RENDERING_IFACE_H
 #define ATRES_RENDERING_IFACE_H
 
-#include <string>
 #include "AtresExport.h"
 
 namespace Atres

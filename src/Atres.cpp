@@ -14,7 +14,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 namespace Atres
 {
-    std::map<std::string,Font*> fonts;
+    std::map<hstr,Font*> fonts;
 	
 	RenderInterface* render_iface=0;
 	
@@ -27,13 +27,13 @@ namespace Atres
     
     void destroy()
     {
-        for (std::map<std::string,Font*>::iterator it=fonts.begin();it!=fonts.end();it++)
+        for (std::map<hstr,Font*>::iterator it=fonts.begin();it!=fonts.end();it++)
 		{
 			delete it->second;
 		}
     }
 
-	float drawText(std::string font_name,float x,float y,std::string text,float r,float g,float b,float a,Alignment alignment,Effect effect)
+	float drawText(chstr font_name,float x,float y,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
 	{
 		float w;
 		Font* f=getFont(font_name);
@@ -56,7 +56,7 @@ namespace Atres
 		return w;
 	}
 
-	float drawWrappedText(std::string font_name,float x,float y,float w_max,std::string text,float r,float g,float b,float a,Alignment alignment,Effect effect)
+	float drawWrappedText(chstr font_name,float x,float y,float w_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
 	{
 		float h;
 		Font* f=getFont(font_name);
@@ -79,17 +79,17 @@ namespace Atres
 		return h;
 	}
 
-	float drawText(float x,float y,std::string text,float r,float g,float b,float a,Alignment alignment,Effect effect)
+	float drawText(float x,float y,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
 	{
 		return drawText("",x,y,text,r,g,b,a,alignment,effect);
 	}
 
-	float drawWrappedText(float x,float y,float w_max,std::string text,float r,float g,float b,float a,Alignment alignment,Effect effect)
+	float drawWrappedText(float x,float y,float w_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
 	{
 		return drawWrappedText("",x,y,w_max,text,r,g,b,a,alignment,effect);
 	}
 
-	float getTextWidth(std::string font_name,std::string text)
+	float getTextWidth(chstr font_name,chstr text)
 	{
 		float w;
 
@@ -97,26 +97,26 @@ namespace Atres
 		return w;
 	}
 
-	float getWrappedTextHeight(std::string font_name,float w_max,std::string text)
+	float getWrappedTextHeight(chstr font_name,float w_max,chstr text)
 	{
 		float h;
 		getFont(font_name)->render(0,0,w_max,LEFT,text,0,1,1,1,1,0,&h);
 		return h;
 	}
 	
-	void setDefaultFont(std::string name)
+	void setDefaultFont(chstr name)
 	{
 		default_font=fonts[name];
 	}
     
-    void loadFont(std::string filename)
+    void loadFont(chstr filename)
     {
         Font* f=new Font(filename);
         fonts[f->getName()]=f;
 		if (default_font == 0) default_font=f;
     }
     
-    Font* getFont(std::string name)
+    Font* getFont(chstr name)
     {
 		if (name == "" && default_font != 0)
 		{

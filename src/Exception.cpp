@@ -11,12 +11,12 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 namespace Atres
 {
-	FontNotFoundException::FontNotFoundException(const std::string& errorText)
+	FontNotFoundException::FontNotFoundException(chstr errorText)
 	{
 		mErrText = errorText;
 	}
 
-	std::string FontNotFoundException::repr()
+	hstr FontNotFoundException::repr()
 	{
 
 		return "FontNotFoundException: " + getErrorText();
