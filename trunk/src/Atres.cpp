@@ -130,8 +130,8 @@ namespace Atres
 			int pos=name.find(":");
 			if (pos != -1)
 			{
-				f=getFont(name.substr(0,pos));
-				f->setScale((float)atof(name.substr(pos+1,10).c_str()));
+				f=getFont(name(0,pos));
+				f->setScale((float)atof(name(pos+1,10).c_str()));
 			}
 			else throw FontNotFoundException("Font "+name+" does not exist!");
 		}
