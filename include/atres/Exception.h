@@ -10,19 +10,5 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #ifndef ATRES_EXCEPTION_H
 #define ATRES_EXCEPTION_H
 
-#include <hltypes/hstring.h>
-#include "AtresExport.h"
-
-namespace Atres
-{
-	class AtresExport FontNotFoundException
-	{
-		hstr mErrText;
-	public:
-		FontNotFoundException(chstr errorText);
-		hstr repr();
-		chstr getErrorText() { return mErrText; }
-	};
-}
 
 #endif

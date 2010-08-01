@@ -8,18 +8,3 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 #include "Exception.h"
-
-namespace Atres
-{
-	FontNotFoundException::FontNotFoundException(chstr errorText)
-	{
-		mErrText = errorText;
-	}
-
-	hstr FontNotFoundException::repr()
-	{
-
-		return "FontNotFoundException: " + getErrorText();
-	}
-
-}
