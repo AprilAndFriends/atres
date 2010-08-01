@@ -9,7 +9,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 \************************************************************************************/
 #include "Atres.h"
 #include "Font.h"
-#include "Exception.h"
+#include <hltypes/exception.h>
 #include <stdlib.h>
 
 namespace Atres
@@ -133,7 +133,7 @@ namespace Atres
 				f=getFont(name(0,pos));
 				f->setScale((float)atof(name(pos+1,10).c_str()));
 			}
-			else throw FontNotFoundException("Font "+name+" does not exist!");
+			else throw resource_error("Font",name,"Atres");
 		}
 		else
 		{
