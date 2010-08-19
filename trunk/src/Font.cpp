@@ -80,6 +80,11 @@ namespace Atres
 		mChars.clear();
 	}
 	
+	bool Font::hasChar(unsigned int charcode)
+	{
+		return (mChars.find(charcode) != mChars.end());
+	}
+	
 	void Font::setScale(float scale)
 	{
 		if (scale == 0) mScale=mDefaultScale;
