@@ -37,7 +37,8 @@ namespace Atres
 		~Font();
 
 		void render(float x,float y,float max_w,Alignment alignment,chstr text,bool draw,float r,float g,float b,float a,float* w_out,float* h_out);
-
+		
+		bool hasChar(unsigned int charcode);
 		float getHeight() { return mHeight*mScale; }
 		float getScale() { return mScale; }
 		void setScale(float scale);
