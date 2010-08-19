@@ -151,7 +151,11 @@ namespace Atres
 				}
 				width+=mChars[c].aw*mScale;
 				if (c == 0) break;
-				if ((pc == ',' || pc == '.' || pc == '!' || pc == '?') && c != ' ') { offset=width; last_j=j; }
+				if ((pc == ',' || pc == '.' || pc == '!' || pc == '?') &&
+					c != ' ' && c != ',' && c != '.' && c != '!' & c != '?')
+				{
+					offset=width; last_j=j;
+				}
 				
 				if (width > max_w) // line must have at least one character
 				{
