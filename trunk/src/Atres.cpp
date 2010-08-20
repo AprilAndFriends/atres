@@ -97,6 +97,11 @@ namespace Atres
 		return w;
 	}
 
+	float getTextHeight(chstr font_name,chstr text)
+	{
+		return getFont(font_name)->getHeight();
+	}
+	
 	float getWrappedTextHeight(chstr font_name,float w_max,chstr text)
 	{
 		float h;
