@@ -13,7 +13,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include "Font.h"
 #include "RenderingInterface.h"
 
-#define CHR_BUFFER_MAX 2048
+#define CHR_BUFFER_MAX 32768
 
 namespace Atres
 {
@@ -133,9 +133,8 @@ namespace Atres
 		float offset=0,width,h=mHeight*mScale,text_w=0,starty=y;
 		FontCharDef chr;
 		
-		nOps=0;
-		CharacterRenderOp* op=rops;
-
+		CharacterRenderOp* op=rops+nOps;
+		
 		for (;s[i] != 0;)
 		{
 			int char_len;
@@ -193,11 +192,13 @@ namespace Atres
 					op->resource=mResource;
 					op->r=byte_r; op->g=byte_g; op->b=byte_b; op->a=byte_a;
 					op->italic=op->underline=op->strikethrough=0;
-					op->sx=(unsigned short)chr.x; op->sy=(unsigned short)chr.y; op->sw=(unsigned short)chr.w; op->sh=(unsigned short)mHeight;
+					op->sx=(unsigned short)chr.x; op->sy=(unsigned short)chr.y;
+					op->sw=(unsigned short)chr.w; op->sh=(unsigned short)mHeight;
 					op->dx=offset; op->dw=chr.w*mScale; op->dy=y; op->dh=h;
 					op++;
 					nOps++;
-					if (nOps >= CHR_BUFFER_MAX) { flushRenderOperations(); op=rops; }
+					
+					//if (nOps >= CHR_BUFFER_MAX) { flushRenderOperations(); op=rops; }
 					
 	 /*             v->x=offset;               v->y=y;   v->u=chr.x;       v->v=chr.y; v++;
 					v->x=offset+chr.w*mWScale; v->y=y;   v->u=chr.x+chr.w; v->v=chr.y; v++;
@@ -221,7 +222,7 @@ namespace Atres
 			
 			//delete v;
 		}*/
-		flushRenderOperations();
+		
 		if (w_out) *w_out=text_w;
 		if (h_out) *h_out=y-starty;
 	}

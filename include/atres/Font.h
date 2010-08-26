@@ -17,6 +17,8 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 namespace Atres
 {
+	void flushRenderOperations();
+	
 	struct AtresExport FontCharDef
 	{
 		float x,y,w,aw;
@@ -36,7 +38,8 @@ namespace Atres
 		Font(Font& f,float scale=1);
 		~Font();
 
-		void render(float x,float y,float max_w,Alignment alignment,chstr text,bool draw,float r,float g,float b,float a,float* w_out,float* h_out);
+		void render(float x,float y,float max_w,Alignment alignment,chstr text,bool draw,
+			float r,float g,float b,float a,float* w_out,float* h_out);
 		
 		bool hasChar(unsigned int charcode);
 		float getHeight() { return mHeight*mScale; }

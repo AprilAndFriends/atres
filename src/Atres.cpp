@@ -37,22 +37,26 @@ namespace Atres
 	{
 		float w;
 		Font* f=getFont(font_name);
-		if (effect == SHADOW || effect == BORDER || effect == BORDER_EX)
+		if (effect == SHADOW || effect == BORDER || effect == BORDER_4)
+		{
 			f->render(x+1,y+1,100000,alignment,text,1,0,0,0,a,0,0);
-		if (effect == BORDER || effect == BORDER_EX)
+		}
+		if (effect == BORDER || effect == BORDER_4)
 		{
 			f->render(x-1,y-1,100000,alignment,text,1,0,0,0,a,0,0);
 			f->render(x+1,y-1,100000,alignment,text,1,0,0,0,a,0,0);
 			f->render(x-1,y+1,100000,alignment,text,1,0,0,0,a,0,0);
 		}
-		if (effect == BORDER_EX)
+		if (effect == BORDER)
 		{
 			f->render(x,y-1,100000,alignment,text,1,0,0,0,a,0,0);
 			f->render(x,y+1,100000,alignment,text,1,0,0,0,a,0,0);
 			f->render(x+1,y,100000,alignment,text,1,0,0,0,a,0,0);
 			f->render(x-1,y,100000,alignment,text,1,0,0,0,a,0,0);
 		}
+		flushRenderOperations();
 		f->render(x, y, 100000, alignment,text,1,r,g,b,a,&w,0);
+		flushRenderOperations();
 		return w;
 	}
 
@@ -60,22 +64,26 @@ namespace Atres
 	{
 		float h;
 		Font* f=getFont(font_name);
-		if (effect == SHADOW || effect == BORDER || effect == BORDER_EX)
+		if (effect == SHADOW || effect == BORDER || effect == BORDER_4)
+		{
 			f->render(x+1,y+1,w_max,alignment,text,1,0,0,0,a,0,0);
-		if (effect == BORDER || effect == BORDER_EX)
+		}
+		if (effect == BORDER || effect == BORDER_4)
 		{
 			f->render(x-1,y-1,w_max,alignment,text,1,0,0,0,a,0,0);
 			f->render(x+1,y-1,w_max,alignment,text,1,0,0,0,a,0,0);
 			f->render(x-1,y+1,w_max,alignment,text,1,0,0,0,a,0,0);
 		}
-		if (effect == BORDER_EX)
+		if (effect == BORDER)
 		{
 			f->render(x,y-1,w_max,alignment,text,1,0,0,0,a,0,0);
 			f->render(x,y+1,w_max,alignment,text,1,0,0,0,a,0,0);
 			f->render(x+1,y,w_max,alignment,text,1,0,0,0,a,0,0);
 			f->render(x-1,y,w_max,alignment,text,1,0,0,0,a,0,0);
 		}
+		flushRenderOperations();
 		f->render(x,y,w_max,alignment,text,1,r,g,b,a,0,&h);
+		flushRenderOperations();
 		return h;
 	}
 
@@ -92,8 +100,7 @@ namespace Atres
 	float getTextWidth(chstr font_name,chstr text)
 	{
 		float w;
-
-		getFont(font_name)->render(0,0, 100000,LEFT,text,0,1,1,1,1,&w,0);
+		getFont(font_name)->render(0,0,100000,LEFT,text,0,1,1,1,1,&w,0);
 		return w;
 	}
 
