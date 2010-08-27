@@ -121,7 +121,7 @@ namespace Atres
 		}
 	}
 
-	void Font::render(float x,float y,float max_w,Alignment alignment,chstr text,bool draw,float r,float g,float b,float a,float* w_out,float* h_out)
+	void Font::render(float x,float y,float max_w,float max_h,Alignment alignment,bool wrap,chstr text,bool draw,float r,float g,float b,float a,float* w_out,float* h_out,int *c_out)
 	{
 		// ascii only at the moment
 		const char* s=text.c_str();
@@ -134,6 +134,7 @@ namespace Atres
 		FontCharDef chr;
 		
 		CharacterRenderOp* op=rops+nOps;
+		int count=0;
 		
 		for (;s[i] != 0;)
 		{
@@ -183,7 +184,7 @@ namespace Atres
 			}
 			else if (alignment == RIGHT) offset=x-offset;
 			else                         offset=x-offset/2;
-			for (;i < j;i+=char_len)
+			for (;i < j;i+=char_len,count++)
 			{
 				c=utf8_getchar(s+i,char_len);
 				chr=mChars[c];
@@ -212,6 +213,9 @@ namespace Atres
 				offset+=chr.aw*mScale;
 			}
 			y+=mLineHeight*mScale;
+			if (!wrap) break;
+			if (y - starty >= max_h) break;
+			
 		}
 		
 	/*    if (draw)
@@ -225,5 +229,6 @@ namespace Atres
 		
 		if (w_out) *w_out=text_w;
 		if (h_out) *h_out=y-starty;
+		if (c_out) *c_out=count;
 	}
 }

@@ -33,74 +33,74 @@ namespace Atres
 		}
     }
 
-	float drawText(chstr font_name,float x,float y,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
+	float drawText(chstr font_name,float x,float y,float w_max,float h_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
 	{
 		float w;
 		Font* f=getFont(font_name);
 		if (effect == SHADOW || effect == BORDER || effect == BORDER_4)
 		{
-			f->render(x+1,y+1,100000,alignment,text,1,0,0,0,a,0,0);
+			f->render(x+1,y+1,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
 		}
 		if (effect == BORDER || effect == BORDER_4)
 		{
-			f->render(x-1,y-1,100000,alignment,text,1,0,0,0,a,0,0);
-			f->render(x+1,y-1,100000,alignment,text,1,0,0,0,a,0,0);
-			f->render(x-1,y+1,100000,alignment,text,1,0,0,0,a,0,0);
+			f->render(x-1,y-1,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
+			f->render(x+1,y-1,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
+			f->render(x-1,y+1,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
 		}
 		if (effect == BORDER)
 		{
-			f->render(x,y-1,100000,alignment,text,1,0,0,0,a,0,0);
-			f->render(x,y+1,100000,alignment,text,1,0,0,0,a,0,0);
-			f->render(x+1,y,100000,alignment,text,1,0,0,0,a,0,0);
-			f->render(x-1,y,100000,alignment,text,1,0,0,0,a,0,0);
+			f->render(x,y-1,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
+			f->render(x,y+1,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
+			f->render(x+1,y,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
+			f->render(x-1,y,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
 		}
 		flushRenderOperations();
-		f->render(x, y, 100000, alignment,text,1,r,g,b,a,&w,0);
+		f->render(x,y,w_max,h_max,alignment,0,text,1,r,g,b,a,&w,0,0);
 		flushRenderOperations();
 		return w;
 	}
 
-	float drawWrappedText(chstr font_name,float x,float y,float w_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
+	float drawWrappedText(chstr font_name,float x,float y,float w_max,float h_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
 	{
 		float h;
 		Font* f=getFont(font_name);
 		if (effect == SHADOW || effect == BORDER || effect == BORDER_4)
 		{
-			f->render(x+1,y+1,w_max,alignment,text,1,0,0,0,a,0,0);
+			f->render(x+1,y+1,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
 		}
 		if (effect == BORDER || effect == BORDER_4)
 		{
-			f->render(x-1,y-1,w_max,alignment,text,1,0,0,0,a,0,0);
-			f->render(x+1,y-1,w_max,alignment,text,1,0,0,0,a,0,0);
-			f->render(x-1,y+1,w_max,alignment,text,1,0,0,0,a,0,0);
+			f->render(x-1,y-1,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
+			f->render(x+1,y-1,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
+			f->render(x-1,y+1,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
 		}
 		if (effect == BORDER)
 		{
-			f->render(x,y-1,w_max,alignment,text,1,0,0,0,a,0,0);
-			f->render(x,y+1,w_max,alignment,text,1,0,0,0,a,0,0);
-			f->render(x+1,y,w_max,alignment,text,1,0,0,0,a,0,0);
-			f->render(x-1,y,w_max,alignment,text,1,0,0,0,a,0,0);
+			f->render(x,y-1,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
+			f->render(x,y+1,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
+			f->render(x+1,y,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
+			f->render(x-1,y,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
 		}
 		flushRenderOperations();
-		f->render(x,y,w_max,alignment,text,1,r,g,b,a,0,&h);
+		f->render(x,y,w_max,h_max,alignment,1,text,1,r,g,b,a,0,&h,0);
 		flushRenderOperations();
 		return h;
 	}
 
-	float drawText(float x,float y,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
+	float drawText(float x,float y,float w_max,float h_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
 	{
-		return drawText("",x,y,text,r,g,b,a,alignment,effect);
+		return drawText("",x,y,w_max,h_max,text,r,g,b,a,alignment,effect);
 	}
 
-	float drawWrappedText(float x,float y,float w_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
+	float drawWrappedText(float x,float y,float w_max,float h_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
 	{
-		return drawWrappedText("",x,y,w_max,text,r,g,b,a,alignment,effect);
+		return drawWrappedText("",x,y,w_max,h_max,text,r,g,b,a,alignment,effect);
 	}
 
 	float getTextWidth(chstr font_name,chstr text)
 	{
 		float w;
-		getFont(font_name)->render(0,0,100000,LEFT,text,0,1,1,1,1,&w,0);
+		getFont(font_name)->render(0,0,100000,100000,LEFT,0,text,0,1,1,1,1,&w,0,0);
 		return w;
 	}
 
@@ -112,8 +112,15 @@ namespace Atres
 	float getWrappedTextHeight(chstr font_name,float w_max,chstr text)
 	{
 		float h;
-		getFont(font_name)->render(0,0,w_max,LEFT,text,0,1,1,1,1,0,&h);
+		getFont(font_name)->render(0,0,w_max,100000,LEFT,1,text,0,1,1,1,1,0,&h,0);
 		return h;
+	}
+	
+	int getWrappedTextCount(chstr font_name,float w_max,float h_max,chstr text)
+	{
+		int c;
+		getFont(font_name)->render(0,0,w_max,h_max,LEFT,1,text,0,1,1,1,1,0,0,&c);
+		return c;
 	}
 	
 	void setDefaultFont(chstr name)
