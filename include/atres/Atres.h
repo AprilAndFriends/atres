@@ -31,13 +31,14 @@ namespace Atres
     AtresFnExport void init(RenderInterface* iface);
     AtresFnExport void destroy();
 	
-	AtresFnExport float drawText(float x,float y,chstr text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
-	AtresFnExport float drawWrappedText(float x,float y,float w_max,chstr text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
-	AtresFnExport float drawText(chstr font_name,float x,float y,chstr text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
-	AtresFnExport float drawWrappedText(chstr font_name,float x,float y,float w_max,chstr text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	AtresFnExport float drawText(float x,float y,float w_max,float h_max,chstr text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	AtresFnExport float drawText(chstr font_name,float x,float y,float w_max,float h_max,chstr text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	AtresFnExport float drawWrappedText(float x,float y,float w_max,float h_max,chstr text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
+	AtresFnExport float drawWrappedText(chstr font_name,float x,float y,float w_max,float h_max,chstr text,float r=1,float g=1,float b=1,float a=1,Alignment alignment=LEFT,Effect effect=NONE);
 	AtresFnExport float getTextWidth(chstr font_name,chstr text);
 	AtresFnExport float getTextHeight(chstr font_name,chstr text);
 	AtresFnExport float getWrappedTextHeight(chstr font_name,float w_max,chstr text);
+	AtresFnExport int getWrappedTextCount(chstr font_name,float w_max,float h_max,chstr text);
 
 	AtresFnExport void setRenderInterface(RenderInterface* iface);
 	AtresFnExport RenderInterface* getRenderInterface();
