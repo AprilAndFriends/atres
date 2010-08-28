@@ -176,6 +176,7 @@ namespace Atres
 				
 			}
 			if (offset > text_w) text_w=offset;
+			count+=j;
 			if (width > max_w && last_j > 0) j=last_j;
 			if      (alignment == LEFT)
 			{
@@ -184,7 +185,7 @@ namespace Atres
 			}
 			else if (alignment == RIGHT) offset=x-offset;
 			else                         offset=x-offset/2;
-			for (;i < j;i+=char_len,count++)
+			for (;i < j;i+=char_len)
 			{
 				c=utf8_getchar(s+i,char_len);
 				chr=mChars[c];
