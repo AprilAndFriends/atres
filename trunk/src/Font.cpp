@@ -134,7 +134,6 @@ namespace Atres
 		FontCharDef chr;
 		
 		CharacterRenderOp* op=rops+nOps;
-		int count=0;
 		
 		for (;s[i] != 0;)
 		{
@@ -176,7 +175,6 @@ namespace Atres
 				
 			}
 			if (offset > text_w) text_w=offset;
-			count+=j;
 			if (width > max_w && last_j > 0) j=last_j;
 			if      (alignment == LEFT)
 			{
@@ -230,6 +228,6 @@ namespace Atres
 		
 		if (w_out) *w_out=text_w;
 		if (h_out) *h_out=y-starty;
-		if (c_out) *c_out=count;
+		if (c_out) *c_out=j;
 	}
 }
