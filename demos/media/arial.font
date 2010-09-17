@@ -1,7 +1,7 @@
 # -----------------------------------
 # ATRES Font definition file
 # -----------------------------------
-Name=Arial
+Name=arial
 Resource=../media/arial.tga
 Height=32
 Scale=1.0
