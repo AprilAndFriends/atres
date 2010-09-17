@@ -8,26 +8,31 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-#include "april/RenderSystem.h"
-#include "aprilui/AprilUI.h"
-#include "aprilui/Dataset.h"
-#include "aprilui/Objects.h"
-#include "atres/Atres.h"
 #include <iostream>
+
+#include <april/RenderSystem.h>
+#include <aprilui/AprilUI.h>
+#include <aprilui/Dataset.h>
+#include <aprilui/Objects.h>
+#include <atres/Atres.h>
 
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
+
 AprilUI::Dataset* dataset;
+AprilUI::Object* root;
 
 bool render(float time_increase)
 {
 	rendersys->clear();
-	rendersys->setOrthoProjection(800,600);
+	rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	dataset->getObject("root")->draw();
-	dataset->getObject("root")->update(time_increase);
+	root->draw();
+	root->update(time_increase);
 	return true;
 }
 
@@ -79,15 +84,13 @@ int main()
 #endif
 	try
 	{
-		April::init("OpenGL",800,600,0,"demo_simple");
+		April::init("OpenGL", SCREEN_WIDTH, SCREEN_HEIGHT, 0, "demo_simple");
 		rendersys->registerUpdateCallback(render);
 		AprilUI::init();
-
-		dataset=new AprilUI::Dataset("../media/demo_simple.datadef");
-		dataset->load();
-
 		Atres::loadFont("../media/arial.font");
-
+		dataset = new AprilUI::Dataset("../media/demo_simple.datadef");
+		dataset->load();
+		root = dataset->getObject("root");
 		rendersys->enterMainLoop();
 		delete dataset;
 		AprilUI::destroy();
