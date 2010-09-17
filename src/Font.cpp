@@ -7,11 +7,13 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-#include <fstream>
 #include <string.h>
 #include <stdlib.h>
+#include <fstream>
+
+#include <april/RenderSystem.h>
+
 #include "Font.h"
-#include "RenderingInterface.h"
 
 #define CHR_BUFFER_MAX 32768
 
@@ -24,7 +26,26 @@ namespace Atres
 	{
 		if (nOps)
 		{
+			April::TexturedVertex v[32768];
+			//April::Texture* t = rendersys->getTe g_font_textures[rops[0].resource];
+			April::Texture* t = rops[0].texture;
+			int i=0;
+			float w=(float)t->getWidth(),h=(float)t->getHeight();
+			for (Atres::CharacterRenderOp* op=rops;op < rops+nOps;op++)
+			{
+				v[i].x=op->dx;        v[i].y=op->dy;        v[i].z=0; v[i].u=op->sx/w;          v[i].v=op->sy/h;          i++;
+				v[i].x=op->dx+op->dw; v[i].y=op->dy;        v[i].z=0; v[i].u=(op->sx+op->sw)/w; v[i].v=op->sy/h;          i++;
+				v[i].x=op->dx;        v[i].y=op->dy+op->dh; v[i].z=0; v[i].u=op->sx/w;          v[i].v=(op->sy+op->sh)/h; i++;
+				v[i].x=op->dx+op->dw; v[i].y=op->dy;        v[i].z=0; v[i].u=(op->sx+op->sw)/w; v[i].v=op->sy/h;          i++;
+				v[i].x=op->dx+op->dw; v[i].y=op->dy+op->dh; v[i].z=0; v[i].u=(op->sx+op->sw)/w; v[i].v=(op->sy+op->sh)/h; i++;
+				v[i].x=op->dx;        v[i].y=op->dy+op->dh; v[i].z=0; v[i].u=op->sx/w;          v[i].v=(op->sy+op->sh)/h; i++;
+			}
+			rendersys->setTexture(t);
+			rendersys->render(April::TriangleList,v,i,rops[0].r/255.0f,rops[0].g/255.0f,rops[0].b/255.0f,rops[0].a/255.0f);
+			/*
+			rendersys->render()
 			getRenderInterface()->render(rops,nOps);
+			*/
 			nOps=0;
 		}
 	}
@@ -48,7 +69,14 @@ namespace Atres
 #endif
 			if      (strstr(line,"Name=")) mName=line+5;
 			else if (strstr(line,"Resource="))
-				    mResource=getRenderInterface()->loadResource(line+9);
+			{
+				mTexture = rendersys->loadTexture(line + 9);
+				printf("\"Resource=\" is deprecated. Use \"Texture=\" instead. (File: %s)\n", filename.c_str());
+			}
+			else if (strstr(line,"Texture="))
+			{
+				mTexture = rendersys->loadTexture(line + 9);
+			}
 			else if (strstr(line,"LineHeight=")) mLineHeight=(float)atof(line+11);
 			else if (strstr(line,"Height=")) mHeight=(float)atof(line+7);
 			else if (strstr(line,"Scale=")) mScale=mDefaultScale=(float)atof(line+6);
@@ -189,7 +217,7 @@ namespace Atres
 				chr=mChars[c];
 				if (draw && c != ' ')
 				{
-					op->resource=mResource;
+					op->texture=mTexture;
 					op->r=byte_r; op->g=byte_g; op->b=byte_b; op->a=byte_a;
 					op->italic=op->underline=op->strikethrough=0;
 					op->sx=(unsigned short)chr.x; op->sy=(unsigned short)chr.y;

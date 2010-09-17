@@ -10,17 +10,24 @@
   <VirtualDirectory Name="src">
     <File Name="src/Atres.cpp"/>
     <File Name="src/Font.cpp"/>
-    <File Name="src/RenderingInterface.cpp"/>
     <File Name="src/Exception.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/atres/Atres.h"/>
     <File Name="include/atres/Font.h"/>
-    <File Name="include/atres/RenderingInterface.h"/>
     <File Name="include/atres/AtresExport.h"/>
     <File Name="include/atres/Exception.h"/>
   </VirtualDirectory>
   <Dependencies Name="Release"/>
+  <Dependencies Name="Linux_Debug">
+    <Project Name="libhltypes"/>
+  </Dependencies>
+  <Dependencies Name="Release_Win32">
+    <Project Name="libhltypes"/>
+  </Dependencies>
+  <Dependencies Name="Debug">
+    <Project Name="libhltypes"/>
+  </Dependencies>
   <Settings Type="Dynamic Library">
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
@@ -28,6 +35,8 @@
         <Preprocessor Value="_DEBUG"/>
       </Compiler>
       <Linker Options="" Required="yes">
+        <Library Value="libapril_d"/>
+        <Library Value="libgtypes_d"/>
         <Library Value="libhltypes_d"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
@@ -58,6 +67,8 @@
         <Preprocessor Value="_DEBUG"/>
       </Compiler>
       <Linker Options="" Required="yes">
+        <Library Value="libapril_d"/>
+        <Library Value="libgtypes_d"/>
         <Library Value="libhltypes_d"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
@@ -88,6 +99,8 @@
         <Preprocessor Value="_WIN32"/>
       </Compiler>
       <Linker Options="-O2" Required="yes">
+        <Library Value="libapril"/>
+        <Library Value="libgtypes"/>
         <Library Value="libhltypes"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
@@ -117,22 +130,17 @@
       <Compiler Options="">
         <IncludePath Value="."/>
         <IncludePath Value="./include/atres"/>
+        <IncludePath Value="../april/include"/>
+        <IncludePath Value="../gtypes/include"/>
         <IncludePath Value="../hltypes/include"/>
         <Preprocessor Value="ATRES_EXPORTS"/>
       </Compiler>
       <Linker Options="">
+        <LibraryPath Value="../april/bin"/>
+        <LibraryPath Value="../gtypes/bin/$(ConfigurationName)"/>
         <LibraryPath Value="../hltypes/bin/$(ConfigurationName)"/>
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
-  <Dependencies Name="Linux_Debug">
-    <Project Name="libhltypes"/>
-  </Dependencies>
-  <Dependencies Name="Release_Win32">
-    <Project Name="libhltypes"/>
-  </Dependencies>
-  <Dependencies Name="Debug">
-    <Project Name="libhltypes"/>
-  </Dependencies>
 </CodeLite_Project>
