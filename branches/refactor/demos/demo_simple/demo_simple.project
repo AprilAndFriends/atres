@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="demo_simple" InternalType="Console">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00010001N0011Linux_Debug000000000000]]>
+    </Plugin>
+  </Plugins>
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="src">
+    <File Name="demo_simple.cpp"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="data">
+    <File Name="../media/demo_simple.datadef"/>
+  </VirtualDirectory>
+  <Dependencies Name="Release">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
+    <Project Name="libaprilui"/>
+  </Dependencies>
+  <Settings Type="Executable">
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g" Required="yes" PreCompiledHeader=""/>
+      <Linker Options="" Required="yes">
+        <Library Value="libhltypes_d"/>
+        <Library Value="libgtypes_d"/>
+        <Library Value="libapril_d"/>
+        <Library Value="libaprilui_d"/>
+        <Library Value="libatres_d"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/$(ConfigurationName)" Command="$(IntermediateDirectory)/$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Linux_Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g" Required="yes" PreCompiledHeader=""/>
+      <Linker Options="" Required="yes">
+        <Library Value="libhltypes_d"/>
+        <Library Value="libgtypes_d"/>
+        <Library Value="libapril_d"/>
+        <Library Value="libaprilui_d"/>
+        <Library Value="libatres_d"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/$(ConfigurationName)" Command="$(IntermediateDirectory)/$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Release_Win32" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="" Required="yes" PreCompiledHeader=""/>
+      <Linker Options="-O2" Required="yes">
+        <Library Value="libhltypes"/>
+        <Library Value="libgtypes"/>
+        <Library Value="libapril"/>
+        <Library Value="libaprilui"/>
+        <Library Value="libatres"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/$(ConfigurationName)" Command="$(IntermediateDirectory)/$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="."/>
+        <IncludePath Value="../../include"/>
+        <IncludePath Value="../../../include"/>
+        <IncludePath Value="../../../hltypes/include"/>
+        <IncludePath Value="../../../gtypes/include"/>
+        <IncludePath Value="../../../april/include"/>
+        <IncludePath Value="../../../atres/include"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="../../lib"/>
+        <LibraryPath Value="../../bin/$(ConfigurationName)"/>
+        <LibraryPath Value="../../../april/bin"/>
+        <LibraryPath Value="../../../atres/bin/$(ConfigurationName)"/>
+        <LibraryPath Value="../../../aprilui/bin/$(ConfigurationName)"/>
+        <LibraryPath Value="../../../hltypes/bin/$(ConfigurationName)"/>
+        <LibraryPath Value="../../../gtypes/bin/$(ConfigurationName)"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+  </Settings>
+  <Dependencies Name="Linux_Debug">
+    <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
+    <Project Name="libapril"/>
+    <Project Name="libatres"/>
+    <Project Name="libaprilui"/>
+  </Dependencies>
+  <Dependencies Name="Debug">
+    <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
+    <Project Name="libapril"/>
+    <Project Name="libatres"/>
+    <Project Name="libaprilui"/>
+  </Dependencies>
+  <Dependencies Name="Release_Win32">
+    <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
+    <Project Name="libapril"/>
+    <Project Name="libatres"/>
+    <Project Name="libaprilui"/>
+  </Dependencies>
+</CodeLite_Project>

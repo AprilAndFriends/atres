@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Workspace Name="libatres" Database="./libatres.tags">
+  <Project Name="libatres" Path="libatres.project" Active="No"/>
+  <Project Name="glut_simple" Path="demos/glut_simple/glut_simple.project" Active="No"/>
+  <Project Name="libhltypes" Path="../hltypes/libhltypes.project" Active="No"/>
+  <Project Name="libapril" Path="../april/libapril.project" Active="No"/>
+  <Project Name="libgtypes" Path="../gtypes/libgtypes.project" Active="No"/>
+  <Project Name="libaprilui" Path="../aprilui/libaprilui.project" Active="No"/>
+  <Project Name="demo_simple" Path="demos/demo_simple/demo_simple.project" Active="Yes"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
+      <Project Name="libatres" ConfigName="Debug"/>
+      <Project Name="glut_simple" ConfigName="Debug"/>
+      <Project Name="libhltypes" ConfigName="Debug"/>
+      <Project Name="libapril" ConfigName="DirectX_Debug"/>
+      <Project Name="libgtypes" ConfigName="Debug"/>
+      <Project Name="libaprilui" ConfigName="Debug"/>
+      <Project Name="demo_simple" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release" Selected="yes">
+      <Project Name="libhltypes" ConfigName="Release_Win32"/>
+      <Project Name="libatres" ConfigName="Release_Win32"/>
+      <Project Name="glut_simple" ConfigName="Release_Win32"/>
+      <Project Name="libapril" ConfigName="DirectX_Debug"/>
+      <Project Name="libgtypes" ConfigName="Debug"/>
+      <Project Name="libaprilui" ConfigName="Debug"/>
+      <Project Name="demo_simple" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Linux_Debug" Selected="yes">
+      <Project Name="libhltypes" ConfigName="Linux_Debug"/>
+      <Project Name="libatres" ConfigName="Linux_Debug"/>
+      <Project Name="glut_simple" ConfigName="Linux_Debug"/>
+      <Project Name="libapril" ConfigName="Linux_Debug"/>
+      <Project Name="libgtypes" ConfigName="Linux_Debug"/>
+      <Project Name="libaprilui" ConfigName="Linux_Debug"/>
+      <Project Name="demo_simple" ConfigName="Linux_Debug"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>
