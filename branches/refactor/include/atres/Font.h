@@ -15,6 +15,11 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include "Atres.h"
 #include "AtresExport.h"
 
+namespace April
+{
+	class Texture;
+}
+
 namespace Atres
 {
 	void flushRenderOperations();
@@ -26,13 +31,6 @@ namespace Atres
 
 	class AtresExport Font
 	{
-		std::map<unsigned int,FontCharDef> mChars;
-		float mScale,mDefaultScale;
-		hstr mName;
-		unsigned int mResource;
-		float mHeight,mLineHeight;
-
-		
 	public:
 		Font(chstr filename);
 		Font(Font& f,float scale=1);
@@ -46,6 +44,14 @@ namespace Atres
 		float getScale() { return mScale; }
 		void setScale(float scale);
 		hstr getName() { return mName; }
+		April::Texture* getTexture() { return mTexture; }
+		
+	protected:
+		std::map<unsigned int,FontCharDef> mChars;
+		float mScale,mDefaultScale;
+		hstr mName;
+		float mHeight,mLineHeight;
+		April::Texture* mTexture;
 	};
 }
 

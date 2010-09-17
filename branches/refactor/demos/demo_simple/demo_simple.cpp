@@ -96,9 +96,9 @@ int main()
 		AprilUI::destroy();
 		April::destroy();
 	}
-	catch (AprilUI::_GenericException e)
+	catch (hltypes::exception e)
 	{
-		std::cout << e.getType() << "\n";
+		std::cout << e.message() << "\n";
 	}
 	return 0;
 }

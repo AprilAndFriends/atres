@@ -179,10 +179,6 @@
 				RelativePath=".\src\Font.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\src\RenderingInterface.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -203,10 +199,6 @@
 			</File>
 			<File
 				RelativePath=".\include\atres\Font.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\atres\RenderingInterface.h"
 				>
 			</File>
 		</Filter>

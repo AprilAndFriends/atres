@@ -13,8 +13,21 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include <hltypes/hstring.h>
 #include "AtresExport.h"
 
+namespace April
+{
+	class Texture;
+}
+
 namespace Atres
 {
+	struct AtresExport CharacterRenderOp
+	{
+		April::Texture* texture;
+		unsigned short sx,sy,sw,sh;
+		float dx,dy,dw,dh;
+		unsigned char r,g,b,a, italic, underline, strikethrough;
+	};
+	
 	enum Alignment
 	{
 		LEFT,RIGHT,CENTER
