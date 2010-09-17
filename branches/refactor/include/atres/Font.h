@@ -10,15 +10,11 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #ifndef ATRES_FONT_H
 #define ATRES_FONT_H
 
-#include <map>
+#include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
+
 #include "Atres.h"
 #include "AtresExport.h"
-
-namespace April
-{
-	class Texture;
-}
 
 namespace Atres
 {
@@ -26,32 +22,38 @@ namespace Atres
 	
 	struct AtresExport FontCharDef
 	{
-		float x,y,w,aw;
+		float x, y, w, aw;
 	};
 
 	class AtresExport Font
 	{
 	public:
 		Font(chstr filename);
-		Font(Font& f,float scale=1);
+		Font(Font& f, float scale = 1.0f);
 		~Font();
 
-		void render(float x,float y,float max_w,float max_h,Alignment alignment,bool wrap,chstr text,bool draw,
-			float r,float g,float b,float a,float* w_out,float* h_out,int *c_out);
+		float getHeight() { return this->height * this->scale; }
+		float getScale() { return this->scale; }
+		void setScale(float value);
+		hstr getName() { return this->name; }
+		April::Texture* getTexture() { return this->texture; }
 		
 		bool hasChar(unsigned int charcode);
-		float getHeight() { return mHeight*mScale; }
-		float getScale() { return mScale; }
-		void setScale(float scale);
-		hstr getName() { return mName; }
-		April::Texture* getTexture() { return mTexture; }
+		
+		void render(float x, float y, float w, float h, Alignment alignment, bool wrap, chstr text, bool draw, float r, float g, float b, float a, float* w_out, float* h_out, int *c_out) __attribute__((deprecated));
+		void render(grect rect, Alignment alignment, bool wrap, chstr text, bool draw, float r, float g, float b, float a, float* w_out, float* h_out, int *c_out) __attribute__((deprecated));
+		void render(float x, float y, float w, float h, Alignment alignment, bool wrap, chstr text, bool draw, April::Color color, float* w_out, float* h_out, int *c_out) __attribute__((deprecated));
+		void render(grect rect, Alignment alignment, bool wrap, chstr text, bool draw, April::Color color, float* w_out, float* h_out, int *c_out);
 		
 	protected:
-		std::map<unsigned int,FontCharDef> mChars;
-		float mScale,mDefaultScale;
-		hstr mName;
-		float mHeight,mLineHeight;
-		April::Texture* mTexture;
+		hstr name;
+		float scale;
+		float defaultScale;
+		float height;
+		float lineHeight;
+		hmap<unsigned int, FontCharDef> characters;
+		April::Texture* texture;
+		
 	};
 }
 

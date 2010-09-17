@@ -7,11 +7,11 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-#include <string.h>
-#include <stdlib.h>
-#include <fstream>
-
 #include <april/RenderSystem.h>
+#include <gtypes/Rectangle.h>
+#include <hltypes/harray.h>
+#include <hltypes/hfile.h>
+#include <hltypes/hstring.h>
 
 #include "Font.h"
 
@@ -22,26 +22,27 @@ namespace Atres
 	CharacterRenderOp rops[CHR_BUFFER_MAX];
 	int nOps=0;
 	
+	//2DO
 	void flushRenderOperations()
 	{
 		if (nOps)
 		{
-			April::TexturedVertex v[32768];
+			April::TexturedVertex v[CHR_BUFFER_MAX];
 			//April::Texture* t = rendersys->getTe g_font_textures[rops[0].resource];
 			April::Texture* t = rops[0].texture;
 			int i=0;
 			float w=(float)t->getWidth(),h=(float)t->getHeight();
 			for (Atres::CharacterRenderOp* op=rops;op < rops+nOps;op++)
 			{
-				v[i].x=op->dx;        v[i].y=op->dy;        v[i].z=0; v[i].u=op->sx/w;          v[i].v=op->sy/h;          i++;
-				v[i].x=op->dx+op->dw; v[i].y=op->dy;        v[i].z=0; v[i].u=(op->sx+op->sw)/w; v[i].v=op->sy/h;          i++;
-				v[i].x=op->dx;        v[i].y=op->dy+op->dh; v[i].z=0; v[i].u=op->sx/w;          v[i].v=(op->sy+op->sh)/h; i++;
-				v[i].x=op->dx+op->dw; v[i].y=op->dy;        v[i].z=0; v[i].u=(op->sx+op->sw)/w; v[i].v=op->sy/h;          i++;
-				v[i].x=op->dx+op->dw; v[i].y=op->dy+op->dh; v[i].z=0; v[i].u=(op->sx+op->sw)/w; v[i].v=(op->sy+op->sh)/h; i++;
-				v[i].x=op->dx;        v[i].y=op->dy+op->dh; v[i].z=0; v[i].u=op->sx/w;          v[i].v=(op->sy+op->sh)/h; i++;
+				v[i].x=op->dest.x;              v[i].y = op->dest.y;              v[i].z = 0; v[i].u = op->src.x / w;               v[i].v = op->src.y / h;               i++;
+				v[i].x=op->dest.x + op->dest.w; v[i].y = op->dest.y;              v[i].z = 0; v[i].u = (op->src.x + op->src.w) / w; v[i].v = op->src.y / h;               i++;
+				v[i].x=op->dest.x;              v[i].y = op->dest.y + op->dest.h; v[i].z = 0; v[i].u = op->src.x / w;               v[i].v = (op->src.y + op->src.h) / h; i++;
+				v[i].x=op->dest.x + op->dest.w; v[i].y = op->dest.y;              v[i].z = 0; v[i].u = (op->src.x + op->src.w) / w; v[i].v = op->src.y / h;               i++;
+				v[i].x=op->dest.x + op->dest.w; v[i].y = op->dest.y + op->dest.h; v[i].z = 0; v[i].u = (op->src.x + op->src.w) / w; v[i].v = (op->src.y + op->src.h) / h; i++;
+				v[i].x=op->dest.x;              v[i].y = op->dest.y + op->dest.h; v[i].z = 0; v[i].u = op->src.x / w;               v[i].v = (op->src.y + op->src.h) / h; i++;
 			}
 			rendersys->setTexture(t);
-			rendersys->render(April::TriangleList,v,i,rops[0].r/255.0f,rops[0].g/255.0f,rops[0].b/255.0f,rops[0].a/255.0f);
+			rendersys->render(April::TriangleList,v,i,rops[0].color.r_float(),rops[0].color.g_float(),rops[0].color.b_float(),rops[0].color.a_float());
 			/*
 			rendersys->render()
 			getRenderInterface()->render(rops,nOps);
@@ -52,50 +53,70 @@ namespace Atres
 	
 	Font::Font(chstr filename)
 	{
-		std::ifstream f(filename.c_str());
-		
-		if (!f.is_open())
-			throw "Can't open Font file"+filename+"!";
-		
-		mScale=mDefaultScale=1;
-		char line[512];
-		mLineHeight=0;
-		while (!f.eof())
+		this->scale = 1.0f;
+		this->defaultScale = 1.0f;
+		this->lineHeight = 0.0f;
+		harray<hstr> lines = hfile::hread(filename).split("\n");
+		hstr line;
+		while (lines.size() > 0)
 		{
-			f.getline(line,512);
-#ifndef _WIN32
-			int len=strlen(line);
-			if (line[len-1] == '\r') line[len-1]=0;
-#endif
-			if      (strstr(line,"Name=")) mName=line+5;
-			else if (strstr(line,"Resource="))
+			line = lines.pop_front();
+			if (line.starts_with("Name="))
 			{
-				mTexture = rendersys->loadTexture(line + 9);
-				printf("\"Resource=\" is deprecated. Use \"Texture=\" instead. (File: %s)\n", filename.c_str());
+				this->name = line.replace("Name=", "");
 			}
-			else if (strstr(line,"Texture="))
+			else if (line.starts_with("Resource="))
 			{
-				mTexture = rendersys->loadTexture(line + 9);
+				this->texture = rendersys->loadTexture(line.replace("Resource=", ""));
+				Atres::logMessage(hsprintf("\"Resource=\" is deprecated. Use \"Texture=\" instead. (File: %s)", filename.c_str()));
 			}
-			else if (strstr(line,"LineHeight=")) mLineHeight=(float)atof(line+11);
-			else if (strstr(line,"Height=")) mHeight=(float)atof(line+7);
-			else if (strstr(line,"Scale=")) mScale=mDefaultScale=(float)atof(line+6);
-			//if (strstr(line,"Scale="));
-			if (line[0] == '#') continue;
-			if (line[0] == '-') break;
+			else if (line.starts_with("Texture="))
+			{
+				this->texture = rendersys->loadTexture(line.replace("Texture=", ""));
+			}
+			else if (line.starts_with("LineHeight="))
+			{
+				this->lineHeight = (float)line.replace("LineHeight=", "");
+			}
+			else if (line.starts_with("Height="))
+			{
+				this->height = (float)line.replace("Height=", "");
+			}
+			else if (line.starts_with("Scale="))
+			{
+				this->scale = (float)line.replace("Scale=", "");
+				this->defaultScale = this->scale;
+			}
+			else if (line.starts_with("#"))
+			{
+				continue;
+			}
+			else if (line.starts_with("-"))
+			{
+				break;
+			}
 		}
-		if (mLineHeight == 0) mLineHeight=mHeight;
-		
-		FontCharDef c; unsigned int code;
-		while (!f.eof())
+		if (this->lineHeight == 0.0f)
 		{
-			f >> code;
-			f >> c.x; f >> c.y; f >> c.w; f >> c.aw;
-			if (c.aw == 0) c.aw=c.w;
-			mChars[code]=c;
+			this->lineHeight = this->height;
 		}
-		 
-		f.close();
+		FontCharDef c;
+		unsigned int code;
+		harray<hstr> data;
+		foreach (hstr, it, lines)
+		{
+			data = (*it).split(" ");
+			code = (unsigned int)data.pop_front();
+			c.x = (float)data.pop_front();
+			c.y = (float)data.pop_front();
+			c.w = (float)data.pop_front();
+			c.aw = (float)data.pop_front();
+			if (c.aw == 0.0f)
+			{
+				c.aw = c.w;
+			}
+			this->characters[code] = c;
+		}
 	}
 
 	Font::Font(Font& f,float scale)
@@ -105,60 +126,67 @@ namespace Atres
 
 	Font::~Font()
 	{
-		mChars.clear();
+		this->characters.clear();
 	}
 	
 	bool Font::hasChar(unsigned int charcode)
 	{
-		return (mChars.find(charcode) != mChars.end());
+		return this->characters.has_key(charcode);
 	}
 	
-	void Font::setScale(float scale)
+	void Font::setScale(float value)
 	{
-		if (scale == 0) mScale=mDefaultScale;
-		else mScale=scale;
+		this->scale = (value == 0.0f ? this->defaultScale : value);
 	}
 
-	unsigned int utf8_getchar(const char* s,int& char_len_out)
+	unsigned int utf8_getchar(const char* s, int& char_len_out)
 	{
 		if (*s < 0)
 		{
-			const unsigned char* u=(const unsigned char*) s;
-			const unsigned char first=*u;
-
+			const unsigned char* u = (const unsigned char*)s;
+			const unsigned char first = *u;
 			if ((first & 0xE0) == 0xC0)
 			{
-				char_len_out=2;
+				char_len_out = 2;
 				return ((first & 0x1F) << 6) | (u[1] & 0x3F);
 			}
-			else if ((first & 0xF0) == 0xE0)
+			if ((first & 0xF0) == 0xE0)
 			{
-				char_len_out=3;
+				char_len_out = 3;
 				return ((((first & 0xF) << 6) | (u[1] & 0x3F) ) << 6) | (u[2] & 0x3F);
 			}
-			else
-			{
-				char_len_out=4;
-				return ((((((first & 7) << 6) | (u[1] & 0x3F) ) << 6) | (u[2] & 0x3F)) << 6) | (u[3] & 0x3F);
-			}
+			char_len_out = 4;
+			return ((((((first & 7) << 6) | (u[1] & 0x3F) ) << 6) | (u[2] & 0x3F)) << 6) | (u[3] & 0x3F);
 		}
-		else
-		{
-			char_len_out=1;
-			return *s;
-		}
+		char_len_out = 1;
+		return *s;
 	}
 
-	void Font::render(float x,float y,float max_w,float max_h,Alignment alignment,bool wrap,chstr text,bool draw,float r,float g,float b,float a,float* w_out,float* h_out,int *c_out)
+	void Font::render(float x, float y, float w, float h, Alignment alignment, bool wrap, chstr text, bool draw, float r, float g, float b, float a, float* w_out, float* h_out, int *c_out)
+	{
+		this->render(grect(x, y, w, h), alignment, wrap, text, draw, April::Color(a, r, g, b), w_out, h_out, c_out);
+	}
+	
+	void Font::render(grect rect, Alignment alignment, bool wrap, chstr text, bool draw, float r, float g, float b, float a, float* w_out, float* h_out, int *c_out)
+	{
+		this->render(rect, alignment, wrap, text, draw, April::Color(a, r, g, b), w_out, h_out, c_out);
+	}
+	
+	void Font::render(float x, float y, float w, float h, Alignment alignment, bool wrap, chstr text, bool draw, April::Color color, float* w_out, float* h_out, int *c_out)
+	{
+		this->render(grect(x, y, w, h), alignment, wrap, text, draw, color, w_out, h_out, c_out);
+	}
+	
+	//2DO
+	void Font::render(grect rect, Alignment alignment, bool wrap, chstr text, bool draw, April::Color color, float* w_out, float* h_out, int *c_out)
 	{
 		// ascii only at the moment
 		const char* s=text.c_str();
 		int len=text.size(),i=0,j=0,last_j;
 		unsigned int c=0,pc;
 		
-		unsigned char byte_r=(unsigned char)(r*255),byte_g=(unsigned char)(g*255),byte_b=(unsigned char)(b*255),byte_a=(unsigned char)(a*255);
-
-		float offset=0,width,h=mHeight*mScale,text_w=0,starty=y;
+		float offset=0,width,h=this->height*this->scale,text_w=0,starty=rect.y;
+		float y = starty;
 		FontCharDef chr;
 		
 		CharacterRenderOp* op=rops+nOps;
@@ -176,7 +204,7 @@ namespace Atres
 				{
 					offset=width; last_j=j+(c == ' ');
 				}
-				width+=mChars[c].aw*mScale;
+				width+=this->characters[c].aw*this->scale;
 				if (c == 0) break;
 				if ((pc == ',' || pc == '.' || pc == '!' || pc == '?') &&
 					c != ' ' && c != ',' && c != '.' && c != '!' & c != '?')
@@ -184,11 +212,11 @@ namespace Atres
 					offset=width; last_j=j;
 				}
 				
-				if (width > max_w) // line must have at least one character
+				if (width > rect.w) // line must have at least one character
 				{
 					if (offset == 0)
 					{
-						offset=width-mChars[c].aw*mScale;
+						offset=width-this->characters[c].aw*this->scale;
 						if (offset == 0) // this happens when max_w is smaller then the character width
 						{
 							// in that case, allow one character through, even though
@@ -203,26 +231,26 @@ namespace Atres
 				
 			}
 			if (offset > text_w) text_w=offset;
-			if (width > max_w && last_j > 0) j=last_j;
+			if (width > rect.w && last_j > 0) j=last_j;
 			if      (alignment == LEFT)
 			{
-				offset=x;
+				offset=rect.x;
 				if (i > 0 && s[i] == ' ') i++; // jump over spaces in the beginnings of lines after the first one
 			}
-			else if (alignment == RIGHT) offset=x-offset;
-			else                         offset=x-offset/2;
+			else if (alignment == RIGHT) offset=rect.x-offset;
+			else                         offset=rect.x-offset/2;
 			for (;i < j;i+=char_len)
 			{
 				c=utf8_getchar(s+i,char_len);
-				chr=mChars[c];
+				chr=this->characters[c];
 				if (draw && c != ' ')
 				{
-					op->texture=mTexture;
-					op->r=byte_r; op->g=byte_g; op->b=byte_b; op->a=byte_a;
-					op->italic=op->underline=op->strikethrough=0;
-					op->sx=(unsigned short)chr.x; op->sy=(unsigned short)chr.y;
-					op->sw=(unsigned short)chr.w; op->sh=(unsigned short)mHeight;
-					op->dx=offset; op->dw=chr.w*mScale; op->dy=y; op->dh=h;
+					op->texture = this->texture;
+					op->color = color;
+					op->italic = op->underline = op->strikethrough = false;
+					op->src.x = (unsigned short)chr.x; op->src.y = (unsigned short)chr.y;
+					op->src.w = (unsigned short)chr.w; op->src.h = (unsigned short)this->height;
+					op->dest.x = offset; op->dest.w = chr.w * this->scale; op->dest.y = y; op->dest.h = h;
 					op++;
 					nOps++;
 					
@@ -237,11 +265,11 @@ namespace Atres
 					v->x=offset;               v->y=y+h; v->u=chr.x;       v->v=chr.y+mHeight; v++;
 	  */
 				}
-				offset+=chr.aw*mScale;
+				offset += chr.aw*this->scale;
 			}
-			y+=mLineHeight*mScale;
+			y+=this->lineHeight*this->scale;
 			if (!wrap) break;
-			if (y - starty >= max_h) break;
+			if (rect.y - starty >= rect.h) break;
 			
 		}
 		

@@ -7,22 +7,22 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <hltypes/exception.h>
+
 #include "Atres.h"
 #include "Font.h"
-#include <hltypes/exception.h>
-#include <stdlib.h>
 
 namespace Atres
 {
     std::map<hstr,Font*> fonts;
-	
-	RenderInterface* render_iface=0;
-	
 	Font* default_font=0;
+	void (*g_logFunction)(chstr)=atres_writelog;
 
-    void init(RenderInterface* iface)
+    void init()
     {
-		render_iface=iface;
     }
     
     void destroy()
@@ -33,6 +33,21 @@ namespace Atres
 		}
     }
 
+	void logMessage(chstr message, chstr prefix)
+	{
+		g_logFunction(prefix + message);
+	}
+	
+	void atres_writelog(chstr message)
+	{
+		printf("%s\n", message.c_str());		
+	}
+	
+	void setLogFunction(void (*fnptr)(chstr))
+	{
+		g_logFunction=fnptr;
+	}
+	
 	float drawText(chstr font_name,float x,float y,float w_max,float h_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
 	{
 		float w;
@@ -162,13 +177,4 @@ namespace Atres
         return f;
     }
 	
-	void setRenderInterface(RenderInterface* iface)
-	{
-		render_iface=iface;
-	}
-	
-	RenderInterface* getRenderInterface()
-	{
-		return render_iface;
-	}
 }
