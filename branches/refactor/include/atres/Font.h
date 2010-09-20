@@ -32,10 +32,11 @@ namespace Atres
 		Font(Font& f, float scale = 1.0f);
 		~Font();
 
+		hstr getName() { return this->name; }
 		float getHeight() { return this->height * this->scale; }
+		float getLineHeight() { return this->lineHeight * this->scale; }
 		float getScale() { return this->scale; }
 		void setScale(float value);
-		hstr getName() { return this->name; }
 		April::Texture* getTexture() { return this->texture; }
 		
 		bool hasChar(unsigned int charcode);
@@ -43,7 +44,9 @@ namespace Atres
 		void render(float x, float y, float w, float h, Alignment alignment, bool wrap, chstr text, bool draw, float r, float g, float b, float a, float* w_out, float* h_out, int *c_out) __attribute__((deprecated));
 		void render(grect rect, Alignment alignment, bool wrap, chstr text, bool draw, float r, float g, float b, float a, float* w_out, float* h_out, int *c_out) __attribute__((deprecated));
 		void render(float x, float y, float w, float h, Alignment alignment, bool wrap, chstr text, bool draw, April::Color color, float* w_out, float* h_out, int *c_out) __attribute__((deprecated));
-		void render(grect rect, Alignment alignment, bool wrap, chstr text, bool draw, April::Color color, float* w_out, float* h_out, int *c_out);
+		
+		harray<hstr> testRender(grect rect, chstr text, Alignment alignment, harray<grect>* sizes = NULL, int* count = NULL);
+		void render(grect rect, chstr text, Alignment alignment, April::Color color, float* w_out, float* h_out, int *c_out);
 		
 	protected:
 		hstr name;

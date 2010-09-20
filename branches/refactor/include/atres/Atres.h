@@ -33,7 +33,10 @@ namespace Atres
 	{
 		LEFT,
 		RIGHT,
-		CENTER
+		CENTER,
+		LEFT_WRAPPED,
+		RIGHT_WRAPPED,
+		CENTER_WRAPPED
 	};
 
 	enum Effect
