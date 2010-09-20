@@ -242,20 +242,27 @@ namespace Atres
 		harray<hstr> result;
 		const char* str = text.c_str();
 		int byteLength;
-		
-		int i = 0;
-		unsigned int code = 0;
-		float width;
 		bool checkingSpaces;
+		float lineHeight = this->getLineHeight();
+		float width;
 		float lastWidth;
 		float offset;
 		float x = 0.0f;
-		int start;
-		int current;
-		float lineHeight = this->getLineHeight();
+		unsigned int code = 0;
+		int i = 0;
+		int start = 0;
+		int current = 0;
+		if (fabs(rect.w - 160) < 0.01f)
+		{
+			start = 0;
+		}
 		while (i < text.size())
 		{
-			while (i < text.size() && str[i] == ' ') i++; // skip initial spaces in the line
+			i = start + current;
+			while (i < text.size() && str[i] == ' ') // skip initial spaces in the line
+			{
+				i++;
+			}
 			start = i;
 			current = 0;
 			width = 0.0f;
@@ -268,6 +275,7 @@ namespace Atres
 				{
 					width = offset;
 					i += byteLength;
+					current = i - start;
 					break;
 				}
 				if (code == ' ' || code == '\0')
@@ -275,6 +283,7 @@ namespace Atres
 					if (!checkingSpaces)
 					{
 						width = offset;
+						current = i - start;
 					}
 					checkingSpaces = true;
 					if (code == '\0')
@@ -288,42 +297,17 @@ namespace Atres
 					checkingSpaces = false;
 				}
 				offset += this->characters[code].aw * this->scale;
-				/*
-				if ((pc == ',' || pc == '.' || pc == '!' || pc == '?') &&
-					c != ' ' && c != ',' && c != '.' && c != '!' & c != '?')
-				{
-					offset=width; last_j=j;
-				}
-				*/
 				if (offset > rect.w) // current word doesn't fit anymore
 				{
-					i = start + current;
-					//2DO can cause an infinite loop
-					/*
-					if (current == 0)
+					if (current == 0) // whole word doesn't fit into line, just chop it off
 					{
-						width = offset - this->characters[c].aw * this->scale;
-						if (width == 0) // this happens when max_w is smaller then the character width
-						{
-							// in that case, allow one character through, even though
-							// it will break the max_w limit
-							width = offset;
-							j += char_len;
-						}
-						last_j = j;
+						width = offset - this->characters[code].aw * this->scale;;
+						current = i - start;
 					}
-					*/
 					break;
-				}				
-				current += byteLength;
+				}
 				i += byteLength;
 			}
-			//width
-			//for (int)
-			//y += this->lineHeight * this->scale;
-			//if (!wrap) break;
-			//if (rect.y - starty >= rect.h) break;
-			
 			if (areas != NULL)
 			{
 				switch (alignment)
@@ -339,9 +323,14 @@ namespace Atres
 				}
 				*areas += grect(rect.x + x, rect.y + result.size() * lineHeight, width, lineHeight);
 			}
-			//printf("%f %f %f -> %f\n", rect.x, rect.w, width, x);
-			result += text(start, current).trim();
+			result += (current > 0 ? text(start, current).trim() : "");
+			//width
+			//for (int)
+			//y += lineHeight;
+			//if (!wrap) break;
+			//if (result.size() * lineHeight >= rect.h) break;
 		}
+		//result.size() * lineHeight >= rect.h;
 		if (count != NULL)
 		{
 			*count = i;
