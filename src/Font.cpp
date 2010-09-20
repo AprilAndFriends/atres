@@ -142,7 +142,7 @@ namespace Atres
 		}
 	}
 
-	Font::Font(Font& f,float scale)
+	Font::Font(Font& f, float scale)
 	{
 		// todo: copy constructor
 	}
@@ -161,7 +161,8 @@ namespace Atres
 	{
 		this->scale = (value == 0.0f ? this->defaultScale : value);
 	}
-
+	
+	/*
 	void Font::render(float x, float y, float w, float h, Alignment alignment, bool wrap, chstr text, bool draw, float r, float g, float b, float a, float* w_out, float* h_out, int *c_out)
 	{
 		Alignment align = alignment;
@@ -233,8 +234,9 @@ namespace Atres
 			this->render(grect(x, y, w, h), text, align, color, w_out, h_out, c_out);
 		}
 	}
+	*/
 	
-	harray<hstr> Font::testRender(grect rect, chstr text, Alignment alignment, harray<grect>* sizes, int* count)
+	harray<hstr> Font::testRender(grect rect, chstr text, Alignment alignment, harray<grect>* areas, int* count)
 	{
 		bool wrap = (alignment == LEFT_WRAPPED || alignment == RIGHT_WRAPPED || alignment == CENTER_WRAPPED);
 		harray<hstr> result;
@@ -322,7 +324,7 @@ namespace Atres
 			//if (!wrap) break;
 			//if (rect.y - starty >= rect.h) break;
 			
-			if (sizes != NULL)
+			if (areas != NULL)
 			{
 				switch (alignment)
 				{
@@ -335,7 +337,7 @@ namespace Atres
 					x = (rect.w - width) / 2;
 					break;
 				}
-				*sizes += grect(rect.x + x, rect.y + result.size() * lineHeight, width, lineHeight);
+				*areas += grect(rect.x + x, rect.y + result.size() * lineHeight, width, lineHeight);
 			}
 			//printf("%f %f %f -> %f\n", rect.x, rect.w, width, x);
 			result += text(start, current).trim();
@@ -363,8 +365,8 @@ namespace Atres
 		*/
 		
 		CharacterRenderOp* op=rops+nOps;
-		harray<grect> sizes;
-		harray<hstr> lines = this->testRender(rect, text, alignment, &sizes, c_out);
+		harray<grect> areas;
+		harray<hstr> lines = this->testRender(rect, text, alignment, &areas, c_out);
 		int byteLength;
 		FontCharDef chr;
 		unsigned int code;
@@ -388,7 +390,7 @@ namespace Atres
 				op->italic = op->underline = op->strikethrough = false;
 				op->src.x = (unsigned short)chr.x; op->src.y = (unsigned short)chr.y;
 				op->src.w = (unsigned short)chr.w; op->src.h = (unsigned short)this->height;
-				op->dest.x = sizes[i].x + width; op->dest.y = sizes[i].y; op->dest.w = chr.w * this->scale; op->dest.h = lineHeight;
+				op->dest.x = areas[i].x + width; op->dest.y = areas[i].y; op->dest.w = chr.w * this->scale; op->dest.h = lineHeight;
 				op++;
 				nOps++;
 				width += chr.aw * this->scale;
