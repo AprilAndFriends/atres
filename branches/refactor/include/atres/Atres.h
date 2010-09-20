@@ -36,7 +36,9 @@ namespace Atres
 		CENTER,
 		LEFT_WRAPPED,
 		RIGHT_WRAPPED,
-		CENTER_WRAPPED
+		CENTER_WRAPPED,
+		TOP,
+		BOTTOM
 	};
 
 	enum Effect
@@ -55,10 +57,23 @@ namespace Atres
 	void logMessage(chstr message, chstr prefix = "[atres] ");
 	void atres_writelog(chstr message);
 	
-	AtresFnExport float drawText(float x, float y, float w_max, float h_max, chstr text, float r = 1, float g = 1, float b = 1, float a = 1, Alignment alignment = LEFT, Effect effect = NONE);
-	AtresFnExport float drawText(chstr fontName, float x, float y, float w_max, float h_max, chstr text, float r = 1, float g = 1, float b = 1, float a = 1, Alignment alignment = LEFT, Effect effect = NONE);
-	AtresFnExport float drawWrappedText(float x, float y, float w_max, float h_max, chstr text, float r = 1, float g = 1, float b = 1, float a = 1, Alignment alignment = LEFT, Effect effect = NONE);
-	AtresFnExport float drawWrappedText(chstr fontName, float x, float y, float w_max, float h_max, chstr text, float r = 1, float g = 1, float b = 1, float a = 1, Alignment alignment = LEFT, Effect effect = NONE);
+	AtresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment alignment = LEFT, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
+	AtresFnExport void drawText(grect rect, chstr text, Alignment alignment = LEFT, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
+	AtresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment alignment = LEFT, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
+	AtresFnExport void drawText(grect rect, chstr text, Alignment alignment = LEFT, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
+	AtresFnExport void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment alignment = LEFT, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
+	AtresFnExport void drawText(float x, float y, float w, float h, chstr text, Alignment alignment = LEFT, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
+	AtresFnExport void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment alignment = LEFT, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
+	AtresFnExport void drawText(float x, float y, float w, float h, chstr text, Alignment alignment = LEFT, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
+	
+	//2DO - deprecated
+	/*
+	AtresFnExport float drawText(float x, float y, float w_max, float h_max, chstr text, float r = 1, float g = 1, float b = 1, float a = 1, Alignment alignment = LEFT, Effect effect = NONE) __attribute__((deprecated));
+	AtresFnExport float drawText(chstr fontName, float x, float y, float w_max, float h_max, chstr text, float r = 1, float g = 1, float b = 1, float a = 1, Alignment alignment = LEFT, Effect effect = NONE) __attribute__((deprecated));
+	AtresFnExport float drawWrappedText(float x, float y, float w_max, float h_max, chstr text, float r = 1, float g = 1, float b = 1, float a = 1, Alignment alignment = LEFT, Effect effect = NONE) __attribute__((deprecated));
+	AtresFnExport float drawWrappedText(chstr fontName, float x, float y, float w_max, float h_max, chstr text, float r = 1, float g = 1, float b = 1, float a = 1, Alignment alignment = LEFT, Effect effect = NONE) __attribute__((deprecated));
+	*/
+	
 	AtresFnExport float getTextWidth(chstr font_name,chstr text);
 	AtresFnExport float getTextHeight(chstr font_name,chstr text);
 	AtresFnExport float getWrappedTextHeight(chstr font_name,float w_max,chstr text);
