@@ -11,14 +11,14 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include "Font.h"
 #include <hltypes/exception.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 namespace Atres
 {
     std::map<hstr,Font*> fonts;
-	
 	RenderInterface* render_iface=0;
-	
 	Font* default_font=0;
+	void (*g_logFunction)(chstr)=atres_writelog;
 
     void init(RenderInterface* iface)
     {
@@ -33,6 +33,21 @@ namespace Atres
 		}
     }
 
+	void logMessage(chstr message, chstr prefix)
+	{
+		g_logFunction(prefix + message);
+	}
+	
+	void atres_writelog(chstr message)
+	{
+		printf("%s\n", message.c_str());		
+	}
+	
+	void setLogFunction(void (*fnptr)(chstr))
+	{
+		g_logFunction=fnptr;
+	}
+	
 	float drawText(chstr font_name,float x,float y,float w_max,float h_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
 	{
 		float w;
