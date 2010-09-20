@@ -9,12 +9,12 @@
   <Project Name="demo_simple" Path="demos/demo_simple/demo_simple.project" Active="Yes"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
-      <Project Name="libatres" ConfigName="Debug"/>
-      <Project Name="glut_simple" ConfigName="Debug"/>
       <Project Name="libhltypes" ConfigName="Debug"/>
-      <Project Name="libapril" ConfigName="DirectX_Debug"/>
       <Project Name="libgtypes" ConfigName="Debug"/>
+      <Project Name="libatres" ConfigName="Debug"/>
       <Project Name="libaprilui" ConfigName="Debug"/>
+      <Project Name="libapril" ConfigName="DirectX_Debug"/>
+      <Project Name="glut_simple" ConfigName="Debug"/>
       <Project Name="demo_simple" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Release" Selected="yes">

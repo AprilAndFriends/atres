@@ -28,8 +28,8 @@ AprilUI::Object* root;
 
 bool render(float time_increase)
 {
-	rendersys->clear();
-	rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
+	April::rendersys->clear();
+	April::rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	root->draw();
 	root->update(time_increase);
@@ -85,13 +85,13 @@ int main()
 	try
 	{
 		April::init("OpenGL", SCREEN_WIDTH, SCREEN_HEIGHT, 0, "demo_simple");
-		rendersys->registerUpdateCallback(render);
+		April::rendersys->registerUpdateCallback(render);
 		AprilUI::init();
 		Atres::loadFont("../media/arial.font");
 		dataset = new AprilUI::Dataset("../media/demo_simple.datadef");
 		dataset->load();
 		root = dataset->getObject("root");
-		rendersys->enterMainLoop();
+		April::rendersys->enterMainLoop();
 		delete dataset;
 		AprilUI::destroy();
 		April::destroy();
