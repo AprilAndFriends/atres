@@ -19,27 +19,6 @@
     <Project Name="libapril"/>
     <Project Name="libaprilui"/>
   </Dependencies>
-  <Dependencies Name="Linux_Debug">
-    <Project Name="libgtypes"/>
-    <Project Name="libhltypes"/>
-    <Project Name="libapril"/>
-    <Project Name="libatres"/>
-    <Project Name="libaprilui"/>
-  </Dependencies>
-  <Dependencies Name="Debug">
-    <Project Name="libgtypes"/>
-    <Project Name="libhltypes"/>
-    <Project Name="libapril"/>
-    <Project Name="libatres"/>
-    <Project Name="libaprilui"/>
-  </Dependencies>
-  <Dependencies Name="Release_Win32">
-    <Project Name="libgtypes"/>
-    <Project Name="libhltypes"/>
-    <Project Name="libapril"/>
-    <Project Name="libatres"/>
-    <Project Name="libaprilui"/>
-  </Dependencies>
   <Settings Type="Executable">
     <GlobalSettings>
       <Compiler Options="">
@@ -181,4 +160,25 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
+  <Dependencies Name="Debug">
+    <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
+    <Project Name="libapril"/>
+    <Project Name="libatres"/>
+    <Project Name="libaprilui"/>
+  </Dependencies>
+  <Dependencies Name="Linux_Debug">
+    <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
+    <Project Name="libapril"/>
+    <Project Name="libatres"/>
+    <Project Name="libaprilui"/>
+  </Dependencies>
+  <Dependencies Name="Release_Win32">
+    <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
+    <Project Name="libapril"/>
+    <Project Name="libatres"/>
+    <Project Name="libaprilui"/>
+  </Dependencies>
 </CodeLite_Project>

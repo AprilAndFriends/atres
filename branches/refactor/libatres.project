@@ -19,15 +19,6 @@
     <File Name="include/atres/Exception.h"/>
   </VirtualDirectory>
   <Dependencies Name="Release"/>
-  <Dependencies Name="Linux_Debug">
-    <Project Name="libhltypes"/>
-  </Dependencies>
-  <Dependencies Name="Release_Win32">
-    <Project Name="libhltypes"/>
-  </Dependencies>
-  <Dependencies Name="Debug">
-    <Project Name="libhltypes"/>
-  </Dependencies>
   <Settings Type="Dynamic Library">
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
@@ -143,4 +134,13 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
+  <Dependencies Name="Debug">
+    <Project Name="libhltypes"/>
+  </Dependencies>
+  <Dependencies Name="Linux_Debug">
+    <Project Name="libhltypes"/>
+  </Dependencies>
+  <Dependencies Name="Release_Win32">
+    <Project Name="libhltypes"/>
+  </Dependencies>
 </CodeLite_Project>
