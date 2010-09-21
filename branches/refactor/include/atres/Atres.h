@@ -59,6 +59,7 @@ namespace Atres
 	
 	AtresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment alignment = LEFT, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
 	AtresFnExport void drawText(grect rect, chstr text, Alignment alignment = LEFT, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
+	
 	AtresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment alignment = LEFT, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
 	AtresFnExport void drawText(grect rect, chstr text, Alignment alignment = LEFT, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
 	AtresFnExport void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment alignment = LEFT, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
@@ -77,8 +78,8 @@ namespace Atres
 	AtresFnExport float getFontHeight(chstr fontName);
 	
 	AtresFnExport float getTextWidth(chstr fontName, chstr text);
-	AtresFnExport float getWrappedTextHeight(chstr fontName, chstr text, float maxWidth);
-	AtresFnExport int getWrappedTextCount(chstr fontName, chstr text, float maxWidth, float maxHeight);
+	AtresFnExport float getTextHeight(chstr fontName, chstr text, float maxWidth);
+	AtresFnExport int getTextCount(chstr fontName, chstr text, float maxWidth, float maxHeight);
 
 	AtresFnExport void setDefaultFont(chstr name);
 	AtresFnExport void loadFont(chstr filename);
