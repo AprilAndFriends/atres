@@ -87,10 +87,15 @@ int main()
 		April::init("OpenGL", SCREEN_WIDTH, SCREEN_HEIGHT, 0, "demo_simple");
 		April::rendersys->registerUpdateCallback(render);
 		AprilUI::init();
+#ifdef _DEBUG
+		AprilUI::setDebugMode(true);
+#endif
 		Atres::loadFont("../media/arial.font");
 		dataset = new AprilUI::Dataset("../media/demo_simple.datadef");
 		dataset->load();
 		AprilUI::Label* label = (AprilUI::Label*)dataset->getObject("test_4");
+		label->setText("This is a vertical test.\nIt really is. Really.");
+		label = (AprilUI::Label*)dataset->getObject("test_5");
 		label->setText("This is a vertical test.\nIt really is. Really.");
 		root = dataset->getObject("root");
 		April::rendersys->enterMainLoop();
