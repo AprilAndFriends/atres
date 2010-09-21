@@ -160,7 +160,7 @@ namespace Atres
 		return maxWidth;
 	}
 
-	float getWrappedTextHeight(chstr fontName, chstr text, float maxWidth)
+	float getTextHeight(chstr fontName, chstr text, float maxWidth)
 	{
 		harray<grect> areas;
 		//2DO - when not wrapped, no unlimited rect is needed
@@ -169,7 +169,7 @@ namespace Atres
 		return (lines.size() * f->getLineHeight());
 	}
 	
-	int getWrappedTextCount(chstr fontName, chstr text, float maxWidth, float maxHeight)
+	int getTextCount(chstr fontName, chstr text, float maxWidth, float maxHeight)
 	{
 		int count;
 		getFont(fontName)->testRender(grect(0, 0, maxWidth, maxHeight), text, LEFT, NULL, &count);
