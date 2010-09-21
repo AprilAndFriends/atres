@@ -140,10 +140,15 @@ namespace Atres
 	*/
 	//2DO - to here
 
-	float getTextWidth(chstr font_name,chstr text)
+	float getFontHeight(chstr fontName)
+	{
+		return getFont(fontName)->getHeight();
+	}
+	
+	float getTextWidth(chstr fontName, chstr text)
 	{
 		harray<grect> areas;
-		getFont(font_name)->testRender(grect(0,0,100000,100000), text, LEFT, &areas);
+		getFont(fontName)->testRender(grect(0,0,100000,100000), text, LEFT, &areas);
 		float maxWidth = 0.0f;
 		foreach (grect, it, areas)
 		{
@@ -155,24 +160,19 @@ namespace Atres
 		return maxWidth;
 	}
 
-	float getTextHeight(chstr font_name,chstr text)
-	{
-		return getFont(font_name)->getHeight();
-	}
-	
-	float getWrappedTextHeight(chstr font_name,float w_max,chstr text)
+	float getWrappedTextHeight(chstr fontName, chstr text, float maxWidth)
 	{
 		harray<grect> areas;
 		//2DO - when not wrapped, no unlimited rect is needed
-		Font* f = getFont(font_name);
-		harray<hstr> lines = f->testRender(grect(0,0,w_max,100000), text, LEFT, &areas);
+		Font* f = getFont(fontName);
+		harray<hstr> lines = f->testRender(grect(0, 0, maxWidth, 100000), text, LEFT, &areas);
 		return (lines.size() * f->getLineHeight());
 	}
 	
-	int getWrappedTextCount(chstr font_name,float w_max,float h_max,chstr text)
+	int getWrappedTextCount(chstr fontName, chstr text, float maxWidth, float maxHeight)
 	{
 		int count;
-		getFont(font_name)->testRender(grect(0,0,w_max,h_max), text, LEFT, NULL, &count);
+		getFont(fontName)->testRender(grect(0, 0, maxWidth, maxHeight), text, LEFT, NULL, &count);
 		return count;
 	}
 	
