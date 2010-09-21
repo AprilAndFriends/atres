@@ -4,8 +4,8 @@
     <Object type="DummyObject" name="root" x="0" y="0" w="1024" h="768">
 		<Object type="ColoredQuad" name="background" r="0.6" g="0.6" b="0" x="0" y="0" w="1024" h="768"/>
 		
-		<Object type="TextButton" name="test_0" text="This is blasphemy." horz_formatting="left" x="60" y="24" w="640" h="64"/>
-		<Object type="TextButton" name="test_1" text="This is madness." font="arial:0.8" vert_formatting="top" x="70" y="144" w="864" h="32"/>
+		<Object type="TextButton" name="test_0" text="This is blasphemy." vert_formatting="top" x="60" y="24" w="640" h="64"/>
+		<Object type="TextButton" name="test_1" text="This is madness." font="arial:0.8" horz_formatting="left" x="70" y="144" w="864" h="32"/>
 		<Object type="TextButton" name="test_2" text="No. This is Sparta!" font="arial:2.0" horz_formatting="right" x="180" y="400" w="512" h="128"/>
 		<Object type="TextButton" name="test_3" text="This is a test that is supposed to show whether X_horz_formatting wrapped works right or not." horz_formatting="left_wrapped" x="80" y="600" w="160" h="64"/>
     </Object>

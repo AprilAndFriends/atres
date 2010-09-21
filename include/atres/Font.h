@@ -41,8 +41,8 @@ namespace Atres
 		
 		bool hasChar(unsigned int charcode);
 		
-		harray<hstr> testRender(grect rect, chstr text, Alignment alignment, harray<grect>* areas = NULL, int* count = NULL);
-		void render(grect rect, chstr text, Alignment alignment, April::Color color, float* w_out = NULL, float* h_out = NULL, int* c_out = NULL);
+		harray<hstr> testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, harray<grect>* areas = NULL, int* count = NULL);
+		void render(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, float* w_out = NULL, float* h_out = NULL, int* c_out = NULL);
 		
 	protected:
 		hstr name;
