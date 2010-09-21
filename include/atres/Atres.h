@@ -24,9 +24,9 @@ namespace Atres
 		grect src;
 		grect dest;
 		April::Color color;
-		unsigned char italic;
-		unsigned char underline;
-		unsigned char strikethrough;
+		bool italic;
+		bool underline;
+		bool strikethrough;
 	};
 	
 	enum Alignment

@@ -51,20 +51,21 @@ namespace Atres
 	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, Effect effect)
 	{
 		Font* f = getFont(fontName);
+		April::Color borderColor(255, 0, 0, 0);
 		if (effect == SHADOW || effect == BORDER || effect == BORDER_4)
 		{
-			f->render(grect(rect.x + 1, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, color);
+			f->render(grect(rect.x + 1, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, borderColor);
 			if (effect == BORDER || effect == BORDER_4)
 			{
-				f->render(grect(rect.x - 1, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, color);
-				f->render(grect(rect.x + 1, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, color);
-				f->render(grect(rect.x - 1, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, color);
+				f->render(grect(rect.x - 1, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, borderColor);
+				f->render(grect(rect.x + 1, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, borderColor);
+				f->render(grect(rect.x - 1, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, borderColor);
 				if (effect == BORDER)
 				{
-					f->render(grect(rect.x, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, color);
-					f->render(grect(rect.x, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, color);
-					f->render(grect(rect.x - 1, rect.y, rect.w, rect.h), text, horizontal, vertical, color);
-					f->render(grect(rect.x + 1, rect.y, rect.w, rect.h), text, horizontal, vertical, color);
+					f->render(grect(rect.x, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, borderColor);
+					f->render(grect(rect.x, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, borderColor);
+					f->render(grect(rect.x - 1, rect.y, rect.w, rect.h), text, horizontal, vertical, borderColor);
+					f->render(grect(rect.x + 1, rect.y, rect.w, rect.h), text, horizontal, vertical, borderColor);
 				}
 			}
 			flushRenderOperations();
