@@ -74,10 +74,11 @@ namespace Atres
 	AtresFnExport float drawWrappedText(chstr fontName, float x, float y, float w_max, float h_max, chstr text, float r = 1, float g = 1, float b = 1, float a = 1, Alignment alignment = LEFT, Effect effect = NONE) __attribute__((deprecated));
 	*/
 	
-	AtresFnExport float getTextWidth(chstr font_name,chstr text);
-	AtresFnExport float getTextHeight(chstr font_name,chstr text);
-	AtresFnExport float getWrappedTextHeight(chstr font_name,float w_max,chstr text);
-	AtresFnExport int getWrappedTextCount(chstr font_name,float w_max,float h_max,chstr text);
+	AtresFnExport float getFontHeight(chstr fontName);
+	
+	AtresFnExport float getTextWidth(chstr fontName, chstr text);
+	AtresFnExport float getWrappedTextHeight(chstr fontName, chstr text, float maxWidth);
+	AtresFnExport int getWrappedTextCount(chstr fontName, chstr text, float maxWidth, float maxHeight);
 
 	AtresFnExport void setDefaultFont(chstr name);
 	AtresFnExport void loadFont(chstr filename);

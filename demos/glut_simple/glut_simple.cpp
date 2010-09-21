@@ -38,7 +38,7 @@ void draw()
 	glColor3f(1,1,1);
 
 	char mltext[]="Label7: V_Warden_1_DAMAGE";
-	drawRect(200,200,230,Atres::getWrappedTextHeight("",230,mltext));
+	drawRect(200,200,230,Atres::getWrappedTextHeight("",mltext,230));
 
 	Atres::drawText("Arial:0.5",10,500,"a scaled font");
 	Atres::drawText(100,100,"drawText() call");
