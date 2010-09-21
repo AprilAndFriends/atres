@@ -313,26 +313,36 @@ namespace Atres
 			float width;
 			float ratioTop;
 			float ratioBottom;
+			float ratioLeft;
+			float ratioRight;
 			for (int i = 0; i < lines.size(); i++)
 			{
 				width = 0.0f;
 				ratioTop = (areas[i].y < rect.y ? (areas[i].y + areas[i].h - rect.y) / lineHeight : 1.0f);
 				ratioBottom = (rect.y + rect.h < areas[i].y + areas[i].h ? (rect.y + rect.h - areas[i].y) / lineHeight : 1.0f);
-				for (int j = 0; j < lines[i].size(); j += byteLength, op++, nOps++)
+				for (int j = 0; j < lines[i].size(); j += byteLength)
 				{
 					code = getCharUtf8(&lines[i][j], &byteLength);
 					chr = this->characters[code];
-					op->texture = this->texture;
-					op->color = color;
-					op->italic = op->underline = op->strikethrough = false;
-					op->src.x = chr.x;
-					op->src.y = chr.y + this->height * (1.0f - ratioTop);
-					op->src.w = chr.w;
-					op->src.h = this->height * (ratioTop + ratioBottom - 1.0f);
 					op->dest.x = areas[i].x + width;
 					op->dest.y = areas[i].y + height * (1.0f - ratioTop);
 					op->dest.w = chr.w * this->scale;
 					op->dest.h = height * (ratioTop + ratioBottom - 1.0f);
+					if (rect.intersects(op->dest))
+					{
+						ratioLeft = (op->dest.x < rect.x ? (op->dest.x + op->dest.w - rect.x) / op->dest.w : 1.0f);
+						ratioRight = (rect.x + rect.w < op->dest.x + op->dest.w ? (rect.x + rect.w - op->dest.x) / op->dest.w : 1.0f);
+						op->dest.x = op->dest.x + op->dest.w * (1.0f - ratioLeft);
+						op->dest.w = op->dest.w * (ratioLeft + ratioRight - 1.0f);
+						op->src.x = chr.x + chr.w * (1.0f - ratioLeft);
+						op->src.y = chr.y + this->height * (1.0f - ratioTop);
+						op->src.w = chr.w * (ratioLeft + ratioRight - 1.0f);
+						op->src.h = this->height * (ratioTop + ratioBottom - 1.0f);
+						op->texture = this->texture;
+						op->color = color;
+						op++;
+						nOps++;
+					}
 					width += chr.aw * this->scale;
 				}
 			}
