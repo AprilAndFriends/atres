@@ -57,15 +57,15 @@ namespace Atres
 	void logMessage(chstr message, chstr prefix = "[atres] ");
 	void atres_writelog(chstr message);
 	
-	AtresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment alignment = LEFT, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
-	AtresFnExport void drawText(grect rect, chstr text, Alignment alignment = LEFT, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
+	AtresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
+	AtresFnExport void drawText(grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
 	
-	AtresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment alignment = LEFT, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
-	AtresFnExport void drawText(grect rect, chstr text, Alignment alignment = LEFT, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
-	AtresFnExport void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment alignment = LEFT, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
-	AtresFnExport void drawText(float x, float y, float w, float h, chstr text, Alignment alignment = LEFT, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
-	AtresFnExport void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment alignment = LEFT, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
-	AtresFnExport void drawText(float x, float y, float w, float h, chstr text, Alignment alignment = LEFT, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
+	AtresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
+	AtresFnExport void drawText(grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
+	AtresFnExport void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
+	AtresFnExport void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(255, 255, 255, 255), Effect effect = NONE);
+	AtresFnExport void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
+	AtresFnExport void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
 	
 	//2DO - deprecated
 	/*

@@ -162,83 +162,9 @@ namespace Atres
 		this->scale = (value == 0.0f ? this->defaultScale : value);
 	}
 	
-	/*
-	void Font::render(float x, float y, float w, float h, Alignment alignment, bool wrap, chstr text, bool draw, float r, float g, float b, float a, float* w_out, float* h_out, int *c_out)
+	harray<hstr> Font::testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, harray<grect>* areas, int* count)
 	{
-		Alignment align = alignment;
-		if (wrap)
-		{
-			switch (align)
-			{
-			case LEFT:
-				align = LEFT_WRAPPED;
-				break;
-			case RIGHT:
-				align = RIGHT_WRAPPED;
-				break;
-			case CENTER:
-				align = CENTER_WRAPPED;
-				break;
-			}
-		}
-		if (draw)
-		{
-			this->render(grect(x, y, w, h), text, align, April::Color(a, r, g, b), w_out, h_out, c_out);
-		}
-	}
-	
-	void Font::render(grect rect, Alignment alignment, bool wrap, chstr text, bool draw, float r, float g, float b, float a, float* w_out, float* h_out, int *c_out)
-	{
-		Alignment align = alignment;
-		if (wrap)
-		{
-			switch (align)
-			{
-			case LEFT:
-				align = LEFT_WRAPPED;
-				break;
-			case RIGHT:
-				align = RIGHT_WRAPPED;
-				break;
-			case CENTER:
-				align = CENTER_WRAPPED;
-				break;
-			}
-		}
-		if (draw)
-		{
-			this->render(rect, text, align, April::Color(a, r, g, b), w_out, h_out, c_out);
-		}
-	}
-	
-	void Font::render(float x, float y, float w, float h, Alignment alignment, bool wrap, chstr text, bool draw, April::Color color, float* w_out, float* h_out, int *c_out)
-	{
-		Alignment align = alignment;
-		if (wrap)
-		{
-			switch (align)
-			{
-			case LEFT:
-				align = LEFT_WRAPPED;
-				break;
-			case RIGHT:
-				align = RIGHT_WRAPPED;
-				break;
-			case CENTER:
-				align = CENTER_WRAPPED;
-				break;
-			}
-		}
-		if (draw)
-		{
-			this->render(grect(x, y, w, h), text, align, color, w_out, h_out, c_out);
-		}
-	}
-	*/
-	
-	harray<hstr> Font::testRender(grect rect, chstr text, Alignment alignment, harray<grect>* areas, int* count)
-	{
-		bool wrap = (alignment == LEFT_WRAPPED || alignment == RIGHT_WRAPPED || alignment == CENTER_WRAPPED);
+		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED);
 		harray<hstr> result;
 		const char* str = text.c_str();
 		int byteLength;
@@ -310,7 +236,7 @@ namespace Atres
 			}
 			if (areas != NULL)
 			{
-				switch (alignment)
+				switch (horizontal)
 				{
 				case RIGHT:
 				case RIGHT_WRAPPED:
@@ -339,7 +265,7 @@ namespace Atres
 	}
 	
 	//2DO
-	void Font::render(grect rect, chstr text, Alignment alignment, April::Color color, float* w_out, float* h_out, int *c_out)
+	void Font::render(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, float* w_out, float* h_out, int *c_out)
 	{
 		/*
 		bool wrap = (alignment == LEFT_WRAPPED || alignment == RIGHT_WRAPPED || alignment == CENTER_WRAPPED);
@@ -355,7 +281,7 @@ namespace Atres
 		
 		CharacterRenderOp* op=rops+nOps;
 		harray<grect> areas;
-		harray<hstr> lines = this->testRender(rect, text, alignment, &areas, c_out);
+		harray<hstr> lines = this->testRender(rect, text, horizontal, vertical, &areas, c_out);
 		int byteLength;
 		FontCharDef chr;
 		unsigned int code;
