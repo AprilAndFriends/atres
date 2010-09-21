@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="include/atres;../hltypes/include"
+				AdditionalIncludeDirectories="include/atres;../april/include;../gtypes/include;../hltypes/include"
 				PreprocessorDefinitions="_DEBUG;ATRES_EXPORTS;_WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -59,9 +59,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes_d.lib"
+				AdditionalDependencies="libapril_d.lib libgtypes_d.lib libhltypes_d.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
-				AdditionalLibraryDirectories="..\hltypes\bin\$(ConfigurationName)"
+				AdditionalLibraryDirectories="..\april\bin;..\gtypes\bin\$(ConfigurationName);..\hltypes\bin\$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				ImportLibrary="$(TargetDir)\$(TargetName).lib"
 			/>
@@ -115,7 +115,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="include/atres;../hltypes/include"
+				AdditionalIncludeDirectories="include/atres;../april/include;../gtypes/include;../hltypes/include"
 				PreprocessorDefinitions="ATRES_EXPORTS;_WIN32"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -133,8 +133,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes.lib"
-				AdditionalLibraryDirectories="..\hltypes\bin\$(ConfigurationName)"
+				AdditionalDependencies="libapril.lib libgtypes.lib libhltypes.lib"
+				AdditionalLibraryDirectories="..\april\bin;..\gtypes\bin\$(ConfigurationName);..\hltypes\bin\$(ConfigurationName)"
 			/>
 			<Tool
 				Name="VCALinkTool"

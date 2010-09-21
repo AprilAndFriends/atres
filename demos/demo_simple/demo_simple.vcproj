@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../include;../../../april/include;../../../gtypes/include;../../../hltypes/include;../../../april/include;../../../atres/include"
+				AdditionalIncludeDirectories="../../include;../../../gtypes/include;../../../hltypes/include;../../../atres/include;../../../april/include;../../../aprilui/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,9 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libapril_d.lib DevIL.lib libxml2.lib libaprilui_d.lib libatres_d.lib libgtypes_d.lib libhltypes_d.lib"
+				AdditionalDependencies="libapril_d.lib libaprilui_d.lib DevIL.lib libxml2.lib libatres_d.lib libgtypes_d.lib libhltypes_d.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../lib;../../bin/win32_Debug;../../../lib/msvc;../../../atres/bin/win32_Debug;../../../april/bin/win32_Debug;../../../gtypes/bin/win32_Debug;../../../hltypes/bin/win32_Debug"
+				AdditionalLibraryDirectories="../../lib;../../lib/msvc;../../bin/$(ConfigurationName);../../../gtypes/bin/$(ConfigurationName);../../../hltypes/bin/$(ConfigurationName);../../../atres/bin/$(ConfigurationName);../../../april/bin;../../../aprilui/bin/$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -118,8 +118,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../include;../../../april/include;../../../gtypes/include;../../../hltypes/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="../../include;../../../gtypes/include;../../../hltypes/include;../../../atres/include;../../../april/include;../../../aprilui/include"
+				PreprocessorDefinitions="WIN32;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -137,9 +137,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libapril.lib"
+				AdditionalDependencies="libapril.lib libaprilui.lib DevIL.lib libxml2.lib libatres.lib libgtypes.lib libhltypes.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../lib;../../Release"
+				AdditionalLibraryDirectories="../../lib;../../bin/$(ConfigurationName);../../../gtypes/bin/$(ConfigurationName);../../../hltypes/bin/$(ConfigurationName);../../../atres/bin/$(ConfigurationName);../../../april/bin;../../../aprilui/bin/$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
