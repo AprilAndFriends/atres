@@ -162,7 +162,61 @@ namespace Atres
 		this->scale = (value == 0.0f ? this->defaultScale : value);
 	}
 	
-	harray<hstr> Font::testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, harray<grect>* areas, int* count)
+	void Font::aligmentCorrection(grect rect, Alignment horizontal, Alignment vertical, harray<hstr>* lines, harray<grect>* areas)
+	{
+		float lineHeight = this->getLineHeight();
+		// vertical correction
+		if (vertical != Atres::TOP)
+		{
+			float difference = lines->size() * lineHeight - rect.h;
+			if (vertical == Atres::CENTER)
+			{
+				difference /= 2;
+				while (lines->size() > 0 && (lines->size() - 2) * lineHeight >= rect.h)
+				{
+					lines->pop_front();
+					areas->pop_front();
+					if (lines->size() > 0)
+					{
+						lines->pop_back();
+						areas->pop_back();
+					}
+				}
+			}
+			else if (vertical == Atres::BOTTOM)
+			{
+				while (lines->size() > 0 && (lines->size() - 1) * lineHeight >= rect.h)
+				{
+					lines->pop_front();
+					areas->pop_front();
+				}
+			}
+			foreach (grect, it, *areas)
+			{
+				(*it).y -= difference;
+			}
+		}
+		// horizontal correction
+		if (areas != NULL && horizontal != LEFT && horizontal != LEFT_WRAPPED)
+		{
+			if (horizontal == RIGHT || horizontal == RIGHT_WRAPPED)
+			{
+				foreach (grect, it, *areas)
+				{
+					(*it).x += rect.w - (*it).w;
+				}
+			}
+			else if (horizontal == CENTER || horizontal == CENTER_WRAPPED)
+			{
+				foreach (grect, it, *areas)
+				{
+					(*it).x += (rect.w - (*it).w) / 2;
+				}
+			}
+		}
+	}
+	
+	harray<hstr> Font::testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, harray<grect>* areas)
 	{
 		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED);
 		harray<hstr> result;
@@ -171,17 +225,12 @@ namespace Atres
 		bool checkingSpaces;
 		float lineHeight = this->getLineHeight();
 		float width;
-		float lastWidth;
 		float offset;
-		float x = 0.0f;
 		unsigned int code = 0;
 		int i = 0;
 		int start = 0;
 		int current = 0;
-		if (fabs(rect.w - 160) < 0.01f)
-		{
-			start = 0;
-		}
+		// extraction of all lines
 		while (i < text.size())
 		{
 			i = start + current;
@@ -223,7 +272,7 @@ namespace Atres
 					checkingSpaces = false;
 				}
 				offset += this->characters[code].aw * this->scale;
-				if (offset > rect.w) // current word doesn't fit anymore
+				if (wrapped && offset > rect.w) // current word doesn't fit anymore
 				{
 					if (current == 0) // whole word doesn't fit into line, just chop it off
 					{
@@ -234,172 +283,59 @@ namespace Atres
 				}
 				i += byteLength;
 			}
+			// horizontal offset
 			if (areas != NULL)
 			{
-				switch (horizontal)
-				{
-				case RIGHT:
-				case RIGHT_WRAPPED:
-					x = rect.w - width;
-					break;
-				case CENTER:
-				case CENTER_WRAPPED:
-					x = (rect.w - width) / 2;
-					break;
-				}
-				*areas += grect(rect.x + x, rect.y + result.size() * lineHeight, width, lineHeight);
+				*areas += grect(rect.x, rect.y + result.size() * lineHeight, width, lineHeight);
 			}
 			result += (current > 0 ? text(start, current).trim() : "");
-			//width
-			//for (int)
-			//y += lineHeight;
-			//if (!wrap) break;
-			//if (result.size() * lineHeight >= rect.h) break;
+			if (vertical == Atres::TOP && result.size() * lineHeight >= rect.h)
+			{
+				break;
+			}
 		}
-		//result.size() * lineHeight >= rect.h;
-		if (count != NULL)
-		{
-			*count = i;
-		}
+		this->aligmentCorrection(rect, horizontal, vertical, &result, areas);
 		return result;
 	}
 	
-	//2DO
-	void Font::render(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, float* w_out, float* h_out, int *c_out)
+	void Font::render(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color)
 	{
-		/*
-		bool wrap = (alignment == LEFT_WRAPPED || alignment == RIGHT_WRAPPED || alignment == CENTER_WRAPPED);
-		bool draw = true;
-		// ascii only at the moment
-		const char* s=text.c_str();
-		int len=text.size(),i=0,j=0,last_j;
-		unsigned int c=0,pc;
-		
-		float offset=0,width,h=this->height*this->scale,text_w=0,starty=rect.y;
-		float y = starty;
-		*/
-		
-		CharacterRenderOp* op=rops+nOps;
+		CharacterRenderOp* op = rops + nOps;
 		harray<grect> areas;
-		harray<hstr> lines = this->testRender(rect, text, horizontal, vertical, &areas, c_out);
-		int byteLength;
-		FontCharDef chr;
-		unsigned int code;
-		float width;
+		harray<hstr> lines = this->testRender(rect, text, horizontal, vertical, &areas);
+		float height = this->getHeight();
 		float lineHeight = this->getLineHeight();
-		float maxWidth = 0.0f;
-		
-		for (int i = 0; i < lines.size(); i++)
+		if (lines.size() > 0)
 		{
-			if (maxWidth < rect.w)
+			int byteLength;
+			FontCharDef chr;
+			unsigned int code;
+			float width;
+			float ratioTop;
+			float ratioBottom;
+			for (int i = 0; i < lines.size(); i++)
 			{
-				maxWidth = rect.w;
-			}
-			width = 0.0f;
-			for (int j = 0; j < lines[i].size(); j += byteLength)
-			{
-				code = getCharUtf8(&lines[i][j], &byteLength);
-				chr = this->characters[code];
-				op->texture = this->texture;
-				op->color = color;
-				op->italic = op->underline = op->strikethrough = false;
-				op->src.x = (unsigned short)chr.x; op->src.y = (unsigned short)chr.y;
-				op->src.w = (unsigned short)chr.w; op->src.h = (unsigned short)this->height;
-				op->dest.x = areas[i].x + width; op->dest.y = areas[i].y; op->dest.w = chr.w * this->scale; op->dest.h = lineHeight;
-				op++;
-				nOps++;
-				width += chr.aw * this->scale;
-			}
-		}
-		/*
-		for (;s[i] != 0;)
-		{
-			int char_len;
-			// first, get the last index of the last word we can fit into the current line
-			for (width=offset=0,last_j=0;;j+=char_len)
-			{
-				pc=c;
-				c=getCharUtf8(s+j,&char_len);
-				if (c == '\n') { j++; offset=width; break; }
-				if (c == ' ' || c == 0)
+				width = 0.0f;
+				ratioTop = (areas[i].y < rect.y ? (areas[i].y + areas[i].h - rect.y) / lineHeight : 1.0f);
+				ratioBottom = (rect.y + rect.h < areas[i].y + areas[i].h ? (rect.y + rect.h - areas[i].y) / lineHeight : 1.0f);
+				for (int j = 0; j < lines[i].size(); j += byteLength, op++, nOps++)
 				{
-					offset=width; last_j=j+(c == ' ');
-				}
-				width+=this->characters[c].aw*this->scale;
-				if (c == 0) break;
-				if ((pc == ',' || pc == '.' || pc == '!' || pc == '?') &&
-					c != ' ' && c != ',' && c != '.' && c != '!' & c != '?')
-				{
-					offset=width; last_j=j;
-				}
-				
-				if (width > rect.w) // line must have at least one character
-				{
-					if (offset == 0)
-					{
-						offset=width-this->characters[c].aw*this->scale;
-						if (offset == 0) // this happens when max_w is smaller then the character width
-						{
-							// in that case, allow one character through, even though
-							// it will break the max_w limit
-							offset=width;
-							j+=char_len;
-						}
-						last_j=j;
-					}
-					break;
-				}
-				
-			}
-			if (offset > text_w) text_w=offset;
-			if (width > rect.w && last_j > 0) j=last_j;
-			if      (alignment == LEFT)
-			{
-				offset=rect.x;
-				if (i > 0 && s[i] == ' ') i++; // jump over spaces in the beginnings of lines after the first one
-			}
-			else if (alignment == RIGHT) offset=rect.x-offset;
-			else                         offset=rect.x-offset/2;
-			for (;i < j;i+=char_len)
-			{
-				c=getCharUtf8(s+i,&char_len);
-				chr=this->characters[c];
-				if (draw && c != ' ')
-				{
+					code = getCharUtf8(&lines[i][j], &byteLength);
+					chr = this->characters[code];
 					op->texture = this->texture;
 					op->color = color;
 					op->italic = op->underline = op->strikethrough = false;
-					op->src.x = (unsigned short)chr.x; op->src.y = (unsigned short)chr.y;
-					op->src.w = (unsigned short)chr.w; op->src.h = (unsigned short)this->height;
-					op->dest.x = offset; op->dest.w = chr.w * this->scale; op->dest.y = y; op->dest.h = h;
-					op++;
-					nOps++;
+					op->src.x = chr.x;
+					op->src.y = chr.y + this->height * (1.0f - ratioTop);
+					op->src.w = chr.w;
+					op->src.h = this->height * (ratioTop + ratioBottom - 1.0f);
+					op->dest.x = areas[i].x + width;
+					op->dest.y = areas[i].y + height * (1.0f - ratioTop);
+					op->dest.w = chr.w * this->scale;
+					op->dest.h = height * (ratioTop + ratioBottom - 1.0f);
+					width += chr.aw * this->scale;
 				}
-				offset += chr.aw*this->scale;
 			}
-			y+=this->lineHeight*this->scale;
-			if (!wrap) break;
-			if (rect.y - starty >= rect.h) break;
-			
-		}
-		*/
-		
-	/*    if (draw)
-		{
-			rendersys->setTexture(mTexture);
-			if (r == 1 && g == 1 && b == 1 && a == 1) rendersys->render(TRIANGLE_LIST, vertices, len*6);
-			else                                      rendersys->render(TRIANGLE_LIST, vertices, len*6,r,g,b,a);
-			
-			//delete v;
-		}*/
-		
-		if (w_out != NULL)
-		{
-			*w_out = maxWidth;
-		}
-		if (h_out != NULL)
-		{
-			*h_out = lines.size() * lineHeight;
 		}
 	}
 }

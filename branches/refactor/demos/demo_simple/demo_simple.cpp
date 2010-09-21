@@ -90,6 +90,8 @@ int main()
 		Atres::loadFont("../media/arial.font");
 		dataset = new AprilUI::Dataset("../media/demo_simple.datadef");
 		dataset->load();
+		AprilUI::Label* label = (AprilUI::Label*)dataset->getObject("test_4");
+		label->setText("This is a vertical test.\nIt really is. Really.");
 		root = dataset->getObject("root");
 		April::rendersys->enterMainLoop();
 		delete dataset;

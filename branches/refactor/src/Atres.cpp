@@ -122,7 +122,7 @@ namespace Atres
 	float getTextWidth(chstr fontName, chstr text)
 	{
 		harray<grect> areas;
-		getFont(fontName)->testRender(grect(0,0,100000,100000), text, LEFT, TOP, &areas);
+		getFont(fontName)->testRender(grect(0, 0, 1, 1), text, LEFT, TOP, &areas);
 		float maxWidth = 0.0f;
 		foreach (grect, it, areas)
 		{
@@ -139,15 +139,23 @@ namespace Atres
 		harray<grect> areas;
 		//2DO - when not wrapped, no unlimited rect is needed
 		Font* f = getFont(fontName);
-		harray<hstr> lines = f->testRender(grect(0, 0, maxWidth, 100000), text, LEFT, TOP, &areas);
+		harray<hstr> lines = f->testRender(grect(0, 0, maxWidth, 100000), text, LEFT_WRAPPED, TOP, &areas);
 		return (lines.size() * f->getLineHeight());
 	}
 	
 	int getTextCount(chstr fontName, chstr text, float maxWidth, float maxHeight)
 	{
-		int count;
-		getFont(fontName)->testRender(grect(0, 0, maxWidth, maxHeight), text, LEFT, TOP, NULL, &count);
-		return count;
+		harray<hstr> lines = getFont(fontName)->testRender(grect(0, 0, maxWidth, maxHeight), text, LEFT_WRAPPED, TOP);
+		if (lines.size() == 0)
+		{
+			return 0;
+		}
+		hstr str = text;
+		foreach (hstr, it, lines)
+		{
+			str = str.replace((*it), "").ltrim().ltrim('\n');
+		}
+		return (text.size() - str.size());
 	}
 	
 	void setDefaultFont(chstr name)

@@ -67,16 +67,7 @@ namespace Atres
 	AtresFnExport void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
 	AtresFnExport void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, Effect effect = NONE);
 	
-	//2DO - deprecated
-	/*
-	AtresFnExport float drawText(float x, float y, float w_max, float h_max, chstr text, float r = 1, float g = 1, float b = 1, float a = 1, Alignment alignment = LEFT, Effect effect = NONE) __attribute__((deprecated));
-	AtresFnExport float drawText(chstr fontName, float x, float y, float w_max, float h_max, chstr text, float r = 1, float g = 1, float b = 1, float a = 1, Alignment alignment = LEFT, Effect effect = NONE) __attribute__((deprecated));
-	AtresFnExport float drawWrappedText(float x, float y, float w_max, float h_max, chstr text, float r = 1, float g = 1, float b = 1, float a = 1, Alignment alignment = LEFT, Effect effect = NONE) __attribute__((deprecated));
-	AtresFnExport float drawWrappedText(chstr fontName, float x, float y, float w_max, float h_max, chstr text, float r = 1, float g = 1, float b = 1, float a = 1, Alignment alignment = LEFT, Effect effect = NONE) __attribute__((deprecated));
-	*/
-	
 	AtresFnExport float getFontHeight(chstr fontName);
-	
 	AtresFnExport float getTextWidth(chstr fontName, chstr text);
 	AtresFnExport float getTextHeight(chstr fontName, chstr text, float maxWidth);
 	AtresFnExport int getTextCount(chstr fontName, chstr text, float maxWidth, float maxHeight);
