@@ -51,26 +51,28 @@ namespace Atres
 	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset, Effect effect)
 	{
 		Font* f = getFont(fontName);
-		April::Color borderColor(255, 0, 0, 0);
+		harray<grect> areas;
+		harray<hstr> lines = f->testRender(rect, text, horizontal, vertical, areas, offset);
 		if (effect == SHADOW || effect == BORDER || effect == BORDER_4)
 		{
-			f->render(grect(rect.x + 1, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
+			April::Color borderColor(255, 0, 0, 0);
+			f->renderRaw(rect, lines, areas, borderColor, gvec2(1.0f, 1.0f));
 			if (effect == BORDER || effect == BORDER_4)
 			{
-				f->render(grect(rect.x - 1, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
-				f->render(grect(rect.x + 1, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
-				f->render(grect(rect.x - 1, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
+				f->renderRaw(rect, lines, areas, borderColor, gvec2(-1.0f, -1.0f));
+				f->renderRaw(rect, lines, areas, borderColor, gvec2(1.0f, -1.0f));
+				f->renderRaw(rect, lines, areas, borderColor, gvec2(-1.0f, 1.0f));
 				if (effect == BORDER)
 				{
-					f->render(grect(rect.x, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
-					f->render(grect(rect.x, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
-					f->render(grect(rect.x - 1, rect.y, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
-					f->render(grect(rect.x + 1, rect.y, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
+					f->renderRaw(rect, lines, areas, borderColor, gvec2(0.0f, -1.0f));
+					f->renderRaw(rect, lines, areas, borderColor, gvec2(0.0f, 1.0f));
+					f->renderRaw(rect, lines, areas, borderColor, gvec2(-1.0f, 0.0f));
+					f->renderRaw(rect, lines, areas, borderColor, gvec2(1.0f, 0.0f));
 				}
 			}
 			flushRenderOperations();
 		}
-		f->render(rect, text, horizontal, vertical, color, offset);
+		f->renderRaw(rect, lines, areas, color);
 		flushRenderOperations();
 	}
 
@@ -111,7 +113,7 @@ namespace Atres
 	float getTextWidth(chstr fontName, chstr text)
 	{
 		harray<grect> areas;
-		getFont(fontName)->testRender(grect(0, 0, 1, 1), text, LEFT, TOP, gvec2(), &areas);
+		getFont(fontName)->testRender(grect(0, 0, 1, 1), text, LEFT, TOP, areas);
 		float maxWidth = 0.0f;
 		foreach (grect, it, areas)
 		{
@@ -128,13 +130,14 @@ namespace Atres
 		harray<grect> areas;
 		//2DO - when not wrapped, no unlimited rect is needed
 		Font* f = getFont(fontName);
-		harray<hstr> lines = f->testRender(grect(0, 0, maxWidth, 100000), text, LEFT_WRAPPED, TOP, gvec2(), &areas);
+		harray<hstr> lines = f->testRender(grect(0, 0, maxWidth, 100000), text, LEFT_WRAPPED, TOP, areas);
 		return (lines.size() * f->getLineHeight());
 	}
 	
 	int getTextCount(chstr fontName, chstr text, float maxWidth, float maxHeight)
 	{
-		harray<hstr> lines = getFont(fontName)->testRender(grect(0, 0, maxWidth, maxHeight), text, LEFT_WRAPPED, TOP);
+		harray<grect> areas;
+		harray<hstr> lines = getFont(fontName)->testRender(grect(0, 0, maxWidth, maxHeight), text, LEFT_WRAPPED, TOP, areas);
 		if (lines.size() == 0)
 		{
 			return 0;

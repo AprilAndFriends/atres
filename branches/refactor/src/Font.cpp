@@ -29,7 +29,6 @@ namespace Atres
 		if (nOps)
 		{
 			April::TexturedVertex v[CHR_BUFFER_MAX];
-			//April::Texture* t = rendersys->getTe g_font_textures[rops[0].resource];
 			April::Texture* t = rops[0].texture;
 			int i=0;
 			float w=(float)t->getWidth(),h=(float)t->getHeight();
@@ -44,10 +43,6 @@ namespace Atres
 			}
 			April::rendersys->setTexture(t);
 			April::rendersys->render(April::TriangleList,v,i,rops[0].color.r_float(),rops[0].color.g_float(),rops[0].color.b_float(),rops[0].color.a_float());
-			/*
-			rendersys->render()
-			getRenderInterface()->render(rops,nOps);
-			*/
 			nOps=0;
 		}
 	}
@@ -130,16 +125,19 @@ namespace Atres
 		foreach (hstr, it, lines)
 		{
 			data = (*it).split(" ");
-			code = (unsigned int)data.pop_front();
-			c.x = (float)data.pop_front();
-			c.y = (float)data.pop_front();
-			c.w = (float)data.pop_front();
-			c.aw = (float)data.pop_front();
-			if (c.aw == 0.0f)
+			if (data.size() == 5)
 			{
-				c.aw = c.w;
+				code = (unsigned int)data.pop_front();
+				c.x = (float)data.pop_front();
+				c.y = (float)data.pop_front();
+				c.w = (float)data.pop_front();
+				c.aw = (float)data.pop_front();
+				if (c.aw == 0.0f)
+				{
+					c.aw = c.w;
+				}
+				this->characters[code] = c;
 			}
-			this->characters[code] = c;
 		}
 	}
 
@@ -163,70 +161,67 @@ namespace Atres
 		this->scale = (value == 0.0f ? this->defaultScale : value);
 	}
 	
-	void Font::positionCorrection(grect rect, Alignment horizontal, Alignment vertical, gvec2 offset, harray<hstr>* lines, harray<grect>* areas)
+	void Font::positionCorrection(grect rect, Alignment horizontal, Alignment vertical, gvec2 offset, harray<hstr>& lines, harray<grect>& areas)
 	{
 		float lineHeight = this->getLineHeight();
 		// vertical correction
 		switch (vertical)
 		{
 		case Atres::CENTER:
-			offset.y += (lines->size() * lineHeight - rect.h) / 2;
+			offset.y += (lines.size() * lineHeight - rect.h) / 2;
 			break;
 		case Atres::BOTTOM:
-			offset.y += lines->size() * lineHeight - rect.h;
+			offset.y += lines.size() * lineHeight - rect.h;
 			break;
 		}
-		// lines to skip at beginning
-		int count = offset.y / lineHeight;
-		count = hmin(count, lines->size());
+		// lines to skip on top
+		int count = hmin((int)floor(offset.y / lineHeight), lines.size());
 		if (count > 0)
 		{
-			lines->pop_front(count);
-			areas->pop_front(count);
+			lines.pop_front(count);
+			areas.pop_front(count);
 		}
-		// number of lines fitting in
-		count = lines->size() - (int)((offset.y + rect.h) / lineHeight) - count - 1;
-		count = hmin(count, lines->size());
+		// lines to skip on bottom
+		count = lines.size() - (int)ceil((offset.y + rect.h) / lineHeight - count);
+		count = hmin(count, lines.size());
 		if (count > 0)
 		{
-			lines->pop_back(count);
-			areas->pop_back(count);
+			lines.pop_back(count);
+			areas.pop_back(count);
 		}
-		foreach (grect, it, *areas)
+		// apply the offset to the remaining lines
+		foreach (grect, it, areas)
 		{
 			(*it).y -= offset.y;
 		}
 		// horizontal correction
-		if (areas != NULL)
+		switch (horizontal)
 		{
-			switch (horizontal)
+		case LEFT:
+		case LEFT_WRAPPED:
+			foreach (grect, it, areas)
 			{
-			case LEFT:
-			case LEFT_WRAPPED:
-				foreach (grect, it, *areas)
-				{
-					(*it).x += -offset.x;
-				}
-				break;
-			case CENTER:
-			case CENTER_WRAPPED:
-				foreach (grect, it, *areas)
-				{
-					(*it).x += -offset.x + (rect.w - (*it).w) / 2;
-				}
-				break;
-			case RIGHT:
-			case RIGHT_WRAPPED:
-				foreach (grect, it, *areas)
-				{
-					(*it).x += -offset.x + rect.w - (*it).w;
-				}
-				break;
+				(*it).x += -offset.x;
 			}
+			break;
+		case CENTER:
+		case CENTER_WRAPPED:
+			foreach (grect, it, areas)
+			{
+				(*it).x += -offset.x + (rect.w - (*it).w) / 2;
+			}
+			break;
+		case RIGHT:
+		case RIGHT_WRAPPED:
+			foreach (grect, it, areas)
+			{
+				(*it).x += -offset.x + rect.w - (*it).w;
+			}
+			break;
 		}
 	}
 	
-	harray<hstr> Font::testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, gvec2 offset, harray<grect>* areas)
+	harray<hstr> Font::testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, harray<grect>& areas, gvec2 offset)
 	{
 		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED);
 		harray<hstr> result;
@@ -294,63 +289,76 @@ namespace Atres
 				i += byteLength;
 			}
 			// horizontal offset
-			if (areas != NULL)
-			{
-				*areas += grect(rect.x, rect.y + result.size() * lineHeight, width, lineHeight);
-			}
+			areas += grect(rect.x, rect.y + result.size() * lineHeight, width, lineHeight);
 			result += (current > 0 ? text(start, current).trim() : "");
 		}
-		this->positionCorrection(rect, horizontal, vertical, offset, &result, areas);
+		this->positionCorrection(rect, horizontal, vertical, offset, result, areas);
 		return result;
 	}
 	
 	void Font::render(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
-		CharacterRenderOp* op = rops + nOps;
 		harray<grect> areas;
-		harray<hstr> lines = this->testRender(rect, text, horizontal, vertical, offset, &areas);
+		harray<hstr> lines = this->testRender(rect, text, horizontal, vertical, areas, offset);
+		this->renderRaw(rect, lines, areas, color);
+	}
+	
+	void Font::renderRaw(grect rect, harray<hstr> lines, harray<grect> areas, April::Color color, gvec2 offset)
+	{
+		if (lines.size() == 0)
+		{
+			return;
+		}
+		CharacterRenderOp* op = rops + nOps;
 		float height = this->getHeight();
 		float lineHeight = this->getLineHeight();
-		if (lines.size() > 0)
+		FontCharDef chr;
+		unsigned int code;
+		int byteLength;
+		float width;
+		float ratioTop;
+		float ratioBottom;
+		float ratioLeft;
+		float ratioRight;
+		foreach (grect, it, areas)
 		{
-			int byteLength;
-			FontCharDef chr;
-			unsigned int code;
-			float width;
-			float ratioTop;
-			float ratioBottom;
-			float ratioLeft;
-			float ratioRight;
-			for (int i = 0; i < lines.size(); i++)
+			(*it).x += offset.x;
+			(*it).y += offset.y;
+		}
+		for (int i = 0; i < lines.size(); i++)
+		{
+			width = 0.0f;
+			// vertical cutoff of destination rectangle
+			ratioTop = (areas[i].y < rect.y ? (areas[i].y + areas[i].h - rect.y) / lineHeight : 1.0f);
+			ratioBottom = (rect.y + rect.h < areas[i].y + areas[i].h ? (rect.y + rect.h - areas[i].y) / lineHeight : 1.0f);
+			for (int j = 0; j < lines[i].size(); j += byteLength)
 			{
-				width = 0.0f;
-				ratioTop = (areas[i].y < rect.y ? (areas[i].y + areas[i].h - rect.y) / lineHeight : 1.0f);
-				ratioBottom = (rect.y + rect.h < areas[i].y + areas[i].h ? (rect.y + rect.h - areas[i].y) / lineHeight : 1.0f);
-				for (int j = 0; j < lines[i].size(); j += byteLength)
+				code = getCharUtf8(&lines[i][j], &byteLength);
+				chr = this->characters[code];
+				// destination rectangle
+				op->dest.x = areas[i].x + width;
+				op->dest.y = areas[i].y + height * (1.0f - ratioTop);
+				op->dest.w = chr.w * this->scale;
+				op->dest.h = height * (ratioTop + ratioBottom - 1.0f);
+				if (rect.intersects(op->dest)) // if destination rectangle inside drawing area
 				{
-					code = getCharUtf8(&lines[i][j], &byteLength);
-					chr = this->characters[code];
-					op->dest.x = areas[i].x + width;
-					op->dest.y = areas[i].y + height * (1.0f - ratioTop);
-					op->dest.w = chr.w * this->scale;
-					op->dest.h = height * (ratioTop + ratioBottom - 1.0f);
-					if (rect.intersects(op->dest))
-					{
-						ratioLeft = (op->dest.x < rect.x ? (op->dest.x + op->dest.w - rect.x) / op->dest.w : 1.0f);
-						ratioRight = (rect.x + rect.w < op->dest.x + op->dest.w ? (rect.x + rect.w - op->dest.x) / op->dest.w : 1.0f);
-						op->dest.x = op->dest.x + op->dest.w * (1.0f - ratioLeft);
-						op->dest.w = op->dest.w * (ratioLeft + ratioRight - 1.0f);
-						op->src.x = chr.x + chr.w * (1.0f - ratioLeft);
-						op->src.y = chr.y + this->height * (1.0f - ratioTop);
-						op->src.w = chr.w * (ratioLeft + ratioRight - 1.0f);
-						op->src.h = this->height * (ratioTop + ratioBottom - 1.0f);
-						op->texture = this->texture;
-						op->color = color;
-						op++;
-						nOps++;
-					}
-					width += chr.aw * this->scale;
+					// horizontal cutoff of destination rectangle
+					ratioLeft = (op->dest.x < rect.x ? (op->dest.x + op->dest.w - rect.x) / op->dest.w : 1.0f);
+					ratioRight = (rect.x + rect.w < op->dest.x + op->dest.w ? (rect.x + rect.w - op->dest.x) / op->dest.w : 1.0f);
+					op->dest.x = op->dest.x + op->dest.w * (1.0f - ratioLeft);
+					op->dest.w = op->dest.w * (ratioLeft + ratioRight - 1.0f);
+					// source rectangle
+					op->src.x = chr.x + chr.w * (1.0f - ratioLeft);
+					op->src.y = chr.y + this->height * (1.0f - ratioTop);
+					op->src.w = chr.w * (ratioLeft + ratioRight - 1.0f);
+					op->src.h = this->height * (ratioTop + ratioBottom - 1.0f);
+					// everything else
+					op->texture = this->texture;
+					op->color = color;
+					op++;
+					nOps++;
 				}
+				width += chr.aw * this->scale;
 			}
 		}
 	}
