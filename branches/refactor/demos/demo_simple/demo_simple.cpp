@@ -26,6 +26,10 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 AprilUI::Dataset* dataset;
 AprilUI::Object* root;
 
+bool clicked;
+float x;
+float y;
+
 bool render(float time_increase)
 {
 	April::rendersys->clear();
@@ -33,7 +37,36 @@ bool render(float time_increase)
 
 	root->draw();
 	root->update(time_increase);
+	
+	//Atres::drawText((600 + x, 700 + y, 120, 38, "This is a vertical test.\nIt really is. Really.");
+	April::rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
+	
 	return true;
+}
+
+void onKeyDown(unsigned int keycode)
+{
+	root->OnKeyDown(keycode);
+}
+
+void onKeyUp(unsigned int keycode)
+{
+	root->OnKeyUp(keycode);
+}
+
+void onMouseDown(float x, float y, int button)
+{
+	root->OnMouseDown(button, x, y);
+}
+
+void onMouseUp(float x, float y, int button)
+{
+	root->OnMouseUp(button, x, y);
+}
+
+void onMouseMove(float x, float y)
+{
+	root->OnMouseMove(x, y);
 }
 
 int main()
@@ -86,6 +119,8 @@ int main()
 	{
 		April::init("OpenGL", SCREEN_WIDTH, SCREEN_HEIGHT, 0, "demo_simple");
 		April::rendersys->registerUpdateCallback(render);
+		April::rendersys->registerMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
+		April::rendersys->registerKeyboardCallbacks(&onKeyDown, &onKeyUp, NULL);
 		AprilUI::init();
 #ifdef _DEBUG
 		AprilUI::setDebugMode(true);

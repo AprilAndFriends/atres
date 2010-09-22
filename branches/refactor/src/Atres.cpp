@@ -48,71 +48,71 @@ namespace Atres
 		g_logFunction=fnptr;
 	}
 	
-	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, Effect effect)
+	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset, Effect effect)
 	{
 		Font* f = getFont(fontName);
 		April::Color borderColor(255, 0, 0, 0);
 		if (effect == SHADOW || effect == BORDER || effect == BORDER_4)
 		{
-			f->render(grect(rect.x + 1, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, borderColor);
+			f->render(grect(rect.x + 1, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
 			if (effect == BORDER || effect == BORDER_4)
 			{
-				f->render(grect(rect.x - 1, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, borderColor);
-				f->render(grect(rect.x + 1, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, borderColor);
-				f->render(grect(rect.x - 1, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, borderColor);
+				f->render(grect(rect.x - 1, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
+				f->render(grect(rect.x + 1, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
+				f->render(grect(rect.x - 1, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
 				if (effect == BORDER)
 				{
-					f->render(grect(rect.x, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, borderColor);
-					f->render(grect(rect.x, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, borderColor);
-					f->render(grect(rect.x - 1, rect.y, rect.w, rect.h), text, horizontal, vertical, borderColor);
-					f->render(grect(rect.x + 1, rect.y, rect.w, rect.h), text, horizontal, vertical, borderColor);
+					f->render(grect(rect.x, rect.y - 1, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
+					f->render(grect(rect.x, rect.y + 1, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
+					f->render(grect(rect.x - 1, rect.y, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
+					f->render(grect(rect.x + 1, rect.y, rect.w, rect.h), text, horizontal, vertical, borderColor, offset);
 				}
 			}
 			flushRenderOperations();
 		}
-		f->render(rect, text, horizontal, vertical, color);
+		f->render(rect, text, horizontal, vertical, color, offset);
 		flushRenderOperations();
 	}
 
-	void drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, Effect effect)
+	void drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset, Effect effect)
 	{
-		drawText("", rect, text, horizontal, vertical, color, effect);
+		drawText("", rect, text, horizontal, vertical, color, offset, effect);
 	}
 
 	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, Effect effect)
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset, Effect effect)
 	{
-		drawText(fontName, rect, text, horizontal, vertical, April::Color(a, r, g, b), effect);
+		drawText(fontName, rect, text, horizontal, vertical, April::Color(a, r, g, b), offset, effect);
 	}
 	
 	void drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, Effect effect)
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset, Effect effect)
 	{
-		drawText("", rect, text, horizontal, vertical, April::Color(a, r, g, b), effect);
+		drawText("", rect, text, horizontal, vertical, April::Color(a, r, g, b), offset, effect);
 	}
 	
 	void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		April::Color color, Effect effect)
+		April::Color color, gvec2 offset, Effect effect)
 	{
-		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, color, effect);
+		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset, effect);
 	}
 	
 	void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		April::Color color, Effect effect)
+		April::Color color, gvec2 offset, Effect effect)
 	{
-		drawText("", grect(x, y, w, h), text, horizontal, vertical, color, effect);
+		drawText("", grect(x, y, w, h), text, horizontal, vertical, color, offset, effect);
 	}
 	
 	void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, Effect effect)
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset, Effect effect)
 	{
-		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), effect);
+		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), offset, effect);
 	}
 	
 	void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, Effect effect)
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset, Effect effect)
 	{
-		drawText("", x, y, w, h, text, horizontal, vertical, r, g, b, a, effect);
+		drawText("", x, y, w, h, text, horizontal, vertical, r, g, b, a, offset, effect);
 	}
 	
 	float getFontHeight(chstr fontName)
@@ -123,7 +123,7 @@ namespace Atres
 	float getTextWidth(chstr fontName, chstr text)
 	{
 		harray<grect> areas;
-		getFont(fontName)->testRender(grect(0, 0, 1, 1), text, LEFT, TOP, &areas);
+		getFont(fontName)->testRender(grect(0, 0, 1, 1), text, LEFT, TOP, gvec2(), &areas);
 		float maxWidth = 0.0f;
 		foreach (grect, it, areas)
 		{
@@ -140,7 +140,7 @@ namespace Atres
 		harray<grect> areas;
 		//2DO - when not wrapped, no unlimited rect is needed
 		Font* f = getFont(fontName);
-		harray<hstr> lines = f->testRender(grect(0, 0, maxWidth, 100000), text, LEFT_WRAPPED, TOP, &areas);
+		harray<hstr> lines = f->testRender(grect(0, 0, maxWidth, 100000), text, LEFT_WRAPPED, TOP, gvec2(), &areas);
 		return (lines.size() * f->getLineHeight());
 	}
 	
