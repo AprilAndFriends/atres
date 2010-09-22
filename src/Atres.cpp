@@ -79,18 +79,6 @@ namespace Atres
 		drawText("", rect, text, horizontal, vertical, color, offset, effect);
 	}
 
-	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset, Effect effect)
-	{
-		drawText(fontName, rect, text, horizontal, vertical, April::Color(a, r, g, b), offset, effect);
-	}
-	
-	void drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset, Effect effect)
-	{
-		drawText("", rect, text, horizontal, vertical, April::Color(a, r, g, b), offset, effect);
-	}
-	
 	void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		April::Color color, gvec2 offset, Effect effect)
 	{
