@@ -41,9 +41,9 @@ namespace Atres
 		
 		bool hasChar(unsigned int charcode);
 		
-		void aligmentCorrection(grect rect, Alignment horizontal, Alignment vertical, harray<hstr>* lines, harray<grect>* areas);
-		harray<hstr> testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, harray<grect>* areas = NULL);
-		void render(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color);
+		void positionCorrection(grect rect, Alignment horizontal, Alignment vertical, gvec2 offset, harray<hstr>* lines, harray<grect>* areas);
+		harray<hstr> testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, gvec2 offset = gvec2(0.0f, 0.0f), harray<grect>* areas = NULL);
+		void render(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset);
 		
 	protected:
 		hstr name;

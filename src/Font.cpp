@@ -12,6 +12,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include <hltypes/harray.h>
 #include <hltypes/hfile.h>
 #include <hltypes/hstring.h>
+#include <hltypes/util.h>
 
 #include "Font.h"
 
@@ -162,39 +163,37 @@ namespace Atres
 		this->scale = (value == 0.0f ? this->defaultScale : value);
 	}
 	
-	void Font::aligmentCorrection(grect rect, Alignment horizontal, Alignment vertical, harray<hstr>* lines, harray<grect>* areas)
+	void Font::positionCorrection(grect rect, Alignment horizontal, Alignment vertical, gvec2 offset, harray<hstr>* lines, harray<grect>* areas)
 	{
 		float lineHeight = this->getLineHeight();
 		// vertical correction
-		if (vertical != Atres::TOP)
+		switch (vertical)
 		{
-			float difference = lines->size() * lineHeight - rect.h;
-			if (vertical == Atres::CENTER)
-			{
-				difference /= 2;
-				while (lines->size() > 0 && (lines->size() - 2) * lineHeight >= rect.h)
-				{
-					lines->pop_front();
-					areas->pop_front();
-					if (lines->size() > 0)
-					{
-						lines->pop_back();
-						areas->pop_back();
-					}
-				}
-			}
-			else if (vertical == Atres::BOTTOM)
-			{
-				while (lines->size() > 0 && (lines->size() - 1) * lineHeight >= rect.h)
-				{
-					lines->pop_front();
-					areas->pop_front();
-				}
-			}
-			foreach (grect, it, *areas)
-			{
-				(*it).y -= difference;
-			}
+		case Atres::CENTER:
+			offset.y += (lines->size() * lineHeight - rect.h) / 2;
+			break;
+		case Atres::BOTTOM:
+			offset.y += lines->size() * lineHeight - rect.h;
+			break;
+		}
+		// lines to skip at beginning
+		int count = offset.y / lineHeight;
+		count = hmin(count, lines->size());
+		if (count > 0)
+		{
+			lines->pop_front(count);
+			areas->pop_front(count);
+		}
+		// number of lines fitting in
+		count = lines->size() - (int)((offset.y + rect.h) / lineHeight) - count - 1;
+		if (count > 0)
+		{
+			lines->pop_back(count);
+			areas->pop_back(count);
+		}
+		foreach (grect, it, *areas)
+		{
+			(*it).y -= offset.y;
 		}
 		// horizontal correction
 		if (areas != NULL && horizontal != LEFT && horizontal != LEFT_WRAPPED)
@@ -216,7 +215,7 @@ namespace Atres
 		}
 	}
 	
-	harray<hstr> Font::testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, harray<grect>* areas)
+	harray<hstr> Font::testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, gvec2 offset, harray<grect>* areas)
 	{
 		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED);
 		harray<hstr> result;
@@ -225,7 +224,7 @@ namespace Atres
 		bool checkingSpaces;
 		float lineHeight = this->getLineHeight();
 		float width;
-		float offset;
+		float advance;
 		unsigned int code = 0;
 		int i = 0;
 		int start = 0;
@@ -241,14 +240,14 @@ namespace Atres
 			start = i;
 			current = 0;
 			width = 0.0f;
-			offset = 0.0f;
+			advance = 0.0f;
 			checkingSpaces = false;
 			while (true) // checking how much fits into this line
 			{
 				code = getCharUtf8(&str[i], &byteLength);
 				if (code == '\n')
 				{
-					width = offset;
+					width = advance;
 					i += byteLength;
 					current = i - start;
 					break;
@@ -257,7 +256,7 @@ namespace Atres
 				{
 					if (!checkingSpaces)
 					{
-						width = offset;
+						width = advance;
 						current = i - start;
 					}
 					checkingSpaces = true;
@@ -271,12 +270,12 @@ namespace Atres
 				{
 					checkingSpaces = false;
 				}
-				offset += this->characters[code].aw * this->scale;
-				if (wrapped && offset > rect.w) // current word doesn't fit anymore
+				advance += this->characters[code].aw * this->scale;
+				if (wrapped && advance > rect.w) // current word doesn't fit anymore
 				{
 					if (current == 0) // whole word doesn't fit into line, just chop it off
 					{
-						width = offset - this->characters[code].aw * this->scale;;
+						width = advance - this->characters[code].aw * this->scale;;
 						current = i - start;
 					}
 					break;
@@ -289,20 +288,16 @@ namespace Atres
 				*areas += grect(rect.x, rect.y + result.size() * lineHeight, width, lineHeight);
 			}
 			result += (current > 0 ? text(start, current).trim() : "");
-			if (vertical == Atres::TOP && result.size() * lineHeight >= rect.h)
-			{
-				break;
-			}
 		}
-		this->aligmentCorrection(rect, horizontal, vertical, &result, areas);
+		this->positionCorrection(rect, horizontal, vertical, offset, &result, areas);
 		return result;
 	}
 	
-	void Font::render(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color)
+	void Font::render(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
 		CharacterRenderOp* op = rops + nOps;
 		harray<grect> areas;
-		harray<hstr> lines = this->testRender(rect, text, horizontal, vertical, &areas);
+		harray<hstr> lines = this->testRender(rect, text, horizontal, vertical, offset, &areas);
 		float height = this->getHeight();
 		float lineHeight = this->getLineHeight();
 		if (lines.size() > 0)
