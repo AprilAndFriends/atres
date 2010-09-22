@@ -27,20 +27,18 @@ AprilUI::Dataset* dataset;
 AprilUI::Object* root;
 
 bool clicked;
-float x;
-float y;
+gvec2 position;
+gvec2 offset;
 
 bool render(float time_increase)
 {
 	April::rendersys->clear();
 	April::rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
-
 	root->draw();
 	root->update(time_increase);
-	
-	//Atres::drawText((600 + x, 700 + y, 120, 38, "This is a vertical test.\nIt really is. Really.");
-	April::rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
-	
+	April::rendersys->drawColoredQuad(700, 600, 240, 76, 0, 0, 0, 0.5f);
+	Atres::drawText("arial:2.0", grect(700, 600, 240, 76), "This is a vertical test.\nIt really is. Really.",
+		Atres::CENTER, Atres::CENTER, April::Color(255, 255, 255, 255), offset);
 	return true;
 }
 
@@ -57,15 +55,22 @@ void onKeyUp(unsigned int keycode)
 void onMouseDown(float x, float y, int button)
 {
 	root->OnMouseDown(button, x, y);
+	position = April::rendersys->getCursorPos() + offset;
+	clicked = true;
 }
 
 void onMouseUp(float x, float y, int button)
 {
 	root->OnMouseUp(button, x, y);
+	clicked = false;
 }
 
 void onMouseMove(float x, float y)
 {
+	if (clicked)
+	{
+		offset = position - gvec2(x, y);
+	}
 	root->OnMouseMove(x, y);
 }
 
@@ -129,8 +134,6 @@ int main()
 		dataset = new AprilUI::Dataset("../media/demo_simple.datadef");
 		dataset->load();
 		AprilUI::Label* label = (AprilUI::Label*)dataset->getObject("test_4");
-		label->setText("This is a vertical test.\nIt really is. Really.");
-		label = (AprilUI::Label*)dataset->getObject("test_5");
 		label->setText("This is a vertical test.\nIt really is. Really.");
 		root = dataset->getObject("root");
 		April::rendersys->enterMainLoop();

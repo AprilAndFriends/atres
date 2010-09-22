@@ -186,6 +186,7 @@ namespace Atres
 		}
 		// number of lines fitting in
 		count = lines->size() - (int)((offset.y + rect.h) / lineHeight) - count - 1;
+		count = hmin(count, lines->size());
 		if (count > 0)
 		{
 			lines->pop_back(count);
@@ -196,21 +197,31 @@ namespace Atres
 			(*it).y -= offset.y;
 		}
 		// horizontal correction
-		if (areas != NULL && horizontal != LEFT && horizontal != LEFT_WRAPPED)
+		if (areas != NULL)
 		{
-			if (horizontal == RIGHT || horizontal == RIGHT_WRAPPED)
+			switch (horizontal)
 			{
+			case LEFT:
+			case LEFT_WRAPPED:
 				foreach (grect, it, *areas)
 				{
-					(*it).x += rect.w - (*it).w;
+					(*it).x += -offset.x;
 				}
-			}
-			else if (horizontal == CENTER || horizontal == CENTER_WRAPPED)
-			{
+				break;
+			case CENTER:
+			case CENTER_WRAPPED:
 				foreach (grect, it, *areas)
 				{
-					(*it).x += (rect.w - (*it).w) / 2;
+					(*it).x += -offset.x + (rect.w - (*it).w) / 2;
 				}
+				break;
+			case RIGHT:
+			case RIGHT_WRAPPED:
+				foreach (grect, it, *areas)
+				{
+					(*it).x += -offset.x + rect.w - (*it).w;
+				}
+				break;
 			}
 		}
 	}
