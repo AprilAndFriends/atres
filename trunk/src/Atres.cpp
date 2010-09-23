@@ -8,14 +8,13 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 #include <stdio.h>
-#include <stdlib.h>
 
 #include <hltypes/exception.h>
-#include <hltypes/exception.h>
+#include <hltypes/harray.h>
+#include <hltypes/hstring.h>
 
 #include "Atres.h"
 #include "Font.h"
-#include <stdio.h>
 
 namespace Atres
 {
@@ -66,7 +65,8 @@ namespace Atres
 	{
 		Font* f = getFont(fontName);
 		harray<grect> areas;
-		harray<hstr> lines = f->testRender(rect, text, horizontal, vertical, areas, offset);
+		harray<hstr> lines;
+		f->testRender(rect, text, horizontal, vertical, lines, areas, offset);
 		f->renderRaw(rect + shadowOffset, lines, areas, shadowColor);
 		flushRenderOperations();
 		f->renderRaw(rect, lines, areas, color);
@@ -77,7 +77,8 @@ namespace Atres
 	{
 		Font* f = getFont(fontName);
 		harray<grect> areas;
-		harray<hstr> lines = f->testRender(rect, text, horizontal, vertical, areas, offset);
+		harray<hstr> lines;
+		f->testRender(rect, text, horizontal, vertical, lines, areas, offset);
 		f->renderRaw(rect, lines, areas, borderColor, gvec2(-borderOffset, -borderOffset) * f->getScale());
 		f->renderRaw(rect, lines, areas, borderColor, gvec2(borderOffset, -borderOffset) * f->getScale());
 		f->renderRaw(rect, lines, areas, borderColor, gvec2(-borderOffset, borderOffset) * f->getScale());
@@ -231,42 +232,21 @@ namespace Atres
 	
 	float getTextWidth(chstr fontName, chstr text)
 	{
-		harray<grect> areas;
-		getFont(fontName)->testRender(grect(0, 0, 1, 1), text, LEFT, TOP, areas);
-		float maxWidth = 0.0f;
-		foreach (grect, it, areas)
-		{
-			if (maxWidth < (*it).w)
-			{
-				maxWidth = (*it).w;
-			}
-		}
-		return maxWidth;
+		return getFont(fontName)->getTextWidth(text);
 	}
 
 	float getTextHeight(chstr fontName, chstr text, float maxWidth)
 	{
-		harray<grect> areas;
-		//2DO - when not wrapped, no unlimited rect is needed
 		Font* f = getFont(fontName);
-		harray<hstr> lines = f->testRender(grect(0, 0, maxWidth, 100000), text, LEFT_WRAPPED, TOP, areas);
+		harray<grect> areas;
+		harray<hstr> lines;
+		f->testRender(grect(0, 0, maxWidth, 100000), text, LEFT_WRAPPED, TOP, lines, areas);
 		return (lines.size() * f->getLineHeight());
 	}
 	
-	int getTextCount(chstr fontName, chstr text, float maxWidth, float maxHeight)
+	int getTextCount(chstr fontName, chstr text, float maxWidth)
 	{
-		harray<grect> areas;
-		harray<hstr> lines = getFont(fontName)->testRender(grect(0, 0, maxWidth, maxHeight), text, LEFT_WRAPPED, TOP, areas);
-		if (lines.size() == 0)
-		{
-			return 0;
-		}
-		hstr str = text;
-		foreach (hstr, it, lines)
-		{
-			str = str.replace((*it), "").ltrim().ltrim('\n');
-		}
-		return (text.size() - str.size());
+		return (text != "" ? getFont(fontName)->getTextCount(text, maxWidth) : 0);
 	}
 	
 	void setDefaultFont(chstr name)

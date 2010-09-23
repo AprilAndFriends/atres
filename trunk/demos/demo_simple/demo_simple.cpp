@@ -37,8 +37,8 @@ bool render(float time_increase)
 	root->draw();
 	root->update(time_increase);
 	April::rendersys->drawColoredQuad(700, 600, 240, 76, 0, 0, 0, 0.5f);
-	Atres::drawText(grect(700, 600, 240, 76), "This is a vertical test.\nIt really is. Really.",
-		Atres::CENTER, Atres::CENTER, April::Color(255, 255, 255, 255), offset, Atres::BORDER);
+	Atres::drawTextBordered(grect(700, 600, 240, 76), "This is a vertical test.\nIt really is. Really.",
+		Atres::CENTER_WRAPPED, Atres::CENTER, April::Color(255, 255, 255, 255), offset);
 	return true;
 }
 
