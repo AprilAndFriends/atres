@@ -9,6 +9,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 \************************************************************************************/
 #include <april/RenderSystem.h>
 #include <gtypes/Rectangle.h>
+#include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
 #include <hltypes/hfile.h>
 #include <hltypes/hstring.h>
@@ -320,10 +321,10 @@ namespace Atres
 		float ratioBottom;
 		float ratioLeft;
 		float ratioRight;
+		rect += offset;
 		foreach (grect, it, areas)
 		{
-			(*it).x += offset.x;
-			(*it).y += offset.y;
+			(*it) += offset;
 		}
 		for (int i = 0; i < lines.size(); i++)
 		{

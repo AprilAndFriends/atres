@@ -11,15 +11,21 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include <stdlib.h>
 
 #include <hltypes/exception.h>
+#include <hltypes/exception.h>
 
 #include "Atres.h"
 #include "Font.h"
 
 namespace Atres
 {
-    std::map<hstr,Font*> fonts;
+    hmap<hstr,Font*> fonts;
 	Font* default_font=0;
 	void (*g_logFunction)(chstr)=atres_writelog;
+	
+	gvec2 shadowOffset(1.0f, 1.0f);
+	April::Color shadowColor(255, 0, 0, 0);
+	float borderOffset = 1.0f;
+	April::Color borderColor(255, 0, 0, 0);
 
     void init()
     {
@@ -33,6 +39,11 @@ namespace Atres
 		}
     }
 
+	void setLogFunction(void (*fnptr)(chstr))
+	{
+		g_logFunction=fnptr;
+	}
+	
 	void logMessage(chstr message, chstr prefix)
 	{
 		g_logFunction(prefix + message);
@@ -43,68 +54,176 @@ namespace Atres
 		printf("%s\n", message.c_str());		
 	}
 	
-	void setLogFunction(void (*fnptr)(chstr))
+/******* DRAW TEXT *****************************************************/
+
+	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
-		g_logFunction=fnptr;
+		getFont(fontName)->render(rect, text, horizontal, vertical, color, offset);
+		flushRenderOperations();
 	}
-	
-	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset, Effect effect)
+
+	void drawTextShadowed(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
 		Font* f = getFont(fontName);
 		harray<grect> areas;
 		harray<hstr> lines = f->testRender(rect, text, horizontal, vertical, areas, offset);
-		if (effect == SHADOW || effect == BORDER || effect == BORDER_4)
-		{
-			April::Color borderColor(255, 0, 0, 0);
-			f->renderRaw(rect, lines, areas, borderColor, gvec2(1.0f, 1.0f));
-			if (effect == BORDER || effect == BORDER_4)
-			{
-				f->renderRaw(rect, lines, areas, borderColor, gvec2(-1.0f, -1.0f));
-				f->renderRaw(rect, lines, areas, borderColor, gvec2(1.0f, -1.0f));
-				f->renderRaw(rect, lines, areas, borderColor, gvec2(-1.0f, 1.0f));
-				if (effect == BORDER)
-				{
-					f->renderRaw(rect, lines, areas, borderColor, gvec2(0.0f, -1.0f));
-					f->renderRaw(rect, lines, areas, borderColor, gvec2(0.0f, 1.0f));
-					f->renderRaw(rect, lines, areas, borderColor, gvec2(-1.0f, 0.0f));
-					f->renderRaw(rect, lines, areas, borderColor, gvec2(1.0f, 0.0f));
-				}
-			}
-			flushRenderOperations();
-		}
+		f->renderRaw(rect + shadowOffset, lines, areas, shadowColor);
+		flushRenderOperations();
 		f->renderRaw(rect, lines, areas, color);
 		flushRenderOperations();
 	}
 
-	void drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset, Effect effect)
+	void drawTextBordered(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
-		drawText("", rect, text, horizontal, vertical, color, offset, effect);
+		Font* f = getFont(fontName);
+		harray<grect> areas;
+		harray<hstr> lines = f->testRender(rect, text, horizontal, vertical, areas, offset);
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(-borderOffset, -borderOffset) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(borderOffset, -borderOffset) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(-borderOffset, borderOffset) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(borderOffset, borderOffset) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(0.0f, -borderOffset) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(-borderOffset, 0.0f) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(borderOffset, 0.0f) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(0.0f, borderOffset) * f->getScale());
+		flushRenderOperations();
+		f->renderRaw(rect, lines, areas, color);
+		flushRenderOperations();
+	}
+
+/******* DRAW TEXT OVERLOADS *******************************************/
+
+	void drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
+	{
+		drawText("", rect, text, horizontal, vertical, color, offset);
 	}
 
 	void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		April::Color color, gvec2 offset, Effect effect)
+		April::Color color, gvec2 offset)
 	{
-		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset, effect);
+		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
 	}
 	
 	void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		April::Color color, gvec2 offset, Effect effect)
+		April::Color color, gvec2 offset)
 	{
-		drawText("", grect(x, y, w, h), text, horizontal, vertical, color, offset, effect);
+		drawText("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
 	}
 	
 	void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset, Effect effect)
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), offset, effect);
+		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), offset);
 	}
 	
 	void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset, Effect effect)
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		drawText("", x, y, w, h, text, horizontal, vertical, r, g, b, a, offset, effect);
+		drawText("", x, y, w, h, text, horizontal, vertical, r, g, b, a, offset);
 	}
 	
+	void drawTextShadowed(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
+	{
+		drawTextShadowed("", rect, text, horizontal, vertical, color, offset);
+	}
+
+	void drawTextShadowed(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		April::Color color, gvec2 offset)
+	{
+		drawTextShadowed(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
+	}
+	
+	void drawTextShadowed(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		April::Color color, gvec2 offset)
+	{
+		drawTextShadowed("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
+	}
+	
+	void drawTextShadowed(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
+	{
+		drawTextShadowed(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), offset);
+	}
+	
+	void drawTextShadowed(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
+	{
+		drawTextShadowed("", x, y, w, h, text, horizontal, vertical, r, g, b, a, offset);
+	}
+	
+	void drawTextBordered(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
+	{
+		drawTextBordered("", rect, text, horizontal, vertical, color, offset);
+	}
+
+	void drawTextBordered(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		April::Color color, gvec2 offset)
+	{
+		drawTextBordered(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
+	}
+	
+	void drawTextBordered(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		April::Color color, gvec2 offset)
+	{
+		drawTextBordered("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
+	}
+	
+	void drawTextBordered(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
+	{
+		drawTextBordered(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), offset);
+	}
+	
+	void drawTextBordered(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
+	{
+		drawTextBordered("", x, y, w, h, text, horizontal, vertical, r, g, b, a, offset);
+	}
+	
+/******* PROPERTIES ****************************************************/
+
+	gvec2 getShadowOffset()
+	{
+		return shadowOffset;
+	}
+	
+	void setShadowOffset(gvec2 value)
+	{
+		shadowOffset = value;
+	}
+	
+	April::Color getShadowColor()
+	{
+		return shadowColor;
+	}
+	
+	void setShadowColor(April::Color value)
+	{
+		shadowColor = value;
+	}
+	
+	float getBorderOffset()
+	{
+		return borderOffset;
+	}
+	
+	void setBorderOffset(float value)
+	{
+		borderOffset = value;
+	}
+	
+	April::Color getBorderColor()
+	{
+		return borderColor;
+	}
+	
+	void setBorderColor(April::Color value)
+	{
+		borderColor = value;
+	}
+	
+/******* OTHER *********************************************************/
+
 	float getFontHeight(chstr fontName)
 	{
 		return getFont(fontName)->getHeight();
@@ -157,6 +276,7 @@ namespace Atres
     
     void loadFont(chstr filename)
     {
+		logMessage(hsprintf("loading font %s", filename.c_str()));
         Font* f=new Font(filename);
         fonts[f->getName()]=f;
 		if (default_font == 0) default_font=f;
