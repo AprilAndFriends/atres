@@ -52,6 +52,11 @@ void onKeyUp(unsigned int keycode)
 	root->OnKeyUp(keycode);
 }
 
+void onChar(unsigned int charcode)
+{
+	root->OnChar(charcode);
+}
+
 void onMouseDown(float x, float y, int button)
 {
 	root->OnMouseDown(button, x, y);
@@ -125,7 +130,7 @@ int main()
 		April::init("OpenGL", SCREEN_WIDTH, SCREEN_HEIGHT, 0, "demo_simple");
 		April::rendersys->registerUpdateCallback(render);
 		April::rendersys->registerMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
-		April::rendersys->registerKeyboardCallbacks(&onKeyDown, &onKeyUp, NULL);
+		April::rendersys->registerKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
 		AprilUI::init();
 #ifdef _DEBUG
 		AprilUI::setDebugMode(true);
