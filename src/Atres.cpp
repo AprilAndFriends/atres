@@ -7,22 +7,28 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <hltypes/exception.h>
+#include <hltypes/exception.h>
+
 #include "Atres.h"
 #include "Font.h"
-#include <hltypes/exception.h>
-#include <stdlib.h>
 #include <stdio.h>
 
 namespace Atres
 {
-    std::map<hstr,Font*> fonts;
-	RenderInterface* render_iface=0;
+    hmap<hstr,Font*> fonts;
 	Font* default_font=0;
 	void (*g_logFunction)(chstr)=atres_writelog;
+	gvec2 shadowOffset(1.0f, 1.0f);
+	April::Color shadowColor(255, 0, 0, 0);
+	float borderOffset = 1.0f;
+	April::Color borderColor(255, 0, 0, 0);
 
-    void init(RenderInterface* iface)
+    void init()
     {
-		render_iface=iface;
     }
     
     void destroy()
@@ -33,6 +39,11 @@ namespace Atres
 		}
     }
 
+	void setLogFunction(void (*fnptr)(chstr))
+	{
+		g_logFunction=fnptr;
+	}
+	
 	void logMessage(chstr message, chstr prefix)
 	{
 		g_logFunction(prefix + message);
@@ -43,99 +54,219 @@ namespace Atres
 		printf("%s\n", message.c_str());		
 	}
 	
-	void setLogFunction(void (*fnptr)(chstr))
+/******* DRAW TEXT *****************************************************/
+
+	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
-		g_logFunction=fnptr;
+		getFont(fontName)->render(rect, text, horizontal, vertical, color, offset);
+		flushRenderOperations();
+	}
+
+	void drawTextShadowed(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
+	{
+		Font* f = getFont(fontName);
+		harray<grect> areas;
+		harray<hstr> lines = f->testRender(rect, text, horizontal, vertical, areas, offset);
+		f->renderRaw(rect + shadowOffset, lines, areas, shadowColor);
+		flushRenderOperations();
+		f->renderRaw(rect, lines, areas, color);
+		flushRenderOperations();
+	}
+
+	void drawTextBordered(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
+	{
+		Font* f = getFont(fontName);
+		harray<grect> areas;
+		harray<hstr> lines = f->testRender(rect, text, horizontal, vertical, areas, offset);
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(-borderOffset, -borderOffset) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(borderOffset, -borderOffset) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(-borderOffset, borderOffset) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(borderOffset, borderOffset) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(0.0f, -borderOffset) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(-borderOffset, 0.0f) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(borderOffset, 0.0f) * f->getScale());
+		f->renderRaw(rect, lines, areas, borderColor, gvec2(0.0f, borderOffset) * f->getScale());
+		flushRenderOperations();
+		f->renderRaw(rect, lines, areas, color);
+		flushRenderOperations();
+	}
+
+/******* DRAW TEXT OVERLOADS *******************************************/
+
+	void drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
+	{
+		drawText("", rect, text, horizontal, vertical, color, offset);
+	}
+
+	void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		April::Color color, gvec2 offset)
+	{
+		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
 	}
 	
-	float drawText(chstr font_name,float x,float y,float w_max,float h_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
+	void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		April::Color color, gvec2 offset)
 	{
-		float w;
-		Font* f=getFont(font_name);
-		if (effect == SHADOW || effect == BORDER || effect == BORDER_4)
-		{
-			f->render(x+1,y+1,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
-		}
-		if (effect == BORDER || effect == BORDER_4)
-		{
-			f->render(x-1,y-1,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
-			f->render(x+1,y-1,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
-			f->render(x-1,y+1,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
-		}
-		if (effect == BORDER)
-		{
-			f->render(x,y-1,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
-			f->render(x,y+1,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
-			f->render(x+1,y,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
-			f->render(x-1,y,w_max,h_max,alignment,0,text,1,0,0,0,a,0,0,0);
-		}
-		flushRenderOperations();
-		f->render(x,y,w_max,h_max,alignment,0,text,1,r,g,b,a,&w,0,0);
-		flushRenderOperations();
-		return w;
-	}
-
-	float drawWrappedText(chstr font_name,float x,float y,float w_max,float h_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
-	{
-		float h;
-		Font* f=getFont(font_name);
-		if (effect == SHADOW || effect == BORDER || effect == BORDER_4)
-		{
-			f->render(x+1,y+1,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
-		}
-		if (effect == BORDER || effect == BORDER_4)
-		{
-			f->render(x-1,y-1,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
-			f->render(x+1,y-1,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
-			f->render(x-1,y+1,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
-		}
-		if (effect == BORDER)
-		{
-			f->render(x,y-1,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
-			f->render(x,y+1,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
-			f->render(x+1,y,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
-			f->render(x-1,y,w_max,h_max,alignment,1,text,1,0,0,0,a,0,0,0);
-		}
-		flushRenderOperations();
-		f->render(x,y,w_max,h_max,alignment,1,text,1,r,g,b,a,0,&h,0);
-		flushRenderOperations();
-		return h;
-	}
-
-	float drawText(float x,float y,float w_max,float h_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
-	{
-		return drawText("",x,y,w_max,h_max,text,r,g,b,a,alignment,effect);
-	}
-
-	float drawWrappedText(float x,float y,float w_max,float h_max,chstr text,float r,float g,float b,float a,Alignment alignment,Effect effect)
-	{
-		return drawWrappedText("",x,y,w_max,h_max,text,r,g,b,a,alignment,effect);
-	}
-
-	float getTextWidth(chstr font_name,chstr text)
-	{
-		float w;
-		getFont(font_name)->render(0,0,100000,100000,LEFT,0,text,0,1,1,1,1,&w,0,0);
-		return w;
-	}
-
-	float getTextHeight(chstr font_name,chstr text)
-	{
-		return getFont(font_name)->getHeight();
+		drawText("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
 	}
 	
-	float getWrappedTextHeight(chstr font_name,float w_max,chstr text)
+	void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		float h;
-		getFont(font_name)->render(0,0,w_max,100000,LEFT,1,text,0,1,1,1,1,0,&h,0);
-		return h;
+		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), offset);
 	}
 	
-	int getWrappedTextCount(chstr font_name,float w_max,float h_max,chstr text)
+	void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		int c;
-		getFont(font_name)->render(0,0,w_max,h_max,LEFT,1,text,0,1,1,1,1,0,0,&c);
-		return c;
+		drawText("", x, y, w, h, text, horizontal, vertical, r, g, b, a, offset);
+	}
+	
+	void drawTextShadowed(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
+	{
+		drawTextShadowed("", rect, text, horizontal, vertical, color, offset);
+	}
+
+	void drawTextShadowed(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		April::Color color, gvec2 offset)
+	{
+		drawTextShadowed(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
+	}
+	
+	void drawTextShadowed(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		April::Color color, gvec2 offset)
+	{
+		drawTextShadowed("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
+	}
+	
+	void drawTextShadowed(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
+	{
+		drawTextShadowed(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), offset);
+	}
+	
+	void drawTextShadowed(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
+	{
+		drawTextShadowed("", x, y, w, h, text, horizontal, vertical, r, g, b, a, offset);
+	}
+	
+	void drawTextBordered(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
+	{
+		drawTextBordered("", rect, text, horizontal, vertical, color, offset);
+	}
+
+	void drawTextBordered(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		April::Color color, gvec2 offset)
+	{
+		drawTextBordered(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
+	}
+	
+	void drawTextBordered(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		April::Color color, gvec2 offset)
+	{
+		drawTextBordered("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
+	}
+	
+	void drawTextBordered(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
+	{
+		drawTextBordered(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), offset);
+	}
+	
+	void drawTextBordered(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
+	{
+		drawTextBordered("", x, y, w, h, text, horizontal, vertical, r, g, b, a, offset);
+	}
+	
+/******* PROPERTIES ****************************************************/
+
+	gvec2 getShadowOffset()
+	{
+		return shadowOffset;
+	}
+	
+	void setShadowOffset(gvec2 value)
+	{
+		shadowOffset = value;
+	}
+	
+	April::Color getShadowColor()
+	{
+		return shadowColor;
+	}
+	
+	void setShadowColor(April::Color value)
+	{
+		shadowColor = value;
+	}
+	
+	float getBorderOffset()
+	{
+		return borderOffset;
+	}
+	
+	void setBorderOffset(float value)
+	{
+		borderOffset = value;
+	}
+	
+	April::Color getBorderColor()
+	{
+		return borderColor;
+	}
+	
+	void setBorderColor(April::Color value)
+	{
+		borderColor = value;
+	}
+	
+/******* OTHER *********************************************************/
+
+	float getFontHeight(chstr fontName)
+	{
+		return getFont(fontName)->getHeight();
+	}
+	
+	float getTextWidth(chstr fontName, chstr text)
+	{
+		harray<grect> areas;
+		getFont(fontName)->testRender(grect(0, 0, 1, 1), text, LEFT, TOP, areas);
+		float maxWidth = 0.0f;
+		foreach (grect, it, areas)
+		{
+			if (maxWidth < (*it).w)
+			{
+				maxWidth = (*it).w;
+			}
+		}
+		return maxWidth;
+	}
+
+	float getTextHeight(chstr fontName, chstr text, float maxWidth)
+	{
+		harray<grect> areas;
+		//2DO - when not wrapped, no unlimited rect is needed
+		Font* f = getFont(fontName);
+		harray<hstr> lines = f->testRender(grect(0, 0, maxWidth, 100000), text, LEFT_WRAPPED, TOP, areas);
+		return (lines.size() * f->getLineHeight());
+	}
+	
+	int getTextCount(chstr fontName, chstr text, float maxWidth, float maxHeight)
+	{
+		harray<grect> areas;
+		harray<hstr> lines = getFont(fontName)->testRender(grect(0, 0, maxWidth, maxHeight), text, LEFT_WRAPPED, TOP, areas);
+		if (lines.size() == 0)
+		{
+			return 0;
+		}
+		hstr str = text;
+		foreach (hstr, it, lines)
+		{
+			str = str.replace((*it), "").ltrim().ltrim('\n');
+		}
+		return (text.size() - str.size());
 	}
 	
 	void setDefaultFont(chstr name)
@@ -145,6 +276,7 @@ namespace Atres
     
     void loadFont(chstr filename)
     {
+		logMessage(hsprintf("loading font %s", filename.c_str()));
         Font* f=new Font(filename);
         fonts[f->getName()]=f;
 		if (default_font == 0) default_font=f;
@@ -177,13 +309,4 @@ namespace Atres
         return f;
     }
 	
-	void setRenderInterface(RenderInterface* iface)
-	{
-		render_iface=iface;
-	}
-	
-	RenderInterface* getRenderInterface()
-	{
-		return render_iface;
-	}
 }

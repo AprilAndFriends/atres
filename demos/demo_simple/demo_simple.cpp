@@ -8,27 +8,70 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-#include "april/RenderSystem.h"
-#include "aprilui/AprilUI.h"
-#include "aprilui/Dataset.h"
-#include "aprilui/Objects.h"
-#include "atres/Atres.h"
 #include <iostream>
+
+#include <april/RenderSystem.h>
+#include <aprilui/AprilUI.h>
+#include <aprilui/Dataset.h>
+#include <aprilui/Objects.h>
+#include <atres/Atres.h>
 
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
+
 AprilUI::Dataset* dataset;
+AprilUI::Object* root;
+
+bool clicked;
+gvec2 position;
+gvec2 offset;
 
 bool render(float time_increase)
 {
-	rendersys->clear();
-	rendersys->setOrthoProjection(800,600);
-
-	dataset->getObject("root")->draw();
-	dataset->getObject("root")->update(time_increase);
+	April::rendersys->clear();
+	April::rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
+	root->draw();
+	root->update(time_increase);
+	April::rendersys->drawColoredQuad(700, 600, 240, 76, 0, 0, 0, 0.5f);
+	Atres::drawText(grect(700, 600, 240, 76), "This is a vertical test.\nIt really is. Really.",
+		Atres::CENTER, Atres::CENTER, April::Color(255, 255, 255, 255), offset, Atres::BORDER);
 	return true;
+}
+
+void onKeyDown(unsigned int keycode)
+{
+	root->OnKeyDown(keycode);
+}
+
+void onKeyUp(unsigned int keycode)
+{
+	root->OnKeyUp(keycode);
+}
+
+void onMouseDown(float x, float y, int button)
+{
+	root->OnMouseDown(button, x, y);
+	position = April::rendersys->getCursorPos() + offset;
+	clicked = true;
+}
+
+void onMouseUp(float x, float y, int button)
+{
+	root->OnMouseUp(button, x, y);
+	clicked = false;
+}
+
+void onMouseMove(float x, float y)
+{
+	if (clicked)
+	{
+		offset = position - gvec2(x, y);
+	}
+	root->OnMouseMove(x, y);
 }
 
 int main()
@@ -79,23 +122,28 @@ int main()
 #endif
 	try
 	{
-		April::init("OpenGL",800,600,0,"demo_simple");
-		rendersys->registerUpdateCallback(render);
+		April::init("OpenGL", SCREEN_WIDTH, SCREEN_HEIGHT, 0, "demo_simple");
+		April::rendersys->registerUpdateCallback(render);
+		April::rendersys->registerMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
+		April::rendersys->registerKeyboardCallbacks(&onKeyDown, &onKeyUp, NULL);
 		AprilUI::init();
-
-		dataset=new AprilUI::Dataset("../media/demo_simple.datadef");
-		dataset->load();
-
+#ifdef _DEBUG
+		AprilUI::setDebugMode(true);
+#endif
 		Atres::loadFont("../media/arial.font");
-
-		rendersys->enterMainLoop();
+		dataset = new AprilUI::Dataset("../media/demo_simple.datadef");
+		dataset->load();
+		AprilUI::Label* label = (AprilUI::Label*)dataset->getObject("test_4");
+		label->setText("This is a vertical test.\nIt really is. Really.");
+		root = dataset->getObject("root");
+		April::rendersys->enterMainLoop();
 		delete dataset;
 		AprilUI::destroy();
 		April::destroy();
 	}
-	catch (AprilUI::_GenericException e)
+	catch (hltypes::exception e)
 	{
-		std::cout << e.getType() << "\n";
+		std::cout << e.message() << "\n";
 	}
 	return 0;
 }

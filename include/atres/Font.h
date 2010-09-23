@@ -10,8 +10,9 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #ifndef ATRES_FONT_H
 #define ATRES_FONT_H
 
-#include <map>
+#include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
+
 #include "Atres.h"
 #include "AtresExport.h"
 
@@ -21,31 +22,39 @@ namespace Atres
 	
 	struct AtresExport FontCharDef
 	{
-		float x,y,w,aw;
+		float x, y, w, aw;
 	};
 
 	class AtresExport Font
 	{
-		std::map<unsigned int,FontCharDef> mChars;
-		float mScale,mDefaultScale;
-		hstr mName;
-		unsigned int mResource;
-		float mHeight,mLineHeight;
-
-		
 	public:
 		Font(chstr filename);
-		Font(Font& f,float scale=1);
+		Font(Font& f, float scale = 1.0f);
 		~Font();
 
-		void render(float x,float y,float max_w,float max_h,Alignment alignment,bool wrap,chstr text,bool draw,
-			float r,float g,float b,float a,float* w_out,float* h_out,int *c_out);
+		hstr getName() { return this->name; }
+		float getHeight() { return this->height * this->scale; }
+		float getLineHeight() { return this->lineHeight * this->scale; }
+		float getScale() { return this->scale; }
+		void setScale(float value);
+		April::Texture* getTexture() { return this->texture; }
 		
 		bool hasChar(unsigned int charcode);
-		float getHeight() { return mHeight*mScale; }
-		float getScale() { return mScale; }
-		void setScale(float scale);
-		hstr getName() { return mName; }
+		
+		void positionCorrection(grect rect, Alignment horizontal, Alignment vertical, gvec2 offset, harray<hstr>& lines, harray<grect>& areas);
+		harray<hstr> testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, harray<grect>& areas, gvec2 offset = gvec2());
+		void render(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset = gvec2());
+		void renderRaw(grect rect, harray<hstr> lines, harray<grect> areas, April::Color color, gvec2 offset = gvec2());
+		
+	protected:
+		hstr name;
+		float scale;
+		float defaultScale;
+		float height;
+		float lineHeight;
+		hmap<unsigned int, FontCharDef> characters;
+		April::Texture* texture;
+		
 	};
 }
 
