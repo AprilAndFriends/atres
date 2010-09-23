@@ -162,8 +162,9 @@ namespace Atres
 		this->scale = (value == 0.0f ? this->defaultScale : value);
 	}
 	
-	void Font::positionCorrection(grect rect, Alignment horizontal, Alignment vertical, gvec2 offset, harray<hstr>& lines, harray<grect>& areas)
+	int Font::verticalCorrection(grect rect, Alignment vertical, harray<hstr>& lines, harray<grect>& areas, gvec2 offset)
 	{
+		int result;
 		float lineHeight = this->getLineHeight();
 		// vertical correction
 		switch (vertical)
@@ -182,6 +183,7 @@ namespace Atres
 			lines.pop_front(count);
 			areas.pop_front(count);
 		}
+		result = count;
 		// lines to skip on bottom
 		count = lines.size() - (int)ceil((offset.y + rect.h) / lineHeight - count);
 		count = hmin(count, lines.size());
@@ -195,6 +197,11 @@ namespace Atres
 		{
 			(*it).y -= offset.y;
 		}
+		return result;
+	}
+	
+	void Font::horizontalCorrection(grect rect, Alignment horizontal, harray<hstr>& lines, harray<grect>& areas, gvec2 offset)
+	{
 		// horizontal correction
 		switch (horizontal)
 		{
@@ -222,16 +229,52 @@ namespace Atres
 		}
 	}
 	
-	harray<hstr> Font::testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, harray<grect>& areas, gvec2 offset)
+	float Font::getTextWidth(chstr text)
+	{
+		const char* str = text.c_str();
+		float result = 0.0f;
+		unsigned int code;
+		int byteLength;
+		int i = 0;
+		while (i < text.size())
+		{
+			code = getCharUtf8(&str[i], &byteLength);
+			result += this->characters[code].aw * this->scale;
+			i += byteLength;
+		}
+		return result;
+	}
+	
+	int Font::getTextCount(chstr text, float maxWidth)
+	{
+		const char* str = text.c_str();
+		unsigned int code;
+		float width = 0.0f;
+		int byteLength;
+		int i = 0;
+		while (i < text.size())
+		{
+			code = getCharUtf8(&str[i], &byteLength);
+			width += this->characters[code].aw * this->scale;
+			if (width > maxWidth)
+			{
+				break;
+			}
+			i += byteLength;
+		}
+		return i;
+	}
+	
+	int Font::testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, harray<hstr>& lines, harray<grect>& areas, gvec2 offset)
 	{
 		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED);
-		harray<hstr> result;
 		const char* str = text.c_str();
 		int byteLength;
 		bool checkingSpaces;
 		float lineHeight = this->getLineHeight();
 		float width;
 		float advance;
+		harray<int> counts;
 		unsigned int code = 0;
 		int i = 0;
 		int start = 0;
@@ -240,10 +283,12 @@ namespace Atres
 		while (i < text.size())
 		{
 			i = start + current;
+			counts += current;
 			while (i < text.size() && str[i] == ' ') // skip initial spaces in the line
 			{
 				i++;
 			}
+			//counts += i - start;
 			start = i;
 			current = 0;
 			width = 0.0f;
@@ -282,25 +327,42 @@ namespace Atres
 				{
 					if (current == 0) // whole word doesn't fit into line, just chop it off
 					{
-						width = advance - this->characters[code].aw * this->scale;;
+						width = advance - this->characters[code].aw * this->scale;
 						current = i - start;
 					}
 					break;
 				}
 				i += byteLength;
 			}
+			counts[counts.size() - 1] += current;
 			// horizontal offset
-			areas += grect(rect.x, rect.y + result.size() * lineHeight, width, lineHeight);
-			result += (current > 0 ? text(start, current).trim() : "");
+			areas += grect(rect.x, rect.y + lines.size() * lineHeight, width, lineHeight);
+			lines += (current > 0 ? text(start, current).trim() : "");
 		}
-		this->positionCorrection(rect, horizontal, vertical, offset, result, areas);
-		return result;
+		int count = this->verticalCorrection(rect, vertical, lines, areas, offset);
+		this->horizontalCorrection(rect, horizontal, lines, areas, offset);
+		if (count > 0)
+		{
+			counts.pop_front(count);
+		}
+		count = counts.size() - lines.size();
+		if (count > 0)
+		{
+			counts.pop_back(count);
+		}
+		count = 0;
+		foreach (int, it, counts)
+		{
+			count += (*it);
+		}
+		return hmin(count, text.size());
 	}
 	
 	void Font::render(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
 		harray<grect> areas;
-		harray<hstr> lines = this->testRender(rect, text, horizontal, vertical, areas, offset);
+		harray<hstr> lines;
+		this->testRender(rect, text, horizontal, vertical, lines, areas, offset);
 		this->renderRaw(rect, lines, areas, color);
 	}
 	

@@ -6,10 +6,10 @@
 		
 		<Object type="Label" name="test_0" text="This is blasphemy." vert_formatting="top" x="60" y="24" w="640" h="64"/>
 		<Object type="Label" name="test_1" text="This is madness." font="arial:0.8" horz_formatting="left_wrapped" x="70" y="144" w="864" h="32"/>
-		<Object type="EditBox" name="test_box" text="Hello" horz_formatting="left_wrapped" x="70" y="180" w="128" h="32"/>
+		<Object type="EditBox" name="test_box" text="Hello" x="70" y="180" w="128" h="32"/>
 		<Object type="Label" name="test_2" text="No. This is Sparta!" font="arial:2.0" horz_formatting="right_wrapped" vert_formatting="bottom" x="180" y="400" w="512" h="128"/>
 		<Object type="Label" name="test_3" text="This is a test that is supposed to show whether X_horz_formatting wrapped works right or not." horz_formatting="center_wrapped" vert_formatting="center" x="80" y="600" w="160" h="84"/>
-		<Object type="Label" name="test_4" text="" x="400" y="600" w="120" h="38"/>
+		<Object type="Label" name="test_4" horz_formatting="right" text="" x="400" y="600" w="120" h="38"/>
     </Object>
 
 </DataDefinition>

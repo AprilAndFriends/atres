@@ -82,7 +82,7 @@ namespace Atres
 	AtresFnExport float getFontHeight(chstr fontName);
 	AtresFnExport float getTextWidth(chstr fontName, chstr text);
 	AtresFnExport float getTextHeight(chstr fontName, chstr text, float maxWidth);
-	AtresFnExport int getTextCount(chstr fontName, chstr text, float maxWidth, float maxHeight);
+	AtresFnExport int getTextCount(chstr fontName, chstr text, float maxWidth);
 	
 	AtresFnExport void setDefaultFont(chstr name);
 	AtresFnExport void loadFont(chstr filename);
