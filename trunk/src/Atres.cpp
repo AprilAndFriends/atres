@@ -82,9 +82,9 @@ namespace Atres
 		return *s;
 	}
 
-	harray<FormatOperationDepr> verticalCorrection(grect rect, Alignment vertical, harray<FormatOperationDepr> operations, float y, float lineHeight)
+	harray<FormatOperation> verticalCorrection(grect rect, Alignment vertical, harray<FormatOperation> operations, float y, float lineHeight)
 	{
-		harray<FormatOperationDepr> result;
+		harray<FormatOperation> result;
 		int lines = round((operations[operations.size() - 1].rect.y - operations[0].rect.y) / lineHeight) + 1;
 		// vertical correction
 		switch (vertical)
@@ -97,7 +97,7 @@ namespace Atres
 			break;
 		}
 		// remove lines that cannot be seen anyway
-		foreach (FormatOperationDepr, it, operations)
+		foreach (FormatOperation, it, operations)
 		{
 			if ((*it).type == TEXT)
 			{
@@ -115,27 +115,27 @@ namespace Atres
 		return result;
 	}
 	
-	harray<FormatOperationDepr> horizontalCorrection(grect rect, Alignment horizontal, harray<FormatOperationDepr> operations, float x, float lineWidth)
+	harray<FormatOperation> horizontalCorrection(grect rect, Alignment horizontal, harray<FormatOperation> operations, float x, float lineWidth)
 	{
 		// horizontal correction not necessary when left aligned
 		if (horizontal == LEFT || horizontal == LEFT_WRAPPED)
 		{
-			foreach (FormatOperationDepr, it, operations)
+			foreach (FormatOperation, it, operations)
 			{
 				(*it).rect.x -= x;
 			}
 			return operations;
 		}
-		harray<FormatOperationDepr> lineParts;
+		harray<FormatOperation> lineParts;
 		harray<float> widths;
 		float y = operations[0].rect.y;
 		float width = 0.0f;
 		// find all lines from format operations
-		foreach (FormatOperationDepr, it, operations)
+		foreach (FormatOperation, it, operations)
 		{
 			if ((*it).rect.y > y)
 			{
-				foreach (FormatOperationDepr, it2, lineParts)
+				foreach (FormatOperation, it2, lineParts)
 				{
 					width += (*it2).rect.w;
 				}
@@ -146,7 +146,7 @@ namespace Atres
 			}
 			lineParts += (*it);
 		}
-		foreach (FormatOperationDepr, it2, lineParts)
+		foreach (FormatOperation, it2, lineParts)
 		{
 			width += (*it2).rect.w;
 		}
@@ -169,10 +169,10 @@ namespace Atres
 		return operations;
 	}
 	
-	harray<FormatOperationDepr> analyzeText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
+	harray<FormatOperation> analyzeText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
 		hstr font = fontName;
-		harray<FormatOperationDepr> result;
+		harray<FormatOperation> result;
 		Font* f = getFont(fontName);
 		float lineHeight = f->getLineHeight();
 		hmap<unsigned int, FontCharDef> characters = f->getCharacters();
@@ -187,7 +187,7 @@ namespace Atres
 		int i = 0;
 		int start = 0;
 		int current = 0;
-		FormatOperationDepr operation;
+		FormatOperation operation;
 		float lineWidth = 0.0f;
 		float y = 0.0f;
 		while (i < text.size())
@@ -233,33 +233,101 @@ namespace Atres
 					current = i - start;
 					break;
 				}
-				/*
-				if (code == '[')
+				advance += characters[code].aw * scale;
+				if (wrapped && advance > rect.w) // current word doesn't fit anymore
 				{
-					current = i - start;
-					if (current > 0)
+					if (current == 0) // whole word doesn't fit into a line, just chop it off
 					{
-						operation.data += text(start, current);
+						width = advance - characters[code].aw * scale;
+						current = i - start;
 					}
-					operation.size += current;
-					start = i;
-					i += byteLength;
-					code = getCharUtf8(&str[i], &byteLength);
-					while (i < text.size())
-					{
-						code = getCharUtf8(&str[i], &byteLength);
-						if (code == ']')
-						{
-							break;
-						}
-						i += byteLength;
-					}
-					i += byteLength;
-					operation.size += i - start;
-					start = i;
-					continue;
+					break;
 				}
-				*/
+				i += byteLength;
+			}
+			lineWidth = hmax(lineWidth, width);
+			operation.rect = grect(rect.x, rect.y + y, width, lineHeight);
+			if (current > 0)
+			{
+				operation.data += text(start, current);
+			}
+			operation.data = operation.data.trim();
+			operation.size += current;
+			result += operation;
+			y += lineHeight;
+		}
+		if (result.size() > 0)
+		{
+			result = verticalCorrection(rect, vertical, result, offset.y, lineHeight);
+			result = horizontalCorrection(rect, horizontal, result, offset.x, lineWidth);
+		}
+		return result;
+	}
+
+	harray<FormatOperation> calculateTextPositions(grect rect, chstr text, harray<FormatTag> tags,
+		Alignment horizontal, Alignment vertical, gvec2 offset)
+	{
+		Font* f = getFont(tags.pop_front().data);
+		harray<FormatOperation> result;
+		float lineHeight = f->getLineHeight();
+		hmap<unsigned int, FontCharDef> characters = f->getCharacters();
+		float scale = f->getScale();
+		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED);
+		const char* str = text.c_str();
+		int byteLength;
+		bool checkingSpaces;
+		float width;
+		float advance;
+		unsigned int code = 0;
+		int i = 0;
+		int start = 0;
+		int current = 0;
+		FormatOperation operation;
+		float lineWidth = 0.0f;
+		float y = 0.0f;
+		while (i < text.size())
+		{
+			i = start + current;
+			operation.data = "";
+			operation.size = current;
+			operation.type = TEXT;
+			while (i < text.size() && str[i] == ' ') // skip initial spaces in the line
+			{
+				i++;
+			}
+			start = i;
+			current = 0;
+			width = 0.0f;
+			advance = 0.0f;
+			checkingSpaces = false;
+			while (true) // checking how much fits into this line
+			{
+				code = getCharUtf8(&str[i], &byteLength);
+				if (code == ' ' || code == '\0')
+				{
+					if (!checkingSpaces)
+					{
+						width = advance;
+						current = i - start;
+					}
+					checkingSpaces = true;
+					if (code == '\0')
+					{
+						i += byteLength;
+						break;
+					}
+				}
+				else
+				{
+					checkingSpaces = false;
+				}
+				if (code == '\n')
+				{
+					width = advance;
+					i += byteLength;
+					current = i - start;
+					break;
+				}
 				advance += characters[code].aw * scale;
 				if (wrapped && advance > rect.w) // current word doesn't fit anymore
 				{
@@ -295,32 +363,41 @@ namespace Atres
 
 	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
-		harray<FormatOperation> operations;
-		hstr unformattedText = analyzeFormatting(text, operations);
-		harray<FormatOperationDepr> operationsDepr = analyzeText(fontName, rect, unformattedText, horizontal, vertical, color, offset);
-		Font* f = getFont(fontName);
+		harray<FormatTag> tags;
+		//hstr unformattedText = removeFormatting(text);
+		hstr unformattedText = analyzeFormatting(text, tags);
+		FormatTag tag;
+		tag.type = FORMAT_FONT;
+		tag.data = fontName;
+		tag.start = 0;
+		tag.count = 0;
+		tags.push_front(tag);
+		tag.type = FORMAT_COLOR;
+		tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
+		tags.push_front(tag);
+		harray<FormatOperation> operationsDepr = calculateTextPositions(rect, unformattedText, tags, horizontal, vertical, offset);
 		harray<grect> areas;
 		harray<hstr> lines;
-		foreach (FormatOperationDepr, it, operationsDepr)
+		foreach (FormatOperation, it, operationsDepr)
 		{
 			areas += (*it).rect;
 			lines += (*it).data;
 		}
-		f->renderRaw(rect, lines, areas, color);
+		getFont(fontName)->renderRaw(rect, lines, areas, color);
 		flushRenderOperations();
 	}
 
 	void drawTextShadowed(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
-		//drawText(fontName, rect, "[s]" + text, horizontal, vertical, color, offset);
-		///*
-		harray<FormatOperation> operations;
+		drawText(fontName, rect, "[s]" + text, horizontal, vertical, color, offset);
+		/*
+		harray<FormatTag> operations;
 		hstr unformattedText = analyzeFormatting(text, operations);
-		harray<FormatOperationDepr> operationsDepr = analyzeText(fontName, rect, unformattedText, horizontal, vertical, color, offset);
+		harray<FormatOperation> operationsDepr = analyzeText(fontName, rect, unformattedText, horizontal, vertical, color, offset);
 		Font* f = getFont(fontName);
 		harray<grect> areas;
 		harray<hstr> lines;
-		foreach (FormatOperationDepr, it, operationsDepr)
+		foreach (FormatOperation, it, operationsDepr)
 		{
 			areas += (*it).rect;
 			lines += (*it).data;
@@ -334,15 +411,15 @@ namespace Atres
 
 	void drawTextBordered(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
-		//drawText(fontName, rect, "[b]" + text, horizontal, vertical, color, offset);
-		///*
-		harray<FormatOperation> operations;
+		drawText(fontName, rect, "[b]" + text, horizontal, vertical, color, offset);
+		/*
+		harray<FormatTag> operations;
 		hstr unformattedText = analyzeFormatting(text, operations);
-		harray<FormatOperationDepr> operationsDepr = analyzeText(fontName, rect, unformattedText, horizontal, vertical, color, offset);
+		harray<FormatOperation> operationsDepr = analyzeText(fontName, rect, unformattedText, horizontal, vertical, color, offset);
 		Font* f = getFont(fontName);
 		harray<grect> areas;
 		harray<hstr> lines;
-		foreach (FormatOperationDepr, it, operationsDepr)
+		foreach (FormatOperation, it, operationsDepr)
 		{
 			areas += (*it).rect;
 			lines += (*it).data;
@@ -500,6 +577,7 @@ namespace Atres
 		int start;
 		int end;
 		hstr result;
+		char tag = '\0';
 		while (true)
 		{
 			start = text.find('[', index);
@@ -513,6 +591,10 @@ namespace Atres
 				break;
 			}
 			result += text(index, start - index);
+			if (end - start == 1)
+			{
+				result += '[';
+			}
 			index = end + 1;
 		}
 		int count = text.size() - index;
@@ -523,12 +605,15 @@ namespace Atres
 		return result;
 	}
 
-	hstr analyzeFormatting(chstr text, harray<FormatOperation>& operations)
+	hstr analyzeFormatting(chstr text, harray<FormatTag>& tags)
 	{
+		const char* str = text.c_str();
 		int start = 0;
 		int end;
 		int count;
-		FormatOperation operation;
+		harray<char> stack;
+		FormatTag tag;
+		harray<FormatTag> foundTags;
 		while (true)
 		{
 			start = text.find('[', start);
@@ -543,22 +628,69 @@ namespace Atres
 			}
 			end++;
 			count = end - start;
-			operation.start = start;
-			operation.count = count;
-			operation.data = text(start + 1, count - 2);
-			operations += operation;
+			tag.data = "";
+			if (count == 2) // empty tag
+			{
+				tag.type = ESCAPE;
+			}
+			else if (str[start + 1] == '/') // closing tag
+			{
+				if (stack.size() > 0 && stack.back() != str[start + 2]) // interleaving, ignore the tag
+				{
+					start = end;
+#ifdef _DEBUG
+					logMessage(hsprintf("Warning: closing tag that was not opened (\"[/%c]\" in \"%s\")", str[start + 2], str));
+#endif
+					continue;
+				}
+				stack.pop_back();
+				tag.type = CLOSE;
+			}
+			else // opening new tag
+			{
+				switch (str[start + 1])
+				{
+				case 's':
+					tag.type = FORMAT_SHADOW;
+					break;
+				case 'b':
+					tag.type = FORMAT_BORDER;
+					break;
+				case 'c':
+					tag.type = FORMAT_COLOR;
+					break;
+				case 'f':
+					tag.type = FORMAT_FONT;
+					break;
+				}
+				stack += str[start + 1];
+				if (count > 4)
+				{
+					tag.data = text(start + 3, count - 4);
+				}
+			}
+			tag.start = start;
+			tag.count = count;
+			foundTags += tag;
 			start = end;
 		}
 		hstr result;
 		count = 0;
 		int index = 0;
-		foreach (FormatOperation, it, operations)
+		foreach (FormatTag, it, foundTags)
 		{
 			result += text(index, (*it).start - index);
 			index = (*it).start + (*it).count;
 			(*it).start -= count;
 			count += (*it).count;
-			//2DO - analyze formatting operation
+			if ((*it).type != ESCAPE)
+			{
+				tags += (*it);
+			}
+			else
+			{
+				result += '[';
+			}
 		}
 		count = text.size() - index;
 		if (count > 0)
