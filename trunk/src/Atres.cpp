@@ -7,7 +7,16 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
+#include <math.h>
 #include <stdio.h>
+
+// VS compilers' math.h does not have round defined
+#ifndef round
+float round(float f)
+{
+	return floor(f + 0.5f);
+}
+#endif
 
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
@@ -367,13 +376,13 @@ namespace Atres
 		//hstr unformattedText = removeFormatting(text);
 		hstr unformattedText = analyzeFormatting(text, tags);
 		FormatTag tag;
-		tag.type = FORMAT_FONT;
-		tag.data = fontName;
+		tag.type = FORMAT_COLOR;
+		tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
 		tag.start = 0;
 		tag.count = 0;
 		tags.push_front(tag);
-		tag.type = FORMAT_COLOR;
-		tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
+		tag.type = FORMAT_FONT;
+		tag.data = fontName;
 		tags.push_front(tag);
 		harray<FormatOperation> operationsDepr = calculateTextPositions(rect, unformattedText, tags, horizontal, vertical, offset);
 		harray<grect> areas;
@@ -389,8 +398,8 @@ namespace Atres
 
 	void drawTextShadowed(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
-		drawText(fontName, rect, "[s]" + text, horizontal, vertical, color, offset);
-		/*
+		//drawText(fontName, rect, "[s]" + text, horizontal, vertical, color, offset);
+		///*
 		harray<FormatTag> operations;
 		hstr unformattedText = analyzeFormatting(text, operations);
 		harray<FormatOperation> operationsDepr = analyzeText(fontName, rect, unformattedText, horizontal, vertical, color, offset);
@@ -411,8 +420,8 @@ namespace Atres
 
 	void drawTextBordered(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
-		drawText(fontName, rect, "[b]" + text, horizontal, vertical, color, offset);
-		/*
+		//drawText(fontName, rect, "[b]" + text, horizontal, vertical, color, offset);
+		///*
 		harray<FormatTag> operations;
 		hstr unformattedText = analyzeFormatting(text, operations);
 		harray<FormatOperation> operationsDepr = analyzeText(fontName, rect, unformattedText, horizontal, vertical, color, offset);
@@ -628,6 +637,7 @@ namespace Atres
 			}
 			end++;
 			count = end - start;
+			tag.type = TEXT;
 			tag.data = "";
 			if (count == 2) // empty tag
 			{
@@ -662,6 +672,11 @@ namespace Atres
 				case 'f':
 					tag.type = FORMAT_FONT;
 					break;
+				}
+				if (tag.type == TEXT)
+				{
+					start = end;
+					continue;
 				}
 				stack += str[start + 1];
 				if (count > 4)
