@@ -13,23 +13,13 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include <april/RenderSystem.h>
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
+#include <hltypes/harray.h>
 #include <hltypes/hstring.h>
 
 #include "AtresExport.h"
 
 namespace Atres
 {
-	struct AtresExport CharacterRenderOp
-	{
-		April::Texture* texture;
-		grect src;
-		grect dest;
-		April::Color color;
-		bool italic;
-		bool underline;
-		bool strikethrough;
-	};
-	
 	enum Alignment
 	{
 		LEFT,
@@ -49,6 +39,47 @@ namespace Atres
 		BORDER
 	};
 	
+	enum FormatOperationType
+	{
+		TEXT,
+		ESCAPE,
+		PUSH_SHADOW,
+		POP_SHADOW,
+		PUSH_BORDER,
+		POP_BORDER,
+		PUSH_COLOR,
+		POP_COLOR,
+		PUSH_FONT,
+		POP_FONT
+	};
+	
+	struct AtresExport CharacterRenderOperation
+	{
+		April::Texture* texture;
+		grect src;
+		grect dest;
+		April::Color color;
+		bool italic;
+		bool underline;
+		bool strikethrough;
+	};
+	
+	struct AtresExport FormatOperationDepr
+	{
+		grect rect;
+		FormatOperationType type;
+		hstr data;
+		int size;
+	};
+	
+	struct AtresExport FormatOperation
+	{
+		FormatOperationType type;
+		hstr data;
+		int start;
+		int count;
+	};
+	
 	class Font;
 
     AtresFnExport void init();
@@ -56,6 +87,12 @@ namespace Atres
 	AtresFnExport void setLogFunction(void (*fnptr)(chstr));
 	void logMessage(chstr message, chstr prefix = "[atres] ");
 	void atres_writelog(chstr message);
+	
+	unsigned int getCharUtf8(const char* s, int* char_len_out);
+	
+	AtresFnExport harray<FormatOperationDepr> verticalCorrection(grect rect, Alignment vertical, harray<FormatOperationDepr> operations, float x, float lineHeight);
+	AtresFnExport harray<FormatOperationDepr> horizontalCorrection(grect rect, Alignment horizontal, harray<FormatOperationDepr> operations, float y, float lineWidth);
+	AtresFnExport harray<FormatOperationDepr> analyzeText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset);
 	
 	AtresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(), gvec2 offset = gvec2());
 	AtresFnExport void drawTextShadowed(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(), gvec2 offset = gvec2());
@@ -79,6 +116,8 @@ namespace Atres
 	AtresFnExport void drawTextBordered(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, gvec2 offset = gvec2());
 	AtresFnExport void drawTextBordered(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, gvec2 offset = gvec2());
 	
+	AtresFnExport hstr removeFormatting(chstr text);
+	AtresFnExport hstr analyzeFormatting(chstr text, harray<FormatOperation>& operations);
 	AtresFnExport float getFontHeight(chstr fontName);
 	AtresFnExport float getTextWidth(chstr fontName, chstr text);
 	AtresFnExport float getTextHeight(chstr fontName, chstr text, float maxWidth);

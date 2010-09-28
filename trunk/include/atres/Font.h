@@ -37,6 +37,7 @@ namespace Atres
 		float getLineHeight() { return this->lineHeight * this->scale; }
 		float getScale() { return this->scale; }
 		void setScale(float value);
+		hmap<unsigned int, FontCharDef>& getCharacters() { return this->characters; }
 		April::Texture* getTexture() { return this->texture; }
 		
 		bool hasChar(unsigned int charcode);
@@ -44,8 +45,6 @@ namespace Atres
 		float getTextWidth(chstr text);
 		int getTextCount(chstr text, float maxWidth);
 		
-		int verticalCorrection(grect rect, Alignment vertical, harray<hstr>& lines, harray<grect>& areas, gvec2 offset);
-		void horizontalCorrection(grect rect, Alignment horizontal, harray<hstr>& lines, harray<grect>& areas, gvec2 offset);
 		int testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, harray<hstr>& lines, harray<grect>& areas, gvec2 offset = gvec2());
 		void render(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset = gvec2());
 		void renderRaw(grect rect, harray<hstr> lines, harray<grect> areas, April::Color color, gvec2 offset = gvec2());

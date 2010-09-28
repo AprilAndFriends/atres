@@ -21,54 +21,33 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 namespace Atres
 {
-	CharacterRenderOp rops[CHR_BUFFER_MAX];
-	int nOps=0;
+	CharacterRenderOperation operations[CHR_BUFFER_MAX];
+	int operationsCount = 0;
 	
 	//2DO
 	void flushRenderOperations()
 	{
-		if (nOps)
+		if (operationsCount > 0)
 		{
 			April::TexturedVertex v[CHR_BUFFER_MAX];
-			April::Texture* t = rops[0].texture;
-			int i=0;
-			float w=(float)t->getWidth(),h=(float)t->getHeight();
-			for (Atres::CharacterRenderOp* op=rops;op < rops+nOps;op++)
+			April::Texture* t = operations[0].texture;
+			int i = 0;
+			float w = (float)t->getWidth();
+			float h = (float)t->getHeight();
+			for (Atres::CharacterRenderOperation* op = operations; op < operations + operationsCount; op++)
 			{
-				v[i].x=op->dest.x;              v[i].y = op->dest.y;              v[i].z = 0; v[i].u = op->src.x / w;               v[i].v = op->src.y / h;               i++;
-				v[i].x=op->dest.x + op->dest.w; v[i].y = op->dest.y;              v[i].z = 0; v[i].u = (op->src.x + op->src.w) / w; v[i].v = op->src.y / h;               i++;
-				v[i].x=op->dest.x;              v[i].y = op->dest.y + op->dest.h; v[i].z = 0; v[i].u = op->src.x / w;               v[i].v = (op->src.y + op->src.h) / h; i++;
-				v[i].x=op->dest.x + op->dest.w; v[i].y = op->dest.y;              v[i].z = 0; v[i].u = (op->src.x + op->src.w) / w; v[i].v = op->src.y / h;               i++;
-				v[i].x=op->dest.x + op->dest.w; v[i].y = op->dest.y + op->dest.h; v[i].z = 0; v[i].u = (op->src.x + op->src.w) / w; v[i].v = (op->src.y + op->src.h) / h; i++;
-				v[i].x=op->dest.x;              v[i].y = op->dest.y + op->dest.h; v[i].z = 0; v[i].u = op->src.x / w;               v[i].v = (op->src.y + op->src.h) / h; i++;
+				v[i].x = op->dest.x;              v[i].y = op->dest.y;              v[i].z = 0; v[i].u = op->src.x / w;               v[i].v = op->src.y / h;               i++;
+				v[i].x = op->dest.x + op->dest.w; v[i].y = op->dest.y;              v[i].z = 0; v[i].u = (op->src.x + op->src.w) / w; v[i].v = op->src.y / h;               i++;
+				v[i].x = op->dest.x;              v[i].y = op->dest.y + op->dest.h; v[i].z = 0; v[i].u = op->src.x / w;               v[i].v = (op->src.y + op->src.h) / h; i++;
+				v[i].x = op->dest.x + op->dest.w; v[i].y = op->dest.y;              v[i].z = 0; v[i].u = (op->src.x + op->src.w) / w; v[i].v = op->src.y / h;               i++;
+				v[i].x = op->dest.x + op->dest.w; v[i].y = op->dest.y + op->dest.h; v[i].z = 0; v[i].u = (op->src.x + op->src.w) / w; v[i].v = (op->src.y + op->src.h) / h; i++;
+				v[i].x = op->dest.x;              v[i].y = op->dest.y + op->dest.h; v[i].z = 0; v[i].u = op->src.x / w;               v[i].v = (op->src.y + op->src.h) / h; i++;
 			}
 			April::rendersys->setTexture(t);
-			April::rendersys->render(April::TriangleList,v,i,rops[0].color.r_float(),rops[0].color.g_float(),rops[0].color.b_float(),rops[0].color.a_float());
-			nOps=0;
+			April::Color color = operations[0].color;
+			April::rendersys->render(April::TriangleList, v, i, color.r_float(), color.g_float(), color.b_float(), color.a_float());
+			operationsCount = 0;
 		}
-	}
-	
-	unsigned int getCharUtf8(const char* s, int* char_len_out)
-	{
-		if (*s < 0)
-		{
-			const unsigned char* u = (const unsigned char*)s;
-			const unsigned char first = *u;
-			if ((first & 0xE0) == 0xC0)
-			{
-				*char_len_out = 2;
-				return ((first & 0x1F) << 6) | (u[1] & 0x3F);
-			}
-			if ((first & 0xF0) == 0xE0)
-			{
-				*char_len_out = 3;
-				return ((((first & 0xF) << 6) | (u[1] & 0x3F) ) << 6) | (u[2] & 0x3F);
-			}
-			*char_len_out = 4;
-			return ((((((first & 7) << 6) | (u[1] & 0x3F) ) << 6) | (u[2] & 0x3F)) << 6) | (u[3] & 0x3F);
-		}
-		*char_len_out = 1;
-		return *s;
 	}
 
 	Font::Font(chstr filename)
@@ -160,73 +139,6 @@ namespace Atres
 	void Font::setScale(float value)
 	{
 		this->scale = (value == 0.0f ? this->defaultScale : value);
-	}
-	
-	int Font::verticalCorrection(grect rect, Alignment vertical, harray<hstr>& lines, harray<grect>& areas, gvec2 offset)
-	{
-		int result;
-		float lineHeight = this->getLineHeight();
-		// vertical correction
-		switch (vertical)
-		{
-		case Atres::CENTER:
-			offset.y += (lines.size() * lineHeight - rect.h) / 2;
-			break;
-		case Atres::BOTTOM:
-			offset.y += lines.size() * lineHeight - rect.h;
-			break;
-		}
-		// lines to skip on top
-		int count = hmin((int)floor(offset.y / lineHeight), lines.size());
-		if (count > 0)
-		{
-			lines.pop_front(count);
-			areas.pop_front(count);
-		}
-		result = count;
-		// lines to skip on bottom
-		count = lines.size() - (int)ceil((offset.y + rect.h) / lineHeight - count);
-		count = hmin(count, lines.size());
-		if (count > 0)
-		{
-			lines.pop_back(count);
-			areas.pop_back(count);
-		}
-		// apply the offset to the remaining lines
-		foreach (grect, it, areas)
-		{
-			(*it).y -= offset.y;
-		}
-		return result;
-	}
-	
-	void Font::horizontalCorrection(grect rect, Alignment horizontal, harray<hstr>& lines, harray<grect>& areas, gvec2 offset)
-	{
-		// horizontal correction
-		switch (horizontal)
-		{
-		case LEFT:
-		case LEFT_WRAPPED:
-			foreach (grect, it, areas)
-			{
-				(*it).x += -offset.x;
-			}
-			break;
-		case CENTER:
-		case CENTER_WRAPPED:
-			foreach (grect, it, areas)
-			{
-				(*it).x += -offset.x + (rect.w - (*it).w) / 2;
-			}
-			break;
-		case RIGHT:
-		case RIGHT_WRAPPED:
-			foreach (grect, it, areas)
-			{
-				(*it).x += -offset.x + rect.w - (*it).w;
-			}
-			break;
-		}
 	}
 	
 	float Font::getTextWidth(chstr text)
@@ -339,8 +251,9 @@ namespace Atres
 			areas += grect(rect.x, rect.y + lines.size() * lineHeight, width, lineHeight);
 			lines += (current > 0 ? text(start, current).trim() : "");
 		}
-		int count = this->verticalCorrection(rect, vertical, lines, areas, offset);
-		this->horizontalCorrection(rect, horizontal, lines, areas, offset);
+		int count = 0;
+		//int count = this->verticalCorrection(rect, vertical, lines, areas, offset);
+		//this->horizontalCorrection(rect, horizontal, lines, areas, offset);
 		if (count > 0)
 		{
 			counts.pop_front(count);
@@ -372,7 +285,7 @@ namespace Atres
 		{
 			return;
 		}
-		CharacterRenderOp* op = rops + nOps;
+		CharacterRenderOperation* op = operations + operationsCount;
 		float height = this->getHeight();
 		float lineHeight = this->getLineHeight();
 		FontCharDef chr;
@@ -419,7 +332,7 @@ namespace Atres
 					op->texture = this->texture;
 					op->color = color;
 					op++;
-					nOps++;
+					operationsCount++;
 				}
 				width += chr.aw * this->scale;
 			}

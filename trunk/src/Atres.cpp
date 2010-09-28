@@ -9,9 +9,13 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 \************************************************************************************/
 #include <stdio.h>
 
+#include <gtypes/Rectangle.h>
+#include <gtypes/Vector2.h>
 #include <hltypes/exception.h>
 #include <hltypes/harray.h>
+#include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
+#include <hltypes/util.h>
 
 #include "Atres.h"
 #include "Font.h"
@@ -19,8 +23,8 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 namespace Atres
 {
     hmap<hstr,Font*> fonts;
-	Font* default_font=0;
-	void (*g_logFunction)(chstr)=atres_writelog;
+	Font* default_font = NULL;
+	void (*g_logFunction)(chstr) = atres_writelog;
 	gvec2 shadowOffset(1.0f, 1.0f);
 	April::Color shadowColor(255, 0, 0, 0);
 	float borderOffset = 1.0f;
@@ -32,7 +36,7 @@ namespace Atres
     
     void destroy()
     {
-        for (std::map<hstr,Font*>::iterator it=fonts.begin();it!=fonts.end();it++)
+		foreach_m (Font*, it, fonts)
 		{
 			delete it->second;
 		}
@@ -40,7 +44,7 @@ namespace Atres
 
 	void setLogFunction(void (*fnptr)(chstr))
 	{
-		g_logFunction=fnptr;
+		g_logFunction = fnptr;
 	}
 	
 	void logMessage(chstr message, chstr prefix)
@@ -53,32 +57,296 @@ namespace Atres
 		printf("%s\n", message.c_str());		
 	}
 	
+/******* ANALYZE TEXT **************************************************/
+
+	unsigned int getCharUtf8(const char* s, int* char_len_out)
+	{
+		if (*s < 0)
+		{
+			const unsigned char* u = (const unsigned char*)s;
+			const unsigned char first = *u;
+			if ((first & 0xE0) == 0xC0)
+			{
+				*char_len_out = 2;
+				return ((first & 0x1F) << 6) | (u[1] & 0x3F);
+			}
+			if ((first & 0xF0) == 0xE0)
+			{
+				*char_len_out = 3;
+				return ((((first & 0xF) << 6) | (u[1] & 0x3F) ) << 6) | (u[2] & 0x3F);
+			}
+			*char_len_out = 4;
+			return ((((((first & 7) << 6) | (u[1] & 0x3F) ) << 6) | (u[2] & 0x3F)) << 6) | (u[3] & 0x3F);
+		}
+		*char_len_out = 1;
+		return *s;
+	}
+
+	harray<FormatOperationDepr> verticalCorrection(grect rect, Alignment vertical, harray<FormatOperationDepr> operations, float y, float lineHeight)
+	{
+		harray<FormatOperationDepr> result;
+		int lines = round((operations[operations.size() - 1].rect.y - operations[0].rect.y) / lineHeight) + 1;
+		// vertical correction
+		switch (vertical)
+		{
+		case CENTER:
+			y += (lines * lineHeight - rect.h) / 2;
+			break;
+		case BOTTOM:
+			y += lines * lineHeight - rect.h;
+			break;
+		}
+		// remove lines that cannot be seen anyway
+		foreach (FormatOperationDepr, it, operations)
+		{
+			if ((*it).type == TEXT)
+			{
+				(*it).rect.y -= y;
+				if ((*it).rect.intersects(rect))
+				{
+					result += (*it);
+				}
+			}
+			else
+			{
+				result += (*it);
+			}
+		}
+		return result;
+	}
+	
+	harray<FormatOperationDepr> horizontalCorrection(grect rect, Alignment horizontal, harray<FormatOperationDepr> operations, float x, float lineWidth)
+	{
+		// horizontal correction not necessary when left aligned
+		if (horizontal == LEFT || horizontal == LEFT_WRAPPED)
+		{
+			foreach (FormatOperationDepr, it, operations)
+			{
+				(*it).rect.x -= x;
+			}
+			return operations;
+		}
+		harray<FormatOperationDepr> lineParts;
+		harray<float> widths;
+		float y = operations[0].rect.y;
+		float width = 0.0f;
+		// find all lines from format operations
+		foreach (FormatOperationDepr, it, operations)
+		{
+			if ((*it).rect.y > y)
+			{
+				foreach (FormatOperationDepr, it2, lineParts)
+				{
+					width += (*it2).rect.w;
+				}
+				widths.push_back(width, lineParts.size());
+				y = (*it).rect.y;
+				width = 0.0f;
+				lineParts.clear();
+			}
+			lineParts += (*it);
+		}
+		foreach (FormatOperationDepr, it2, lineParts)
+		{
+			width += (*it2).rect.w;
+		}
+		widths.push_back(width, lineParts.size());
+		// horizontal correction
+		for (int i = 0; i < operations.size(); i++)
+		{
+			switch (horizontal)
+			{
+			case CENTER:
+			case CENTER_WRAPPED:
+				operations[i].rect.x += -x + (rect.w - widths[i]) / 2;
+				break;
+			case RIGHT:
+			case RIGHT_WRAPPED:
+				operations[i].rect.x += -x + rect.w - widths[i];
+				break;
+			}
+		}
+		return operations;
+	}
+	
+	harray<FormatOperationDepr> analyzeText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
+	{
+		hstr font = fontName;
+		harray<FormatOperationDepr> result;
+		Font* f = getFont(fontName);
+		float lineHeight = f->getLineHeight();
+		hmap<unsigned int, FontCharDef> characters = f->getCharacters();
+		float scale = f->getScale();
+		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED);
+		const char* str = text.c_str();
+		int byteLength;
+		bool checkingSpaces;
+		float width;
+		float advance;
+		unsigned int code = 0;
+		int i = 0;
+		int start = 0;
+		int current = 0;
+		FormatOperationDepr operation;
+		float lineWidth = 0.0f;
+		float y = 0.0f;
+		while (i < text.size())
+		{
+			i = start + current;
+			operation.data = "";
+			operation.size = current;
+			operation.type = TEXT;
+			while (i < text.size() && str[i] == ' ') // skip initial spaces in the line
+			{
+				i++;
+			}
+			start = i;
+			current = 0;
+			width = 0.0f;
+			advance = 0.0f;
+			checkingSpaces = false;
+			while (true) // checking how much fits into this line
+			{
+				code = getCharUtf8(&str[i], &byteLength);
+				if (code == ' ' || code == '\0')
+				{
+					if (!checkingSpaces)
+					{
+						width = advance;
+						current = i - start;
+					}
+					checkingSpaces = true;
+					if (code == '\0')
+					{
+						i += byteLength;
+						break;
+					}
+				}
+				else
+				{
+					checkingSpaces = false;
+				}
+				if (code == '\n')
+				{
+					width = advance;
+					i += byteLength;
+					current = i - start;
+					break;
+				}
+				/*
+				if (code == '[')
+				{
+					current = i - start;
+					if (current > 0)
+					{
+						operation.data += text(start, current);
+					}
+					operation.size += current;
+					start = i;
+					i += byteLength;
+					code = getCharUtf8(&str[i], &byteLength);
+					while (i < text.size())
+					{
+						code = getCharUtf8(&str[i], &byteLength);
+						if (code == ']')
+						{
+							break;
+						}
+						i += byteLength;
+					}
+					i += byteLength;
+					operation.size += i - start;
+					start = i;
+					continue;
+				}
+				*/
+				advance += characters[code].aw * scale;
+				if (wrapped && advance > rect.w) // current word doesn't fit anymore
+				{
+					if (current == 0) // whole word doesn't fit into a line, just chop it off
+					{
+						width = advance - characters[code].aw * scale;
+						current = i - start;
+					}
+					break;
+				}
+				i += byteLength;
+			}
+			lineWidth = hmax(lineWidth, width);
+			operation.rect = grect(rect.x, rect.y + y, width, lineHeight);
+			if (current > 0)
+			{
+				operation.data += text(start, current);
+			}
+			operation.data = operation.data.trim();
+			operation.size += current;
+			result += operation;
+			y += lineHeight;
+		}
+		if (result.size() > 0)
+		{
+			result = verticalCorrection(rect, vertical, result, offset.y, lineHeight);
+			result = horizontalCorrection(rect, horizontal, result, offset.x, lineWidth);
+		}
+		return result;
+	}
+
 /******* DRAW TEXT *****************************************************/
 
 	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
-		getFont(fontName)->render(rect, text, horizontal, vertical, color, offset);
+		harray<FormatOperation> operations;
+		hstr unformattedText = analyzeFormatting(text, operations);
+		harray<FormatOperationDepr> operationsDepr = analyzeText(fontName, rect, unformattedText, horizontal, vertical, color, offset);
+		Font* f = getFont(fontName);
+		harray<grect> areas;
+		harray<hstr> lines;
+		foreach (FormatOperationDepr, it, operationsDepr)
+		{
+			areas += (*it).rect;
+			lines += (*it).data;
+		}
+		f->renderRaw(rect, lines, areas, color);
 		flushRenderOperations();
 	}
 
 	void drawTextShadowed(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
+		//drawText(fontName, rect, "[s]" + text, horizontal, vertical, color, offset);
+		///*
+		harray<FormatOperation> operations;
+		hstr unformattedText = analyzeFormatting(text, operations);
+		harray<FormatOperationDepr> operationsDepr = analyzeText(fontName, rect, unformattedText, horizontal, vertical, color, offset);
 		Font* f = getFont(fontName);
 		harray<grect> areas;
 		harray<hstr> lines;
-		f->testRender(rect, text, horizontal, vertical, lines, areas, offset);
+		foreach (FormatOperationDepr, it, operationsDepr)
+		{
+			areas += (*it).rect;
+			lines += (*it).data;
+		}
 		f->renderRaw(rect + shadowOffset, lines, areas, shadowColor);
 		flushRenderOperations();
 		f->renderRaw(rect, lines, areas, color);
 		flushRenderOperations();
+		//*/
 	}
 
 	void drawTextBordered(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
+		//drawText(fontName, rect, "[b]" + text, horizontal, vertical, color, offset);
+		///*
+		harray<FormatOperation> operations;
+		hstr unformattedText = analyzeFormatting(text, operations);
+		harray<FormatOperationDepr> operationsDepr = analyzeText(fontName, rect, unformattedText, horizontal, vertical, color, offset);
 		Font* f = getFont(fontName);
 		harray<grect> areas;
 		harray<hstr> lines;
-		f->testRender(rect, text, horizontal, vertical, lines, areas, offset);
+		foreach (FormatOperationDepr, it, operationsDepr)
+		{
+			areas += (*it).rect;
+			lines += (*it).data;
+		}
 		f->renderRaw(rect, lines, areas, borderColor, gvec2(-borderOffset, -borderOffset) * f->getScale());
 		f->renderRaw(rect, lines, areas, borderColor, gvec2(borderOffset, -borderOffset) * f->getScale());
 		f->renderRaw(rect, lines, areas, borderColor, gvec2(-borderOffset, borderOffset) * f->getScale());
@@ -90,6 +358,7 @@ namespace Atres
 		flushRenderOperations();
 		f->renderRaw(rect, lines, areas, color);
 		flushRenderOperations();
+		//*/
 	}
 
 /******* DRAW TEXT OVERLOADS *******************************************/
@@ -225,6 +494,80 @@ namespace Atres
 	
 /******* OTHER *********************************************************/
 
+	hstr removeFormatting(chstr text)
+	{
+		int index = 0;
+		int start;
+		int end;
+		hstr result;
+		while (true)
+		{
+			start = text.find('[', index);
+			if (start < 0)
+			{
+				break;
+			}
+			end = text.find(']', start);
+			if (end < 0)
+			{
+				break;
+			}
+			result += text(index, start - index);
+			index = end + 1;
+		}
+		int count = text.size() - index;
+		if (count > 0)
+		{
+			result += text(index, text.size() - index);
+		}
+		return result;
+	}
+
+	hstr analyzeFormatting(chstr text, harray<FormatOperation>& operations)
+	{
+		int start = 0;
+		int end;
+		int count;
+		FormatOperation operation;
+		while (true)
+		{
+			start = text.find('[', start);
+			if (start < 0)
+			{
+				break;
+			}
+			end = text.find(']', start);
+			if (end < 0)
+			{
+				break;
+			}
+			end++;
+			count = end - start;
+			operation.start = start;
+			operation.count = count;
+			operation.data = text(start + 1, count - 2);
+			operations += operation;
+			start = end;
+		}
+		hstr result;
+		count = 0;
+		int index = 0;
+		foreach (FormatOperation, it, operations)
+		{
+			result += text(index, (*it).start - index);
+			index = (*it).start + (*it).count;
+			(*it).start -= count;
+			count += (*it).count;
+			//2DO - analyze formatting operation
+		}
+		count = text.size() - index;
+		if (count > 0)
+		{
+			result += text(index, text.size() - index);
+		}
+		return result;
+	}
+
 	float getFontHeight(chstr fontName)
 	{
 		return getFont(fontName)->getHeight();
@@ -232,6 +575,7 @@ namespace Atres
 	
 	float getTextWidth(chstr fontName, chstr text)
 	{
+		//2DO - make it work with formatted text properly
 		return getFont(fontName)->getTextWidth(text);
 	}
 
@@ -246,7 +590,10 @@ namespace Atres
 	
 	int getTextCount(chstr fontName, chstr text, float maxWidth)
 	{
-		return (text != "" ? getFont(fontName)->getTextCount(text, maxWidth) : 0);
+		//return (text != "" ? getFont(fontName)->getTextCount(text, maxWidth) : 0);
+		hstr rawText = removeFormatting(text);
+		//2DO - make it work with formatted text properly
+		return (rawText != "" ? getFont(fontName)->getTextCount(rawText, maxWidth) : 0);
 	}
 	
 	void setDefaultFont(chstr name)
