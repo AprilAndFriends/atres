@@ -7,28 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F3518981251E67B0005B659 /* gtypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F3518971251E67B0005B659 /* gtypes.framework */; };
+		7F35189A1251E6810005B659 /* april.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F3518991251E6810005B659 /* april.framework */; };
 		7FC8038311EC6AFA00851062 /* Atres.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8037E11EC6AFA00851062 /* Atres.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FC8038411EC6AFA00851062 /* AtresExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8037F11EC6AFA00851062 /* AtresExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FC8038511EC6AFA00851062 /* Exception.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8038011EC6AFA00851062 /* Exception.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FC8038611EC6AFA00851062 /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8038111EC6AFA00851062 /* Font.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7FC8038711EC6AFA00851062 /* RenderingInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8038211EC6AFA00851062 /* RenderingInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FC8038C11EC6B5100851062 /* Atres.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8038811EC6B5000851062 /* Atres.cpp */; };
 		7FC8038D11EC6B5100851062 /* Exception.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8038911EC6B5100851062 /* Exception.cpp */; };
 		7FC8038E11EC6B5100851062 /* Font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8038A11EC6B5100851062 /* Font.cpp */; };
-		7FC8038F11EC6B5100851062 /* RenderingInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8038B11EC6B5100851062 /* RenderingInterface.cpp */; };
 		7FC8039911EC6C0400851062 /* hltypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FC8039811EC6C0400851062 /* hltypes.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7F3518971251E67B0005B659 /* gtypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtypes.framework; path = Library/Frameworks/gtypes.framework; sourceTree = SDKROOT; };
+		7F3518991251E6810005B659 /* april.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = april.framework; path = Library/Frameworks/april.framework; sourceTree = SDKROOT; };
 		7FC8037E11EC6AFA00851062 /* Atres.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Atres.h; path = include/atres/Atres.h; sourceTree = "<group>"; };
 		7FC8037F11EC6AFA00851062 /* AtresExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AtresExport.h; path = include/atres/AtresExport.h; sourceTree = "<group>"; };
 		7FC8038011EC6AFA00851062 /* Exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Exception.h; path = include/atres/Exception.h; sourceTree = "<group>"; };
 		7FC8038111EC6AFA00851062 /* Font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Font.h; path = include/atres/Font.h; sourceTree = "<group>"; };
-		7FC8038211EC6AFA00851062 /* RenderingInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderingInterface.h; path = include/atres/RenderingInterface.h; sourceTree = "<group>"; };
 		7FC8038811EC6B5000851062 /* Atres.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Atres.cpp; path = src/Atres.cpp; sourceTree = "<group>"; };
 		7FC8038911EC6B5100851062 /* Exception.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Exception.cpp; path = src/Exception.cpp; sourceTree = "<group>"; };
 		7FC8038A11EC6B5100851062 /* Font.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Font.cpp; path = src/Font.cpp; sourceTree = "<group>"; };
-		7FC8038B11EC6B5100851062 /* RenderingInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderingInterface.cpp; path = src/RenderingInterface.cpp; sourceTree = "<group>"; };
 		7FC8039811EC6C0400851062 /* hltypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = hltypes.framework; path = Library/Frameworks/hltypes.framework; sourceTree = SDKROOT; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* atres.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = atres.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -40,6 +40,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7FC8039911EC6C0400851062 /* hltypes.framework in Frameworks */,
+				7F3518981251E67B0005B659 /* gtypes.framework in Frameworks */,
+				7F35189A1251E6810005B659 /* april.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +73,8 @@
 			children = (
 				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
 				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
+				7F3518971251E67B0005B659 /* gtypes.framework */,
+				7F3518991251E6810005B659 /* april.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
@@ -105,7 +109,6 @@
 				7FC8037F11EC6AFA00851062 /* AtresExport.h */,
 				7FC8038011EC6AFA00851062 /* Exception.h */,
 				7FC8038111EC6AFA00851062 /* Font.h */,
-				7FC8038211EC6AFA00851062 /* RenderingInterface.h */,
 			);
 			name = Includes;
 			sourceTree = "<group>";
@@ -116,7 +119,6 @@
 				7FC8038811EC6B5000851062 /* Atres.cpp */,
 				7FC8038911EC6B5100851062 /* Exception.cpp */,
 				7FC8038A11EC6B5100851062 /* Font.cpp */,
-				7FC8038B11EC6B5100851062 /* RenderingInterface.cpp */,
 			);
 			name = Sources;
 			sourceTree = "<group>";
@@ -132,7 +134,6 @@
 				7FC8038411EC6AFA00851062 /* AtresExport.h in Headers */,
 				7FC8038511EC6AFA00851062 /* Exception.h in Headers */,
 				7FC8038611EC6AFA00851062 /* Font.h in Headers */,
-				7FC8038711EC6AFA00851062 /* RenderingInterface.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -165,7 +166,14 @@
 			isa = PBXProject;
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "libatres" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* libatres */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
@@ -194,7 +202,6 @@
 				7FC8038C11EC6B5100851062 /* Atres.cpp in Sources */,
 				7FC8038D11EC6B5100851062 /* Exception.cpp in Sources */,
 				7FC8038E11EC6B5100851062 /* Font.cpp in Sources */,
-				7FC8038F11EC6B5100851062 /* RenderingInterface.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,6 +213,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
@@ -214,6 +223,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Info.plist;
+				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
