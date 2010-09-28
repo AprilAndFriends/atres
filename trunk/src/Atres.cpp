@@ -268,7 +268,10 @@ namespace Atres
 		if (result.size() > 0)
 		{
 			result = verticalCorrection(rect, vertical, result, offset.y, lineHeight);
-			result = horizontalCorrection(rect, horizontal, result, offset.x, lineWidth);
+			if (result.size() > 0)
+			{
+				result = horizontalCorrection(rect, horizontal, result, offset.x, lineWidth);
+			}
 		}
 		return result;
 	}
