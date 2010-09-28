@@ -114,7 +114,6 @@ namespace Atres
 	AtresFnExport void drawTextBordered(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, gvec2 offset = gvec2());
 	AtresFnExport void drawTextBordered(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, gvec2 offset = gvec2());
 	
-	AtresFnExport hstr removeFormatting(chstr text);
 	AtresFnExport hstr analyzeFormatting(chstr text, harray<FormatTag>& operations);
 	AtresFnExport float getFontHeight(chstr fontName);
 	AtresFnExport float getTextWidth(chstr fontName, chstr text);

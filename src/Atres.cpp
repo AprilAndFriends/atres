@@ -582,47 +582,12 @@ namespace Atres
 	}
 	
 /******* OTHER *********************************************************/
-
-	hstr removeFormatting(chstr text)
-	{
-		int index = 0;
-		int start;
-		int end;
-		hstr result;
-		char tag = '\0';
-		while (true)
-		{
-			start = text.find('[', index);
-			if (start < 0)
-			{
-				break;
-			}
-			end = text.find(']', start);
-			if (end < 0)
-			{
-				break;
-			}
-			result += text(index, start - index);
-			if (end - start == 1)
-			{
-				result += '[';
-			}
-			index = end + 1;
-		}
-		int count = text.size() - index;
-		if (count > 0)
-		{
-			result += text(index, text.size() - index);
-		}
-		return result;
-	}
-
+	
 	hstr analyzeFormatting(chstr text, harray<FormatTag>& tags)
 	{
 		const char* str = text.c_str();
 		int start = 0;
 		int end;
-		int count;
 		harray<char> stack;
 		FormatTag tag;
 		harray<FormatTag> foundTags;
@@ -639,14 +604,14 @@ namespace Atres
 				break;
 			}
 			end++;
-			count = end - start;
-			tag.type = TEXT;
 			tag.data = "";
-			if (count == 2) // empty tag
+			tag.start = start;
+			tag.count = end - start;
+			if (tag.count == 2) // empty command
 			{
 				tag.type = ESCAPE;
 			}
-			else if (str[start + 1] == '/') // closing tag
+			else if (str[start + 1] == '/') // closing command
 			{
 				if (stack.size() > 0 && stack.back() != str[start + 2]) // interleaving, ignore the tag
 				{
@@ -675,45 +640,42 @@ namespace Atres
 				case 'f':
 					tag.type = FORMAT_FONT;
 					break;
-				}
-				if (tag.type == TEXT)
-				{
+				default: // command not supported, regard as normal text
 					start = end;
 					continue;
 				}
 				stack += str[start + 1];
-				if (count > 4)
+				if (tag.count > 4)
 				{
-					tag.data = text(start + 3, count - 4);
+					tag.data = text(start + 3, tag.count - 4);
 				}
 			}
-			tag.start = start;
-			tag.count = count;
 			foundTags += tag;
 			start = end;
 		}
 		hstr result;
-		count = 0;
 		int index = 0;
+		int count = 0;
 		foreach (FormatTag, it, foundTags)
 		{
 			result += text(index, (*it).start - index);
 			index = (*it).start + (*it).count;
-			(*it).start -= count;
-			count += (*it).count;
 			if ((*it).type != ESCAPE)
 			{
+				(*it).start -= count;
 				tags += (*it);
 			}
 			else
 			{
+				count--;
 				result += '[';
 			}
+			count += (*it).count;
 		}
 		count = text.size() - index;
 		if (count > 0)
 		{
-			result += text(index, text.size() - index);
+			result += text(index, count);
 		}
 		return result;
 	}
@@ -741,9 +703,10 @@ namespace Atres
 	int getTextCount(chstr fontName, chstr text, float maxWidth)
 	{
 		//return (text != "" ? getFont(fontName)->getTextCount(text, maxWidth) : 0);
-		hstr rawText = removeFormatting(text);
+		harray<FormatTag> tags;
+		hstr unformattedText = analyzeFormatting(text, tags);
 		//2DO - make it work with formatted text properly
-		return (rawText != "" ? getFont(fontName)->getTextCount(rawText, maxWidth) : 0);
+		return (unformattedText != "" ? getFont(fontName)->getTextCount(unformattedText, maxWidth) : 0);
 	}
 	
 	void setDefaultFont(chstr name)
