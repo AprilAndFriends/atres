@@ -18,6 +18,8 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 #include "AtresExport.h"
 
+#define BUFFER_MAX_CHARACTERS 32768
+
 namespace Atres
 {
 	enum Alignment
@@ -43,6 +45,7 @@ namespace Atres
 	{
 		TEXT,
 		ESCAPE,
+		FORMAT_NORMAL,
 		FORMAT_SHADOW,
 		FORMAT_BORDER,
 		FORMAT_COLOR,
@@ -50,23 +53,24 @@ namespace Atres
 		CLOSE
 	};
 	
-	struct AtresExport CharacterRenderOperation
+	struct AtresExport RenderRectangle
 	{
-		April::Texture* texture;
 		grect src;
 		grect dest;
-		April::Color color;
-		bool italic;
-		bool underline;
-		bool strikethrough;
 	};
 	
-	struct AtresExport FormatOperation
+	struct AtresExport RenderSequence
 	{
+		April::Texture* texture;
+		April::Color color;
+		harray<RenderRectangle> rectangles;
+	};
+	
+	struct AtresExport RenderLine
+	{
+		hstr text;
 		grect rect;
-		FormatTagType type;
-		hstr data;
-		int size;
+		int start;
 	};
 	
 	struct AtresExport FormatTag
@@ -87,10 +91,10 @@ namespace Atres
 	
 	unsigned int getCharUtf8(const char* s, int* char_len_out);
 	
-	AtresFnExport harray<FormatOperation> verticalCorrection(grect rect, Alignment vertical, harray<FormatOperation> operations, float x, float lineHeight);
-	AtresFnExport harray<FormatOperation> horizontalCorrection(grect rect, Alignment horizontal, harray<FormatOperation> operations, float y, float lineWidth);
-	AtresFnExport harray<FormatOperation> analyzeText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset);
-	AtresFnExport harray<FormatOperation> calculateTextPositions(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset);
+	AtresFnExport harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight);
+	AtresFnExport harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
+	AtresFnExport harray<RenderSequence> createRenderSequences(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset);
+	AtresFnExport harray<RenderSequence> analyzeLines(grect rect, harray<RenderLine> lines, harray<FormatTag> tags);
 	
 	AtresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(), gvec2 offset = gvec2());
 	AtresFnExport void drawTextShadowed(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(), gvec2 offset = gvec2());

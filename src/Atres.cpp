@@ -28,11 +28,12 @@ float round(float f)
 
 #include "Atres.h"
 #include "Font.h"
+#include "Util.h"
 
 namespace Atres
 {
     hmap<hstr,Font*> fonts;
-	Font* default_font = NULL;
+	Font* defaultFont = NULL;
 	void (*g_logFunction)(chstr) = atres_writelog;
 	gvec2 shadowOffset(1.0f, 1.0f);
 	April::Color shadowColor(255, 0, 0, 0);
@@ -91,32 +92,25 @@ namespace Atres
 		return *s;
 	}
 
-	harray<FormatOperation> verticalCorrection(grect rect, Alignment vertical, harray<FormatOperation> operations, float y, float lineHeight)
+	harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight)
 	{
-		harray<FormatOperation> result;
-		int lines = round((operations[operations.size() - 1].rect.y - operations[0].rect.y) / lineHeight) + 1;
+		harray<RenderLine> result;
+		int count = round((lines[lines.size() - 1].rect.y - lines[0].rect.y) / lineHeight) + 1;
 		// vertical correction
 		switch (vertical)
 		{
 		case CENTER:
-			y += (lines * lineHeight - rect.h) / 2;
+			y += (count * lineHeight - rect.h) / 2;
 			break;
 		case BOTTOM:
-			y += lines * lineHeight - rect.h;
+			y += count * lineHeight - rect.h;
 			break;
 		}
 		// remove lines that cannot be seen anyway
-		foreach (FormatOperation, it, operations)
+		foreach (RenderLine, it, lines)
 		{
-			if ((*it).type == TEXT)
-			{
-				(*it).rect.y -= y;
-				if ((*it).rect.intersects(rect))
-				{
-					result += (*it);
-				}
-			}
-			else
+			(*it).rect.y -= y;
+			if ((*it).rect.intersects(rect))
 			{
 				result += (*it);
 			}
@@ -124,27 +118,27 @@ namespace Atres
 		return result;
 	}
 	
-	harray<FormatOperation> horizontalCorrection(grect rect, Alignment horizontal, harray<FormatOperation> operations, float x, float lineWidth)
+	harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float x, float lineWidth)
 	{
 		// horizontal correction not necessary when left aligned
 		if (horizontal == LEFT || horizontal == LEFT_WRAPPED)
 		{
-			foreach (FormatOperation, it, operations)
+			foreach (RenderLine, it, lines)
 			{
 				(*it).rect.x -= x;
 			}
-			return operations;
+			return lines;
 		}
-		harray<FormatOperation> lineParts;
+		harray<RenderLine> lineParts;
 		harray<float> widths;
-		float y = operations[0].rect.y;
+		float y = lines[0].rect.y;
 		float width = 0.0f;
-		// find all lines from format operations
-		foreach (FormatOperation, it, operations)
+		// find all lines
+		foreach (RenderLine, it, lines)
 		{
 			if ((*it).rect.y > y)
 			{
-				foreach (FormatOperation, it2, lineParts)
+				foreach (RenderLine, it2, lineParts)
 				{
 					width += (*it2).rect.w;
 				}
@@ -155,154 +149,63 @@ namespace Atres
 			}
 			lineParts += (*it);
 		}
-		foreach (FormatOperation, it2, lineParts)
+		foreach (RenderLine, it, lineParts)
 		{
-			width += (*it2).rect.w;
+			width += (*it).rect.w;
 		}
 		widths.push_back(width, lineParts.size());
 		// horizontal correction
-		for (int i = 0; i < operations.size(); i++)
+		for (int i = 0; i < lines.size(); i++)
 		{
 			switch (horizontal)
 			{
 			case CENTER:
 			case CENTER_WRAPPED:
-				operations[i].rect.x += -x + (rect.w - widths[i]) / 2;
+				lines[i].rect.x += -x + (rect.w - widths[i]) / 2;
 				break;
 			case RIGHT:
 			case RIGHT_WRAPPED:
-				operations[i].rect.x += -x + rect.w - widths[i];
+				lines[i].rect.x += -x + rect.w - widths[i];
 				break;
 			}
 		}
-		return operations;
-	}
-	
-	harray<FormatOperation> analyzeText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
-	{
-		hstr font = fontName;
-		harray<FormatOperation> result;
-		Font* f = getFont(fontName);
-		float lineHeight = f->getLineHeight();
-		hmap<unsigned int, FontCharDef> characters = f->getCharacters();
-		float scale = f->getScale();
-		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED);
-		const char* str = text.c_str();
-		int byteLength;
-		bool checkingSpaces;
-		float width;
-		float advance;
-		unsigned int code = 0;
-		int i = 0;
-		int start = 0;
-		int current = 0;
-		FormatOperation operation;
-		float lineWidth = 0.0f;
-		float y = 0.0f;
-		while (i < text.size())
-		{
-			i = start + current;
-			operation.data = "";
-			operation.size = current;
-			operation.type = TEXT;
-			while (i < text.size() && str[i] == ' ') // skip initial spaces in the line
-			{
-				i++;
-			}
-			start = i;
-			current = 0;
-			width = 0.0f;
-			advance = 0.0f;
-			checkingSpaces = false;
-			while (true) // checking how much fits into this line
-			{
-				code = getCharUtf8(&str[i], &byteLength);
-				if (code == ' ' || code == '\0')
-				{
-					if (!checkingSpaces)
-					{
-						width = advance;
-						current = i - start;
-					}
-					checkingSpaces = true;
-					if (code == '\0')
-					{
-						i += byteLength;
-						break;
-					}
-				}
-				else
-				{
-					checkingSpaces = false;
-				}
-				if (code == '\n')
-				{
-					width = advance;
-					i += byteLength;
-					current = i - start;
-					break;
-				}
-				advance += characters[code].aw * scale;
-				if (wrapped && advance > rect.w) // current word doesn't fit anymore
-				{
-					if (current == 0) // whole word doesn't fit into a line, just chop it off
-					{
-						width = advance - characters[code].aw * scale;
-						current = i - start;
-					}
-					break;
-				}
-				i += byteLength;
-			}
-			lineWidth = hmax(lineWidth, width);
-			operation.rect = grect(rect.x, rect.y + y, width, lineHeight);
-			if (current > 0)
-			{
-				operation.data += text(start, current);
-			}
-			operation.data = operation.data.trim();
-			operation.size += current;
-			result += operation;
-			y += lineHeight;
-		}
-		if (result.size() > 0)
-		{
-			result = verticalCorrection(rect, vertical, result, offset.y, lineHeight);
-			if (result.size() > 0)
-			{
-				result = horizontalCorrection(rect, horizontal, result, offset.x, lineWidth);
-			}
-		}
-		return result;
+		return lines;
 	}
 
-	harray<FormatOperation> calculateTextPositions(grect rect, chstr text, harray<FormatTag> tags,
+	harray<RenderSequence> createRenderSequences(grect rect, chstr text, harray<FormatTag> tags,
 		Alignment horizontal, Alignment vertical, gvec2 offset)
 	{
-		Font* f = getFont(tags.pop_front().data);
-		harray<FormatOperation> result;
-		float lineHeight = f->getLineHeight();
-		hmap<unsigned int, FontCharDef> characters = f->getCharacters();
-		float scale = f->getScale();
-		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED);
+		harray<RenderLine> lines;
+		RenderLine line;
+		harray<FormatTag> stack;
+		harray<FormatTag> formatTags(tags);
+		FormatTag tag;
+		FormatTag nextTag = tags.front();
+		
+		hstr fontName;
+		Font* font = NULL;
+		hmap<unsigned int, CharacterDefinition> characters;
+		float lineHeight;
+		float scale;
+		
 		const char* str = text.c_str();
-		int byteLength;
-		bool checkingSpaces;
-		float width;
-		float advance;
-		unsigned int code = 0;
+		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED);
+		bool checkingSpaces = false;
 		int i = 0;
 		int start = 0;
 		int current = 0;
-		FormatOperation operation;
+		int byteLength;
+		unsigned int code;
+		float width;
+		float advance;
 		float lineWidth = 0.0f;
 		float y = 0.0f;
+		
+		
 		while (i < text.size())
 		{
 			i = start + current;
-			operation.data = "";
-			operation.size = current;
-			operation.type = TEXT;
+			line.text = "";
 			while (i < text.size() && str[i] == ' ') // skip initial spaces in the line
 			{
 				i++;
@@ -314,6 +217,49 @@ namespace Atres
 			checkingSpaces = false;
 			while (true) // checking how much fits into this line
 			{
+				while (tags.size() > 0 && i >= nextTag.start)
+				{
+					if (nextTag.type == CLOSE)
+					{
+						tag = stack.pop_back();
+						if (tag.type == FORMAT_FONT)
+						{
+							fontName = tag.data;
+							font = getFont(fontName);
+							characters = font->getCharacters();
+							scale = font->getScale();
+						}
+					}
+					else if (nextTag.type == FORMAT_FONT)
+					{
+						tag.type = FORMAT_FONT;
+						tag.data = fontName;
+						stack += tag;
+						fontName = nextTag.data;
+						if (font == NULL)
+						{
+							font = getFont(fontName);
+							lineHeight = font->getLineHeight();
+						}
+						else
+						{
+							font = getFont(fontName);
+						}
+						characters = font->getCharacters();
+						scale = font->getScale();
+					}
+					else
+					{
+						tag.type = FORMAT_NORMAL;
+						stack += tag;
+					}
+					tags.pop_front();
+					nextTag = tags.front();
+				}
+				if (tags.size() == 0)
+				{
+					nextTag.start = text.size() + 1;
+				}
 				code = getCharUtf8(&str[i], &byteLength);
 				if (code == ' ' || code == '\0')
 				{
@@ -353,30 +299,195 @@ namespace Atres
 				i += byteLength;
 			}
 			lineWidth = hmax(lineWidth, width);
-			operation.rect = grect(rect.x, rect.y + y, width, lineHeight);
-			if (current > 0)
-			{
-				operation.data += text(start, current);
-			}
-			operation.data = operation.data.trim();
-			operation.size += current;
-			result += operation;
+			line.text = text(start, current);
+			line.rect = grect(rect.x, rect.y + y, width, lineHeight);
+			line.start = start;
+			lines += line;
 			y += lineHeight;
 		}
-		if (result.size() > 0)
+		if (lines.size() > 0)
 		{
-			result = verticalCorrection(rect, vertical, result, offset.y, lineHeight);
-			result = horizontalCorrection(rect, horizontal, result, offset.x, lineWidth);
+			lines = verticalCorrection(rect, vertical, lines, offset.y, lineHeight);
+			if (lines.size() > 0)
+			{
+				lines = horizontalCorrection(rect, horizontal, lines, offset.x, lineWidth);
+			}
 		}
-		return result;
+		if (lines.size() == 0)
+		{
+			return harray<RenderSequence>();
+		}
+		return analyzeLines(rect, lines, formatTags);
+	}
+	
+	harray<RenderSequence> analyzeLines(grect rect, harray<RenderLine> lines, harray<FormatTag> tags)
+	{
+		harray<RenderSequence> effectSequences;
+		harray<RenderSequence> sequences;
+		RenderSequence sequence;
+		RenderRectangle renderRect;
+		harray<FormatTag> stack;
+		RenderLine line;
+		FormatTag tag;
+		FormatTag nextTag = tags.front();
+		grect area;
+		
+		hstr fontName;
+		Font* font = NULL;
+		hmap<unsigned int, CharacterDefinition> characters;
+		float lineHeight;
+		float scale;
+		April::Color color;
+		int effectMode = 0;
+		
+		int byteLength;
+		unsigned int code;
+		float width;
+		
+		while (lines.size() > 0)
+		{
+			line = lines.pop_front();
+			width = 0.0f;
+			for (int i = 0; i < line.text.size(); i += byteLength)
+			{
+				while (tags.size() > 0 && line.start + i >= nextTag.start)
+				{
+					if (nextTag.type == CLOSE)
+					{
+						tag = stack.pop_back();
+						switch (tag.type)
+						{
+						case FORMAT_FONT:
+							fontName = tag.data;
+							font = getFont(fontName);
+							characters = font->getCharacters();
+							scale = font->getScale();
+							break;
+						case FORMAT_COLOR:
+							color = hexstr_to_color(tag.data);
+							break;
+						case FORMAT_NORMAL:
+							effectMode = 0;
+							break;
+						case FORMAT_SHADOW:
+							effectMode = 1;
+							break;
+						case FORMAT_BORDER:
+							effectMode = 2;
+							break;
+						}
+					}
+					else
+					{
+						switch (nextTag.type)
+						{
+						case FORMAT_FONT:
+							tag.type = FORMAT_FONT;
+							tag.data = fontName;
+							stack += tag;
+							fontName = nextTag.data;
+							if (font == NULL)
+							{
+								font = getFont(fontName);
+								lineHeight = font->getLineHeight();
+							}
+							else
+							{
+								font = getFont(fontName);
+							}
+							characters = font->getCharacters();
+							scale = font->getScale();
+							break;
+						case FORMAT_COLOR:
+							tag.type = FORMAT_COLOR;
+							tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
+							stack += tag;
+							color = hexstr_to_color(nextTag.data);
+							break;
+						case FORMAT_NORMAL:
+							tag.type = (effectMode == 2 ? FORMAT_BORDER : (effectMode == 1 ? FORMAT_SHADOW : FORMAT_NORMAL));
+							stack += tag;
+							effectMode = 0;
+							break;
+						case FORMAT_SHADOW:
+							tag.type = (effectMode == 2 ? FORMAT_BORDER : (effectMode == 1 ? FORMAT_SHADOW : FORMAT_NORMAL));
+							stack += tag;
+							effectMode = 1;
+							break;
+						case FORMAT_BORDER:
+							tag.type = (effectMode == 2 ? FORMAT_BORDER : (effectMode == 1 ? FORMAT_SHADOW : FORMAT_NORMAL));
+							stack += tag;
+							effectMode = 2;
+							break;
+						}
+					}
+					tags.pop_front();
+					nextTag = tags.front();
+					if (sequence.rectangles.size() > 0)
+					{
+						sequences += sequence;
+					}
+					sequence.texture = font->getTexture();
+					sequence.color = color;
+					sequence.rectangles.clear();
+				}
+				if (tags.size() == 0)
+				{
+					if (lines.size() > 0)
+					{
+						nextTag.start = lines.back().start + lines.back().text.size() + 1;
+					}
+					else
+					{
+						nextTag.start = line.start + line.text.size() + 1;
+					}
+				}
+				code = getCharUtf8(&line.text[i], &byteLength);
+				area = line.rect;
+				area.x += width;
+				area.w = characters[code].aw * scale;
+				area.y += (lineHeight - font->getHeight()) / 2;
+				area.h = font->getHeight();
+				renderRect = font->makeRenderRectangle(rect, area, code);
+				sequence.rectangles += renderRect;
+				width += characters[code].aw * scale;
+			}
+		}
+		if (sequence.rectangles.size() > 0)
+		{
+			sequences += sequence;
+		}
+		return sequences;
 	}
 
 /******* DRAW TEXT *****************************************************/
 
+	void drawRenderSequence(RenderSequence& sequence)
+	{
+		if (sequence.rectangles.size() > 0)
+		{
+			April::TexturedVertex v[BUFFER_MAX_CHARACTERS];
+			float w = (float)sequence.texture->getWidth();
+			float h = (float)sequence.texture->getHeight();
+			int i = 0;
+			foreach (RenderRectangle, it, sequence.rectangles)
+			{
+				v[i].x = (*it).dest.x;                v[i].y = (*it).dest.y;                v[i].z = 0; v[i].u = (*it).src.x / w;                 v[i].v = (*it).src.y / h;                 i++;
+				v[i].x = (*it).dest.x + (*it).dest.w; v[i].y = (*it).dest.y;                v[i].z = 0; v[i].u = ((*it).src.x + (*it).src.w) / w; v[i].v = (*it).src.y / h;                 i++;
+				v[i].x = (*it).dest.x;                v[i].y = (*it).dest.y + (*it).dest.h; v[i].z = 0; v[i].u = (*it).src.x / w;                 v[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+				v[i].x = (*it).dest.x + (*it).dest.w; v[i].y = (*it).dest.y;                v[i].z = 0; v[i].u = ((*it).src.x + (*it).src.w) / w; v[i].v = (*it).src.y / h;                 i++;
+				v[i].x = (*it).dest.x + (*it).dest.w; v[i].y = (*it).dest.y + (*it).dest.h; v[i].z = 0; v[i].u = ((*it).src.x + (*it).src.w) / w; v[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+				v[i].x = (*it).dest.x;                v[i].y = (*it).dest.y + (*it).dest.h; v[i].z = 0; v[i].u = (*it).src.x / w;                 v[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+			}
+			April::Color color = sequence.color;
+			April::rendersys->setTexture(sequence.texture);
+			April::rendersys->render(April::TriangleList, v, i, color.r_float(), color.g_float(), color.b_float(), color.a_float());
+		}
+	}
+
 	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
 		harray<FormatTag> tags;
-		//hstr unformattedText = removeFormatting(text);
 		hstr unformattedText = analyzeFormatting(text, tags);
 		FormatTag tag;
 		tag.type = FORMAT_COLOR;
@@ -387,67 +498,21 @@ namespace Atres
 		tag.type = FORMAT_FONT;
 		tag.data = fontName;
 		tags.push_front(tag);
-		harray<FormatOperation> operationsDepr = calculateTextPositions(rect, unformattedText, tags, horizontal, vertical, offset);
-		harray<grect> areas;
-		harray<hstr> lines;
-		foreach (FormatOperation, it, operationsDepr)
+		harray<RenderSequence> sequences = createRenderSequences(rect, unformattedText, tags, horizontal, vertical, offset);
+		foreach (RenderSequence, it, sequences)
 		{
-			areas += (*it).rect;
-			lines += (*it).data;
+			drawRenderSequence(*it);
 		}
-		getFont(fontName)->renderRaw(rect, lines, areas, color);
-		flushRenderOperations();
 	}
 
 	void drawTextShadowed(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
-		//drawText(fontName, rect, "[s]" + text, horizontal, vertical, color, offset);
-		///*
-		harray<FormatTag> operations;
-		hstr unformattedText = analyzeFormatting(text, operations);
-		harray<FormatOperation> operationsDepr = analyzeText(fontName, rect, unformattedText, horizontal, vertical, color, offset);
-		Font* f = getFont(fontName);
-		harray<grect> areas;
-		harray<hstr> lines;
-		foreach (FormatOperation, it, operationsDepr)
-		{
-			areas += (*it).rect;
-			lines += (*it).data;
-		}
-		f->renderRaw(rect + shadowOffset, lines, areas, shadowColor);
-		flushRenderOperations();
-		f->renderRaw(rect, lines, areas, color);
-		flushRenderOperations();
-		//*/
+		drawText(fontName, rect, "[s]" + text, horizontal, vertical, color, offset);
 	}
 
 	void drawTextBordered(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
-		//drawText(fontName, rect, "[b]" + text, horizontal, vertical, color, offset);
-		///*
-		harray<FormatTag> operations;
-		hstr unformattedText = analyzeFormatting(text, operations);
-		harray<FormatOperation> operationsDepr = analyzeText(fontName, rect, unformattedText, horizontal, vertical, color, offset);
-		Font* f = getFont(fontName);
-		harray<grect> areas;
-		harray<hstr> lines;
-		foreach (FormatOperation, it, operationsDepr)
-		{
-			areas += (*it).rect;
-			lines += (*it).data;
-		}
-		f->renderRaw(rect, lines, areas, borderColor, gvec2(-borderOffset, -borderOffset) * f->getScale());
-		f->renderRaw(rect, lines, areas, borderColor, gvec2(borderOffset, -borderOffset) * f->getScale());
-		f->renderRaw(rect, lines, areas, borderColor, gvec2(-borderOffset, borderOffset) * f->getScale());
-		f->renderRaw(rect, lines, areas, borderColor, gvec2(borderOffset, borderOffset) * f->getScale());
-		f->renderRaw(rect, lines, areas, borderColor, gvec2(0.0f, -borderOffset) * f->getScale());
-		f->renderRaw(rect, lines, areas, borderColor, gvec2(-borderOffset, 0.0f) * f->getScale());
-		f->renderRaw(rect, lines, areas, borderColor, gvec2(borderOffset, 0.0f) * f->getScale());
-		f->renderRaw(rect, lines, areas, borderColor, gvec2(0.0f, borderOffset) * f->getScale());
-		flushRenderOperations();
-		f->renderRaw(rect, lines, areas, color);
-		flushRenderOperations();
-		//*/
+		drawText(fontName, rect, "[b]" + text, horizontal, vertical, color, offset);
 	}
 
 /******* DRAW TEXT OVERLOADS *******************************************/
@@ -628,6 +693,9 @@ namespace Atres
 			{
 				switch (str[start + 1])
 				{
+				case 'n':
+					tag.type = FORMAT_NORMAL;
+					break;
 				case 's':
 					tag.type = FORMAT_SHADOW;
 					break;
@@ -696,7 +764,8 @@ namespace Atres
 		Font* f = getFont(fontName);
 		harray<grect> areas;
 		harray<hstr> lines;
-		f->testRender(grect(0, 0, maxWidth, 100000), text, LEFT_WRAPPED, TOP, lines, areas);
+		//f->testRender(grect(0, 0, maxWidth, 100000), text, LEFT_WRAPPED, TOP, lines, areas);
+		//2DO - make it work with formatted text properly
 		return (lines.size() * f->getLineHeight());
 	}
 	
@@ -711,42 +780,47 @@ namespace Atres
 	
 	void setDefaultFont(chstr name)
 	{
-		default_font=fonts[name];
+		if (!fonts.has_key(name))
+		{
+			throw resource_error("Font", name, "Atres");
+		}
+		defaultFont = fonts[name];
 	}
     
     void loadFont(chstr filename)
     {
 		logMessage(hsprintf("loading font %s", filename.c_str()));
-        Font* f=new Font(filename);
-        fonts[f->getName()]=f;
-		if (default_font == 0) default_font=f;
+        Font* font = new Font(filename);
+        fonts[font->getName()] = font;
+		if (defaultFont == NULL)
+		{
+			defaultFont = font;
+		}
     }
     
     Font* getFont(chstr name)
     {
-		if (name == "" && default_font != 0)
+		if (name == "" && defaultFont != NULL)
 		{
-			default_font->setScale(0);
-			return default_font;
+			defaultFont->setScale(1.0f);
+			return defaultFont;
 		}
-		
-        Font* f;
-        if (fonts.find(name) == fonts.end())
+        Font* font;
+		if (fonts.has_key(name))
 		{
-			int pos=name.find(":");
-			if (pos != -1)
-			{
-				f=getFont(name(0,pos));
-				f->setScale((float)atof(name(pos+1,10).c_str()));
-			}
-			else throw resource_error("Font",name,"Atres");
+			font = fonts[name];
+			font->setScale(1.0f);
+			return font;
 		}
-		else
+		int position = name.find(":");
+		if (position < 0)
 		{
-			f=fonts[name];
-			f->setScale(0);
+			throw resource_error("Font", name, "Atres");
 		}
-        return f;
+		font = getFont(name(0, position));
+		position++;
+		font->setScale((float)(name(position, name.size() - position)));
+        return font;
     }
 	
 }
