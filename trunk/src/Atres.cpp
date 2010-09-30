@@ -322,9 +322,14 @@ namespace Atres
 	
 	harray<RenderSequence> analyzeLines(grect rect, harray<RenderLine> lines, harray<FormatTag> tags)
 	{
-		harray<RenderSequence> effectSequences;
 		harray<RenderSequence> sequences;
 		RenderSequence sequence;
+		harray<RenderSequence> shadowSequences;
+		RenderSequence shadowSequence;
+		shadowSequence.color = shadowColor;
+		harray<RenderSequence> borderSequences;
+		RenderSequence borderSequence;
+		borderSequence.color = borderColor;
 		RenderRectangle renderRect;
 		harray<FormatTag> stack;
 		RenderLine line;
@@ -343,6 +348,7 @@ namespace Atres
 		int byteLength;
 		unsigned int code;
 		float width;
+		grect destination;
 		
 		while (lines.size() > 0)
 		{
@@ -423,13 +429,34 @@ namespace Atres
 					}
 					tags.pop_front();
 					nextTag = tags.front();
-					if (sequence.rectangles.size() > 0)
+					if (sequence.texture != font->getTexture() || sequence.color != color)
 					{
-						sequences += sequence;
+						if (sequence.rectangles.size() > 0)
+						{
+							sequences += sequence;
+							sequence.rectangles.clear();
+						}
+						sequence.texture = font->getTexture();
+						sequence.color = color;
 					}
-					sequence.texture = font->getTexture();
-					sequence.color = color;
-					sequence.rectangles.clear();
+					if (shadowSequence.texture != font->getTexture())
+					{
+						if (shadowSequence.rectangles.size() > 0)
+						{
+							shadowSequences += shadowSequence;
+							shadowSequence.rectangles.clear();
+						}
+						shadowSequence.texture = font->getTexture();
+					}
+					if (borderSequence.texture != font->getTexture())
+					{
+						if (borderSequence.rectangles.size() > 0)
+						{
+							borderSequences += borderSequence;
+							borderSequence.rectangles.clear();
+						}
+						borderSequence.texture = font->getTexture();
+					}
 				}
 				if (tags.size() == 0)
 				{
@@ -450,6 +477,32 @@ namespace Atres
 				area.h = font->getHeight();
 				renderRect = font->makeRenderRectangle(rect, area, code);
 				sequence.rectangles += renderRect;
+				destination = renderRect.dest;
+				switch (effectMode)
+				{
+				case 1:
+					renderRect.dest = destination + shadowOffset;
+					shadowSequence.rectangles += renderRect;
+					break;
+				case 2:
+					renderRect.dest = destination + gvec2(-borderOffset, -borderOffset);
+					borderSequence.rectangles += renderRect;
+					renderRect.dest = destination + gvec2(borderOffset, -borderOffset);
+					borderSequence.rectangles += renderRect;
+					renderRect.dest = destination + gvec2(-borderOffset, borderOffset);
+					borderSequence.rectangles += renderRect;
+					renderRect.dest = destination + gvec2(borderOffset, borderOffset);
+					borderSequence.rectangles += renderRect;
+					renderRect.dest = destination + gvec2(0.0f, -borderOffset);
+					borderSequence.rectangles += renderRect;
+					renderRect.dest = destination + gvec2(-borderOffset, 0.0f);
+					borderSequence.rectangles += renderRect;
+					renderRect.dest = destination + gvec2(-borderOffset, 0.0f);
+					borderSequence.rectangles += renderRect;
+					renderRect.dest = destination + gvec2(0.0f, borderOffset);
+					borderSequence.rectangles += renderRect;
+					break;
+				}
 				width += characters[code].aw * scale;
 			}
 		}
@@ -457,9 +510,41 @@ namespace Atres
 		{
 			sequences += sequence;
 		}
-		return sequences;
+		if (shadowSequence.rectangles.size() > 0)
+		{
+			shadowSequences += shadowSequence;
+		}
+		if (borderSequence.rectangles.size() > 0)
+		{
+			borderSequences += borderSequence;
+		}
+		borderSequences = optimizeSequences(borderSequences);
+		shadowSequences = optimizeSequences(shadowSequences);
+		return optimizeSequences(shadowSequences + borderSequences + sequences);
 	}
 
+	harray<RenderSequence> optimizeSequences(harray<RenderSequence> sequences)
+	{
+		harray<RenderSequence> result;
+		RenderSequence current;
+		int i;
+		while (sequences.size() > 0)
+		{
+			current = sequences.pop_front();
+			for (i = 0; i < sequences.size(); i++)
+			{
+				if (current.texture == sequences[i].texture && current.color == sequences[i].color)
+				{
+					current.rectangles += sequences[i].rectangles;
+					sequences.remove_at(i);
+					i--;
+				}
+			}
+			result += current;
+		}
+		return result;
+	}
+	
 /******* DRAW TEXT *****************************************************/
 
 	void drawRenderSequence(RenderSequence& sequence)

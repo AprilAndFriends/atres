@@ -136,6 +136,8 @@ int main()
 		AprilUI::setDebugMode(true);
 #endif
 		Atres::loadFont("../media/arial.font");
+		Atres::setShadowColor(April::Color(255, 255, 0, 0));
+		Atres::setBorderColor(April::Color(255, 0, 128, 255));
 		dataset = new AprilUI::Dataset("../media/demo_simple.datadef");
 		dataset->load();
 		AprilUI::Label* label = (AprilUI::Label*)dataset->getObject("test_4");
