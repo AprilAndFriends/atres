@@ -11,12 +11,14 @@
     <File Name="src/Atres.cpp"/>
     <File Name="src/Font.cpp"/>
     <File Name="src/Exception.cpp"/>
+    <File Name="src/Util.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/atres/Atres.h"/>
     <File Name="include/atres/Font.h"/>
     <File Name="include/atres/AtresExport.h"/>
     <File Name="include/atres/Exception.h"/>
+    <File Name="src/Util.h"/>
   </VirtualDirectory>
   <Dependencies Name="Release"/>
   <Settings Type="Dynamic Library">

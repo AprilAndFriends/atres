@@ -7,8 +7,9 @@ The command and the parameter can be separated with any character.
 
 Following formatting commands are supported:
 
-b - border
+n - normal (no shadow / border)
 s - shadow
+b - border
 c - color change; parameter: string with hex value for color in RGB or ARGB
 f - font change; parameter: string of the font name definition including optional scale factor
 

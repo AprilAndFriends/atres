@@ -18,9 +18,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 namespace Atres
 {
-	void flushRenderOperations();
-	
-	struct AtresExport FontCharDef
+	struct AtresExport CharacterDefinition
 	{
 		float x, y, w, aw;
 	};
@@ -37,7 +35,7 @@ namespace Atres
 		float getLineHeight() { return this->lineHeight * this->scale; }
 		float getScale() { return this->scale; }
 		void setScale(float value);
-		hmap<unsigned int, FontCharDef>& getCharacters() { return this->characters; }
+		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
 		April::Texture* getTexture() { return this->texture; }
 		
 		bool hasChar(unsigned int charcode);
@@ -45,9 +43,7 @@ namespace Atres
 		float getTextWidth(chstr text);
 		int getTextCount(chstr text, float maxWidth);
 		
-		int testRender(grect rect, chstr text, Alignment horizontal, Alignment vertical, harray<hstr>& lines, harray<grect>& areas, gvec2 offset = gvec2());
-		void render(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset = gvec2());
-		void renderRaw(grect rect, harray<hstr> lines, harray<grect> areas, April::Color color, gvec2 offset = gvec2());
+		RenderRectangle makeRenderRectangle(grect rect, grect area, unsigned int code);
 		
 	protected:
 		hstr name;
@@ -55,7 +51,7 @@ namespace Atres
 		float defaultScale;
 		float height;
 		float lineHeight;
-		hmap<unsigned int, FontCharDef> characters;
+		hmap<unsigned int, CharacterDefinition> characters;
 		April::Texture* texture;
 		
 	};
