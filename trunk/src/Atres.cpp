@@ -367,11 +367,14 @@ namespace Atres
 						stack += tag;
 					}
 					tags.pop_front();
-					nextTag = tags.front();
-				}
-				if (tags.size() == 0)
-				{
-					nextTag.start = text.size() + 1;
+					if (tags.size() > 0)
+					{
+						nextTag = tags.front();
+					}
+					else
+					{
+						nextTag.start = text.size() + 1;
+					}
 				}
 				code = getCharUtf8(&str[i], &byteLength);
 				if (code == ' ' || code == '\0')
@@ -541,7 +544,18 @@ namespace Atres
 						}
 					}
 					tags.pop_front();
-					nextTag = tags.front();
+					if (tags.size() > 0)
+					{
+						nextTag = tags.front();
+					}
+					else if (lines.size() > 0)
+					{
+						nextTag.start = lines.back().start + lines.back().text.size() + 1;
+					}
+					else
+					{
+						nextTag.start = line.start + line.text.size() + 1;
+					}
 					if (sequence.texture != font->getTexture() || sequence.color != color)
 					{
 						if (sequence.rectangles.size() > 0)
@@ -1024,7 +1038,14 @@ namespace Atres
 					stack += tag;
 				}
 				tags.pop_front();
-				nextTag = tags.front();
+				if (tags.size() > 0)
+				{
+					nextTag = tags.front();
+				}
+				else
+				{
+					nextTag.start = text.size() + 1;
+				}
 			}
 			if (tags.size() == 0)
 			{

@@ -73,6 +73,7 @@ namespace Atres
 		harray<hstr> data;
 		foreach (hstr, it, lines)
 		{
+			c.aw = 0.0f;
 			data = (*it).split(" ");
 			if (data.size() == 5)
 			{
