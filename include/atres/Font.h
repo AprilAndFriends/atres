@@ -31,10 +31,11 @@ namespace Atres
 		~Font();
 
 		hstr getName() { return this->name; }
-		float getHeight() { return this->height * this->scale; }
-		float getLineHeight() { return this->lineHeight * this->scale; }
-		float getScale() { return this->scale; }
-		void setScale(float value);
+		float getHeight();
+		float getLineHeight();
+		float getScale();
+		void setScale(float value) { this->scale = value; }
+		float getBaseScale() { return this->baseScale; }
 		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
 		April::Texture* getTexture() { return this->texture; }
 		
@@ -48,7 +49,7 @@ namespace Atres
 	protected:
 		hstr name;
 		float scale;
-		float defaultScale;
+		float baseScale;
 		float height;
 		float lineHeight;
 		hmap<unsigned int, CharacterDefinition> characters;

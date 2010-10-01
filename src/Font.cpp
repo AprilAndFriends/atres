@@ -22,7 +22,7 @@ namespace Atres
 	Font::Font(chstr filename)
 	{
 		this->scale = 1.0f;
-		this->defaultScale = 1.0f;
+		this->baseScale = 1.0f;
 		this->lineHeight = 0.0f;
 		harray<hstr> lines = hfile::hread(filename).split("\n");
 		hstr line;
@@ -53,7 +53,7 @@ namespace Atres
 			else if (line.starts_with("Scale="))
 			{
 				this->scale = (float)line.replace("Scale=", "");
-				this->defaultScale = this->scale;
+				this->baseScale = this->scale;
 			}
 			else if (line.starts_with("#"))
 			{
@@ -105,9 +105,19 @@ namespace Atres
 		return this->characters.has_key(charcode);
 	}
 	
-	void Font::setScale(float value)
+	float Font::getHeight()
 	{
-		this->scale = (value == 0.0f ? this->defaultScale : value);
+		return (this->height * this->scale * this->baseScale);
+	}
+	
+	float Font::getLineHeight()
+	{
+		return (this->lineHeight * this->scale * this->baseScale);
+	}
+	
+	float Font::getScale()
+	{
+		return (this->scale * this->baseScale);
 	}
 	
 	float Font::getTextWidth(chstr text)
@@ -120,7 +130,7 @@ namespace Atres
 		while (i < text.size())
 		{
 			code = getCharUtf8(&str[i], &byteLength);
-			result += this->characters[code].aw * this->scale;
+			result += this->characters[code].aw * this->getScale();
 			i += byteLength;
 		}
 		return result;
@@ -136,7 +146,7 @@ namespace Atres
 		while (i < text.size())
 		{
 			code = getCharUtf8(&str[i], &byteLength);
-			width += this->characters[code].aw * this->scale;
+			width += this->characters[code].aw * this->getScale();
 			if (width > maxWidth)
 			{
 				break;
