@@ -11,10 +11,12 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include <iostream>
 
 #include <april/RenderSystem.h>
+#include <april/Keys.h>
 #include <aprilui/AprilUI.h>
 #include <aprilui/Dataset.h>
 #include <aprilui/Objects.h>
 #include <atres/Atres.h>
+#include <hltypes/util.h>
 
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
@@ -49,6 +51,14 @@ void onKeyDown(unsigned int keycode)
 
 void onKeyUp(unsigned int keycode)
 {
+	if (keycode == AK_BACK)
+	{
+		Atres::setBorderColor(April::Color(255, hrand(256), hrand(256), hrand(256)));
+	}
+	if (keycode == AK_SPACE)
+	{
+		Atres::setBorderOffset(hrandf(1.0f, 5.0f));
+	}
 	root->OnKeyUp(keycode);
 }
 

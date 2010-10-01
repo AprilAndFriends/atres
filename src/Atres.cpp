@@ -39,6 +39,7 @@ namespace Atres
 	April::Color shadowColor(255, 0, 0, 0);
 	float borderOffset = 1.0f;
 	April::Color borderColor(255, 0, 0, 0);
+	hmap<hstr, CacheEntry> cache;
 
     void init()
     {
@@ -685,19 +686,38 @@ namespace Atres
 
 	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
-		harray<FormatTag> tags;
-		hstr unformattedText = analyzeFormatting(text, tags);
-		FormatTag tag;
-		tag.type = FORMAT_COLOR;
-		tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
-		tag.start = 0;
-		tag.count = 0;
-		tags.push_front(tag);
-		tag.type = FORMAT_FONT;
-		tag.data = fontName;
-		tags.push_front(tag);
-		harray<RenderLine> lines = createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
-		harray<RenderSequence> sequences = createRenderSequences(rect, lines, tags);
+		bool needCache = !cache.has_key(text);
+		CacheEntry entry;
+		if (!needCache)
+		{
+			entry = cache[text];
+			needCache = (entry.fontName != fontName || entry.rect != rect || entry.horizontal != horizontal ||
+				entry.vertical != vertical || entry.color != color || entry.offset != offset);
+		}
+		if (needCache)
+		{
+			harray<FormatTag> tags;
+			hstr unformattedText = analyzeFormatting(text, tags);
+			FormatTag tag;
+			tag.type = FORMAT_COLOR;
+			tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
+			tag.start = 0;
+			tag.count = 0;
+			tags.push_front(tag);
+			tag.type = FORMAT_FONT;
+			tag.data = fontName;
+			tags.push_front(tag);
+			harray<RenderLine> lines = createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
+			entry.fontName = fontName;
+			entry.rect = rect;
+			entry.horizontal = horizontal;
+			entry.vertical = vertical;
+			entry.color = color;
+			entry.offset = offset;
+			entry.sequences = createRenderSequences(rect, lines, tags);
+			cache[text] = entry;
+		}
+		harray<RenderSequence> sequences = cache[text].sequences;
 		foreach (RenderSequence, it, sequences)
 		{
 			drawRenderSequence(*it);
@@ -803,6 +823,7 @@ namespace Atres
 			throw resource_error("Font", name, "Atres");
 		}
 		defaultFont = fonts[name];
+		cache.clear();
 	}
     
     Font* getFont(chstr name)
@@ -838,6 +859,7 @@ namespace Atres
 	void setShadowOffset(gvec2 value)
 	{
 		shadowOffset = value;
+		cache.clear();
 	}
 	
 	April::Color getShadowColor()
@@ -848,6 +870,7 @@ namespace Atres
 	void setShadowColor(April::Color value)
 	{
 		shadowColor = value;
+		cache.clear();
 	}
 	
 	float getBorderOffset()
@@ -858,6 +881,7 @@ namespace Atres
 	void setBorderOffset(float value)
 	{
 		borderOffset = value;
+		cache.clear();
 	}
 	
 	April::Color getBorderColor()
@@ -868,6 +892,7 @@ namespace Atres
 	void setBorderColor(April::Color value)
 	{
 		borderColor = value;
+		cache.clear();
 	}
 	
 /******* OTHER *********************************************************/
