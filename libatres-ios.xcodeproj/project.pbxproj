@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F24B9401256107200332426 /* Util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F24B93F1256107200332426 /* Util.cpp */; };
+		7F24B9421256107B00332426 /* Util.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F24B9411256107B00332426 /* Util.h */; };
 		7FF23E1C1255E39E000C729A /* Atres.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF23E181255E39E000C729A /* Atres.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FF23E1D1255E39E000C729A /* AtresExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF23E191255E39E000C729A /* AtresExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FF23E1E1255E39E000C729A /* Exception.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF23E1A1255E39E000C729A /* Exception.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7F24B93F1256107200332426 /* Util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Util.cpp; path = src/Util.cpp; sourceTree = "<group>"; };
+		7F24B9411256107B00332426 /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Util.h; path = src/Util.h; sourceTree = "<group>"; };
 		7FF23E181255E39E000C729A /* Atres.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Atres.h; path = include/atres/Atres.h; sourceTree = "<group>"; };
 		7FF23E191255E39E000C729A /* AtresExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AtresExport.h; path = include/atres/AtresExport.h; sourceTree = "<group>"; };
 		7FF23E1A1255E39E000C729A /* Exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Exception.h; path = include/atres/Exception.h; sourceTree = "<group>"; };
@@ -71,6 +75,8 @@
 		7FF23E111255E2B5000C729A /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7F24B9411256107B00332426 /* Util.h */,
+				7F24B93F1256107200332426 /* Util.cpp */,
 				7FF23E201255E3A8000C729A /* Atres.cpp */,
 				7FF23E211255E3A8000C729A /* Exception.cpp */,
 				7FF23E221255E3A8000C729A /* Font.cpp */,
@@ -100,6 +106,7 @@
 				7FF23E1D1255E39E000C729A /* AtresExport.h in Headers */,
 				7FF23E1E1255E39E000C729A /* Exception.h in Headers */,
 				7FF23E1F1255E39E000C729A /* Font.h in Headers */,
+				7F24B9421256107B00332426 /* Util.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,9 +164,11 @@
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/iOS/$(PLATFORM_NAME).sdk/SDKSettings.plist",
 			);
 			name = "Add SDKSettings";
 			outputPaths = (
+				"$(DSTROOT)/SDKSettings.plist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -167,15 +176,17 @@
 		};
 		7FF23E671255EE8A000C729A /* Deploy to HOME-Library-SDKs */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
+				"$(CONFIGURATION_BUILD_DIR)/$(PRODUCT_NAME)SDK/$(PLATFORM_NAME).sdk",
 			);
 			name = "Deploy to HOME-Library-SDKs";
 			outputPaths = (
+				"$(USER_LIBRARY_DIR)/SDKs/$(PRODUCT_NAME)SDK/",
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "mkdir -p \"${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/\"\nrm -rf \"${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/${PLATFORM_NAME}.sdk\"\n\necho \"Deploying to ${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/\"\n\ncp -R \"${CONFIGURATION_BUILD_DIR}/${PRODUCT_NAME}SDK/${PLATFORM_NAME}.sdk\" \"${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/\"\n";
 		};
@@ -189,6 +200,7 @@
 				7FF23E231255E3A8000C729A /* Atres.cpp in Sources */,
 				7FF23E241255E3A8000C729A /* Exception.cpp in Sources */,
 				7FF23E251255E3A8000C729A /* Font.cpp in Sources */,
+				7F24B9401256107200332426 /* Util.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
