@@ -81,8 +81,19 @@ namespace Atres
 		int count;
 	};
 	
+	struct CacheEntry
+	{
+		hstr fontName;
+		grect rect;
+		Alignment horizontal;
+		Alignment vertical;
+		April::Color color;
+		gvec2 offset;
+		harray<RenderSequence> sequences;
+	};
+	
 	class Font;
-
+	
     AtresFnExport void init();
     AtresFnExport void destroy();
 	AtresFnExport void setLogFunction(void (*fnptr)(chstr));
