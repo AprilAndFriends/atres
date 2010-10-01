@@ -586,7 +586,7 @@ namespace Atres
 				code = getCharUtf8(&line.text[i], &byteLength);
 				area = line.rect;
 				area.x += width;
-				area.w = characters[code].aw * scale;
+				area.w = characters[code].w * scale;
 				area.y += (lineHeight - font->getHeight()) / 2;
 				area.h = font->getHeight();
 				renderRect = font->makeRenderRectangle(rect, area, code);
