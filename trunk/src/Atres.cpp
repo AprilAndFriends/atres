@@ -172,13 +172,12 @@ namespace Atres
 		return lines;
 	}
 
-	harray<RenderSequence> createRenderSequences(grect rect, chstr text, harray<FormatTag> tags,
+	harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags,
 		Alignment horizontal, Alignment vertical, gvec2 offset)
 	{
 		harray<RenderLine> lines;
 		RenderLine line;
 		harray<FormatTag> stack;
-		harray<FormatTag> formatTags(tags);
 		FormatTag tag;
 		FormatTag nextTag = tags.front();
 		
@@ -313,14 +312,10 @@ namespace Atres
 				lines = horizontalCorrection(rect, horizontal, lines, offset.x, lineWidth);
 			}
 		}
-		if (lines.size() == 0)
-		{
-			return harray<RenderSequence>();
-		}
-		return analyzeLines(rect, lines, formatTags);
+		return lines;
 	}
 	
-	harray<RenderSequence> analyzeLines(grect rect, harray<RenderLine> lines, harray<FormatTag> tags)
+	harray<RenderSequence> createRenderSequences(grect rect, harray<RenderLine> lines, harray<FormatTag> tags)
 	{
 		harray<RenderSequence> sequences;
 		RenderSequence sequence;
@@ -342,6 +337,7 @@ namespace Atres
 		hmap<unsigned int, CharacterDefinition> characters;
 		float lineHeight;
 		float scale;
+		float baseScale;
 		April::Color color;
 		int effectMode = 0;
 		
@@ -356,6 +352,7 @@ namespace Atres
 			width = 0.0f;
 			for (int i = 0; i < line.text.size(); i += byteLength)
 			{
+				// checking first formatting tag changes
 				while (tags.size() > 0 && line.start + i >= nextTag.start)
 				{
 					if (nextTag.type == CLOSE)
@@ -368,6 +365,7 @@ namespace Atres
 							font = getFont(fontName);
 							characters = font->getCharacters();
 							scale = font->getScale();
+							baseScale = font->getBaseScale();
 							break;
 						case FORMAT_COLOR:
 							color = hexstr_to_color(tag.data);
@@ -403,6 +401,7 @@ namespace Atres
 							}
 							characters = font->getCharacters();
 							scale = font->getScale();
+							baseScale = font->getBaseScale();
 							break;
 						case FORMAT_COLOR:
 							tag.type = FORMAT_COLOR;
@@ -469,6 +468,7 @@ namespace Atres
 						nextTag.start = line.start + line.text.size() + 1;
 					}
 				}
+				// checking the particular character
 				code = getCharUtf8(&line.text[i], &byteLength);
 				area = line.rect;
 				area.x += width;
@@ -480,26 +480,26 @@ namespace Atres
 				destination = renderRect.dest;
 				switch (effectMode)
 				{
-				case 1:
-					renderRect.dest = destination + shadowOffset;
+				case 1: // shadow
+					renderRect.dest = destination + shadowOffset * baseScale;
 					shadowSequence.rectangles += renderRect;
 					break;
-				case 2:
-					renderRect.dest = destination + gvec2(-borderOffset, -borderOffset);
+				case 2: // border
+					renderRect.dest = destination + gvec2(-borderOffset, -borderOffset) * baseScale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(borderOffset, -borderOffset);
+					renderRect.dest = destination + gvec2(borderOffset, -borderOffset) * baseScale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(-borderOffset, borderOffset);
+					renderRect.dest = destination + gvec2(-borderOffset, borderOffset) * baseScale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(borderOffset, borderOffset);
+					renderRect.dest = destination + gvec2(borderOffset, borderOffset) * baseScale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(0.0f, -borderOffset);
+					renderRect.dest = destination + gvec2(0.0f, -borderOffset) * baseScale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(-borderOffset, 0.0f);
+					renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * baseScale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(-borderOffset, 0.0f);
+					renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * baseScale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(0.0f, borderOffset);
+					renderRect.dest = destination + gvec2(0.0f, borderOffset) * baseScale;
 					borderSequence.rectangles += renderRect;
 					break;
 				}
@@ -583,7 +583,8 @@ namespace Atres
 		tag.type = FORMAT_FONT;
 		tag.data = fontName;
 		tags.push_front(tag);
-		harray<RenderSequence> sequences = createRenderSequences(rect, unformattedText, tags, horizontal, vertical, offset);
+		harray<RenderLine> lines = createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
+		harray<RenderSequence> sequences = createRenderSequences(rect, lines, tags);
 		foreach (RenderSequence, it, sequences)
 		{
 			drawRenderSequence(*it);
@@ -628,7 +629,7 @@ namespace Atres
 	void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		drawText("", x, y, w, h, text, horizontal, vertical, r, g, b, a, offset);
+		drawText("", grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), offset);
 	}
 	
 	void drawTextShadowed(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
@@ -657,7 +658,7 @@ namespace Atres
 	void drawTextShadowed(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		drawTextShadowed("", x, y, w, h, text, horizontal, vertical, r, g, b, a, offset);
+		drawTextShadowed("", grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), offset);
 	}
 	
 	void drawTextBordered(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
@@ -686,7 +687,7 @@ namespace Atres
 	void drawTextBordered(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		drawTextBordered("", x, y, w, h, text, horizontal, vertical, r, g, b, a, offset);
+		drawTextBordered("", grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), offset);
 	}
 	
 /******* PROPERTIES ****************************************************/
@@ -840,18 +841,30 @@ namespace Atres
 	
 	float getTextWidth(chstr fontName, chstr text)
 	{
-		//2DO - make it work with formatted text properly
-		return getFont(fontName)->getTextWidth(text);
+		harray<FormatTag> tags;
+		hstr unformattedText = analyzeFormatting(text, tags);
+		FormatTag tag;
+		tag.type = FORMAT_FONT;
+		tag.data = fontName;
+		tag.start = 0;
+		tag.count = 0;
+		tags.push_front(tag);
+		harray<RenderLine> lines = createRenderLines(grect(0, 0, 1, 1), unformattedText, tags, LEFT, TOP);
+		return (lines.size() > 0 ? lines[0].rect.w : 0);
 	}
 
 	float getTextHeight(chstr fontName, chstr text, float maxWidth)
 	{
-		Font* f = getFont(fontName);
-		harray<grect> areas;
-		harray<hstr> lines;
-		//f->testRender(grect(0, 0, maxWidth, 100000), text, LEFT_WRAPPED, TOP, lines, areas);
-		//2DO - make it work with formatted text properly
-		return (lines.size() * f->getLineHeight());
+		harray<FormatTag> tags;
+		hstr unformattedText = analyzeFormatting(text, tags);
+		FormatTag tag;
+		tag.type = FORMAT_FONT;
+		tag.data = fontName;
+		tag.start = 0;
+		tag.count = 0;
+		tags.push_front(tag);
+		harray<RenderLine> lines = createRenderLines(grect(0, 0, maxWidth, 100000), unformattedText, tags, LEFT_WRAPPED, TOP);
+		return (lines.size() * getFont(fontName)->getLineHeight());
 	}
 	
 	int getTextCount(chstr fontName, chstr text, float maxWidth)

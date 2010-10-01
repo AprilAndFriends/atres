@@ -93,8 +93,8 @@ namespace Atres
 	
 	AtresFnExport harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight);
 	AtresFnExport harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
-	AtresFnExport harray<RenderSequence> createRenderSequences(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset);
-	AtresFnExport harray<RenderSequence> analyzeLines(grect rect, harray<RenderLine> lines, harray<FormatTag> tags);
+	AtresFnExport harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset = gvec2());
+	AtresFnExport harray<RenderSequence> createRenderSequences(grect rect, harray<RenderLine> lines, harray<FormatTag> tags);
 	AtresFnExport harray<RenderSequence> optimizeSequences(harray<RenderSequence> sequences);
 	
 	AtresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(), gvec2 offset = gvec2());
