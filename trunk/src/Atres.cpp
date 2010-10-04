@@ -40,9 +40,26 @@ namespace Atres
 	float borderOffset = 1.0f;
 	April::Color borderColor(255, 0, 0, 0);
 	hmap<hstr, CacheEntry> cache;
+	hmap<hstr, hstr> colors;
 
     void init()
     {
+		colors["red"] = "FF0000";
+		colors["red"] = "FF0000";
+		colors["green"] = "00FF00";
+		colors["blue"] = "0000FF";
+		colors["yellow"] = "FFFF00";
+		colors["mangenta"] = "FF00FF";
+		colors["cyan"] = "00FFFF";
+		colors["orange"] = "FF7F00";
+		colors["pink"] = "FF007F";
+		colors["teal"] = "00FF7F";
+		colors["neon"] = "7FFF00";
+		colors["purple"] = "7F00FF";
+		colors["aqua"] = "007FFF";
+		colors["white"] = "FFFFFF";
+		colors["grey"] = "7F7F7F";
+		colors["black"] = "000000";
     }
     
     void destroy()
@@ -348,18 +365,27 @@ namespace Atres
 						tag.type = FORMAT_FONT;
 						tag.data = fontName;
 						stack += tag;
-						fontName = nextTag.data;
-						if (font == NULL)
+						try
 						{
-							font = getFont(fontName);
-							lineHeight = font->getLineHeight();
+							if (font == NULL)
+							{
+								font = getFont(nextTag.data);
+								lineHeight = font->getLineHeight();
+							}
+							else
+							{
+								font = getFont(nextTag.data);
+							}
+							fontName = nextTag.data;
+							characters = font->getCharacters();
+							scale = font->getScale();
 						}
-						else
+						catch (hltypes::_resource_error e)
 						{
-							font = getFont(fontName);
+#ifdef _DEBUG
+							logMessage(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
+#endif
 						}
-						characters = font->getCharacters();
-						scale = font->getScale();
 					}
 					else
 					{
@@ -456,6 +482,7 @@ namespace Atres
 		float scale;
 		float baseScale;
 		April::Color color;
+		hstr hex;
 		int effectMode = 0;
 		
 		int byteLength;
@@ -485,7 +512,11 @@ namespace Atres
 							baseScale = font->getBaseScale();
 							break;
 						case FORMAT_COLOR:
-							color = hexstr_to_color(tag.data);
+							hex = (colors.has_key(tag.data) ? colors[tag.data] : tag.data);
+							if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
+							{
+								color = hexstr_to_color(hex);
+							}
 							break;
 						case FORMAT_NORMAL:
 							effectMode = 0;
@@ -506,25 +537,44 @@ namespace Atres
 							tag.type = FORMAT_FONT;
 							tag.data = fontName;
 							stack += tag;
-							fontName = nextTag.data;
-							if (font == NULL)
+							try
 							{
-								font = getFont(fontName);
-								lineHeight = font->getLineHeight();
+								if (font == NULL)
+								{
+									font = getFont(nextTag.data);
+									lineHeight = font->getLineHeight();
+								}
+								else
+								{
+									font = getFont(nextTag.data);
+								}
+								fontName = nextTag.data;
+								characters = font->getCharacters();
+								scale = font->getScale();
+								baseScale = font->getBaseScale();
 							}
-							else
+							catch (hltypes::_resource_error e)
 							{
-								font = getFont(fontName);
+#ifdef _DEBUG
+								logMessage(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
+#endif
 							}
-							characters = font->getCharacters();
-							scale = font->getScale();
-							baseScale = font->getBaseScale();
 							break;
 						case FORMAT_COLOR:
 							tag.type = FORMAT_COLOR;
 							tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
 							stack += tag;
-							color = hexstr_to_color(nextTag.data);
+							hex = (colors.has_key(nextTag.data) ? colors[nextTag.data] : nextTag.data);
+							if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
+							{
+								color = hexstr_to_color(hex);
+							}
+#ifdef _DEBUG
+							else
+							{
+								logMessage(hsprintf("Warning: color \"%s\" does not exist", hex.c_str()));
+							}
+#endif
 							break;
 						case FORMAT_NORMAL:
 							tag.type = (effectMode == 2 ? FORMAT_BORDER : (effectMode == 1 ? FORMAT_SHADOW : FORMAT_NORMAL));
@@ -909,6 +959,11 @@ namespace Atres
 		cache.clear();
 	}
 	
+	void addColor(chstr key, chstr value)
+	{
+		colors[key.lower()] = value.upper();
+	}
+	
 /******* OTHER *********************************************************/
 	
 	float getFontHeight(chstr fontName)
@@ -918,34 +973,63 @@ namespace Atres
 	
 	float getTextWidth(chstr fontName, chstr text)
 	{
-		harray<FormatTag> tags;
-		hstr unformattedText = prepareFormatting(fontName, text, tags);
-		return getFittingLine(grect(0, 0, 100000, 1), unformattedText, tags).rect.w;
+		if (text != "")
+		{
+			harray<FormatTag> tags;
+			hstr unformattedText = prepareFormatting(fontName, text, tags);
+			if (unformattedText != "")
+			{
+				return getFittingLine(grect(0, 0, 100000, 1), unformattedText, tags).rect.w;
+			}
+		}
+		return 0.0f;
 	}
 
 	float getTextHeight(chstr fontName, chstr text, float maxWidth)
 	{
-		harray<FormatTag> tags;
-		hstr unformattedText = prepareFormatting(fontName, text, tags);
-		harray<RenderLine> lines = createRenderLines(grect(0, 0, maxWidth, 100000), unformattedText, tags, LEFT_WRAPPED, TOP);
-		return (lines.size() * getFont(fontName)->getLineHeight());
+		if (text != "")
+		{
+			harray<FormatTag> tags;
+			hstr unformattedText = prepareFormatting(fontName, text, tags);
+			if (unformattedText != "")
+			{
+				harray<RenderLine> lines = createRenderLines(grect(0, 0, maxWidth, 100000), unformattedText, tags, LEFT_WRAPPED, TOP);
+				return (lines.size() * getFont(fontName)->getLineHeight());
+			}
+		}
+		return 0.0f;
 	}
 	
 	int getTextCount(chstr fontName, chstr text, float maxWidth)
 	{
-		harray<FormatTag> tags;
-		hstr unformattedText = prepareFormatting(fontName, text, tags);
-		return getFittingLine(grect(0, 0, maxWidth, 1), unformattedText, tags).text.size();
+		if (text != "")
+		{
+			harray<FormatTag> tags;
+			hstr unformattedText = prepareFormatting(fontName, text, tags);
+			if (unformattedText != "")
+			{
+				return getFittingLine(grect(0, 0, maxWidth, 1), unformattedText, tags).text.size();
+			}
+		}
+		return 0;
 	}
 	
 	float getTextWidthUnformatted(chstr fontName, chstr text)
 	{
+		if (text == "")
+		{
+			return 0.0f;
+		}
 		harray<FormatTag> tags = prepareTags(fontName);
 		return getFittingLine(grect(0, 0, 100000, 1), text, tags).rect.w;
 	}
 
 	float getTextHeightUnformatted(chstr fontName, chstr text, float maxWidth)
 	{
+		if (text == "")
+		{
+			return 0.0f;
+		}
 		harray<FormatTag> tags = prepareTags(fontName);
 		harray<RenderLine> lines = createRenderLines(grect(0, 0, maxWidth, 100000), text, tags, LEFT_WRAPPED, TOP);
 		return (lines.size() * getFont(fontName)->getLineHeight());
@@ -953,6 +1037,10 @@ namespace Atres
 	
 	int getTextCountUnformatted(chstr fontName, chstr text, float maxWidth)
 	{
+		if (text == "")
+		{
+			return 0;
+		}
 		harray<FormatTag> tags = prepareTags(fontName);
 		return getFittingLine(grect(0, 0, maxWidth, 1), text, tags).text.size();
 	}

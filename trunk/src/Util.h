@@ -18,6 +18,7 @@ struct xml_node;
 namespace Atres
 {
 	April::Color hexstr_to_color(chstr hex);
+	bool is_hexstr(chstr hex);
 	
 }
 #endif

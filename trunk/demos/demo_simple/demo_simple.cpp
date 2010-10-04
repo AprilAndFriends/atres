@@ -145,6 +145,7 @@ int main()
 #ifdef _DEBUG
 		AprilUI::setDebugMode(true);
 #endif
+		Atres::init();
 		Atres::loadFont("../media/arial.font");
 		Atres::setShadowColor(April::Color(255, 255, 0, 0));
 		Atres::setBorderColor(April::Color(255, 0, 128, 255));
