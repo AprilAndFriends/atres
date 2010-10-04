@@ -333,12 +333,9 @@ namespace Atres
 		{
 			i = start + current;
 			line.text = "";
-			if (horizontal != LEFT && horizontal != LEFT_WRAPPED)
+			while (i < text.size() && str[i] == ' ') // skip initial spaces in the line
 			{
-				while (i < text.size() && str[i] == ' ') // skip initial spaces in the line
-				{
-					i++;
-				}
+				i++;
 			}
 			start = i;
 			current = 0;
