@@ -41,27 +41,6 @@
     <Project Name="libaprilui"/>
   </Dependencies>
   <Settings Type="Executable">
-    <GlobalSettings>
-      <Compiler Options="">
-        <IncludePath Value="."/>
-        <IncludePath Value="../../include"/>
-        <IncludePath Value="../../../include"/>
-        <IncludePath Value="../../../hltypes/include"/>
-        <IncludePath Value="../../../gtypes/include"/>
-        <IncludePath Value="../../../april/include"/>
-        <IncludePath Value="../../../aprilui/include"/>
-      </Compiler>
-      <Linker Options="">
-        <LibraryPath Value="../../lib"/>
-        <LibraryPath Value="../../bin/$(ConfigurationName)"/>
-        <LibraryPath Value="../../../april/bin"/>
-        <LibraryPath Value="../../../atres/bin/$(ConfigurationName)"/>
-        <LibraryPath Value="../../../aprilui/bin/$(ConfigurationName)"/>
-        <LibraryPath Value="../../../hltypes/bin/$(ConfigurationName)"/>
-        <LibraryPath Value="../../../gtypes/bin/$(ConfigurationName)"/>
-      </Linker>
-      <ResourceCompiler Options=""/>
-    </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="_DEBUG"/>
@@ -180,5 +159,26 @@
         <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="."/>
+        <IncludePath Value="../../include"/>
+        <IncludePath Value="../../../include"/>
+        <IncludePath Value="../../../hltypes/include"/>
+        <IncludePath Value="../../../gtypes/include"/>
+        <IncludePath Value="../../../april/include"/>
+        <IncludePath Value="../../../aprilui/include"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="../../lib"/>
+        <LibraryPath Value="../../bin/$(ConfigurationName)"/>
+        <LibraryPath Value="../../../april/bin"/>
+        <LibraryPath Value="../../../atres/bin/$(ConfigurationName)"/>
+        <LibraryPath Value="../../../aprilui/bin/$(ConfigurationName)"/>
+        <LibraryPath Value="../../../hltypes/bin/$(ConfigurationName)"/>
+        <LibraryPath Value="../../../gtypes/bin/$(ConfigurationName)"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
   </Settings>
 </CodeLite_Project>
