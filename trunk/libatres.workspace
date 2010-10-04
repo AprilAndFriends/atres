@@ -6,6 +6,10 @@
   <Project Name="libgtypes" Path="../gtypes/libgtypes.project" Active="No"/>
   <Project Name="libaprilui" Path="../aprilui/libaprilui.project" Active="No"/>
   <Project Name="demo_simple" Path="demos/demo_simple/demo_simple.project" Active="Yes"/>
+  <Project Name="fontgen" Path="scripts/win32_font_generator/fontgen.project" Active="No"/>
+  <Project Name="fontgen" Path="scripts/win32_font_generator/fontgen.project" Active="No"/>
+  <Project Name="fontgen" Path="fontgen/fontgen.project"/>
+  <Project Name="fontgen" Path="scripts/win32_font_generator/fontgen.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Project Name="libhltypes" ConfigName="Debug"/>
@@ -14,6 +18,7 @@
       <Project Name="libaprilui" ConfigName="Debug"/>
       <Project Name="libapril" ConfigName="DirectX_Debug"/>
       <Project Name="demo_simple" ConfigName="Debug"/>
+      <Project Name="fontgen" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Release" Selected="yes">
       <Project Name="libhltypes" ConfigName="Release_Win32"/>
@@ -22,6 +27,7 @@
       <Project Name="libgtypes" ConfigName="Debug"/>
       <Project Name="libaprilui" ConfigName="Debug"/>
       <Project Name="demo_simple" ConfigName="Debug"/>
+      <Project Name="fontgen" ConfigName="Release"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Linux_Debug" Selected="yes">
       <Project Name="libhltypes" ConfigName="Linux_Debug"/>
@@ -30,6 +36,7 @@
       <Project Name="libgtypes" ConfigName="Linux_Debug"/>
       <Project Name="libaprilui" ConfigName="Linux_Debug"/>
       <Project Name="demo_simple" ConfigName="Linux_Debug"/>
+      <Project Name="fontgen" ConfigName="Debug"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>
