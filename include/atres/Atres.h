@@ -145,6 +145,7 @@ namespace Atres
 	AtresFnExport void setBorderOffset(float value);
 	AtresFnExport April::Color getBorderColor();
 	AtresFnExport void setBorderColor(April::Color value);
+	AtresFnExport void addColor(chstr key, chstr value);
 };
 
 #endif
