@@ -84,7 +84,7 @@ namespace Atres
 	struct CacheEntry
 	{
 		hstr fontName;
-		grect rect;
+		gvec2 size;
 		Alignment horizontal;
 		Alignment vertical;
 		April::Color color;

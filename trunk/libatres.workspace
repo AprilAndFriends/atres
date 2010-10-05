@@ -8,7 +8,6 @@
   <Project Name="demo_simple" Path="demos/demo_simple/demo_simple.project" Active="Yes"/>
   <Project Name="fontgen" Path="scripts/win32_font_generator/fontgen.project" Active="No"/>
   <Project Name="fontgen" Path="scripts/win32_font_generator/fontgen.project" Active="No"/>
-  <Project Name="fontgen" Path="fontgen/fontgen.project"/>
   <Project Name="fontgen" Path="scripts/win32_font_generator/fontgen.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">

@@ -20,7 +20,10 @@ namespace Atres
 {
 	struct AtresExport CharacterDefinition
 	{
-		float x, y, w, aw;
+		float x;
+		float y;
+		float w;
+		float aw;
 	};
 
 	class AtresExport Font
