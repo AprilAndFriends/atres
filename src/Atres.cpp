@@ -749,11 +749,14 @@ namespace Atres
 	{
 		bool needCache = !cache.has_key(text);
 		CacheEntry entry;
+		grect original = rect;
+		rect.x = 0.0f;
+		rect.y = 0.0f;
 		if (!needCache)
 		{
 			entry = cache[text];
-			needCache = (entry.fontName != fontName || entry.rect != rect || entry.horizontal != horizontal ||
-				entry.vertical != vertical || entry.color != color || entry.offset != offset);
+			needCache = (entry.fontName != fontName || entry.size.x != rect.w || entry.size.y != rect.h ||
+				entry.horizontal != horizontal || entry.vertical != vertical || entry.color != color || entry.offset != offset);
 		}
 		if (needCache)
 		{
@@ -770,7 +773,7 @@ namespace Atres
 			tags.push_front(tag);
 			harray<RenderLine> lines = createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
 			entry.fontName = fontName;
-			entry.rect = rect;
+			entry.size = gvec2(rect.w, rect.h);
 			entry.horizontal = horizontal;
 			entry.vertical = vertical;
 			entry.color = color;
@@ -781,6 +784,11 @@ namespace Atres
 		harray<RenderSequence> sequences = cache[text].sequences;
 		foreach (RenderSequence, it, sequences)
 		{
+			foreach (RenderRectangle, it2, (*it).rectangles)
+			{
+				(*it2).dest.x += original.x;
+				(*it2).dest.y += original.y;
+			}
 			drawRenderSequence(*it);
 		}
 	}
