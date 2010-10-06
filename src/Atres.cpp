@@ -35,6 +35,8 @@ namespace Atres
     hmap<hstr,Font*> fonts;
 	Font* defaultFont = NULL;
 	void (*g_logFunction)(chstr) = atres_writelog;
+	int cacheSize = 100;
+	int cacheIndex = 0;
 	gvec2 shadowOffset(1.0f, 1.0f);
 	April::Color shadowColor(255, 0, 0, 0);
 	float borderOffset = 1.0f;
@@ -758,6 +760,11 @@ namespace Atres
 			needCache = (entry.fontName != fontName || entry.size.x != rect.w || entry.size.y != rect.h ||
 				entry.horizontal != horizontal || entry.vertical != vertical || entry.color != color || entry.offset != offset);
 		}
+		else
+		{
+			updateCache();
+			cacheIndex++;
+		}
 		if (needCache)
 		{
 			harray<FormatTag> tags;
@@ -765,14 +772,13 @@ namespace Atres
 			FormatTag tag;
 			tag.type = FORMAT_COLOR;
 			tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
-			tag.start = 0;
-			tag.count = 0;
 			tags.push_front(tag);
 			tag.type = FORMAT_FONT;
 			tag.data = fontName;
 			tags.push_front(tag);
 			harray<RenderLine> lines = createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
 			entry.fontName = fontName;
+			entry.index = cacheIndex;
 			entry.size = gvec2(rect.w, rect.h);
 			entry.horizontal = horizontal;
 			entry.vertical = vertical;
@@ -809,8 +815,6 @@ namespace Atres
 		FormatTag tag;
 		tag.type = FORMAT_COLOR;
 		tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
-		tag.start = 0;
-		tag.count = 0;
 		tags.push_front(tag);
 		tag.type = FORMAT_FONT;
 		tag.data = fontName;
@@ -919,6 +923,32 @@ namespace Atres
 		font->setScale((float)(name(position, name.size() - position)));
         return font;
     }
+	
+	void setCacheSize(int value)
+	{
+		cacheSize = value;
+		updateCache();
+	}
+	
+	void updateCache()
+	{
+		hstr minKey;
+		int minIndex;
+		while (cache.size() >= cacheSize)
+		{
+			minKey = "";
+			minIndex = -1;
+			foreach_m (CacheEntry, it, cache)
+			{
+				if (minKey == "" || it->second.index < minIndex)
+				{
+					minKey = it->first;
+					minIndex = it->second.index;
+				}
+			}
+			cache.remove_key(minKey);
+		}
+	}
 	
 	gvec2 getShadowOffset()
 	{
@@ -1056,8 +1086,6 @@ namespace Atres
 		FormatTag tag;
 		tag.type = FORMAT_FONT;
 		tag.data = fontName;
-		tag.start = 0;
-		tag.count = 0;
 		tags.push_front(tag);
 		return unformattedText;
 	}
@@ -1068,8 +1096,6 @@ namespace Atres
 		FormatTag tag;
 		tag.type = FORMAT_FONT;
 		tag.data = fontName;
-		tag.start = 0;
-		tag.count = 0;
 		tags.push_front(tag);
 		return tags;
 	}
