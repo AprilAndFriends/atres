@@ -43,7 +43,6 @@ namespace Atres
 	
 	enum FormatTagType
 	{
-		TEXT,
 		ESCAPE,
 		FORMAT_NORMAL,
 		FORMAT_SHADOW,
@@ -57,6 +56,7 @@ namespace Atres
 	{
 		grect src;
 		grect dest;
+		RenderRectangle() : src(), dest() { }
 	};
 	
 	struct AtresExport RenderSequence
@@ -64,6 +64,7 @@ namespace Atres
 		April::Texture* texture;
 		April::Color color;
 		harray<RenderRectangle> rectangles;
+		RenderSequence() : texture(NULL), color(April::Color()), rectangles(harray<RenderRectangle>()) { }
 	};
 	
 	struct AtresExport RenderLine
@@ -71,6 +72,7 @@ namespace Atres
 		hstr text;
 		grect rect;
 		int start;
+		RenderLine() : text(""), rect(), start(0) { }
 	};
 	
 	struct AtresExport FormatTag
@@ -79,17 +81,21 @@ namespace Atres
 		hstr data;
 		int start;
 		int count;
+		FormatTag() : type(ESCAPE), data(""), start(0), count(0) { }
 	};
 	
 	struct CacheEntry
 	{
 		hstr fontName;
+		int index;
 		gvec2 size;
 		Alignment horizontal;
 		Alignment vertical;
 		April::Color color;
 		gvec2 offset;
 		harray<RenderSequence> sequences;
+		CacheEntry() : fontName(""), index(0), size(gvec2()), horizontal(CENTER_WRAPPED), vertical(CENTER),
+			color(April::Color()), offset(gvec2()), sequences(harray<RenderSequence>()) { }
 	};
 	
 	class Font;
@@ -137,6 +143,8 @@ namespace Atres
 	
 	AtresFnExport void setDefaultFont(chstr name);
     AtresFnExport Font* getFont(chstr name);
+	AtresFnExport void setCacheSize(int value);
+	AtresFnExport void updateCache();
 	AtresFnExport gvec2 getShadowOffset();
 	AtresFnExport void setShadowOffset(gvec2 value);
 	AtresFnExport April::Color getShadowColor();
