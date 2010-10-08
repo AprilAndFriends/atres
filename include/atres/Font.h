@@ -39,6 +39,7 @@ namespace Atres
 		float getScale();
 		void setScale(float value) { this->scale = value; }
 		float getBaseScale() { return this->baseScale; }
+		void setBaseScale(float value) { this->baseScale = value; }
 		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
 		April::Texture* getTexture() { return this->texture; }
 		
