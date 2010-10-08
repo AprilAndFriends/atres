@@ -479,7 +479,6 @@ namespace Atres
 		hmap<unsigned int, CharacterDefinition> characters;
 		float lineHeight;
 		float scale;
-		float baseScale;
 		April::Color color;
 		hstr hex;
 		int effectMode = 0;
@@ -509,7 +508,6 @@ namespace Atres
 							font = getFont(fontName);
 							characters = font->getCharacters();
 							scale = font->getScale();
-							baseScale = font->getBaseScale();
 							break;
 						case FORMAT_COLOR:
 							hex = (colors.has_key(tag.data) ? colors[tag.data] : tag.data);
@@ -551,7 +549,6 @@ namespace Atres
 								fontName = nextTag.data;
 								characters = font->getCharacters();
 								scale = font->getScale();
-								baseScale = font->getBaseScale();
 							}
 							catch (hltypes::_resource_error e)
 							{
@@ -664,25 +661,25 @@ namespace Atres
 				switch (effectMode)
 				{
 				case 1: // shadow
-					renderRect.dest = destination + shadowOffset * baseScale;
+					renderRect.dest = destination + shadowOffset * scale;
 					shadowSequence.rectangles += renderRect;
 					break;
 				case 2: // border
-					renderRect.dest = destination + gvec2(-borderOffset, -borderOffset) * baseScale;
+					renderRect.dest = destination + gvec2(-borderOffset, -borderOffset) * scale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(borderOffset, -borderOffset) * baseScale;
+					renderRect.dest = destination + gvec2(borderOffset, -borderOffset) * scale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(-borderOffset, borderOffset) * baseScale;
+					renderRect.dest = destination + gvec2(-borderOffset, borderOffset) * scale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(borderOffset, borderOffset) * baseScale;
+					renderRect.dest = destination + gvec2(borderOffset, borderOffset) * scale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(0.0f, -borderOffset) * baseScale;
+					renderRect.dest = destination + gvec2(0.0f, -borderOffset) * scale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * baseScale;
+					renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * scale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * baseScale;
+					renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * scale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(0.0f, borderOffset) * baseScale;
+					renderRect.dest = destination + gvec2(0.0f, borderOffset) * scale;
 					borderSequence.rectangles += renderRect;
 					break;
 				}
