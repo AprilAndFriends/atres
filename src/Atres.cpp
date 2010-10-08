@@ -488,6 +488,7 @@ namespace Atres
 		unsigned int code;
 		float width;
 		grect destination;
+		bool colorChanged;
 		
 		while (lines.size() > 0)
 		{
@@ -605,7 +606,8 @@ namespace Atres
 					{
 						nextTag.start = line.start + line.text.size() + 1;
 					}
-					if (sequence.texture != font->getTexture() || sequence.color != color)
+					colorChanged = sequence.color != color;
+					if (sequence.texture != font->getTexture() || colorChanged)
 					{
 						if (sequence.rectangles.size() > 0)
 						{
@@ -615,7 +617,7 @@ namespace Atres
 						sequence.texture = font->getTexture();
 						sequence.color = color;
 					}
-					if (shadowSequence.texture != font->getTexture())
+					if (shadowSequence.texture != font->getTexture() || colorChanged)
 					{
 						if (shadowSequence.rectangles.size() > 0)
 						{
@@ -623,8 +625,10 @@ namespace Atres
 							shadowSequence.rectangles.clear();
 						}
 						shadowSequence.texture = font->getTexture();
+						shadowSequence.color = shadowColor;
+						shadowSequence.color.a *= color.a_float();
 					}
-					if (borderSequence.texture != font->getTexture())
+					if (borderSequence.texture != font->getTexture() || colorChanged)
 					{
 						if (borderSequence.rectangles.size() > 0)
 						{
@@ -632,6 +636,8 @@ namespace Atres
 							borderSequence.rectangles.clear();
 						}
 						borderSequence.texture = font->getTexture();
+						borderSequence.color = borderColor;
+						borderSequence.color.a *= color.a_float();
 					}
 				}
 				if (tags.size() == 0)
