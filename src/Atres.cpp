@@ -677,7 +677,7 @@ namespace Atres
 					borderSequence.rectangles += renderRect;
 					renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * scale;
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * scale;
+					renderRect.dest = destination + gvec2(borderOffset, 0.0f) * scale;
 					borderSequence.rectangles += renderRect;
 					renderRect.dest = destination + gvec2(0.0f, borderOffset) * scale;
 					borderSequence.rectangles += renderRect;
