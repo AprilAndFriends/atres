@@ -143,6 +143,7 @@ namespace Atres
 	
 	AtresFnExport void setDefaultFont(chstr name);
     AtresFnExport Font* getFont(chstr name);
+	AtresFnExport bool hasFont(chstr name);
 	AtresFnExport void setCacheSize(int value);
 	AtresFnExport void updateCache();
 	AtresFnExport gvec2 getShadowOffset();

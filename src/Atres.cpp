@@ -927,6 +927,11 @@ namespace Atres
         return font;
     }
 	
+    bool hasFont(chstr name)
+    {
+		return fonts.has_key(name);
+    }
+	
 	void setCacheSize(int value)
 	{
 		cacheSize = value;
