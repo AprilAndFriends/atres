@@ -43,6 +43,7 @@ namespace Atres
 	April::Color borderColor(255, 0, 0, 0);
 	hmap<hstr, CacheEntry> cache;
 	hmap<hstr, hstr> colors;
+	bool globalOffsets = false;
 
     void init()
     {
@@ -663,25 +664,25 @@ namespace Atres
 				switch (effectMode)
 				{
 				case 1: // shadow
-					renderRect.dest = destination + shadowOffset * scale;
+					renderRect.dest = destination + shadowOffset * (globalOffsets ? 1 : scale);
 					shadowSequence.rectangles += renderRect;
 					break;
 				case 2: // border
-					renderRect.dest = destination + gvec2(-borderOffset, -borderOffset) * scale;
+					renderRect.dest = destination + gvec2(-borderOffset, -borderOffset) * (globalOffsets ? 1 : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(borderOffset, -borderOffset) * scale;
+					renderRect.dest = destination + gvec2(borderOffset, -borderOffset) * (globalOffsets ? 1 : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(-borderOffset, borderOffset) * scale;
+					renderRect.dest = destination + gvec2(-borderOffset, borderOffset) * (globalOffsets ? 1 : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(borderOffset, borderOffset) * scale;
+					renderRect.dest = destination + gvec2(borderOffset, borderOffset) * (globalOffsets ? 1 : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(0.0f, -borderOffset) * scale;
+					renderRect.dest = destination + gvec2(0.0f, -borderOffset) * (globalOffsets ? 1 : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * scale;
+					renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * (globalOffsets ? 1 : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(borderOffset, 0.0f) * scale;
+					renderRect.dest = destination + gvec2(borderOffset, 0.0f) * (globalOffsets ? 1 : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(0.0f, borderOffset) * scale;
+					renderRect.dest = destination + gvec2(0.0f, borderOffset) * (globalOffsets ? 1 : scale);
 					borderSequence.rectangles += renderRect;
 					break;
 				}
@@ -958,6 +959,11 @@ namespace Atres
 			}
 			cache.remove_key(minKey);
 		}
+	}
+	
+	bool setGlobalOffsets(bool value)
+	{
+		globalOffsets = value;
 	}
 	
 	gvec2 getShadowOffset()
