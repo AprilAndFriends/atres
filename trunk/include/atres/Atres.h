@@ -146,6 +146,7 @@ namespace Atres
 	AtresFnExport bool hasFont(chstr name);
 	AtresFnExport void setCacheSize(int value);
 	AtresFnExport void updateCache();
+	AtresFnExport bool setGlobalOffsets(bool value);
 	AtresFnExport gvec2 getShadowOffset();
 	AtresFnExport void setShadowOffset(gvec2 value);
 	AtresFnExport April::Color getShadowColor();
