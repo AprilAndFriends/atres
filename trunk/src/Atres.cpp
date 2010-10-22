@@ -467,6 +467,7 @@ namespace Atres
 		harray<RenderSequence> borderSequences;
 		RenderSequence borderSequence;
 		borderSequence.color = borderColor;
+		borderSequence.color.a *= borderSequence.color.a * borderSequence.color.a;
 		RenderRectangle renderRect;
 		harray<FormatTag> stack;
 		RenderLine line;
@@ -634,6 +635,7 @@ namespace Atres
 						}
 						borderSequence.texture = font->getTexture();
 						borderSequence.color = borderColor;
+						borderSequence.color.a *= borderSequence.color.a * borderSequence.color.a;
 						borderSequence.color.a *= color.a_float();
 					}
 				}
