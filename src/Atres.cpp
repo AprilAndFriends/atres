@@ -961,7 +961,7 @@ namespace Atres
 		}
 	}
 	
-	bool setGlobalOffsets(bool value)
+	void setGlobalOffsets(bool value)
 	{
 		globalOffsets = value;
 	}
