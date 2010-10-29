@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<DataDefinition>
+
+    <Object type="DummyObject" name="root" x="0" y="0" w="1024" h="768">
+		<Object type="ColoredQuad" name="background" r="0.6" g="0.6" b="0" x="0" y="0" w="1024" h="768"/>
+		
+		<Object type="Label" name="test_0" text="This is blasphemy." vert_formatting="top" x="60" y="24" w="640" h="64"/>
+		<Object type="Label" name="test_1" text="This is madness." font="arial:0.8" horz_formatting="left_wrapped" x="70" y="144" w="864" h="32"/>
+		<Object type="EditBox" name="test_box" text="Hello" x="70" y="180" w="128" h="32"/>
+		<Object type="Label" name="test_2" text="No. This is Sparta!" font="arial:2.0" horz_formatting="right_wrapped" vert_formatting="bottom" x="180" y="400" w="512" h="128"/>
+		<Object type="Label" name="test_3" text="This []]is] a [b][0]test [n]that[/n] [f:test]is[/f] supposed[/b] to [c=test]show[/c] [f arial:0.5][b]whe[/b]ther[/f] [s]X_horz_formatting [c=7F00FF00]wrapped[/c][/s] w[c=purple]ork[/c]s [f arial:1.3]right[/f] or not." horz_formatting="center_wrapped" vert_formatting="center" x="80" y="550" w="360" h="184"/>
+		<Object type="Label" name="test_4" horz_formatting="right" text="" x="500" y="600" w="120" h="38"/>
+    </Object>
+
+</DataDefinition>
