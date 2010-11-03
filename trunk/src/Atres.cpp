@@ -805,16 +805,6 @@ namespace Atres
 		}
 	}
 
-	void drawTextShadowed(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
-	{
-		drawText(fontName, rect, "[s]" + text, horizontal, vertical, color, offset);
-	}
-
-	void drawTextBordered(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
-	{
-		drawText(fontName, rect, "[b]" + text, horizontal, vertical, color, offset);
-	}
-
 	void drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
 	{
 		harray<FormatTag> tags;
