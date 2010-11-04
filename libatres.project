@@ -21,9 +21,6 @@
     <File Name="src/Util.h"/>
   </VirtualDirectory>
   <Dependencies Name="Release"/>
-  <Dependencies Name="Debug">
-    <Project Name="libhltypes"/>
-  </Dependencies>
   <Dependencies Name="Linux_Debug">
     <Project Name="libhltypes"/>
   </Dependencies>
@@ -145,4 +142,7 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
+  <Dependencies Name="Debug">
+    <Project Name="libhltypes"/>
+  </Dependencies>
 </CodeLite_Project>
