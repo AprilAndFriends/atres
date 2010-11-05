@@ -33,11 +33,6 @@ namespace Atres
 			{
 				this->name = line.replace("Name=", "");
 			}
-			else if (line.starts_with("Resource="))
-			{
-				this->texture = April::rendersys->loadTexture(line.replace("Resource=", ""));
-				Atres::logMessage(hsprintf("\"Resource=\" is deprecated. Use \"Texture=\" instead. (File: %s)", filename.c_str()));
-			}
 			else if (line.starts_with("Texture="))
 			{
 				this->texture = April::rendersys->loadTexture(line.replace("Texture=", ""));
