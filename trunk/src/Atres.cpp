@@ -515,7 +515,7 @@ namespace Atres
 							hex = (colors.has_key(tag.data) ? colors[tag.data] : tag.data);
 							if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
 							{
-								color = hexstr_to_color(hex);
+								color.setColor(hex);
 							}
 							break;
 						case FORMAT_NORMAL:
@@ -566,7 +566,7 @@ namespace Atres
 							hex = (colors.has_key(nextTag.data) ? colors[nextTag.data] : nextTag.data);
 							if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
 							{
-								color = hexstr_to_color(hex);
+								color.setColor(hex);
 							}
 #ifdef _DEBUG
 							else
