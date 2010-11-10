@@ -18,7 +18,7 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 
 #include "AtresExport.h"
 
-#define BUFFER_MAX_CHARACTERS 32768
+#define BUFFER_MAX_CHARACTERS 8192
 
 namespace Atres
 {
