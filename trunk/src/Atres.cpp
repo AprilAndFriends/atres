@@ -44,6 +44,7 @@ namespace Atres
 	hmap<hstr, CacheEntry> cache;
 	hmap<hstr, hstr> colors;
 	bool globalOffsets = false;
+	April::TexturedVertex vertices[BUFFER_MAX_CHARACTERS * 4];
 
     void init()
     {
@@ -734,22 +735,21 @@ namespace Atres
 	{
 		if (sequence.rectangles.size() > 0)
 		{
-			April::TexturedVertex v[BUFFER_MAX_CHARACTERS];
 			float w = (float)sequence.texture->getWidth();
 			float h = (float)sequence.texture->getHeight();
 			int i = 0;
 			foreach (RenderRectangle, it, sequence.rectangles)
 			{
-				v[i].x = (*it).dest.x;                v[i].y = (*it).dest.y;                v[i].z = 0; v[i].u = (*it).src.x / w;                 v[i].v = (*it).src.y / h;                 i++;
-				v[i].x = (*it).dest.x + (*it).dest.w; v[i].y = (*it).dest.y;                v[i].z = 0; v[i].u = ((*it).src.x + (*it).src.w) / w; v[i].v = (*it).src.y / h;                 i++;
-				v[i].x = (*it).dest.x;                v[i].y = (*it).dest.y + (*it).dest.h; v[i].z = 0; v[i].u = (*it).src.x / w;                 v[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-				v[i].x = (*it).dest.x + (*it).dest.w; v[i].y = (*it).dest.y;                v[i].z = 0; v[i].u = ((*it).src.x + (*it).src.w) / w; v[i].v = (*it).src.y / h;                 i++;
-				v[i].x = (*it).dest.x + (*it).dest.w; v[i].y = (*it).dest.y + (*it).dest.h; v[i].z = 0; v[i].u = ((*it).src.x + (*it).src.w) / w; v[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-				v[i].x = (*it).dest.x;                v[i].y = (*it).dest.y + (*it).dest.h; v[i].z = 0; v[i].u = (*it).src.x / w;                 v[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+				vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = (*it).src.y / h;                 i++;
+				vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
+				vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+				vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
+				vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+				vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
 			}
 			April::Color color = sequence.color;
 			April::rendersys->setTexture(sequence.texture);
-			April::rendersys->render(April::TriangleList, v, i, color.r_float(), color.g_float(), color.b_float(), color.a_float());
+			April::rendersys->render(April::TriangleList, vertices, i, color.r_float(), color.g_float(), color.b_float(), color.a_float());
 		}
 	}
 
