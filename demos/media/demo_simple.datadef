@@ -2,7 +2,7 @@
 <DataDefinition>
 
     <Object type="DummyObject" name="root" x="0" y="0" w="1024" h="768">
-		<Object type="ColoredQuad" name="background" r="0.6" g="0.6" b="0" x="0" y="0" w="1024" h="768"/>
+		<Object type="ColoredQuad" name="background" color="999900" x="0" y="0" w="1024" h="768"/>
 		
 		<Object type="Label" name="test_0" text="This is blasphemy." vert_formatting="top" x="60" y="24" w="640" h="64"/>
 		<Object type="Label" name="test_1" text="This is madness." font="arial:0.8" horz_formatting="left_wrapped" x="70" y="144" w="864" h="32"/>

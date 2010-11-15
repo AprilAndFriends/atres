@@ -49,7 +49,6 @@ namespace Atres
     void init()
     {
 		colors["red"] = "FF0000";
-		colors["red"] = "FF0000";
 		colors["green"] = "00FF00";
 		colors["blue"] = "0000FF";
 		colors["yellow"] = "FFFF00";
@@ -733,24 +732,25 @@ namespace Atres
 
 	void drawRenderSequence(RenderSequence& sequence)
 	{
-		if (sequence.rectangles.size() > 0)
+		if (sequence.rectangles.size() == 0)
 		{
-			float w = (float)sequence.texture->getWidth();
-			float h = (float)sequence.texture->getHeight();
-			int i = 0;
-			foreach (RenderRectangle, it, sequence.rectangles)
-			{
-				vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = (*it).src.y / h;                 i++;
-				vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
-				vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-				vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
-				vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-				vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-			}
-			April::Color color = sequence.color;
-			April::rendersys->setTexture(sequence.texture);
-			April::rendersys->render(April::TriangleList, vertices, i, color.r_float(), color.g_float(), color.b_float(), color.a_float());
+			return;
 		}
+		float w = (float)sequence.texture->getWidth();
+		float h = (float)sequence.texture->getHeight();
+		int i = 0;
+		foreach (RenderRectangle, it, sequence.rectangles)
+		{
+			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = (*it).src.y / h;                 i++;
+			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
+			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
+			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+		}
+		April::Color color = sequence.color;
+		April::rendersys->setTexture(sequence.texture);
+		April::rendersys->render(April::TriangleList, vertices, i, color.r_float(), color.g_float(), color.b_float(), color.a_float());
 	}
 
 	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, gvec2 offset)
