@@ -12,6 +12,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 
 #include <april/RenderSystem.h>
 #include <april/Keys.h>
+#include <april/Window.h>
 #include <aprilui/AprilUI.h>
 #include <aprilui/Dataset.h>
 #include <aprilui/Objects.h>
@@ -36,12 +37,36 @@ bool render(float time_increase)
 {
 	April::rendersys->clear();
 	April::rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
-	root->draw();
+	gvec2 pos = April::rendersys->getCursorPos();
+	AprilUI::setCursorPos(pos.x, pos.y);
 	root->update(time_increase);
+	root->draw();
 	April::rendersys->drawColoredQuad(700, 600, 240, 76, 0, 0, 0, 0.5f);
 	Atres::drawText(grect(700, 600, 240, 76), "[b]This is a vertical test.\nIt really is. Really.",
 		Atres::CENTER, Atres::CENTER, April::Color(255, 255, 255, 255), offset);
 	return true;
+}
+
+void onMouseDown(float x, float y, int button)
+{
+	root->OnMouseDown(x, y, button);
+	position = April::rendersys->getCursorPos() + offset;
+	clicked = true;
+}
+
+void onMouseUp(float x, float y, int button)
+{
+	root->OnMouseUp(x, y, button);
+	clicked = false;
+}
+
+void onMouseMove(float x, float y)
+{
+	if (clicked)
+	{
+		offset = position - gvec2(x, y);
+	}
+	root->OnMouseMove(x, y);
 }
 
 void onKeyDown(unsigned int keycode)
@@ -65,28 +90,6 @@ void onKeyUp(unsigned int keycode)
 void onChar(unsigned int charcode)
 {
 	root->OnChar(charcode);
-}
-
-void onMouseDown(float x, float y, int button)
-{
-	root->OnMouseDown(button, x, y);
-	position = April::rendersys->getCursorPos() + offset;
-	clicked = true;
-}
-
-void onMouseUp(float x, float y, int button)
-{
-	root->OnMouseUp(button, x, y);
-	clicked = false;
-}
-
-void onMouseMove(float x, float y)
-{
-	if (clicked)
-	{
-		offset = position - gvec2(x, y);
-	}
-	root->OnMouseMove(x, y);
 }
 
 int main()
@@ -138,9 +141,9 @@ int main()
 	try
 	{
 		April::init("OpenGL", SCREEN_WIDTH, SCREEN_HEIGHT, 0, "demo_simple");
-		April::rendersys->registerUpdateCallback(render);
-		April::rendersys->registerMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
-		April::rendersys->registerKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
+		April::rendersys->getWindow()->setUpdateCallback(render);
+		April::rendersys->getWindow()->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
+		April::rendersys->getWindow()->setKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
 		AprilUI::init();
 #ifdef _DEBUG
 		AprilUI::setDebugMode(true);
@@ -154,7 +157,7 @@ int main()
 		AprilUI::Label* label = (AprilUI::Label*)dataset->getObject("test_4");
 		label->setText("This is a vertical test.\nIt really is. Really.");
 		root = dataset->getObject("root");
-		April::rendersys->enterMainLoop();
+		April::rendersys->getWindow()->enterMainLoop();
 		delete dataset;
 		AprilUI::destroy();
 		April::destroy();
