@@ -435,6 +435,10 @@ namespace Atres
 					{
 						width = advance - characters[code].aw * scale;
 						current = i - start;
+						if (current == 0) // word doesn't fit into line at all
+						{
+							i = text.size();
+						}
 					}
 					break;
 				}
