@@ -227,7 +227,7 @@ namespace Atres
 	harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight)
 	{
 		harray<RenderLine> result;
-		int count = round((lines[lines.size() - 1].rect.y - lines[0].rect.y) / lineHeight) + 1;
+		int count = (int)round((lines[lines.size() - 1].rect.y - lines[0].rect.y) / lineHeight) + 1;
 		// vertical correction
 		switch (vertical)
 		{
@@ -629,7 +629,7 @@ namespace Atres
 						}
 						shadowSequence.texture = font->getTexture();
 						shadowSequence.color = shadowColor;
-						shadowSequence.color.a *= color.a_float();
+						shadowSequence.color.a = (unsigned char)(shadowSequence.color.a * color.a_float());
 					}
 					if (borderSequence.texture != font->getTexture() || colorChanged)
 					{
@@ -641,7 +641,7 @@ namespace Atres
 						borderSequence.texture = font->getTexture();
 						borderSequence.color = borderColor;
 						borderSequence.color.a *= borderSequence.color.a * borderSequence.color.a;
-						borderSequence.color.a *= color.a_float();
+						borderSequence.color.a = (unsigned char)(borderSequence.color.a * color.a_float());
 					}
 				}
 				if (tags.size() == 0)
