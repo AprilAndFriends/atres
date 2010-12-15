@@ -893,7 +893,7 @@ namespace atres
 	{
 		if (!fonts.has_key(name))
 		{
-			throw resource_error("Font", name, "Atres");
+			throw resource_error("Font", name, "atres");
 		}
 		defaultFont = fonts[name];
 		cache.clear();
@@ -916,7 +916,7 @@ namespace atres
 		int position = name.find(":");
 		if (position < 0)
 		{
-			throw resource_error("Font", name, "Atres");
+			throw resource_error("Font", name, "atres");
 		}
 		font = getFont(name(0, position));
 		position++;
