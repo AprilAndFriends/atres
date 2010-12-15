@@ -26,11 +26,11 @@ float round(float f)
 #include <hltypes/hstring.h>
 #include <hltypes/util.h>
 
-#include "Atres.h"
+#include "atres.h"
 #include "Font.h"
 #include "Util.h"
 
-namespace Atres
+namespace atres
 {
     hmap<hstr,Font*> fonts;
 	Font* defaultFont = NULL;

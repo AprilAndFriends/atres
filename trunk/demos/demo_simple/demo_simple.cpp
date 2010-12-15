@@ -16,7 +16,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include <aprilui/AprilUI.h>
 #include <aprilui/Dataset.h>
 #include <aprilui/Objects.h>
-#include <atres/Atres.h>
+#include <atres/atres.h>
 #include <hltypes/util.h>
 
 #ifdef __APPLE__
@@ -42,8 +42,8 @@ bool render(float time_increase)
 	root->update(time_increase);
 	root->draw();
 	April::rendersys->drawColoredQuad(700, 600, 240, 76, 0, 0, 0, 0.5f);
-	Atres::drawText(grect(700, 600, 240, 76), "[b]This is a vertical test.\nIt really is. Really.",
-		Atres::CENTER, Atres::CENTER, April::Color(255, 255, 255, 255), offset);
+	atres::drawText(grect(700, 600, 240, 76), "[b]This is a vertical test.\nIt really is. Really.",
+		atres::CENTER, atres::CENTER, April::Color(255, 255, 255, 255), offset);
 	return true;
 }
 
@@ -78,11 +78,11 @@ void onKeyUp(unsigned int keycode)
 {
 	if (keycode == AK_BACK)
 	{
-		Atres::setBorderColor(April::Color(255, hrand(256), hrand(256), hrand(256)));
+		atres::setBorderColor(April::Color(255, hrand(256), hrand(256), hrand(256)));
 	}
 	if (keycode == AK_SPACE)
 	{
-		Atres::setBorderOffset(hrandf(1.0f, 5.0f));
+		atres::setBorderOffset(hrandf(1.0f, 5.0f));
 	}
 	root->OnKeyUp(keycode);
 }
@@ -148,10 +148,10 @@ int main()
 #ifdef _DEBUG
 		AprilUI::setDebugMode(true);
 #endif
-		Atres::init();
-		Atres::loadFont("../media/arial.font");
-		Atres::setShadowColor(April::Color(255, 255, 0, 0));
-		Atres::setBorderColor(April::Color(255, 0, 128, 255));
+		atres::init();
+		atres::loadFont("../media/arial.font");
+		atres::setShadowColor(April::Color(255, 255, 0, 0));
+		atres::setBorderColor(April::Color(255, 0, 128, 255));
 		dataset = new AprilUI::Dataset("../media/demo_simple.datadef");
 		dataset->load();
 		AprilUI::Label* label = (AprilUI::Label*)dataset->getObject("test_4");

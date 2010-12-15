@@ -17,7 +17,7 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 
 #include "Font.h"
 
-namespace Atres
+namespace atres
 {
 	Font::Font(chstr filename)
 	{

@@ -168,7 +168,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\src\Atres.cpp"
+				RelativePath=".\src\atres.cpp"
 				>
 			</File>
 			<File
@@ -190,11 +190,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\include\atres\Atres.h"
+				RelativePath=".\include\atres\atres.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\atres\AtresExport.h"
+				RelativePath=".\include\atres\atresExport.h"
 				>
 			</File>
 			<File
