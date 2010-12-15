@@ -11,20 +11,20 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 #define ATRES_EXPORT_H
 
 	#ifdef _STATICLIB
-		#define AtresExport
-		#define AtresFnExport
+		#define atresExport
+		#define atresFnExport
 	#else
 		#ifdef _WIN32
 			#ifdef ATRES_EXPORTS
-				#define AtresExport __declspec(dllexport)
-				#define AtresFnExport __declspec(dllexport)
+				#define atresExport __declspec(dllexport)
+				#define atresFnExport __declspec(dllexport)
 			#else
-				#define AtresExport __declspec(dllimport)
-				#define AtresFnExport __declspec(dllimport)
+				#define atresExport __declspec(dllimport)
+				#define atresFnExport __declspec(dllimport)
 			#endif
 		#else
-			#define AtresExport __attribute__ ((visibility("default")))
-			#define AtresFnExport
+			#define atresExport __attribute__ ((visibility("default")))
+			#define atresFnExport
 		#endif
 	#endif
 

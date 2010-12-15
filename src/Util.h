@@ -15,7 +15,7 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 
 struct xml_node;
 
-namespace Atres
+namespace atres
 {
 	bool is_hexstr(chstr hex);
 	

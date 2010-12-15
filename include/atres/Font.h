@@ -13,12 +13,12 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
-#include "Atres.h"
-#include "AtresExport.h"
+#include "atres.h"
+#include "atresExport.h"
 
-namespace Atres
+namespace atres
 {
-	struct AtresExport CharacterDefinition
+	struct atresExport CharacterDefinition
 	{
 		float x;
 		float y;
@@ -26,7 +26,7 @@ namespace Atres
 		float aw;
 	};
 
-	class AtresExport Font
+	class atresExport Font
 	{
 	public:
 		Font(chstr filename);
