@@ -472,7 +472,8 @@ namespace atres
 		harray<RenderSequence> borderSequences;
 		RenderSequence borderSequence;
 		borderSequence.color = borderColor;
-		borderSequence.color.a *= borderSequence.color.a * borderSequence.color.a;
+		borderSequence.color.a = (unsigned char)(255 * (borderSequence.color.a_float() *
+			borderSequence.color.a_float() * borderSequence.color.a_float()));
 		RenderRectangle renderRect;
 		harray<FormatTag> stack;
 		RenderLine line;
@@ -488,6 +489,7 @@ namespace atres
 		April::Color color;
 		hstr hex;
 		int effectMode = 0;
+		int alpha = -1;
 		
 		int byteLength;
 		unsigned int code;
@@ -571,6 +573,7 @@ namespace atres
 							if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
 							{
 								color.setColor(hex);
+								alpha == -1 ? alpha = color.a : color.a = (unsigned char)(alpha * color.a_float());
 							}
 #ifdef _DEBUG
 							else
