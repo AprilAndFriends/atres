@@ -27,6 +27,13 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 			#define atresFnExport
 		#endif
 	#endif
+	#ifndef DEPRECATED_ATTRIBUTE
+		#ifdef _MSC_VER
+			#define DEPRECATED_ATTRIBUTE
+		#else
+			#define DEPRECATED_ATTRIBUTE __attribute__((deprecated))
+		#endif
+	#endif
 
 #endif
 

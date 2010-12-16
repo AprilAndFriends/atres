@@ -36,13 +36,12 @@ bool render(float time_increase)
 {
 	April::rendersys->clear();
 	April::rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
-	gvec2 pos = April::rendersys->getWindow()->getCursorPos();
-	aprilui::setCursorPosition(pos.x, pos.y);
+	aprilui::setCursorPosition(April::rendersys->getWindow()->getCursorPos());
 	root->update(time_increase);
 	root->draw();
 	April::rendersys->drawColoredQuad(700, 600, 240, 76, 0, 0, 0, 0.5f);
 	atres::drawText(grect(700, 600, 240, 76), "[b]This is a vertical test.\nIt really is. Really.",
-		atres::CENTER, atres::CENTER, April::Color(255, 255, 255, 255), offset);
+		atres::CENTER, atres::CENTER, April::Color(255, 255, 255, 255), 30, offset);
 	return true;
 }
 
