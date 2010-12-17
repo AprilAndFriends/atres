@@ -101,7 +101,7 @@ namespace atres
     atresFnExport void init();
     atresFnExport void destroy();
 	atresFnExport void setLogFunction(void (*fnptr)(chstr));
-	void logMessage(chstr message, chstr prefix = "[atres] ");
+	atresFnExport void log(chstr message, chstr prefix = "[atres] ");
 	void atres_writelog(chstr message);
 	atresFnExport void loadFont(chstr filename);
 	
