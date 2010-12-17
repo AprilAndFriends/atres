@@ -38,9 +38,9 @@ namespace atres
 	int cacheSize = 100;
 	int cacheIndex = 0;
 	gvec2 shadowOffset(1.0f, 1.0f);
-	April::Color shadowColor(255, 0, 0, 0);
+	April::Color shadowColor = April::Color::BLACK;
 	float borderOffset = 1.0f;
-	April::Color borderColor(255, 0, 0, 0);
+	April::Color borderColor = April::Color::BLACK;
 	hmap<hstr, CacheEntry> cache;
 	hmap<hstr, hstr> colors;
 	bool globalOffsets = false;
@@ -48,21 +48,21 @@ namespace atres
 
     void init()
     {
-		colors["red"] = "FF0000";
-		colors["green"] = "00FF00";
-		colors["blue"] = "0000FF";
-		colors["yellow"] = "FFFF00";
-		colors["mangenta"] = "FF00FF";
-		colors["cyan"] = "00FFFF";
-		colors["orange"] = "FF7F00";
-		colors["pink"] = "FF007F";
-		colors["teal"] = "00FF7F";
-		colors["neon"] = "7FFF00";
-		colors["purple"] = "7F00FF";
-		colors["aqua"] = "007FFF";
-		colors["white"] = "FFFFFF";
-		colors["grey"] = "7F7F7F";
-		colors["black"] = "000000";
+		colors["red"] = April::Color::RED.hex();
+		colors["green"] = April::Color::GREEN.hex();
+		colors["blue"] = April::Color::BLUE.hex();
+		colors["yellow"] = April::Color::YELLOW.hex();
+		colors["mangenta"] = April::Color::MANGENTA.hex();
+		colors["cyan"] = April::Color::CYAN.hex();
+		colors["orange"] = April::Color::ORANGE.hex();
+		colors["pink"] = April::Color::PINK.hex();
+		colors["teal"] = April::Color::TEAL.hex();
+		colors["neon"] = April::Color::NEON.hex();
+		colors["purple"] = April::Color::PURPLE.hex();
+		colors["aqua"] = April::Color::AQUA.hex();
+		colors["white"] = April::Color::WHITE.hex();
+		colors["grey"] = April::Color::GREY.hex();
+		colors["black"] = April::Color::BLACK.hex();
     }
     
     void destroy()
@@ -521,7 +521,7 @@ namespace atres
 							hex = (colors.has_key(tag.data) ? colors[tag.data] : tag.data);
 							if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
 							{
-								color.setColor(hex);
+								color.set(hex);
 							}
 							break;
 						case FORMAT_NORMAL:
@@ -567,12 +567,12 @@ namespace atres
 							break;
 						case FORMAT_COLOR:
 							tag.type = FORMAT_COLOR;
-							tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
+							tag.data = hsprintf("%02x%02x%02x%02x", color.r, color.g, color.b, color.a);
 							stack += tag;
 							hex = (colors.has_key(nextTag.data) ? colors[nextTag.data] : nextTag.data);
 							if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
 							{
-								color.setColor(hex);
+								color.set(hex);
 								alpha == -1 ? alpha = color.a : color.a = (unsigned char)(alpha * color.a_float());
 							}
 #ifdef _DEBUG
@@ -819,7 +819,7 @@ namespace atres
 			hstr unformattedText = analyzeFormatting(text, tags);
 			FormatTag tag;
 			tag.type = FORMAT_COLOR;
-			tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
+			tag.data = hsprintf("%02x%02x%02x%02x", color.r, color.g, color.b, color.a);
 			tags.push_front(tag);
 			tag.type = FORMAT_FONT;
 			tag.data = fontName;
@@ -853,7 +853,7 @@ namespace atres
 		harray<FormatTag> tags;
 		FormatTag tag;
 		tag.type = FORMAT_COLOR;
-		tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
+		tag.data = hsprintf("%02x%02x%02x%02x", color.r, color.g, color.b, color.a);
 		tags.push_front(tag);
 		tag.type = FORMAT_FONT;
 		tag.data = fontName;
@@ -889,13 +889,13 @@ namespace atres
 	void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		unsigned char r, unsigned char g, unsigned char b, unsigned char a, float angle, gvec2 offset)
 	{
-		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), angle, offset);
+		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(r, g, b, a), angle, offset);
 	}
 	
 	void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		unsigned char r, unsigned char g, unsigned char b, unsigned char a, float angle, gvec2 offset)
 	{
-		drawText("", grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), angle, offset);
+		drawText("", grect(x, y, w, h), text, horizontal, vertical, April::Color(r, g, b, a), angle, offset);
 	}
 	
 	void drawTextUnformatted(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color,
@@ -919,13 +919,13 @@ namespace atres
 	void drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal,
 		Alignment vertical, unsigned char r, unsigned char g, unsigned char b, unsigned char a, float angle, gvec2 offset)
 	{
-		drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), angle, offset);
+		drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(r, g, b, a), angle, offset);
 	}
 	
 	void drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		unsigned char r, unsigned char g, unsigned char b, unsigned char a, float angle, gvec2 offset)
 	{
-		drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), angle, offset);
+		drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, April::Color(r, g, b, a), angle, offset);
 	}
 	
 /******* PROPERTIES ****************************************************/
