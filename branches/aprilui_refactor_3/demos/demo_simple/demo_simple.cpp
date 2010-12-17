@@ -41,7 +41,7 @@ bool render(float time_increase)
 	root->draw();
 	april::rendersys->drawColoredQuad(700, 600, 240, 76, 0, 0, 0, 0.5f);
 	atres::drawText(grect(700, 600, 240, 76), "[b]This is a vertical test.\nIt really is. Really.",
-		atres::CENTER, atres::CENTER, april::Color(255, 255, 255, 255), 30, offset);
+		atres::CENTER, atres::CENTER, april::Color::WHITE, 30, offset);
 	return true;
 }
 
@@ -76,7 +76,7 @@ void onKeyUp(unsigned int keycode)
 {
 	if (keycode == april::AK_BACK)
 	{
-		atres::setBorderColor(april::Color(255, hrand(256), hrand(256), hrand(256)));
+		atres::setBorderColor(april::Color(hrand(256), hrand(256), hrand(256)));
 	}
 	if (keycode == april::AK_SPACE)
 	{
@@ -148,8 +148,8 @@ int main()
 #endif
 		atres::init();
 		atres::loadFont("../media/arial.font");
-		atres::setShadowColor(april::Color(255, 255, 0, 0));
-		atres::setBorderColor(april::Color(255, 0, 128, 255));
+		atres::setShadowColor(april::Color::RED);
+		atres::setBorderColor(april::Color::AQUA);
 		dataset = new aprilui::Dataset("../media/demo_simple.datadef");
 		dataset->load();
 		aprilui::Label* label = (aprilui::Label*)dataset->getObject("test_4");
