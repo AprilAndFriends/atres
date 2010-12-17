@@ -34,21 +34,21 @@ gvec2 offset;
 
 bool render(float time_increase)
 {
-	April::rendersys->clear();
-	April::rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
-	aprilui::setCursorPosition(April::rendersys->getWindow()->getCursorPos());
+	april::rendersys->clear();
+	april::rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
+	aprilui::setCursorPosition(april::rendersys->getWindow()->getCursorPos());
 	root->update(time_increase);
 	root->draw();
-	April::rendersys->drawColoredQuad(700, 600, 240, 76, 0, 0, 0, 0.5f);
+	april::rendersys->drawColoredQuad(700, 600, 240, 76, 0, 0, 0, 0.5f);
 	atres::drawText(grect(700, 600, 240, 76), "[b]This is a vertical test.\nIt really is. Really.",
-		atres::CENTER, atres::CENTER, April::Color(255, 255, 255, 255), 30, offset);
+		atres::CENTER, atres::CENTER, april::Color(255, 255, 255, 255), 30, offset);
 	return true;
 }
 
 void onMouseDown(float x, float y, int button)
 {
 	root->OnMouseDown(x, y, button);
-	position = April::rendersys->getWindow()->getCursorPos() + offset;
+	position = april::rendersys->getWindow()->getCursorPos() + offset;
 	clicked = true;
 }
 
@@ -74,11 +74,11 @@ void onKeyDown(unsigned int keycode)
 
 void onKeyUp(unsigned int keycode)
 {
-	if (keycode == April::AK_BACK)
+	if (keycode == april::AK_BACK)
 	{
-		atres::setBorderColor(April::Color(255, hrand(256), hrand(256), hrand(256)));
+		atres::setBorderColor(april::Color(255, hrand(256), hrand(256), hrand(256)));
 	}
-	if (keycode == April::AK_SPACE)
+	if (keycode == april::AK_SPACE)
 	{
 		atres::setBorderOffset(hrandf(1.0f, 5.0f));
 	}
@@ -138,27 +138,27 @@ int main()
 #endif
 	try
 	{
-		April::init("OpenGL", SCREEN_WIDTH, SCREEN_HEIGHT, 0, "demo_simple");
-		April::rendersys->getWindow()->setUpdateCallback(render);
-		April::rendersys->getWindow()->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
-		April::rendersys->getWindow()->setKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
+		april::init("OpenGL", SCREEN_WIDTH, SCREEN_HEIGHT, 0, "demo_simple");
+		april::rendersys->getWindow()->setUpdateCallback(render);
+		april::rendersys->getWindow()->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
+		april::rendersys->getWindow()->setKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
 		aprilui::init();
 #ifdef _DEBUG
 		aprilui::setDebugMode(true);
 #endif
 		atres::init();
 		atres::loadFont("../media/arial.font");
-		atres::setShadowColor(April::Color(255, 255, 0, 0));
-		atres::setBorderColor(April::Color(255, 0, 128, 255));
+		atres::setShadowColor(april::Color(255, 255, 0, 0));
+		atres::setBorderColor(april::Color(255, 0, 128, 255));
 		dataset = new aprilui::Dataset("../media/demo_simple.datadef");
 		dataset->load();
 		aprilui::Label* label = (aprilui::Label*)dataset->getObject("test_4");
 		label->setText("This is a vertical test.\nIt really is. Really.");
 		root = dataset->getObject("root");
-		April::rendersys->getWindow()->enterMainLoop();
+		april::rendersys->getWindow()->enterMainLoop();
 		delete dataset;
 		aprilui::destroy();
-		April::destroy();
+		april::destroy();
 	}
 	catch (hltypes::exception e)
 	{
