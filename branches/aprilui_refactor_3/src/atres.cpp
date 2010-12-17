@@ -78,7 +78,7 @@ namespace atres
 		g_logFunction = fnptr;
 	}
 	
-	void logMessage(chstr message, chstr prefix)
+	void log(chstr message, chstr prefix)
 	{
 		g_logFunction(prefix + message);
 	}
@@ -90,7 +90,7 @@ namespace atres
 	
     void loadFont(chstr filename)
     {
-		logMessage(hsprintf("loading font %s", filename.c_str()));
+		log(hsprintf("loading font %s", filename.c_str()));
         Font* font = new Font(filename);
         fonts[font->getName()] = font;
 		if (defaultFont == NULL)
@@ -158,7 +158,7 @@ namespace atres
 				{
 					start = end;
 #ifdef _DEBUG
-					logMessage(hsprintf("Warning: closing tag that was not opened (\"[/%c]\" in \"%s\")", str[start + 2], str));
+					log(hsprintf("Warning: closing tag that was not opened (\"[/%c]\" in \"%s\")", str[start + 2], str));
 #endif
 					continue;
 				}
@@ -383,7 +383,7 @@ namespace atres
 						catch (hltypes::_resource_error e)
 						{
 #ifdef _DEBUG
-							logMessage(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
+							log(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
 #endif
 						}
 					}
@@ -561,7 +561,7 @@ namespace atres
 							catch (hltypes::_resource_error e)
 							{
 #ifdef _DEBUG
-								logMessage(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
+								log(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
 #endif
 							}
 							break;
@@ -578,7 +578,7 @@ namespace atres
 #ifdef _DEBUG
 							else
 							{
-								logMessage(hsprintf("Warning: color \"%s\" does not exist", hex.c_str()));
+								log(hsprintf("Warning: color \"%s\" does not exist", hex.c_str()));
 							}
 #endif
 							break;
