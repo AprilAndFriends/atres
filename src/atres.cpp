@@ -756,8 +756,7 @@ namespace atres
 			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
 		}
 		april::rendersys->setTexture(sequence.texture);
-		april::rendersys->render(april::TriangleList, vertices, i, sequence.color.r_float(),
-			sequence.color.g_float(), sequence.color.b_float(), sequence.color.a_float());
+		april::rendersys->render(april::TriangleList, vertices, i, sequence.color);
 	}
 
 	void drawRenderSequence(RenderSequence& sequence, grect rect, float angle)
@@ -791,8 +790,7 @@ namespace atres
 		april::rendersys->translate(rw, rh);
 		april::rendersys->rotate(angle);
 		april::rendersys->setTexture(sequence.texture);
-		april::rendersys->render(april::TriangleList, vertices, i, sequence.color.r_float(),
-			sequence.color.g_float(), sequence.color.b_float(), sequence.color.a_float());
+		april::rendersys->render(april::TriangleList, vertices, i, sequence.color);
 		april::rendersys->setModelviewMatrix(originalMatrix);
 	}
 
