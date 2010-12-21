@@ -34,7 +34,6 @@ namespace atres
 {
     hmap<hstr,Font*> fonts;
 	Font* defaultFont = NULL;
-	void (*g_logFunction)(chstr) = atres_writelog;
 	int cacheSize = 100;
 	int cacheIndex = 0;
 	gvec2 shadowOffset(1.0f, 1.0f);
@@ -45,6 +44,11 @@ namespace atres
 	hmap<hstr, hstr> colors;
 	bool globalOffsets = false;
 	april::TexturedVertex vertices[BUFFER_MAX_CHARACTERS * 4];
+	void atres_writelog(chstr message)
+	{
+		printf("%s\n", message.c_str());		
+	}
+	void (*g_logFunction)(chstr) = atres_writelog;
 
     void init()
     {
@@ -83,14 +87,17 @@ namespace atres
 		g_logFunction(prefix + message);
 	}
 	
-	void atres_writelog(chstr message)
+	void logf(chstr message, ...)
 	{
-		printf("%s\n", message.c_str());		
+		va_list vl;
+		va_start(vl, message);
+		atres::log(hvsprintf(message.c_str(), vl));;
+		va_end(vl);
 	}
 	
     void loadFont(chstr filename)
     {
-		log(hsprintf("loading font %s", filename.c_str()));
+		atres::logf("loading font %s", filename.c_str());
         Font* font = new Font(filename);
         fonts[font->getName()] = font;
 		if (defaultFont == NULL)
@@ -158,7 +165,7 @@ namespace atres
 				{
 					start = end;
 #ifdef _DEBUG
-					log(hsprintf("Warning: closing tag that was not opened (\"[/%c]\" in \"%s\")", str[start + 2], str));
+					atres::logf("Warning: closing tag that was not opened (\"[/%c]\" in \"%s\")", str[start + 2], str);
 #endif
 					continue;
 				}
@@ -383,7 +390,7 @@ namespace atres
 						catch (hltypes::_resource_error e)
 						{
 #ifdef _DEBUG
-							log(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
+							atres::logf("Warning: font \"%s\" does not exist", nextTag.data.c_str());
 #endif
 						}
 					}
@@ -561,7 +568,7 @@ namespace atres
 							catch (hltypes::_resource_error e)
 							{
 #ifdef _DEBUG
-								log(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
+								atres::logf("Warning: font \"%s\" does not exist", nextTag.data.c_str());
 #endif
 							}
 							break;
@@ -578,7 +585,7 @@ namespace atres
 #ifdef _DEBUG
 							else
 							{
-								log(hsprintf("Warning: color \"%s\" does not exist", hex.c_str()));
+								atres::logf("Warning: color \"%s\" does not exist", hex.c_str());
 							}
 #endif
 							break;
