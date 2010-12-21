@@ -479,8 +479,7 @@ namespace atres
 		harray<RenderSequence> borderSequences;
 		RenderSequence borderSequence;
 		borderSequence.color = borderColor;
-		borderSequence.color.a = (unsigned char)(255 * (borderSequence.color.a_float() *
-			borderSequence.color.a_float() * borderSequence.color.a_float()));
+		borderSequence.color.a = (unsigned char)(borderColor.a * borderColor.a_f() * borderColor.a_f());
 		RenderRectangle renderRect;
 		harray<FormatTag> stack;
 		RenderLine line;
@@ -580,7 +579,7 @@ namespace atres
 							if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
 							{
 								color.set(hex);
-								alpha == -1 ? alpha = color.a : color.a = (unsigned char)(alpha * color.a_float());
+								alpha == -1 ? alpha = color.a : color.a = (unsigned char)(alpha * color.a_f());
 							}
 #ifdef _DEBUG
 							else
@@ -639,7 +638,7 @@ namespace atres
 						}
 						shadowSequence.texture = font->getTexture();
 						shadowSequence.color = shadowColor;
-						shadowSequence.color.a = (unsigned char)(shadowSequence.color.a * color.a_float());
+						shadowSequence.color.a = (unsigned char)(shadowSequence.color.a * color.a_f());
 					}
 					if (borderSequence.texture != font->getTexture() || colorChanged)
 					{
@@ -650,8 +649,7 @@ namespace atres
 						}
 						borderSequence.texture = font->getTexture();
 						borderSequence.color = borderColor;
-						borderSequence.color.a *= borderSequence.color.a * borderSequence.color.a;
-						borderSequence.color.a = (unsigned char)(borderSequence.color.a * color.a_float());
+						borderSequence.color.a = (unsigned char)(borderSequence.color.a * color.a_f() * color.a_f());
 					}
 				}
 				if (tags.size() == 0)
