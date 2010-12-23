@@ -89,12 +89,12 @@ namespace atres
 	
 	void logf(chstr message, ...)
 	{
-		va_list vl;
-		va_start(vl, message);
-		atres::log(hvsprintf(message.c_str(), vl));;
-		va_end(vl);
+		va_list args;
+		va_start(args, message);
+		atres::log(hvsprintf(message.c_str(), args));
+		va_end(args);
 	}
-	
+
     void loadFont(chstr filename)
     {
 		atres::logf("loading font %s", filename.c_str());
