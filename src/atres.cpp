@@ -91,13 +91,15 @@ namespace atres
 	{
 		va_list args;
 		va_start(args, message);
-		atres::log(hvsprintf(message.c_str(), args));
+		atres::logf(message.c_str(), args);
 		va_end(args);
 	}
 
     void loadFont(chstr filename)
     {
-		atres::logf("loading font %s", filename.c_str());
+		atres::log(hsprintf("loading font %s", filename.c_str()));
+		// TODO - why does this not work properly on VS2008 compiler???
+		//atres::logf("loading font %s", filename.c_str());
         Font* font = new Font(filename);
         fonts[font->getName()] = font;
 		if (defaultFont == NULL)
