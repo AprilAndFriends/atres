@@ -34,35 +34,39 @@ namespace atres
 {
     hmap<hstr,Font*> fonts;
 	Font* defaultFont = NULL;
-	void (*g_logFunction)(chstr) = atres_writelog;
 	int cacheSize = 100;
 	int cacheIndex = 0;
 	gvec2 shadowOffset(1.0f, 1.0f);
-	April::Color shadowColor(255, 0, 0, 0);
+	april::Color shadowColor = april::Color::BLACK;
 	float borderOffset = 1.0f;
-	April::Color borderColor(255, 0, 0, 0);
+	april::Color borderColor = april::Color::BLACK;
 	hmap<hstr, CacheEntry> cache;
 	hmap<hstr, hstr> colors;
 	bool globalOffsets = false;
-	April::TexturedVertex vertices[BUFFER_MAX_CHARACTERS * 4];
+	april::TexturedVertex vertices[BUFFER_MAX_CHARACTERS * 4];
+	void atres_writelog(chstr message)
+	{
+		printf("%s\n", message.c_str());		
+	}
+	void (*g_logFunction)(chstr) = atres_writelog;
 
     void init()
     {
-		colors["red"] = "FF0000";
-		colors["green"] = "00FF00";
-		colors["blue"] = "0000FF";
-		colors["yellow"] = "FFFF00";
-		colors["mangenta"] = "FF00FF";
-		colors["cyan"] = "00FFFF";
-		colors["orange"] = "FF7F00";
-		colors["pink"] = "FF007F";
-		colors["teal"] = "00FF7F";
-		colors["neon"] = "7FFF00";
-		colors["purple"] = "7F00FF";
-		colors["aqua"] = "007FFF";
-		colors["white"] = "FFFFFF";
-		colors["grey"] = "7F7F7F";
-		colors["black"] = "000000";
+		colors["red"] = april::Color::RED.hex();
+		colors["green"] = april::Color::GREEN.hex();
+		colors["blue"] = april::Color::BLUE.hex();
+		colors["yellow"] = april::Color::YELLOW.hex();
+		colors["mangenta"] = april::Color::MANGENTA.hex();
+		colors["cyan"] = april::Color::CYAN.hex();
+		colors["orange"] = april::Color::ORANGE.hex();
+		colors["pink"] = april::Color::PINK.hex();
+		colors["teal"] = april::Color::TEAL.hex();
+		colors["neon"] = april::Color::NEON.hex();
+		colors["purple"] = april::Color::PURPLE.hex();
+		colors["aqua"] = april::Color::AQUA.hex();
+		colors["white"] = april::Color::WHITE.hex();
+		colors["grey"] = april::Color::GREY.hex();
+		colors["black"] = april::Color::BLACK.hex();
     }
     
     void destroy()
@@ -78,19 +82,24 @@ namespace atres
 		g_logFunction = fnptr;
 	}
 	
-	void logMessage(chstr message, chstr prefix)
+	void log(chstr message, chstr prefix)
 	{
 		g_logFunction(prefix + message);
 	}
 	
-	void atres_writelog(chstr message)
+	void logf(chstr message, ...)
 	{
-		printf("%s\n", message.c_str());		
+		va_list args;
+		va_start(args, message);
+		atres::logf(message.c_str(), args);
+		va_end(args);
 	}
-	
+
     void loadFont(chstr filename)
     {
-		logMessage(hsprintf("loading font %s", filename.c_str()));
+		atres::log(hsprintf("loading font %s", filename.c_str()));
+		// TODO - why does this not work properly on VS2008 compiler???
+		//atres::logf("loading font %s", filename.c_str());
         Font* font = new Font(filename);
         fonts[font->getName()] = font;
 		if (defaultFont == NULL)
@@ -158,7 +167,7 @@ namespace atres
 				{
 					start = end;
 #ifdef _DEBUG
-					logMessage(hsprintf("Warning: closing tag that was not opened (\"[/%c]\" in \"%s\")", str[start + 2], str));
+					atres::logf("Warning: closing tag that was not opened (\"[/%c]\" in \"%s\")", str[start + 2], str);
 #endif
 					continue;
 				}
@@ -383,7 +392,7 @@ namespace atres
 						catch (hltypes::_resource_error e)
 						{
 #ifdef _DEBUG
-							logMessage(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
+							atres::logf("Warning: font \"%s\" does not exist", nextTag.data.c_str());
 #endif
 						}
 					}
@@ -472,8 +481,7 @@ namespace atres
 		harray<RenderSequence> borderSequences;
 		RenderSequence borderSequence;
 		borderSequence.color = borderColor;
-		borderSequence.color.a = (unsigned char)(255 * (borderSequence.color.a_float() *
-			borderSequence.color.a_float() * borderSequence.color.a_float()));
+		borderSequence.color.a = (unsigned char)(borderColor.a * borderColor.a_f() * borderColor.a_f());
 		RenderRectangle renderRect;
 		harray<FormatTag> stack;
 		RenderLine line;
@@ -486,7 +494,7 @@ namespace atres
 		hmap<unsigned int, CharacterDefinition> characters;
 		float lineHeight;
 		float scale;
-		April::Color color;
+		april::Color color;
 		hstr hex;
 		int effectMode = 0;
 		int alpha = -1;
@@ -521,7 +529,7 @@ namespace atres
 							hex = (colors.has_key(tag.data) ? colors[tag.data] : tag.data);
 							if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
 							{
-								color.setColor(hex);
+								color.set(hex);
 							}
 							break;
 						case FORMAT_NORMAL:
@@ -561,24 +569,24 @@ namespace atres
 							catch (hltypes::_resource_error e)
 							{
 #ifdef _DEBUG
-								logMessage(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
+								atres::logf("Warning: font \"%s\" does not exist", nextTag.data.c_str());
 #endif
 							}
 							break;
 						case FORMAT_COLOR:
 							tag.type = FORMAT_COLOR;
-							tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
+							tag.data = hsprintf("%02x%02x%02x%02x", color.r, color.g, color.b, color.a);
 							stack += tag;
 							hex = (colors.has_key(nextTag.data) ? colors[nextTag.data] : nextTag.data);
 							if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
 							{
-								color.setColor(hex);
-								alpha == -1 ? alpha = color.a : color.a = (unsigned char)(alpha * color.a_float());
+								color.set(hex);
+								alpha == -1 ? alpha = color.a : color.a = (unsigned char)(alpha * color.a_f());
 							}
 #ifdef _DEBUG
 							else
 							{
-								logMessage(hsprintf("Warning: color \"%s\" does not exist", hex.c_str()));
+								atres::logf("Warning: color \"%s\" does not exist", hex.c_str());
 							}
 #endif
 							break;
@@ -632,7 +640,7 @@ namespace atres
 						}
 						shadowSequence.texture = font->getTexture();
 						shadowSequence.color = shadowColor;
-						shadowSequence.color.a = (unsigned char)(shadowSequence.color.a * color.a_float());
+						shadowSequence.color.a = (unsigned char)(shadowSequence.color.a * color.a_f());
 					}
 					if (borderSequence.texture != font->getTexture() || colorChanged)
 					{
@@ -643,8 +651,7 @@ namespace atres
 						}
 						borderSequence.texture = font->getTexture();
 						borderSequence.color = borderColor;
-						borderSequence.color.a *= borderSequence.color.a * borderSequence.color.a;
-						borderSequence.color.a = (unsigned char)(borderSequence.color.a * color.a_float());
+						borderSequence.color.a = (unsigned char)(borderSequence.color.a * color.a_f() * color.a_f());
 					}
 				}
 				if (tags.size() == 0)
@@ -755,9 +762,8 @@ namespace atres
 			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
 			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
 		}
-		April::rendersys->setTexture(sequence.texture);
-		April::rendersys->render(April::TriangleList, vertices, i, sequence.color.r_float(),
-			sequence.color.g_float(), sequence.color.b_float(), sequence.color.a_float());
+		april::rendersys->setTexture(sequence.texture);
+		april::rendersys->render(april::TriangleList, vertices, i, sequence.color);
 	}
 
 	void drawRenderSequence(RenderSequence& sequence, grect rect, float angle)
@@ -785,18 +791,17 @@ namespace atres
 			vertices[i].x = (*it).dest.x + (*it).dest.w - rw; vertices[i].y = (*it).dest.y + (*it).dest.h - rh; vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
 			vertices[i].x = (*it).dest.x - rw;                vertices[i].y = (*it).dest.y + (*it).dest.h - rh; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
 		}
-		April::Color color = sequence.color;
-		gmat4 originalMatrix = April::rendersys->getModelviewMatrix();
-		April::rendersys->setIdentityTransform();
-		April::rendersys->translate(rw, rh);
-		April::rendersys->rotate(angle);
-		April::rendersys->setTexture(sequence.texture);
-		April::rendersys->render(April::TriangleList, vertices, i, sequence.color.r_float(),
-			sequence.color.g_float(), sequence.color.b_float(), sequence.color.a_float());
-		April::rendersys->setModelviewMatrix(originalMatrix);
+		april::Color color = sequence.color;
+		gmat4 originalMatrix = april::rendersys->getModelviewMatrix();
+		april::rendersys->setIdentityTransform();
+		april::rendersys->translate(rw, rh);
+		april::rendersys->rotate(angle);
+		april::rendersys->setTexture(sequence.texture);
+		april::rendersys->render(april::TriangleList, vertices, i, sequence.color);
+		april::rendersys->setModelviewMatrix(originalMatrix);
 	}
 
-	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color,
+	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
 		float angle, gvec2 offset)
 	{
 		bool needCache = !cache.has_key(text);
@@ -819,7 +824,7 @@ namespace atres
 			hstr unformattedText = analyzeFormatting(text, tags);
 			FormatTag tag;
 			tag.type = FORMAT_COLOR;
-			tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
+			tag.data = hsprintf("%02x%02x%02x%02x", color.r, color.g, color.b, color.a);
 			tags.push_front(tag);
 			tag.type = FORMAT_FONT;
 			tag.data = fontName;
@@ -848,12 +853,12 @@ namespace atres
 	}
 
 	void drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
-		April::Color color, float angle, gvec2 offset)
+		april::Color color, float angle, gvec2 offset)
 	{
 		harray<FormatTag> tags;
 		FormatTag tag;
 		tag.type = FORMAT_COLOR;
-		tag.data = hsprintf("%02x%02x%02x%02x", color.a, color.r, color.g, color.b);
+		tag.data = hsprintf("%02x%02x%02x%02x", color.r, color.g, color.b, color.a);
 		tags.push_front(tag);
 		tag.type = FORMAT_FONT;
 		tag.data = fontName;
@@ -868,20 +873,20 @@ namespace atres
 
 /******* DRAW TEXT OVERLOADS *******************************************/
 
-	void drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color, float angle,
+	void drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, float angle,
 		gvec2 offset)
 	{
 		drawText("", rect, text, horizontal, vertical, color, angle, offset);
 	}
 
 	void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		April::Color color, float angle, gvec2 offset)
+		april::Color color, float angle, gvec2 offset)
 	{
 		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, color, angle, offset);
 	}
 	
 	void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		April::Color color, float angle, gvec2 offset)
+		april::Color color, float angle, gvec2 offset)
 	{
 		drawText("", grect(x, y, w, h), text, horizontal, vertical, color, angle, offset);
 	}
@@ -889,29 +894,29 @@ namespace atres
 	void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		unsigned char r, unsigned char g, unsigned char b, unsigned char a, float angle, gvec2 offset)
 	{
-		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), angle, offset);
+		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), angle, offset);
 	}
 	
 	void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		unsigned char r, unsigned char g, unsigned char b, unsigned char a, float angle, gvec2 offset)
 	{
-		drawText("", grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), angle, offset);
+		drawText("", grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), angle, offset);
 	}
 	
-	void drawTextUnformatted(grect rect, chstr text, Alignment horizontal, Alignment vertical, April::Color color,
+	void drawTextUnformatted(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
 		float angle, gvec2 offset)
 	{
 		drawTextUnformatted("", rect, text, horizontal, vertical, color, angle, offset);
 	}
 
 	void drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal,
-		Alignment vertical, April::Color color, float angle, gvec2 offset)
+		Alignment vertical, april::Color color, float angle, gvec2 offset)
 	{
 		drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, color, angle, offset);
 	}
 	
 	void drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		April::Color color, float angle, gvec2 offset)
+		april::Color color, float angle, gvec2 offset)
 	{
 		drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, color, angle, offset);
 	}
@@ -919,13 +924,13 @@ namespace atres
 	void drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal,
 		Alignment vertical, unsigned char r, unsigned char g, unsigned char b, unsigned char a, float angle, gvec2 offset)
 	{
-		drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), angle, offset);
+		drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), angle, offset);
 	}
 	
 	void drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		unsigned char r, unsigned char g, unsigned char b, unsigned char a, float angle, gvec2 offset)
 	{
-		drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, April::Color(a, r, g, b), angle, offset);
+		drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), angle, offset);
 	}
 	
 /******* PROPERTIES ****************************************************/
@@ -1012,12 +1017,12 @@ namespace atres
 		cache.clear();
 	}
 	
-	April::Color getShadowColor()
+	april::Color getShadowColor()
 	{
 		return shadowColor;
 	}
 	
-	void setShadowColor(April::Color value)
+	void setShadowColor(april::Color value)
 	{
 		shadowColor = value;
 		cache.clear();
@@ -1034,12 +1039,12 @@ namespace atres
 		cache.clear();
 	}
 	
-	April::Color getBorderColor()
+	april::Color getBorderColor()
 	{
 		return borderColor;
 	}
 	
-	void setBorderColor(April::Color value)
+	void setBorderColor(april::Color value)
 	{
 		borderColor = value;
 		cache.clear();
