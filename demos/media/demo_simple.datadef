@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <DataDefinition>
 
-    <Object type="DummyObject" name="root" x="0" y="0" w="1024" h="768">
+    <Object type="Container" name="root" x="0" y="0" w="1024" h="768">
 		<Object type="ColoredQuad" name="background" color="999900" x="0" y="0" w="1024" h="768"/>
 		
 		<Object type="Label" name="test_0" text="This is blasphemy." vert_formatting="top" x="60" y="24" w="640" h="64"/>
