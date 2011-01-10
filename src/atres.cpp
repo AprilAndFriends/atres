@@ -766,51 +766,16 @@ namespace atres
 		april::rendersys->render(april::TriangleList, vertices, i, sequence.color);
 	}
 
-	void drawRenderSequence(RenderSequence& sequence, grect rect, float angle)
-	{
-		if (sequence.rectangles.size() == 0)
-		{
-			return;
-		}
-		if (angle == 0.0f)
-		{
-			drawRenderSequence(sequence);
-			return;
-		}
-		float w = (float)sequence.texture->getWidth();
-		float h = (float)sequence.texture->getHeight();
-		float rw = rect.x + rect.w / 2;
-		float rh = rect.y + rect.h / 2;
-		int i = 0;
-		foreach (RenderRectangle, it, sequence.rectangles)
-		{
-			vertices[i].x = (*it).dest.x - rw;                vertices[i].y = (*it).dest.y - rh;                vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = (*it).src.y / h;                 i++;
-			vertices[i].x = (*it).dest.x + (*it).dest.w - rw; vertices[i].y = (*it).dest.y - rh;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
-			vertices[i].x = (*it).dest.x - rw;                vertices[i].y = (*it).dest.y + (*it).dest.h - rh; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-			vertices[i].x = (*it).dest.x + (*it).dest.w - rw; vertices[i].y = (*it).dest.y - rh;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
-			vertices[i].x = (*it).dest.x + (*it).dest.w - rw; vertices[i].y = (*it).dest.y + (*it).dest.h - rh; vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-			vertices[i].x = (*it).dest.x - rw;                vertices[i].y = (*it).dest.y + (*it).dest.h - rh; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-		}
-		april::Color color = sequence.color;
-		gmat4 originalMatrix = april::rendersys->getModelviewMatrix();
-		april::rendersys->setIdentityTransform();
-		april::rendersys->translate(rw, rh);
-		april::rendersys->rotate(angle);
-		april::rendersys->setTexture(sequence.texture);
-		april::rendersys->render(april::TriangleList, vertices, i, sequence.color);
-		april::rendersys->setModelviewMatrix(originalMatrix);
-	}
-
 	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
-		float angle, gvec2 offset)
+		gvec2 offset)
 	{
 		bool needCache = !cache.has_key(text);
 		CacheEntry entry;
-		grect dRect = grect(0.0f, 0.0f, rect.getSize());
+		grect drawRect = grect(0.0f, 0.0f, rect.getSize());
 		if (!needCache)
 		{
 			entry = cache[text];
-			needCache = (entry.fontName != fontName || entry.size.x != dRect.w || entry.size.y != dRect.h ||
+			needCache = (entry.fontName != fontName || entry.size.x != drawRect.w || entry.size.y != drawRect.h ||
 				entry.horizontal != horizontal || entry.vertical != vertical || entry.color != color || entry.offset != offset);
 		}
 		else
@@ -829,7 +794,7 @@ namespace atres
 			tag.type = FORMAT_FONT;
 			tag.data = fontName;
 			tags.push_front(tag);
-			harray<RenderLine> lines = createRenderLines(dRect, unformattedText, tags, horizontal, vertical, offset);
+			harray<RenderLine> lines = createRenderLines(drawRect, unformattedText, tags, horizontal, vertical, offset);
 			entry.fontName = fontName;
 			entry.index = cacheIndex;
 			entry.size = rect.getSize();
@@ -837,7 +802,7 @@ namespace atres
 			entry.vertical = vertical;
 			entry.color = color;
 			entry.offset = offset;
-			entry.sequences = createRenderSequences(dRect, lines, tags);
+			entry.sequences = createRenderSequences(drawRect, lines, tags);
 			cache[text] = entry;
 		}
 		harray<RenderSequence> sequences = cache[text].sequences;
@@ -848,12 +813,12 @@ namespace atres
 				(*it2).dest.x += rect.x;
 				(*it2).dest.y += rect.y;
 			}
-			drawRenderSequence((*it), rect, angle);
+			drawRenderSequence(*it);
 		}
 	}
 
 	void drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
-		april::Color color, float angle, gvec2 offset)
+		april::Color color, gvec2 offset)
 	{
 		harray<FormatTag> tags;
 		FormatTag tag;
@@ -867,7 +832,7 @@ namespace atres
 		harray<RenderSequence> sequences = createRenderSequences(rect, lines, tags);
 		foreach (RenderSequence, it, sequences)
 		{
-			drawRenderSequence((*it), rect, angle);
+			drawRenderSequence(*it);
 		}
 	}
 
@@ -876,61 +841,61 @@ namespace atres
 	void drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, float angle,
 		gvec2 offset)
 	{
-		drawText("", rect, text, horizontal, vertical, color, angle, offset);
+		drawText("", rect, text, horizontal, vertical, color, offset);
 	}
 
 	void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		april::Color color, float angle, gvec2 offset)
+		april::Color color, gvec2 offset)
 	{
-		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, color, angle, offset);
+		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
 	}
 	
 	void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		april::Color color, float angle, gvec2 offset)
+		april::Color color, gvec2 offset)
 	{
-		drawText("", grect(x, y, w, h), text, horizontal, vertical, color, angle, offset);
+		drawText("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
 	}
 	
 	void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, float angle, gvec2 offset)
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), angle, offset);
+		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
 	}
 	
 	void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, float angle, gvec2 offset)
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		drawText("", grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), angle, offset);
+		drawText("", grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
 	}
 	
 	void drawTextUnformatted(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
-		float angle, gvec2 offset)
+		gvec2 offset)
 	{
-		drawTextUnformatted("", rect, text, horizontal, vertical, color, angle, offset);
+		drawTextUnformatted("", rect, text, horizontal, vertical, color, offset);
 	}
 
 	void drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal,
-		Alignment vertical, april::Color color, float angle, gvec2 offset)
+		Alignment vertical, april::Color color, gvec2 offset)
 	{
-		drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, color, angle, offset);
+		drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
 	}
 	
 	void drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		april::Color color, float angle, gvec2 offset)
+		april::Color color, gvec2 offset)
 	{
-		drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, color, angle, offset);
+		drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
 	}
 	
 	void drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal,
-		Alignment vertical, unsigned char r, unsigned char g, unsigned char b, unsigned char a, float angle, gvec2 offset)
+		Alignment vertical, unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), angle, offset);
+		drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
 	}
 	
 	void drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, float angle, gvec2 offset)
+		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), angle, offset);
+		drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
 	}
 	
 /******* PROPERTIES ****************************************************/
