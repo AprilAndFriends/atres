@@ -139,12 +139,12 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
-  <Dependencies Name="Debug">
+  <Dependencies Name="Release_Win32">
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
     <Project Name="libapril"/>
   </Dependencies>
-  <Dependencies Name="Release_Win32">
+  <Dependencies Name="Debug">
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
     <Project Name="libapril"/>
