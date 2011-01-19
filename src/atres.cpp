@@ -91,7 +91,7 @@ namespace atres
 	{
 		va_list args;
 		va_start(args, message);
-		atres::log(message.c_str(), args);
+		atres::log(hvsprintf(message.c_str(), args));
 		va_end(args);
 	}
 
