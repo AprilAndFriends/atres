@@ -167,7 +167,9 @@ namespace atres
 				{
 					start = end;
 #ifdef _DEBUG
-					atres::logf("Warning: closing tag that was not opened (\"[/%c]\" in \"%s\")", str[start + 2], str);
+					// does not work for some odd reason
+					//atres::logf("Warning: closing tag that was not opened (\"[/%c]\" in \"%s\")", str[start + 2], str);
+					atres::log(hsprintf("Warning: closing tag that was not opened (\"[/%c]\" in \"%s\")", str[start + 2], str));
 #endif
 					continue;
 				}
@@ -392,7 +394,9 @@ namespace atres
 						catch (hltypes::_resource_error e)
 						{
 #ifdef _DEBUG
-							atres::logf("Warning: font \"%s\" does not exist", nextTag.data.c_str());
+							// does not work for some odd reason
+							//atres::logf("Warning: font \"%s\" does not exist", nextTag.data.c_str());
+							atres::log(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
 #endif
 						}
 					}
@@ -569,7 +573,9 @@ namespace atres
 							catch (hltypes::_resource_error e)
 							{
 #ifdef _DEBUG
-								atres::logf("Warning: font \"%s\" does not exist", nextTag.data.c_str());
+								// does not work for some odd reason
+								//atres::logf("Warning: font \"%s\" does not exist", nextTag.data.c_str());
+								atres::log(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
 #endif
 							}
 							break;
@@ -586,7 +592,9 @@ namespace atres
 #ifdef _DEBUG
 							else
 							{
-								atres::logf("Warning: color \"%s\" does not exist", hex.c_str());
+								// does not work for some odd reason
+								//atres::logf("Warning: color \"%s\" does not exist", hex.c_str());
+								atres::log(hsprintf("Warning: color \"%s\" does not exist", hex.c_str()));
 							}
 #endif
 							break;
@@ -838,8 +846,7 @@ namespace atres
 
 /******* DRAW TEXT OVERLOADS *******************************************/
 
-	void drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, float angle,
-		gvec2 offset)
+	void drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
 	{
 		drawText("", rect, text, horizontal, vertical, color, offset);
 	}

@@ -16,6 +16,7 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #include <aprilui/Dataset.h>
 #include <aprilui/Objects.h>
 #include <atres/atres.h>
+#include <gtypes/Rectangle.h>
 #include <hltypes/util.h>
 
 #ifdef __APPLE__
@@ -36,12 +37,11 @@ bool render(float time_increase)
 {
 	april::rendersys->clear();
 	april::rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
-	aprilui::setCursorPosition(april::rendersys->getWindow()->getCursorPos());
 	root->update(time_increase);
 	root->draw();
-	april::rendersys->drawColoredQuad(700, 600, 240, 76, 0, 0, 0, 0.5f);
+	april::rendersys->drawColoredQuad(grect(700, 600, 240, 76), april::Color(0, 0, 0, 128));
 	atres::drawText(grect(700, 600, 240, 76), "[b]This is a vertical test.\nIt really is. Really.",
-		atres::CENTER, atres::CENTER, april::Color::WHITE, 30, offset);
+		atres::CENTER, atres::CENTER, april::Color::WHITE, offset);
 	return true;
 }
 
