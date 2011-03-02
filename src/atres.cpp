@@ -87,19 +87,9 @@ namespace atres
 		g_logFunction(prefix + message);
 	}
 	
-	void logf(chstr message, ...)
-	{
-		va_list args;
-		va_start(args, message);
-		atres::log(hvsprintf(message.c_str(), args));
-		va_end(args);
-	}
-
     void loadFont(chstr filename)
     {
 		atres::log(hsprintf("loading font %s", filename.c_str()));
-		// TODO - why does this not work properly on VS2008 compiler???
-		//atres::logf("loading font %s", filename.c_str());
         Font* font = new Font(filename);
         fonts[font->getName()] = font;
 		if (defaultFont == NULL)
@@ -167,8 +157,6 @@ namespace atres
 				{
 					start = end;
 #ifdef _DEBUG
-					// does not work for some odd reason
-					//atres::logf("Warning: closing tag that was not opened (\"[/%c]\" in \"%s\")", str[start + 2], str);
 					atres::log(hsprintf("Warning: closing tag that was not opened (\"[/%c]\" in \"%s\")", str[start + 2], str));
 #endif
 					continue;
@@ -394,8 +382,6 @@ namespace atres
 						catch (hltypes::_resource_error e)
 						{
 #ifdef _DEBUG
-							// does not work for some odd reason
-							//atres::logf("Warning: font \"%s\" does not exist", nextTag.data.c_str());
 							atres::log(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
 #endif
 						}
@@ -573,8 +559,6 @@ namespace atres
 							catch (hltypes::_resource_error e)
 							{
 #ifdef _DEBUG
-								// does not work for some odd reason
-								//atres::logf("Warning: font \"%s\" does not exist", nextTag.data.c_str());
 								atres::log(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
 #endif
 							}
@@ -592,8 +576,6 @@ namespace atres
 #ifdef _DEBUG
 							else
 							{
-								// does not work for some odd reason
-								//atres::logf("Warning: color \"%s\" does not exist", hex.c_str());
 								atres::log(hsprintf("Warning: color \"%s\" does not exist", hex.c_str()));
 							}
 #endif
