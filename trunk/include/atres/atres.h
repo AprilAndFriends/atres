@@ -102,7 +102,6 @@ namespace atres
     atresFnExport void destroy();
 	atresFnExport void setLogFunction(void (*fnptr)(chstr));
 	atresFnExport void log(chstr message, chstr prefix = "[atres] ");
-	atresFnExport void logf(chstr message, ...);
 	atresFnExport void loadFont(chstr filename);
 	
 	unsigned int getCharUtf8(const char* s, int* char_len_out);
