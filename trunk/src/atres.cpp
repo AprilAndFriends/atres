@@ -9,14 +9,7 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 \************************************************************************************/
 #include <math.h>
 #include <stdio.h>
-
-// VS compilers' math.h does not have round defined
-#ifndef round
-float round(float f)
-{
-	return floor(f + 0.5f);
-}
-#endif
+#include <hltypes/util.h>
 
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
@@ -226,7 +219,7 @@ namespace atres
 	harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight)
 	{
 		harray<RenderLine> result;
-		int count = (int)round((lines[lines.size() - 1].rect.y - lines[0].rect.y) / lineHeight) + 1;
+		int count = hroundl((lines[lines.size() - 1].rect.y - lines[0].rect.y) / lineHeight) + 1;
 		// vertical correction
 		switch (vertical)
 		{
