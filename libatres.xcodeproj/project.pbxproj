@@ -15,10 +15,10 @@
 		7FC8038411EC6AFA00851062 /* AtresExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8037F11EC6AFA00851062 /* AtresExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FC8038511EC6AFA00851062 /* Exception.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8038011EC6AFA00851062 /* Exception.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FC8038611EC6AFA00851062 /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8038111EC6AFA00851062 /* Font.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7FC8038C11EC6B5100851062 /* Atres.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8038811EC6B5000851062 /* Atres.cpp */; };
 		7FC8038D11EC6B5100851062 /* Exception.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8038911EC6B5100851062 /* Exception.cpp */; };
 		7FC8038E11EC6B5100851062 /* Font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8038A11EC6B5100851062 /* Font.cpp */; };
 		7FC8039911EC6C0400851062 /* hltypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FC8039811EC6C0400851062 /* hltypes.framework */; };
+		C981CF3D132AF7CD0072B5A9 /* Atres.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C981CF3C132AF7CD0072B5A9 /* Atres.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,12 +30,12 @@
 		7FC8037F11EC6AFA00851062 /* AtresExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AtresExport.h; path = include/atres/AtresExport.h; sourceTree = "<group>"; };
 		7FC8038011EC6AFA00851062 /* Exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Exception.h; path = include/atres/Exception.h; sourceTree = "<group>"; };
 		7FC8038111EC6AFA00851062 /* Font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Font.h; path = include/atres/Font.h; sourceTree = "<group>"; };
-		7FC8038811EC6B5000851062 /* Atres.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Atres.cpp; path = src/Atres.cpp; sourceTree = "<group>"; };
 		7FC8038911EC6B5100851062 /* Exception.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Exception.cpp; path = src/Exception.cpp; sourceTree = "<group>"; };
 		7FC8038A11EC6B5100851062 /* Font.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Font.cpp; path = src/Font.cpp; sourceTree = "<group>"; };
 		7FC8039811EC6C0400851062 /* hltypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = hltypes.framework; path = Library/Frameworks/hltypes.framework; sourceTree = SDKROOT; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* atres.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = atres.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C981CF3C132AF7CD0072B5A9 /* Atres.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Atres.cpp; path = src/Atres.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,9 +120,9 @@
 		7FC8037D11EC6AD900851062 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				C981CF3C132AF7CD0072B5A9 /* Atres.cpp */,
 				7F876A17125A066100716F62 /* Util.h */,
 				7F876A13125A065600716F62 /* Util.cpp */,
-				7FC8038811EC6B5000851062 /* Atres.cpp */,
 				7FC8038911EC6B5100851062 /* Exception.cpp */,
 				7FC8038A11EC6B5100851062 /* Font.cpp */,
 			);
@@ -206,10 +206,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7FC8038C11EC6B5100851062 /* Atres.cpp in Sources */,
 				7FC8038D11EC6B5100851062 /* Exception.cpp in Sources */,
 				7FC8038E11EC6B5100851062 /* Font.cpp in Sources */,
 				7F876A14125A065600716F62 /* Util.cpp in Sources */,
+				C981CF3D132AF7CD0072B5A9 /* Atres.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,6 +241,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEPLOYMENT_LOCATION = YES;
 				DSTROOT = /;
@@ -317,6 +321,79 @@
 			};
 			name = "App Store";
 		};
+		C981CCCD132AEF8C0072B5A9 /* Debug-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				PRODUCT_NAME = atres;
+				SDKROOT = macosx10.4;
+			};
+			name = "Debug-LLVM";
+		};
+		C981CCCE132AEF8C0072B5A9 /* Debug-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = "Debug-LLVM";
+		};
+		C981CCCF132AEF920072B5A9 /* Release-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				PRODUCT_NAME = atres;
+				SDKROOT = macosx10.4;
+			};
+			name = "Release-LLVM";
+		};
+		C981CCD0132AEF920072B5A9 /* Release-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_MODEL_TUNING = G5;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = "Release-LLVM";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -324,7 +401,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB91AE08733DA50010E9CD /* Debug */,
+				C981CCCE132AEF8C0072B5A9 /* Debug-LLVM */,
 				1DEB91AF08733DA50010E9CD /* Release */,
+				C981CCD0132AEF920072B5A9 /* Release-LLVM */,
 				7FC8A8BB1296C77C003D3931 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -334,7 +413,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB91B208733DA50010E9CD /* Debug */,
+				C981CCCD132AEF8C0072B5A9 /* Debug-LLVM */,
 				1DEB91B308733DA50010E9CD /* Release */,
+				C981CCCF132AEF920072B5A9 /* Release-LLVM */,
 				7FC8A8BA1296C77C003D3931 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
