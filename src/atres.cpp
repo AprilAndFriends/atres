@@ -219,7 +219,7 @@ namespace atres
 	harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight)
 	{
 		harray<RenderLine> result;
-		int count = hroundl((lines[lines.size() - 1].rect.y - lines[0].rect.y) / lineHeight) + 1;
+		int count = hround((lines[lines.size() - 1].rect.y - lines[0].rect.y) / lineHeight) + 1;
 		// vertical correction
 		switch (vertical)
 		{
