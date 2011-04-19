@@ -30,9 +30,9 @@ namespace atres
 	int cacheSize = 100;
 	int cacheIndex = 0;
 	gvec2 shadowOffset(1.0f, 1.0f);
-	april::Color shadowColor = april::Color::BLACK;
+	april::Color shadowColor = APRIL_COLOR_BLACK;
 	float borderOffset = 1.0f;
-	april::Color borderColor = april::Color::BLACK;
+	april::Color borderColor = APRIL_COLOR_BLACK;
 	hmap<hstr, CacheEntry> cache;
 	hmap<hstr, hstr> colors;
 	bool globalOffsets = false;
@@ -45,21 +45,21 @@ namespace atres
 
     void init()
     {
-		colors["red"] = april::Color::RED.hex();
-		colors["green"] = april::Color::GREEN.hex();
-		colors["blue"] = april::Color::BLUE.hex();
-		colors["yellow"] = april::Color::YELLOW.hex();
-		colors["mangenta"] = april::Color::MANGENTA.hex();
-		colors["cyan"] = april::Color::CYAN.hex();
-		colors["orange"] = april::Color::ORANGE.hex();
-		colors["pink"] = april::Color::PINK.hex();
-		colors["teal"] = april::Color::TEAL.hex();
-		colors["neon"] = april::Color::NEON.hex();
-		colors["purple"] = april::Color::PURPLE.hex();
-		colors["aqua"] = april::Color::AQUA.hex();
-		colors["white"] = april::Color::WHITE.hex();
-		colors["grey"] = april::Color::GREY.hex();
-		colors["black"] = april::Color::BLACK.hex();
+		colors["red"] = APRIL_COLOR_RED.hex();
+		colors["green"] = APRIL_COLOR_GREEN.hex();
+		colors["blue"] = APRIL_COLOR_BLUE.hex();
+		colors["yellow"] = APRIL_COLOR_YELLOW.hex();
+		colors["mangenta"] = APRIL_COLOR_MANGENTA.hex();
+		colors["cyan"] = APRIL_COLOR_CYAN.hex();
+		colors["orange"] = APRIL_COLOR_ORANGE.hex();
+		colors["pink"] = APRIL_COLOR_PINK.hex();
+		colors["teal"] = APRIL_COLOR_TEAL.hex();
+		colors["neon"] = APRIL_COLOR_NEON.hex();
+		colors["purple"] = APRIL_COLOR_PURPLE.hex();
+		colors["aqua"] = APRIL_COLOR_AQUA.hex();
+		colors["white"] = APRIL_COLOR_WHITE.hex();
+		colors["grey"] = APRIL_COLOR_GREY.hex();
+		colors["black"] = APRIL_COLOR_BLACK.hex();
     }
     
     void destroy()
