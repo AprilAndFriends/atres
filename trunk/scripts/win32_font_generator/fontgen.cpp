@@ -14,7 +14,7 @@ struct CHARACTER
 	int y;
 	int w;
 	int aw;
-	byte data[64 * 64];
+	byte* data;
 	int nData;
 };
 
@@ -26,7 +26,7 @@ struct TGAINFOHEADER
 };
 
 short maxw = 512;
-short bitmapw = 128;
+short bitmapw = 256;
 int fonth = 32;
 float scale = 1.0f;
 char name[128] = {0};
@@ -63,20 +63,21 @@ void add(int ch)
 
 	// fill character info
 	CHARACTER* chr = &characters[nCharacters];
+	chr->data = new byte[bitmapw * bitmapw];
 
 	chr->CharCode = ch;
 	w = chr->w = abc.abcA + abc.abcB;
 	chr->aw = w + abc.abcC;
 	chr->tex = 0;
 	chr->aw < w ? chr->aw = w : w = chr->aw;
-
+	
 	// move to next row if we've reached the end
 	if (sx + w > maxw)
 	{
 		sy += 4 + fonth;
 		sx = 2;
 	}
-
+	
 	chr->x = sx;
 	chr->y = sy;
 	chr->nData = 0;
@@ -92,7 +93,7 @@ void add(int ch)
 			src += 3;
 		}
 	}
-
+	
 	// check for similar characters
 	for (int i = 0; i < nCharacters; i++)
 	{
@@ -118,7 +119,7 @@ void add(int ch)
 	sx += 4 + w;
 	nCharacters++;
 	n1++;
-}
+}	
 
 long Power2(long size)
 {
