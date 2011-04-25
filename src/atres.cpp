@@ -558,7 +558,7 @@ namespace atres
 							break;
 						case FORMAT_COLOR:
 							tag.type = FORMAT_COLOR;
-							tag.data = hsprintf("%02x%02x%02x%02x", color.r, color.g, color.b, color.a);
+							tag.data = color.hex();
 							stack += tag;
 							hex = (colors.has_key(nextTag.data) ? colors[nextTag.data] : nextTag.data);
 							if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
@@ -772,7 +772,7 @@ namespace atres
 			hstr unformattedText = analyzeFormatting(text, tags);
 			FormatTag tag;
 			tag.type = FORMAT_COLOR;
-			tag.data = hsprintf("%02x%02x%02x%02x", color.r, color.g, color.b, color.a);
+			tag.data = color.hex();
 			tags.push_front(tag);
 			tag.type = FORMAT_FONT;
 			tag.data = fontName;
@@ -806,7 +806,7 @@ namespace atres
 		harray<FormatTag> tags;
 		FormatTag tag;
 		tag.type = FORMAT_COLOR;
-		tag.data = hsprintf("%02x%02x%02x%02x", color.r, color.g, color.b, color.a);
+		tag.data = color.hex();
 		tags.push_front(tag);
 		tag.type = FORMAT_FONT;
 		tag.data = fontName;
