@@ -107,12 +107,12 @@ namespace atres
 	
 	unsigned int getCharUtf8(const char* s, int* char_len_out);
 	
-	hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
-	harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight);
-	harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
-	harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset = gvec2());
-	harray<RenderSequence> createRenderSequences(grect rect, harray<RenderLine> lines, harray<FormatTag> tags);
-	harray<RenderSequence> optimizeSequences(harray<RenderSequence> sequences);
+	atresFnExport hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
+	atresFnExport harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight);
+	atresFnExport harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
+	atresFnExport harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset = gvec2());
+	atresFnExport harray<RenderSequence> createRenderSequences(grect rect, harray<RenderLine> lines, harray<FormatTag> tags);
+	atresFnExport harray<RenderSequence> optimizeSequences(harray<RenderSequence> sequences);
 	
 	atresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = APRIL_COLOR_WHITE, gvec2 offset = gvec2());
 	atresFnExport void drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = APRIL_COLOR_WHITE, gvec2 offset = gvec2());
@@ -135,9 +135,9 @@ namespace atres
 	atresFnExport float getTextWidthUnformatted(chstr fontName, chstr text);
 	atresFnExport float getTextHeightUnformatted(chstr fontName, chstr text, float maxWidth);
 	atresFnExport int getTextCountUnformatted(chstr fontName, chstr text, float maxWidth);
-	hstr prepareFormatting(chstr fontName, chstr text, harray<FormatTag>& tags);
-	harray<FormatTag> prepareTags(chstr fontName);
-	RenderLine getFittingLine(grect rect, chstr text, harray<FormatTag> tags);
+	atresFnExport hstr prepareFormatting(chstr fontName, chstr text, harray<FormatTag>& tags);
+	atresFnExport harray<FormatTag> prepareTags(chstr fontName);
+	atresFnExport RenderLine getFittingLine(grect rect, chstr text, harray<FormatTag> tags);
 	
 	atresFnExport void setDefaultFont(chstr name);
     atresFnExport Font* getFont(chstr name);
