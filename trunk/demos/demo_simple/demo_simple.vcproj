@@ -64,7 +64,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libapril_d.lib libaprilui_d.lib libatres_d.lib libgtypes_d.lib libhltypes_d.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../lib/msvc;../../bin/$(ConfigurationName);../../../gtypes/bin/$(ConfigurationName);../../../hltypes/bin/$(ConfigurationName);../../../atres/bin/$(ConfigurationName);../../../april/bin;../../../aprilui/bin/$(ConfigurationName)"
+				AdditionalLibraryDirectories="../../lib/msvc90;../../bin/$(ConfigurationName);../../../gtypes/bin/$(ConfigurationName);../../../hltypes/bin/$(ConfigurationName);../../../atres/bin/$(ConfigurationName);../../../april/bin;../../../aprilui/bin/$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -89,7 +89,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\april\bin\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\hltypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\gtypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\aprilui\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\lib\msvc\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;"
+				CommandLine="copy ..\..\..\april\bin\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\hltypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\gtypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\aprilui\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\lib\msvc90\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration

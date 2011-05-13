@@ -60,7 +60,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>libapril.lib;libaprilui.lib;libatres.lib;libgtypes.lib;libhltypes.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../lib/msvc;../../bin/$(Configuration);../../../gtypes/bin/$(Configuration);../../../hltypes/bin/$(Configuration);../../../atres/bin/$(Configuration);../../../april/bin;../../../aprilui/bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../lib/msvc100;../../bin/$(Configuration);../../../gtypes/bin/$(Configuration);../../../hltypes/bin/$(Configuration);../../../atres/bin/$(Configuration);../../../april/bin;../../../aprilui/bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -70,7 +70,7 @@
 copy ..\..\..\hltypes\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
 copy ..\..\..\gtypes\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
 copy ..\..\..\aprilui\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
-copy ..\..\..\lib\msvc\*.dll ..\..\bin\$(Configuration)
+copy ..\..\..\lib\msvc100\*.dll ..\..\bin\$(Configuration)
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
