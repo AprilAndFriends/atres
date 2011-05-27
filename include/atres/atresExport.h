@@ -1,15 +1,23 @@
-/************************************************************************************\
-This source file is part of the Advanced Text Rendering System                       *
-For latest info, see http://libatres.sourceforge.net/                                *
-**************************************************************************************
-Copyright (c) 2010 Kresimir Spes, Boris Mikic                                        *
-*                                                                                    *
-* This program is free software; you can redistribute it and/or modify it under      *
-* the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
-\************************************************************************************/
+/// @file
+/// @author  Kresimir Spes
+/// @version 2.0
+/// 
+/// @section LICENSE
+/// 
+/// This program is free software; you can redistribute it and/or modify it under
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+/// 
+/// @section DESCRIPTION
+/// 
+/// Defines macros for DLL exports/imports.
+
 #ifndef ATRES_EXPORT_H
 #define ATRES_EXPORT_H
 
+	/// @def atresExport
+	/// @brief Macro for DLL exports/imports.
+	/// @def atresFnExport
+	/// @brief Macro for function DLL exports/imports.
 	#ifdef _STATICLIB
 		#define atresExport
 		#define atresFnExport
