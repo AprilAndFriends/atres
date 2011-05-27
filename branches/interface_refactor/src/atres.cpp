@@ -22,7 +22,6 @@
 
 #include "atres.h"
 #include "Font.h"
-#include "Renderer.h"
 #include "Util.h"
 
 namespace atres
