@@ -126,7 +126,7 @@ namespace atres
 		int i = 0;
 		while (i < text.size())
 		{
-			code = getCharUtf8(&str[i], &byteLength);
+			code = utf8_to_uint(&str[i], &byteLength);
 			result += this->characters[code].aw * this->getScale();
 			i += byteLength;
 		}
@@ -142,7 +142,7 @@ namespace atres
 		int i = 0;
 		while (i < text.size())
 		{
-			code = getCharUtf8(&str[i], &byteLength);
+			code = utf8_to_uint(&str[i], &byteLength);
 			width += this->characters[code].aw * this->getScale();
 			if (width > maxWidth)
 			{
