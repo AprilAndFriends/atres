@@ -22,86 +22,11 @@
 #include <hltypes/harray.h>
 #include <hltypes/hstring.h>
 
+#include "Renderer.h"
 #include "atresExport.h"
-
-#define BUFFER_MAX_CHARACTERS 8192
 
 namespace atres
 {
-	enum Alignment
-	{
-		LEFT,
-		RIGHT,
-		CENTER,
-		LEFT_WRAPPED,
-		RIGHT_WRAPPED,
-		CENTER_WRAPPED,
-		TOP,
-		BOTTOM
-	};
-
-	enum Effect
-	{
-		NONE,
-		SHADOW,
-		BORDER
-	};
-	
-	enum FormatTagType
-	{
-		ESCAPE,
-		FORMAT_NORMAL,
-		FORMAT_SHADOW,
-		FORMAT_BORDER,
-		FORMAT_COLOR,
-		FORMAT_FONT,
-		CLOSE
-	};
-	
-	struct RenderRectangle
-	{
-		grect src;
-		grect dest;
-	};
-	
-	struct RenderSequence
-	{
-		april::Texture* texture;
-		april::Color color;
-		harray<RenderRectangle> rectangles;
-		RenderSequence() : texture(NULL) { }
-	};
-	
-	struct RenderLine
-	{
-		hstr text;
-		grect rect;
-		int start;
-		RenderLine() : start(0) { }
-	};
-	
-	struct FormatTag
-	{
-		FormatTagType type;
-		hstr data;
-		int start;
-		int count;
-		FormatTag() : type(ESCAPE), start(0), count(0) { }
-	};
-	
-	struct CacheEntry
-	{
-		hstr fontName;
-		int index;
-		gvec2 size;
-		Alignment horizontal;
-		Alignment vertical;
-		april::Color color;
-		gvec2 offset;
-		harray<RenderSequence> sequences;
-		CacheEntry() : index(0), horizontal(CENTER_WRAPPED), vertical(CENTER) { }
-	};
-	
 	class Font;
 	
     atresFnExport void init();
@@ -159,6 +84,7 @@ namespace atres
 	atresFnExport april::Color getBorderColor();
 	atresFnExport void setBorderColor(april::Color value);
 	atresFnExport void addColor(chstr key, chstr value);
+
 };
 
 #endif
