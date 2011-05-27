@@ -23,6 +23,9 @@
     <ClCompile Include="src\Util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\atres\atres.h">
@@ -38,6 +41,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\atres\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
