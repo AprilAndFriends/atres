@@ -39,9 +39,9 @@ bool render(float time_increase)
 	april::rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
 	root->update(time_increase);
 	root->draw();
-	april::rendersys->drawColoredQuad(grect(700, 600, 240, 76), april::Color(0, 0, 0, 128));
+	april::rendersys->drawColoredQuad(grect(700, 600, 240, 76), april::Color(APRIL_COLOR_BLACK, 128));
 	atres::drawText(grect(700, 600, 240, 76), "[b]This is a vertical test.\nIt really is. Really.",
-		atres::CENTER, atres::CENTER, april::Color::WHITE, offset);
+		atres::CENTER, atres::CENTER, APRIL_COLOR_WHITE, offset);
 	return true;
 }
 
@@ -148,8 +148,8 @@ int main()
 #endif
 		atres::init();
 		atres::loadFont("../media/arial.font");
-		atres::setShadowColor(april::Color::RED);
-		atres::setBorderColor(april::Color::AQUA);
+		atres::setShadowColor(APRIL_COLOR_RED);
+		atres::setBorderColor(APRIL_COLOR_AQUA);
 		dataset = new aprilui::Dataset("../media/demo_simple.datadef");
 		dataset->load();
 		aprilui::Label* label = (aprilui::Label*)dataset->getObject("test_4");
