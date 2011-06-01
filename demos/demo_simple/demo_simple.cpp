@@ -23,9 +23,9 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 768
+grect screen(0, 0, 1024, 768);
 
+grect text_area(700, 600, 240, 76);
 aprilui::Dataset* dataset;
 aprilui::Object* root;
 
@@ -36,12 +36,13 @@ gvec2 offset;
 bool render(float time_increase)
 {
 	april::rendersys->clear();
-	april::rendersys->setOrthoProjection(SCREEN_WIDTH, SCREEN_HEIGHT);
+	april::rendersys->setOrthoProjection(screen);
 	root->update(time_increase);
 	root->draw();
-	april::rendersys->drawColoredQuad(grect(700, 600, 240, 76), april::Color(APRIL_COLOR_BLACK, 128));
-	atres::drawText(grect(700, 600, 240, 76), "[b]This is a vertical test.\nIt really is. Really.",
+	april::rendersys->drawColoredQuad(text_area, april::Color(APRIL_COLOR_BLUE, 128));
+	atres::drawText(text_area, "[b]This is a vertical test.\nIt really is. Really.",
 		atres::CENTER, atres::CENTER, APRIL_COLOR_WHITE, offset);
+	aprilui::updateCursorPosition();
 	return true;
 }
 
@@ -138,7 +139,7 @@ int main()
 #endif
 	try
 	{
-		april::init("OpenGL", SCREEN_WIDTH, SCREEN_HEIGHT, 0, "demo_simple");
+		april::init("renderer", (int)screen.w, (int)screen.h, false, "demo_simple");
 		april::rendersys->getWindow()->setUpdateCallback(render);
 		april::rendersys->getWindow()->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
 		april::rendersys->getWindow()->setKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
@@ -152,12 +153,13 @@ int main()
 		atres::setBorderColor(APRIL_COLOR_AQUA);
 		dataset = new aprilui::Dataset("../media/demo_simple.datadef");
 		dataset->load();
-		aprilui::Label* label = (aprilui::Label*)dataset->getObject("test_4");
+		aprilui::Label* label = dataset->getObject<aprilui::Label*>("test_4");
 		label->setText("This is a vertical test.\nIt really is. Really.");
 		root = dataset->getObject("root");
 		april::rendersys->getWindow()->enterMainLoop();
 		delete dataset;
 		aprilui::destroy();
+		atres::destroy();
 		april::destroy();
 	}
 	catch (hltypes::exception e)
