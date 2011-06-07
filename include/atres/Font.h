@@ -41,7 +41,7 @@ namespace atres
 		float getBaseScale() { return this->baseScale; }
 		void setBaseScale(float value) { this->baseScale = value; }
 		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
-		April::Texture* getTexture() { return this->texture; }
+		april::Texture* getTexture() { return this->texture; }
 		
 		bool hasChar(unsigned int charcode);
 		
@@ -57,7 +57,7 @@ namespace atres
 		float height;
 		float lineHeight;
 		hmap<unsigned int, CharacterDefinition> characters;
-		April::Texture* texture;
+		april::Texture* texture;
 		
 	};
 }
