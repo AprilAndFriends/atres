@@ -35,7 +35,7 @@ namespace atres
 			}
 			else if (line.starts_with("Texture="))
 			{
-				this->texture = April::rendersys->loadTexture(line.replace("Texture=", ""));
+				this->texture = april::rendersys->loadTexture(line.replace("Texture=", ""));
 			}
 			else if (line.starts_with("LineHeight="))
 			{

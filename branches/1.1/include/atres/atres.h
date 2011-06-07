@@ -61,10 +61,10 @@ namespace atres
 	
 	struct atresExport RenderSequence
 	{
-		April::Texture* texture;
-		April::Color color;
+		april::Texture* texture;
+		april::Color color;
 		harray<RenderRectangle> rectangles;
-		RenderSequence() : texture(NULL), color(April::Color()), rectangles(harray<RenderRectangle>()) { }
+		RenderSequence() : texture(NULL), color(april::Color()), rectangles(harray<RenderRectangle>()) { }
 	};
 	
 	struct atresExport RenderLine
@@ -91,11 +91,11 @@ namespace atres
 		gvec2 size;
 		Alignment horizontal;
 		Alignment vertical;
-		April::Color color;
+		april::Color color;
 		gvec2 offset;
 		harray<RenderSequence> sequences;
 		CacheEntry() : fontName(""), index(0), size(gvec2()), horizontal(CENTER_WRAPPED), vertical(CENTER),
-			color(April::Color()), offset(gvec2()), sequences(harray<RenderSequence>()) { }
+			color(april::Color()), offset(gvec2()), sequences(harray<RenderSequence>()) { }
 	};
 	
 	class Font;
@@ -116,17 +116,17 @@ namespace atres
 	harray<RenderSequence> createRenderSequences(grect rect, harray<RenderLine> lines, harray<FormatTag> tags);
 	harray<RenderSequence> optimizeSequences(harray<RenderSequence> sequences);
 	
-	atresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(), float angle = 0.0f, gvec2 offset = gvec2());
-	atresFnExport void drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(), float angle = 0.0f, gvec2 offset = gvec2());
-	atresFnExport void drawText(grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(), float angle = 0.0f, gvec2 offset = gvec2());
-	atresFnExport void drawTextUnformatted(grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(), float angle = 0.0f, gvec2 offset = gvec2());
+	atresFnExport void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color(), float angle = 0.0f, gvec2 offset = gvec2());
+	atresFnExport void drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color(), float angle = 0.0f, gvec2 offset = gvec2());
+	atresFnExport void drawText(grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color(), float angle = 0.0f, gvec2 offset = gvec2());
+	atresFnExport void drawTextUnformatted(grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color(), float angle = 0.0f, gvec2 offset = gvec2());
 	
-	atresFnExport void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(), float angle = 0.0f, gvec2 offset = gvec2()) DEPRECATED_ATTRIBUTE;
-	atresFnExport void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(), float angle = 0.0f, gvec2 offset = gvec2()) DEPRECATED_ATTRIBUTE;
+	atresFnExport void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color(), float angle = 0.0f, gvec2 offset = gvec2()) DEPRECATED_ATTRIBUTE;
+	atresFnExport void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color(), float angle = 0.0f, gvec2 offset = gvec2()) DEPRECATED_ATTRIBUTE;
 	atresFnExport void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, float angle = 0.0f, gvec2 offset = gvec2()) DEPRECATED_ATTRIBUTE;
 	atresFnExport void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, float angle = 0.0f, gvec2 offset = gvec2()) DEPRECATED_ATTRIBUTE;
-	atresFnExport void drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(), float angle = 0.0f, gvec2 offset = gvec2()) DEPRECATED_ATTRIBUTE;
-	atresFnExport void drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, April::Color color = April::Color(), float angle = 0.0f, gvec2 offset = gvec2()) DEPRECATED_ATTRIBUTE;
+	atresFnExport void drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color(), float angle = 0.0f, gvec2 offset = gvec2()) DEPRECATED_ATTRIBUTE;
+	atresFnExport void drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color(), float angle = 0.0f, gvec2 offset = gvec2()) DEPRECATED_ATTRIBUTE;
 	atresFnExport void drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, float angle = 0.0f, gvec2 offset = gvec2()) DEPRECATED_ATTRIBUTE;
 	atresFnExport void drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, float angle = 0.0f, gvec2 offset = gvec2()) DEPRECATED_ATTRIBUTE;
 	
@@ -149,12 +149,12 @@ namespace atres
 	atresFnExport void setGlobalOffsets(bool value);
 	atresFnExport gvec2 getShadowOffset();
 	atresFnExport void setShadowOffset(gvec2 value);
-	atresFnExport April::Color getShadowColor();
-	atresFnExport void setShadowColor(April::Color value);
+	atresFnExport april::Color getShadowColor();
+	atresFnExport void setShadowColor(april::Color value);
 	atresFnExport float getBorderOffset();
 	atresFnExport void setBorderOffset(float value);
-	atresFnExport April::Color getBorderColor();
-	atresFnExport void setBorderColor(April::Color value);
+	atresFnExport april::Color getBorderColor();
+	atresFnExport void setBorderColor(april::Color value);
 	atresFnExport void addColor(chstr key, chstr value);
 };
 
