@@ -36,7 +36,7 @@ namespace atres
 	hmap<hstr, CacheEntry> cache;
 	hmap<hstr, hstr> colors;
 	bool globalOffsets = false;
-	april::TexturedVertex vertices[BUFFER_MAX_CHARACTERS * 4];
+	april::TexturedVertex vertices[BUFFER_MAX_CHARACTERS * 6];
 	void atres_writelog(chstr message)
 	{
 		printf("%s\n", message.c_str());		
@@ -735,18 +735,27 @@ namespace atres
 		}
 		float w = (float)sequence.texture->getWidth();
 		float h = (float)sequence.texture->getHeight();
+		harray<RenderRectangle> rectangles;
 		int i = 0;
-		foreach (RenderRectangle, it, sequence.rectangles)
-		{
-			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = (*it).src.y / h;                 i++;
-			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
-			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
-			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-		}
+		int j = 0;
 		april::rendersys->setTexture(sequence.texture);
-		april::rendersys->render(april::TriangleList, vertices, i, sequence.color);
+		while (j < sequence.rectangles.size())
+		{
+			i = 0;
+			rectangles = sequence.rectangles(j, hmin(BUFFER_MAX_CHARACTERS, sequence.rectangles.size() - j));
+			j += BUFFER_MAX_CHARACTERS;
+			foreach (RenderRectangle, it, rectangles)
+			{
+				vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = (*it).src.y / h;                 i++;
+				vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
+				vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+				vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
+				vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+				vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+			}
+			april::rendersys->render(april::TriangleList, vertices, i, sequence.color);
+		}
+		
 	}
 
 	void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
