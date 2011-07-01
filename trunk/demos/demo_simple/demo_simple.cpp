@@ -40,7 +40,7 @@ bool render(float time_increase)
 	root->update(time_increase);
 	root->draw();
 	april::rendersys->drawColoredQuad(text_area, april::Color(APRIL_COLOR_BLUE, 128));
-	atres::drawText(grect(0, 0, 800, 600), "[b]This is a vertical test.\nIt really is. Really.",
+	atres::drawText(text_area, "[b]This is a vertical test.\nIt really is. Really.",
 		atres::CENTER, atres::CENTER, APRIL_COLOR_WHITE, offset);
 	aprilui::updateCursorPosition();
 	return true;
