@@ -1,5 +1,4 @@
 /// @file
-/// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @version 2.0
 /// 
@@ -16,108 +15,45 @@
 #include <hltypes/hstring.h>
 #include <hltypes/util.h>
 
-#include "Font.h"
+#include "FontResource.h"
 
 namespace atres
 {
-	Font::Font(chstr filename)
+	FontResource::FontResource()
 	{
-		this->scale = 1.0f;
-		this->baseScale = 1.0f;
-		this->lineHeight = 0.0f;
-		harray<hstr> lines = hfile::hread(filename).split("\n");
-		hstr line;
-		while (lines.size() > 0)
-		{
-			line = lines.pop_front();
-			if (line.starts_with("Name="))
-			{
-				this->name = line.replace("Name=", "");
-			}
-			else if (line.starts_with("Texture="))
-			{
-				this->texture = april::rendersys->loadTexture(line.replace("Texture=", ""));
-			}
-			else if (line.starts_with("LineHeight="))
-			{
-				this->lineHeight = (float)line.replace("LineHeight=", "");
-			}
-			else if (line.starts_with("Height="))
-			{
-				this->height = (float)line.replace("Height=", "");
-			}
-			else if (line.starts_with("Scale="))
-			{
-				this->scale = (float)line.replace("Scale=", "");
-				this->baseScale = this->scale;
-			}
-			else if (line.starts_with("#"))
-			{
-				continue;
-			}
-			else if (line.starts_with("-"))
-			{
-				break;
-			}
-		}
-		if (this->lineHeight == 0.0f)
-		{
-			this->lineHeight = this->height;
-		}
-		CharacterDefinition c;
-		unsigned int code;
-		harray<hstr> data;
-		foreach (hstr, it, lines)
-		{
-			c.aw = 0.0f;
-			data = (*it).split(" ");
-			if (data.size() == 5)
-			{
-				code = (unsigned int)data.pop_front();
-				c.x = (float)data.pop_front();
-				c.y = (float)data.pop_front();
-				c.w = (float)data.pop_front();
-				c.aw = (float)data.pop_front();
-				if (c.aw == 0.0f)
-				{
-					c.aw = c.w;
-				}
-				this->characters[code] = c;
-			}
-		}
 	}
 
-	Font::Font(Font& f, float scale)
+	FontResource::FontResource(FontResource& f, float scale)
 	{
 		// todo: copy constructor
 	}
 
-	Font::~Font()
+	FontResource::~FontResource()
 	{
 		this->characters.clear();
 	}
 	
-	bool Font::hasChar(unsigned int charcode)
+	bool FontResource::hasChar(unsigned int charcode)
 	{
 		return this->characters.has_key(charcode);
 	}
 	
-	float Font::getHeight()
+	float FontResource::getHeight()
 	{
 		return (this->height * this->scale * this->baseScale);
 	}
 	
-	float Font::getLineHeight()
+	float FontResource::getLineHeight()
 	{
 		return (this->lineHeight * this->scale * this->baseScale);
 	}
 	
-	float Font::getScale()
+	float FontResource::getScale()
 	{
 		return (this->scale * this->baseScale);
 	}
 	
-	float Font::getTextWidth(chstr text)
+	float FontResource::getTextWidth(chstr text)
 	{
 		const char* str = text.c_str();
 		float result = 0.0f;
@@ -133,7 +69,7 @@ namespace atres
 		return result;
 	}
 	
-	int Font::getTextCount(chstr text, float maxWidth)
+	int FontResource::getTextCount(chstr text, float maxWidth)
 	{
 		const char* str = text.c_str();
 		unsigned int code;
@@ -153,7 +89,7 @@ namespace atres
 		return i;
 	}
 	
-	RenderRectangle Font::makeRenderRectangle(grect rect, grect area, unsigned int code)
+	RenderRectangle FontResource::makeRenderRectangle(grect rect, grect area, unsigned int code)
 	{
 		RenderRectangle result;
 		float height = this->getHeight();

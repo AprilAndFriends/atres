@@ -102,7 +102,7 @@ namespace atres
 		CacheEntry() : index(0), horizontal(CENTER_WRAPPED), vertical(CENTER) { }
 	};
 
-	class Font;
+	class FontResource;
 
 	class atresExport Renderer
 	{
@@ -111,7 +111,7 @@ namespace atres
 		~Renderer();
 
 		void drawRenderSequence(RenderSequence& sequence);
-		void loadFont(chstr filename);
+		void registerFontResource(FontResource* fontResource);
 	
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
 		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight);
@@ -146,7 +146,7 @@ namespace atres
 		RenderLine getFittingLine(grect rect, chstr text, harray<FormatTag> tags);
 	
 		void setDefaultFont(chstr name);
-		Font* getFont(chstr name);
+		FontResource* getFontResource(chstr name);
 		bool hasFont(chstr name);
 		void setCacheSize(int value);
 		void updateCache();

@@ -11,7 +11,7 @@
 #include <hltypes/hstring.h>
 
 #include "atres.h"
-#include "Font.h"
+#include "FontResource.h"
 #include "Renderer.h"
 #include "Util.h"
 

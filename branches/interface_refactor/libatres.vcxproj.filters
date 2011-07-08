@@ -17,13 +17,16 @@
     <ClCompile Include="src\Exception.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Font.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FontResourceBitmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FontResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -37,13 +40,16 @@
     <ClInclude Include="include\atres\Exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\atres\Font.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\atres\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\atres\FontResourceBitmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\atres\FontResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
