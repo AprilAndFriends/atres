@@ -1,5 +1,4 @@
 /// @file
-/// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @version 2.0
 /// 
@@ -10,10 +9,10 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a font.
+/// Defines a font resource interface.
 
-#ifndef ATRES_FONT_H
-#define ATRES_FONT_H
+#ifndef ATRES_FONT_RESOURCE_H
+#define ATRES_FONT_RESOURCE_H
 
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
@@ -31,12 +30,12 @@ namespace atres
 		float aw;
 	};
 
-	class atresExport Font
+	class atresExport FontResource
 	{
 	public:
-		Font(chstr filename);
-		Font(Font& f, float scale = 1.0f);
-		~Font();
+		FontResource();
+		FontResource(FontResource& f, float scale = 1.0f);
+		virtual ~FontResource();
 
 		hstr getName() { return this->name; }
 		float getHeight();
@@ -46,7 +45,6 @@ namespace atres
 		float getBaseScale() { return this->baseScale; }
 		void setBaseScale(float value) { this->baseScale = value; }
 		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
-		april::Texture* getTexture() { return this->texture; }
 		
 		bool hasChar(unsigned int charcode);
 		
@@ -62,7 +60,6 @@ namespace atres
 		float height;
 		float lineHeight;
 		hmap<unsigned int, CharacterDefinition> characters;
-		april::Texture* texture;
 		
 	};
 }

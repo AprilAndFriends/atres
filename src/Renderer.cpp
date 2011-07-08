@@ -21,13 +21,13 @@
 #include <hltypes/util.h>
 
 #include "atres.h"
-#include "Font.h"
+#include "FontResource.h"
 #include "Util.h"
 
 namespace atres
 {
-    hmap<hstr,Font*> fonts;
-	Font* defaultFont = NULL;
+    hmap<hstr, FontResource*> fonts;
+	FontResource* defaultFont = NULL;
 	int cacheSize = 100;
 	int cacheIndex = 0;
 	gvec2 shadowOffset(1.0f, 1.0f);
@@ -60,20 +60,19 @@ namespace atres
 
 	Renderer::~Renderer()
 	{
-		foreach_m (Font*, it, fonts)
+		foreach_m (FontResource*, it, fonts)
 		{
 			delete it->second;
 		}
 	}
 
-    void Renderer::loadFont(chstr filename)
+    void Renderer::registerFontResource(FontResource* fontResource)
     {
-		atres::log(hsprintf("loading font %s", filename.c_str()));
-        Font* font = new Font(filename);
-        fonts[font->getName()] = font;
+		atres::log(hsprintf("registering font resource %s", fontResource->getName().c_str()));
+        fonts[fontResource->getName()] = fontResource;
 		if (defaultFont == NULL)
 		{
-			defaultFont = font;
+			defaultFont = fontResource;
 		}
     }
     
@@ -269,7 +268,7 @@ namespace atres
 		FormatTag nextTag = tags.front();
 		
 		hstr fontName;
-		Font* font = NULL;
+		FontResource* fontResource = NULL;
 		hmap<unsigned int, CharacterDefinition> characters;
 		float lineHeight;
 		float scale;
@@ -310,9 +309,9 @@ namespace atres
 						if (tag.type == FORMAT_FONT)
 						{
 							fontName = tag.data;
-							font = getFont(fontName);
-							characters = font->getCharacters();
-							scale = font->getScale();
+							fontResource = getFontResource(fontName);
+							characters = fontResource->getCharacters();
+							scale = fontResource->getScale();
 						}
 					}
 					else if (nextTag.type == FORMAT_FONT)
@@ -322,18 +321,18 @@ namespace atres
 						stack += tag;
 						try
 						{
-							if (font == NULL)
+							if (fontResource == NULL)
 							{
-								font = getFont(nextTag.data);
-								lineHeight = font->getLineHeight();
+								fontResource = getFontResource(nextTag.data);
+								lineHeight = fontResource->getLineHeight();
 							}
 							else
 							{
-								font = getFont(nextTag.data);
+								fontResource = getFontResource(nextTag.data);
 							}
 							fontName = nextTag.data;
-							characters = font->getCharacters();
-							scale = font->getScale();
+							characters = fontResource->getCharacters();
+							scale = fontResource->getScale();
 						}
 						catch (hltypes::_resource_error e)
 						{
@@ -436,7 +435,7 @@ namespace atres
 		grect area;
 		
 		hstr fontName;
-		Font* font = NULL;
+		FontResource* fontResource = NULL;
 		hmap<unsigned int, CharacterDefinition> characters;
 		float lineHeight;
 		float scale;
@@ -467,9 +466,9 @@ namespace atres
 						{
 						case FORMAT_FONT:
 							fontName = tag.data;
-							font = getFont(fontName);
-							characters = font->getCharacters();
-							scale = font->getScale();
+							fontResource = getFontResource(fontName);
+							characters = fontResource->getCharacters();
+							scale = fontResource->getScale();
 							break;
 						case FORMAT_COLOR:
 							hex = (colors.has_key(tag.data) ? colors[tag.data] : tag.data);
@@ -499,18 +498,18 @@ namespace atres
 							stack += tag;
 							try
 							{
-								if (font == NULL)
+								if (fontResource == NULL)
 								{
-									font = getFont(nextTag.data);
-									lineHeight = font->getLineHeight();
+									fontResource = getFontResource(nextTag.data);
+									lineHeight = fontResource->getLineHeight();
 								}
 								else
 								{
-									font = getFont(nextTag.data);
+									fontResource = getFontResource(nextTag.data);
 								}
 								fontName = nextTag.data;
-								characters = font->getCharacters();
-								scale = font->getScale();
+								characters = fontResource->getCharacters();
+								scale = fontResource->getScale();
 							}
 							catch (hltypes::_resource_error e)
 							{
@@ -567,35 +566,35 @@ namespace atres
 						nextTag.start = line.start + line.text.size() + 1;
 					}
 					colorChanged = sequence.color != color;
-					if (sequence.texture != font->getTexture() || colorChanged)
+					if (sequence.texture != fontResource->getTexture() || colorChanged)
 					{
 						if (sequence.rectangles.size() > 0)
 						{
 							sequences += sequence;
 							sequence.rectangles.clear();
 						}
-						sequence.texture = font->getTexture();
+						sequence.texture = fontResource->getTexture();
 						sequence.color = color;
 					}
-					if (shadowSequence.texture != font->getTexture() || colorChanged)
+					if (shadowSequence.texture != fontResource->getTexture() || colorChanged)
 					{
 						if (shadowSequence.rectangles.size() > 0)
 						{
 							shadowSequences += shadowSequence;
 							shadowSequence.rectangles.clear();
 						}
-						shadowSequence.texture = font->getTexture();
+						shadowSequence.texture = fontResource->getTexture();
 						shadowSequence.color = shadowColor;
 						shadowSequence.color.a = (unsigned char)(shadowSequence.color.a * color.a_f());
 					}
-					if (borderSequence.texture != font->getTexture() || colorChanged)
+					if (borderSequence.texture != fontResource->getTexture() || colorChanged)
 					{
 						if (borderSequence.rectangles.size() > 0)
 						{
 							borderSequences += borderSequence;
 							borderSequence.rectangles.clear();
 						}
-						borderSequence.texture = font->getTexture();
+						borderSequence.texture = fontResource->getTexture();
 						borderSequence.color = borderColor;
 						borderSequence.color.a = (unsigned char)(borderSequence.color.a * color.a_f() * color.a_f());
 					}
@@ -616,9 +615,9 @@ namespace atres
 				area = line.rect;
 				area.x += width;
 				area.w = characters[code].w * scale;
-				area.y += (lineHeight - font->getHeight()) / 2;
-				area.h = font->getHeight();
-				renderRect = font->makeRenderRectangle(rect, area, code);
+				area.y += (lineHeight - fontResource->getHeight()) / 2;
+				area.h = fontResource->getHeight();
+				renderRect = fontResource->makeRenderRectangle(rect, area, code);
 				sequence.rectangles += renderRect;
 				destination = renderRect.dest;
 				switch (effectMode)
@@ -855,29 +854,29 @@ namespace atres
 		cache.clear();
 	}
     
-    Font* Renderer::getFont(chstr name)
+    FontResource* Renderer::getFontResource(chstr name)
     {
 		if (name == "" && defaultFont != NULL)
 		{
 			defaultFont->setScale(1.0f);
 			return defaultFont;
 		}
-        Font* font;
+        FontResource* fontResource;
 		if (fonts.has_key(name))
 		{
-			font = fonts[name];
-			font->setScale(1.0f);
-			return font;
+			fontResource = fonts[name];
+			fontResource->setScale(1.0f);
+			return fontResource;
 		}
 		int position = name.find(":");
 		if (position < 0)
 		{
 			throw resource_error("Font", name, "atres");
 		}
-		font = getFont(name(0, position));
+		fontResource = getFontResource(name(0, position));
 		position++;
-		font->setScale((float)(name(position, name.size() - position)));
-        return font;
+		fontResource->setScale((float)(name(position, name.size() - position)));
+        return fontResource;
     }
 	
     bool Renderer::hasFont(chstr name)
@@ -969,7 +968,7 @@ namespace atres
 	
 	float Renderer::getFontHeight(chstr fontName)
 	{
-		return getFont(fontName)->getHeight();
+		return getFontResource(fontName)->getHeight();
 	}
 	
 	float Renderer::getTextWidth(chstr fontName, chstr text)
@@ -995,7 +994,7 @@ namespace atres
 			if (unformattedText != "")
 			{
 				harray<RenderLine> lines = createRenderLines(grect(0, 0, maxWidth, 100000), unformattedText, tags, LEFT_WRAPPED, TOP);
-				return (lines.size() * getFont(fontName)->getLineHeight());
+				return (lines.size() * getFontResource(fontName)->getLineHeight());
 			}
 		}
 		return 0.0f;
@@ -1033,7 +1032,7 @@ namespace atres
 		}
 		harray<FormatTag> tags = prepareTags(fontName);
 		harray<RenderLine> lines = createRenderLines(grect(0, 0, maxWidth, 100000), text, tags, LEFT_WRAPPED, TOP);
-		return (lines.size() * getFont(fontName)->getLineHeight());
+		return (lines.size() * getFontResource(fontName)->getLineHeight());
 	}
 	
 	int Renderer::getTextCountUnformatted(chstr fontName, chstr text, float maxWidth)
@@ -1073,7 +1072,7 @@ namespace atres
 		FormatTag nextTag = tags.front();
 		
 		hstr fontName;
-		Font* font = NULL;
+		FontResource* fontResource = NULL;
 		hmap<unsigned int, CharacterDefinition> characters;
 		float lineHeight;
 		float scale;
@@ -1094,9 +1093,9 @@ namespace atres
 					if (tag.type == FORMAT_FONT)
 					{
 						fontName = tag.data;
-						font = getFont(fontName);
-						characters = font->getCharacters();
-						scale = font->getScale();
+						fontResource = getFontResource(fontName);
+						characters = fontResource->getCharacters();
+						scale = fontResource->getScale();
 					}
 				}
 				else if (nextTag.type == FORMAT_FONT)
@@ -1105,17 +1104,17 @@ namespace atres
 					tag.data = fontName;
 					stack += tag;
 					fontName = nextTag.data;
-					if (font == NULL)
+					if (fontResource == NULL)
 					{
-						font = getFont(fontName);
-						lineHeight = font->getLineHeight();
+						fontResource = getFontResource(fontName);
+						lineHeight = fontResource->getLineHeight();
 					}
 					else
 					{
-						font = getFont(fontName);
+						fontResource = getFontResource(fontName);
 					}
-					characters = font->getCharacters();
-					scale = font->getScale();
+					characters = fontResource->getCharacters();
+					scale = fontResource->getScale();
 				}
 				else
 				{

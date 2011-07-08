@@ -9,18 +9,20 @@
   <Dependencies/>
   <VirtualDirectory Name="src">
     <File Name="src/atres.cpp"/>
-    <File Name="src/Font.cpp"/>
     <File Name="src/Exception.cpp"/>
     <File Name="src/Util.cpp"/>
     <File Name="src/Renderer.cpp"/>
+    <File Name="src/FontResourceBitmap.cpp"/>
+    <File Name="src/FontResourceInterface.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/atres/atres.h"/>
-    <File Name="include/atres/Font.h"/>
     <File Name="include/atres/atresExport.h"/>
     <File Name="include/atres/Exception.h"/>
     <File Name="src/Util.h"/>
     <File Name="include/atres/Renderer.h"/>
+    <File Name="include/atres/FontResourceBitmap.h"/>
+    <File Name="include/atres/FontResourceInterface.h"/>
   </VirtualDirectory>
   <Dependencies Name="Release"/>
   <Dependencies Name="Linux_Debug">

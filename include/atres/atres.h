@@ -22,8 +22,6 @@
 
 namespace atres
 {
-	class Font;
-	
     atresFnExport void init();
     atresFnExport void destroy();
 	atresFnExport void setLogFunction(void (*fnptr)(chstr));

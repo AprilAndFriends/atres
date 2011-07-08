@@ -37,6 +37,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libgtypes", "..\gtypes\libg
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fontgen", "scripts\win32_font_generator\fontgen.vcproj", "{0FC9EEDA-7001-476C-846A-06AC6330B3B1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libatresttf", "atresttf\libatresttf.vcproj", "{4A055F1C-7F19-4CE2-8374-583AC6C7875E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -161,6 +163,22 @@ Global
 		{0FC9EEDA-7001-476C-846A-06AC6330B3B1}.win32_OpenGL_Release|Win32.Build.0 = Release|Win32
 		{0FC9EEDA-7001-476C-846A-06AC6330B3B1}.win32_Release|Win32.ActiveCfg = Release|Win32
 		{0FC9EEDA-7001-476C-846A-06AC6330B3B1}.win32_Release|Win32.Build.0 = Release|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.Debug|Win32.ActiveCfg = win32_Debug|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.Debug|Win32.Build.0 = win32_Debug|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.Release|Win32.ActiveCfg = win32_Release|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.Release|Win32.Build.0 = win32_Release|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.win32_Debug|Win32.ActiveCfg = win32_Debug|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.win32_Debug|Win32.Build.0 = win32_Debug|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.win32_DirectX9_Debug|Win32.ActiveCfg = win32_Debug|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.win32_DirectX9_Debug|Win32.Build.0 = win32_Debug|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.win32_DirectX9_Release|Win32.ActiveCfg = win32_Debug|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.win32_DirectX9_Release|Win32.Build.0 = win32_Debug|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.win32_OpenGL_Debug|Win32.ActiveCfg = win32_Release|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.win32_OpenGL_Debug|Win32.Build.0 = win32_Release|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.win32_OpenGL_Release|Win32.ActiveCfg = win32_Release|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.win32_OpenGL_Release|Win32.Build.0 = win32_Release|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.win32_Release|Win32.ActiveCfg = win32_Release|Win32
+		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.win32_Release|Win32.Build.0 = win32_Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
