@@ -61,8 +61,8 @@
       <ImportLibrary>$(TargetDir)\$(TargetName).lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\hltypes\bin\$(Configuration)\*.dll bin\$(Configuration)
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='win32_Release|Win32'">

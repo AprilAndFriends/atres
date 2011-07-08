@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="include/atresttf;../include;../../hltypes/include;../../gtypes/include;src/"
+				AdditionalIncludeDirectories="include/atresttf;../include;../../include/freetype;../../hltypes/include;../../gtypes/include;../../april/include;src/"
 				PreprocessorDefinitions="_WIN32;_DEBUG;ATRESTTF_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -60,9 +60,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libatres_d.lib libhltypes_d.lib libgtypes_d.lib"
+				AdditionalDependencies="libatres_d.lib libhltypes_d.lib libgtypes_d.lib libapril_d.lib libfreetype.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
-				AdditionalLibraryDirectories="../../hltypes/bin/$(ConfigurationName);../../gtypes/bin/$(ConfigurationName);../bin"
+				AdditionalLibraryDirectories="../../lib/msvc90;../../hltypes/bin/$(ConfigurationName);../../gtypes/bin/$(ConfigurationName);../../april/bin;../bin/$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				ImportLibrary="$(TargetDir)\$(TargetName).lib"
 			/>
@@ -115,7 +115,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="include/atresttf;../include;../../hltypes/include;../../gtypes/include;src/"
+				AdditionalIncludeDirectories="include/atresttf;../include;../../include/freetype;../../hltypes/include;../../gtypes/include;../../april/include;src/"
 				PreprocessorDefinitions="_WIN32;ATRESTTF_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -135,10 +135,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libatres.lib libhltypes.lib libgtypes.lib"
+				AdditionalDependencies="libatres.lib libhltypes.lib libgtypes.lib libapril.lib libfreetype.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../hltypes/bin/$(ConfigurationName);../../gtypes/bin/$(ConfigurationName);../bin"
+				AdditionalLibraryDirectories="../../lib/msvc90;../../hltypes/bin/$(ConfigurationName);../../gtypes/bin/$(ConfigurationName);../../april/bin;../bin/$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -177,6 +177,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\src\atresttf.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\FontResourceTtf.cpp"
 				>
 			</File>
@@ -187,7 +191,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\src\freetype.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\atresttf\atresttfExport.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\atresttf\atresttf.h"
 				>
 			</File>
 			<File

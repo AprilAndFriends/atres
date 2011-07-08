@@ -457,6 +457,7 @@ namespace atres
 			for (int i = 0; i < line.text.size(); i += byteLength)
 			{
 				// checking first formatting tag changes
+				code = utf8_to_uint(&line.text[i], &byteLength);
 				while (tags.size() > 0 && line.start + i >= nextTag.start)
 				{
 					if (nextTag.type == CLOSE)
@@ -566,35 +567,35 @@ namespace atres
 						nextTag.start = line.start + line.text.size() + 1;
 					}
 					colorChanged = sequence.color != color;
-					if (sequence.texture != fontResource->getTexture() || colorChanged)
+					if (sequence.texture != fontResource->getTexture(code) || colorChanged)
 					{
 						if (sequence.rectangles.size() > 0)
 						{
 							sequences += sequence;
 							sequence.rectangles.clear();
 						}
-						sequence.texture = fontResource->getTexture();
+						sequence.texture = fontResource->getTexture(code);
 						sequence.color = color;
 					}
-					if (shadowSequence.texture != fontResource->getTexture() || colorChanged)
+					if (shadowSequence.texture != fontResource->getTexture(code) || colorChanged)
 					{
 						if (shadowSequence.rectangles.size() > 0)
 						{
 							shadowSequences += shadowSequence;
 							shadowSequence.rectangles.clear();
 						}
-						shadowSequence.texture = fontResource->getTexture();
+						shadowSequence.texture = fontResource->getTexture(code);
 						shadowSequence.color = shadowColor;
 						shadowSequence.color.a = (unsigned char)(shadowSequence.color.a * color.a_f());
 					}
-					if (borderSequence.texture != fontResource->getTexture() || colorChanged)
+					if (borderSequence.texture != fontResource->getTexture(code) || colorChanged)
 					{
 						if (borderSequence.rectangles.size() > 0)
 						{
 							borderSequences += borderSequence;
 							borderSequence.rectangles.clear();
 						}
-						borderSequence.texture = fontResource->getTexture();
+						borderSequence.texture = fontResource->getTexture(code);
 						borderSequence.color = borderColor;
 						borderSequence.color.a = (unsigned char)(borderSequence.color.a * color.a_f() * color.a_f());
 					}
@@ -611,7 +612,6 @@ namespace atres
 					}
 				}
 				// checking the particular character
-				code = utf8_to_uint(&line.text[i], &byteLength);
 				area = line.rect;
 				area.x += width;
 				area.w = characters[code].w * scale;

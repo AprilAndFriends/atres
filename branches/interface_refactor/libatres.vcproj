@@ -182,7 +182,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\FontResourceInterface.cpp"
+				RelativePath=".\src\FontResource.cpp"
 				>
 			</File>
 			<File
@@ -216,7 +216,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\atres\FontResourceInterface.h"
+				RelativePath=".\include\atres\FontResource.h"
 				>
 			</File>
 			<File

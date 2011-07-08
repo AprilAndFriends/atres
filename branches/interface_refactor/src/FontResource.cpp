@@ -19,14 +19,16 @@
 
 namespace atres
 {
-	FontResource::FontResource()
+	FontResource::FontResource(chstr name)
 	{
+		this->name = name;
 	}
-
+	/*
 	FontResource::FontResource(FontResource& f, float scale)
 	{
 		// todo: copy constructor
 	}
+	*/
 
 	FontResource::~FontResource()
 	{

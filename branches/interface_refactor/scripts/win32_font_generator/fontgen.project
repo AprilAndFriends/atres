@@ -77,4 +77,5 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
+  <Dependencies Name="Debug"/>
 </CodeLite_Project>
