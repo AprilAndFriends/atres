@@ -18,6 +18,7 @@
 #include <aprilui/Dataset.h>
 #include <aprilui/Objects.h>
 #include <atres/atres.h>
+#include <atres/FontResourceBitmap.h>
 #include <gtypes/Rectangle.h>
 #include <hltypes/util.h>
 
@@ -42,7 +43,7 @@ bool render(float time_increase)
 	root->update(time_increase);
 	root->draw();
 	april::rendersys->drawColoredQuad(grect(700, 600, 240, 76), april::Color(0, 0, 0, 128));
-	atres::drawText(grect(700, 600, 240, 76), "[b]This is a vertical test.\nIt really is. Really.",
+	atres::renderer->drawText(grect(700, 600, 240, 76), "[b]This is a vertical test.\nIt really is. Really.",
 		atres::CENTER, atres::CENTER, APRIL_COLOR_WHITE, offset);
 	return true;
 }
@@ -78,11 +79,11 @@ void onKeyUp(unsigned int keycode)
 {
 	if (keycode == april::AK_BACK)
 	{
-		atres::setBorderColor(april::Color(hrand(256), hrand(256), hrand(256)));
+		atres::renderer->setBorderColor(april::Color(hrand(256), hrand(256), hrand(256)));
 	}
 	if (keycode == april::AK_SPACE)
 	{
-		atres::setBorderOffset(hrandf(1.0f, 5.0f));
+		atres::renderer->setBorderOffset(hrandf(1.0f, 5.0f));
 	}
 	root->OnKeyUp(keycode);
 }
@@ -149,9 +150,9 @@ int main()
 		aprilui::setDebugMode(true);
 #endif
 		atres::init();
-		atres::loadFont("../media/arial.font");
-		atres::setShadowColor(APRIL_COLOR_RED);
-		atres::setBorderColor(APRIL_COLOR_AQUA);
+		atres::renderer->registerFontResource(new atres::FontResourceBitmap("../media/arial.font"));
+		atres::renderer->setShadowColor(APRIL_COLOR_RED);
+		atres::renderer->setBorderColor(APRIL_COLOR_AQUA);
 		dataset = new aprilui::Dataset("../media/demo_simple.datadef");
 		dataset->load();
 		aprilui::Label* label = (aprilui::Label*)dataset->getObject("test_4");

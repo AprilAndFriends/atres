@@ -33,8 +33,8 @@ namespace atres
 	class atresExport FontResource
 	{
 	public:
-		FontResource();
-		FontResource(FontResource& f, float scale = 1.0f);
+		FontResource(chstr name);
+		//FontResource(FontResource& f, float scale = 1.0f);
 		virtual ~FontResource();
 
 		hstr getName() { return this->name; }
@@ -46,6 +46,7 @@ namespace atres
 		void setBaseScale(float value) { this->baseScale = value; }
 		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
 		
+		virtual april::Texture* getTexture(unsigned int charcode) = 0;
 		bool hasChar(unsigned int charcode);
 		
 		float getTextWidth(chstr text);

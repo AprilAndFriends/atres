@@ -23,7 +23,7 @@
 		#define atresttfFnExport
 	#else
 		#ifdef _WIN32
-			#ifdef ATRESTTF_EXPORT_H_EXPORTS
+			#ifdef ATRESTTF_EXPORTS
 				#define atresttfExport __declspec(dllexport)
 				#define atresttfFnExport __declspec(dllexport)
 			#else

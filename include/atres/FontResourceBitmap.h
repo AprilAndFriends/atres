@@ -28,7 +28,7 @@ namespace atres
 		FontResourceBitmap(chstr filename);
 		~FontResourceBitmap();
 
-		april::Texture* getTexture() { return this->texture; }
+		april::Texture* getTexture(unsigned int charcode);
 
 	protected:
 		april::Texture* texture;

@@ -9,16 +9,20 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a font.
+/// Defines a TTF font.
 
-#ifndef ATRES_FONT_RESOURCE_TTF_H
-#define ATRES_FONT_RESOURCE_TTF_H
+#ifndef ATRESTTF_FONT_RESOURCE_TTF_H
+#define ATRESTTF_FONT_RESOURCE_TTF_H
 
 #include <atres/FontResource.h>
-#include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
 #include "atresttfExport.h"
+
+namespace april
+{
+	class Texture;
+}
 
 namespace atresttf
 {
@@ -27,6 +31,8 @@ namespace atresttf
 	public:
 		FontResourceTtf(chstr filename);
 		~FontResourceTtf();
+
+		//april::Texture* getTexture(unsigned int charcode);
 
 	};
 }

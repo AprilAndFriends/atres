@@ -19,7 +19,7 @@
 
 namespace atres
 {
-	FontResourceBitmap::FontResourceBitmap(chstr filename) : FontResource()
+	FontResourceBitmap::FontResourceBitmap(chstr filename) : FontResource(filename)
 	{
 		this->scale = 1.0f;
 		this->baseScale = 1.0f;
@@ -88,6 +88,11 @@ namespace atres
 
 	FontResourceBitmap::~FontResourceBitmap()
 	{
+	}
+
+	april::Texture* FontResourceBitmap::getTexture(unsigned int charcode)
+	{
+		return this->texture;
 	}
 	
 }
