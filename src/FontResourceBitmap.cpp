@@ -24,6 +24,7 @@ namespace atres
 		this->scale = 1.0f;
 		this->baseScale = 1.0f;
 		this->lineHeight = 0.0f;
+		hstr path = get_basedir(filename) + "/";
 		harray<hstr> lines = hfile::hread(filename).split("\n");
 		hstr line;
 		while (lines.size() > 0)
@@ -35,7 +36,7 @@ namespace atres
 			}
 			else if (line.starts_with("Texture="))
 			{
-				this->texture = april::rendersys->loadTexture(line.replace("Texture=", ""));
+				this->texture = april::rendersys->loadTexture(path + line.replace("Texture=", ""));
 			}
 			else if (line.starts_with("LineHeight="))
 			{
