@@ -95,5 +95,5 @@ namespace atres
 	{
 		return this->texture;
 	}
-	
+
 }

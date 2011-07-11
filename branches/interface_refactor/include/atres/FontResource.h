@@ -19,6 +19,7 @@
 
 #include "atres.h"
 #include "atresExport.h"
+#include "Renderer.h"
 
 namespace atres
 {

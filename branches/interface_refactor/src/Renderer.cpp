@@ -37,7 +37,7 @@ namespace atres
 	hmap<hstr, CacheEntry> cache;
 	hmap<hstr, hstr> colors;
 	bool globalOffsets = false;
-	april::TexturedVertex vertices[BUFFER_MAX_CHARACTERS * 4];
+	april::TexturedVertex vertices[BUFFER_MAX_CHARACTERS * 6];
 
 	Renderer::Renderer()
 	{
