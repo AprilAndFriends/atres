@@ -141,7 +141,7 @@ int main()
 #endif
 	try
 	{
-		april::init("OpenGL", SCREEN_WIDTH, SCREEN_HEIGHT, 0, "demo_simple");
+		april::init("", SCREEN_WIDTH, SCREEN_HEIGHT, 0, "demo_simple");
 		april::rendersys->getWindow()->setUpdateCallback(render);
 		april::rendersys->getWindow()->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
 		april::rendersys->getWindow()->setKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);

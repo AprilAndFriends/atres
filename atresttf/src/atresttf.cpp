@@ -32,4 +32,9 @@ namespace atresttf
     {
     }
 
+	FT_Library getLibrary()
+	{
+		return library;
+	}
+
 }
