@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="libatres"
-	ProjectGUID="{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}"
-	RootNamespace="libatres"
+	Name="libatresttf"
+	ProjectGUID="{4A055F1C-7F19-4CE2-8374-583AC6C7875E}"
+	RootNamespace="xalutil"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -17,10 +17,10 @@
 	<Configurations>
 		<Configuration
 			Name="win32_Debug|Win32"
-			OutputDirectory="bin\$(ConfigurationName)"
-			IntermediateDirectory="bin\$(ConfigurationName)"
+			OutputDirectory="..\bin\atresttf\$(ConfigurationName)"
+			IntermediateDirectory="..\bin\atresttf\$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -40,14 +40,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="include/atres;../april/include;../gtypes/include;../hltypes/include"
-				PreprocessorDefinitions="_DEBUG;ATRES_EXPORTS;_WIN32"
+				AdditionalIncludeDirectories="include/atresttf;../include;../../include/freetype;../../hltypes/include;../../gtypes/include;../../april/include;src/"
+				PreprocessorDefinitions="_WIN32;_DEBUG;ATRESTTF_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				WarningLevel="3"
 				DebugInformationFormat="4"
-				DisableSpecificWarnings="4251"
+				DisableSpecificWarnings="4251;4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -60,9 +60,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libapril_d.lib libgtypes_d.lib libhltypes_d.lib"
+				AdditionalDependencies="libatres_d.lib libhltypes_d.lib libgtypes_d.lib libapril_d.lib libfreetype.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
-				AdditionalLibraryDirectories="..\april\bin;..\gtypes\bin\$(ConfigurationName);..\hltypes\bin\$(ConfigurationName)"
+				AdditionalLibraryDirectories="../../lib/msvc90;../../hltypes/bin/$(ConfigurationName);../../gtypes/bin/$(ConfigurationName);../../april/bin;../bin/$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				ImportLibrary="$(TargetDir)\$(TargetName).lib"
 			/>
@@ -86,15 +86,14 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\hltypes\bin\$(ConfigurationName)\*.dll bin\$(ConfigurationName)&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="win32_Release|Win32"
-			OutputDirectory="bin\$(ConfigurationName)"
-			IntermediateDirectory="bin\$(ConfigurationName)"
+			OutputDirectory="..\bin\atresttf\$(ConfigurationName)"
+			IntermediateDirectory="..\bin\atresttf\$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="2"
+			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -116,13 +115,14 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="include/atres;../april/include;../gtypes/include;../hltypes/include"
-				PreprocessorDefinitions="ATRES_EXPORTS;_WIN32"
+				AdditionalIncludeDirectories="include/atresttf;../include;../../include/freetype;../../hltypes/include;../../gtypes/include;../../april/include;src/"
+				PreprocessorDefinitions="_WIN32;ATRESTTF_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4251"
+				DisableSpecificWarnings="4251;4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -135,8 +135,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libapril.lib libgtypes.lib libhltypes.lib"
-				AdditionalLibraryDirectories="..\april\bin;..\gtypes\bin\$(ConfigurationName);..\hltypes\bin\$(ConfigurationName)"
+				AdditionalDependencies="libatres.lib libhltypes.lib libgtypes.lib libapril.lib libfreetype.lib"
+				OutputFile="$(OutDir)\$(ProjectName).dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../lib/msvc90;../../hltypes/bin/$(ConfigurationName);../../gtypes/bin/$(ConfigurationName);../../april/bin;../bin/$(ConfigurationName)"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -170,27 +177,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\src\atres.cpp"
+				RelativePath=".\src\atresttf.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Exception.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\FontResourceBitmap.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\FontResource.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Renderer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Util.cpp"
+				RelativePath=".\src\FontResourceTtf.cpp"
 				>
 			</File>
 		</Filter>
@@ -200,31 +191,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\include\atres\atres.h"
+				RelativePath=".\src\freetype.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\atres\atresExport.h"
+				RelativePath=".\include\atresttf\atresttfExport.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\atres\Exception.h"
+				RelativePath=".\include\atresttf\atresttf.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\atres\FontResourceBitmap.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\atres\FontResource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\atres\Renderer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Util.h"
+				RelativePath=".\include\atresttf\FontResourceTtf.h"
 				>
 			</File>
 		</Filter>

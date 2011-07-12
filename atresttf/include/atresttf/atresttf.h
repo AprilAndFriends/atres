@@ -1,5 +1,5 @@
 /// @file
-/// @author  Kresimir Spes
+/// @author  Boris Mikic
 /// @version 2.0
 /// 
 /// @section LICENSE
@@ -9,10 +9,19 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines exceptions used.
+/// Defines all functions for Atres TTF.
 
-#ifndef ATRES_EXCEPTION_H
-#define ATRES_EXCEPTION_H
+#ifndef ATRESTTF_H
+#define ATRESTTF_H
 
+#include "atresttfExport.h"
+
+namespace atresttf
+{
+    atresttfFnExport void init();
+    atresttfFnExport void destroy();
+
+};
 
 #endif
+

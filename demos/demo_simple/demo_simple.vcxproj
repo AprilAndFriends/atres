@@ -47,7 +47,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='win32_Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../../include;../../../gtypes/include;../../../hltypes/include;../../../atres/include;../../../april/include;../../../aprilui/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../include;../../atresttf/include;../../../gtypes/include;../../../hltypes/include;../../../april/include;../../../aprilui/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -59,14 +59,15 @@
       <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libapril.lib;libaprilui.lib;libatres.lib;libgtypes.lib;libhltypes.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../lib/msvc100;../../bin/$(Configuration);../../../gtypes/bin/$(Configuration);../../../hltypes/bin/$(Configuration);../../../atres/bin/$(Configuration);../../../april/bin;../../../aprilui/bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libapril.lib;libaprilui.lib;libatres.lib;libatresttf.lib;libgtypes.lib;libhltypes.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../lib/msvc100;../../bin/$(Configuration);../../bin/atresttf/$(Configuration);../../../gtypes/bin/$(Configuration);../../../hltypes/bin/$(Configuration);../../../april/bin;../../../aprilui/bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
       <Command>copy ..\..\..\april\bin\*.dll ..\..\bin\$(Configuration)
+copy ..\..\bin\atresttf\$(Configuration)\*.dll ..\..\bin\$(Configuration)
 copy ..\..\..\hltypes\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
 copy ..\..\..\gtypes\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
 copy ..\..\..\aprilui\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
@@ -78,7 +79,7 @@ copy ..\..\..\lib\msvc100\*.dll ..\..\bin\$(Configuration)
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>../../include;../../../gtypes/include;../../../hltypes/include;../../../atres/include;../../../april/include;../../../aprilui/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../include;../../atresttf/include;../../../gtypes/include;../../../hltypes/include;../../../april/include;../../../aprilui/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -88,14 +89,17 @@ copy ..\..\..\lib\msvc100\*.dll ..\..\bin\$(Configuration)
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libapril.lib;libaprilui.lib;libatres.lib;libgtypes.lib;libhltypes.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../lib;../../bin/$(Configuration);../../../gtypes/bin/$(Configuration);../../../hltypes/bin/$(Configuration);../../../atres/bin/$(Configuration);../../../april/bin;../../../aprilui/bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libapril.lib;libaprilui.lib;libatres.lib;libatresttf.lib;libgtypes.lib;libhltypes.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../lib;../../bin/$(Configuration);../../bin/atresttf/$(Configuration);../../../gtypes/bin/$(Configuration);../../../hltypes/bin/$(Configuration);../../../april/bin;../../../aprilui/bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <PostBuildEvent>
+      <Command>copy ..\..\bin\atresttf\$(Configuration)\*.dll ..\..\bin\$(Configuration)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="demo_simple.cpp" />
