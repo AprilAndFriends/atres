@@ -33,7 +33,7 @@ namespace atresttf
 		harray<unsigned int> characters;
 		int penX;
 		int penY;
-		TextureContainer() : texture(NULL), penX(0), penY(0) { }
+		TextureContainer() : texture(NULL), penX(2), penY(2) { }
 	};
 
 	class atresttfExport FontResourceTtf : public atres::FontResource
@@ -43,11 +43,11 @@ namespace atresttf
 		~FontResourceTtf();
 
 		april::Texture* getTexture(unsigned int charcode);
+		bool hasChar(unsigned int charcode);
 
 	protected:
-		harray<TextureContainer> textureContainers;
+		harray<TextureContainer*> textureContainers;
 		hstr fontFilename;
-		FT_Face face;
 
 		bool _addCharacterBitmap(unsigned int charcode);
 

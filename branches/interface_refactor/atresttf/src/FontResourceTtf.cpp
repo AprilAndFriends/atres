@@ -10,12 +10,15 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+#include <april/RenderSystem.h>
 #include <april/Texture.h>
 #include <hltypes/hstring.h>
 #include <hltypes/hfile.h>
 
 #include "freetype.h"
 #include "FontResourceTtf.h"
+
+#define TEXTURE_SIZE 1024
 
 namespace atresttf
 {
@@ -36,7 +39,7 @@ namespace atresttf
 			}
 			else if (line.starts_with("File="))
 			{
-				this->fontFilename = line.replace("File=", "");
+				this->fontFilename = path + line.replace("File=", "");
 			}
 			else if (line.starts_with("LineHeight="))
 			{
@@ -66,7 +69,8 @@ namespace atresttf
 		}
 		// libfreetype stuff
 		FT_Library library = atresttf::getLibrary();
-		FT_Error error = FT_New_Face(library, this->fontFilename.c_str(), 0, &this->face);
+		FT_Face face;
+		FT_Error error = FT_New_Face(library, this->fontFilename.c_str(), 0, &face);
 		if (error == FT_Err_Unknown_File_Format)
 		{
 			atres::log("Error: Format not supported in " + this->fontFilename);
@@ -74,79 +78,117 @@ namespace atresttf
 		}
 		if (error != 0)
 		{
-			atres::log("Error: Could not read face 0 in " + this->fontFilename);
+			atres::log("Error: Could not read face 0 in " + this->fontFilename + hstr(error));
 			return;
 		}
-		error = FT_Set_Pixel_Sizes(face, 0, (unsigned int)this->height);
+		FT_Size_RequestRec request;
+		memset(&request, 0, sizeof(FT_Size_RequestRec));
+		request.height = (long)hround((double)this->height) << 6;
+		request.type = FT_SIZE_REQUEST_TYPE_REAL_DIM;
+		error = FT_Request_Size(face, &request);
 		if (error != 0)
 		{
-			atres::log("Error: Could not set char size");
+			atres::log("Error: Could not set font size in " + this->fontFilename);
 			return;
 		}
-
-		
-
-		unsigned int glyphIndex;
+		atresttf::setFace(this, face);
+		TextureContainer* textureContainer = new TextureContainer();
+		textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
+		this->textureContainers += textureContainer;
 		for (unsigned int code = 32; code < 256; code++)
 		{
-			glyphIndex = FT_Get_Char_Index(this->face, (unsigned long)code);
-			if (glyphIndex != 0)
-			{
-				this->_addCharacterBitmap(code);
-			}
-
-			
+			this->_addCharacterBitmap(code);
 		}
-
-		/*
-		unsigned int code;
-		harray<hstr> data;
-		foreach (hstr, it, lines)
-		{
-			c.aw = 0.0f;
-			data = (*it).split(" ");
-			if (data.size() == 5)
-			{
-				code = (unsigned int)data.pop_front();
-				c.x = (float)data.pop_front();
-				c.y = (float)data.pop_front();
-				c.w = (float)data.pop_front();
-				c.aw = (float)data.pop_front();
-				if (c.aw == 0.0f)
-				{
-					c.aw = c.w;
-				}
-				this->characters[code] = c;
-			}
-		}
-		*/
 	}
 
 	FontResourceTtf::~FontResourceTtf()
 	{
+		foreach (TextureContainer*, it, this->textureContainers)
+		{
+			delete (*it)->texture;
+			delete (*it);
+		}
+		this->textureContainers.clear();
 	}
 	
 	april::Texture* FontResourceTtf::getTexture(unsigned int charcode)
 	{
-		return this->textureContainers[0].texture;
+		if (!this->_addCharacterBitmap(charcode))
+		{
+			return NULL;
+		}
+		foreach (TextureContainer*, it, this->textureContainers)
+		{
+			if ((*it)->characters.contains(charcode))
+			{
+				return (*it)->texture;
+			}
+		}
+		return NULL;
 	}
 
+	bool FontResourceTtf::hasChar(unsigned int charcode)
+	{
+		this->_addCharacterBitmap(charcode);
+		return FontResource::hasChar(charcode);
+	}
+	
 	bool FontResourceTtf::_addCharacterBitmap(unsigned int charcode)
 	{
 		if (this->characters.has_key(charcode))
 		{
 			return true;
 		}
-		unsigned int glyphIndex = FT_Get_Char_Index(this->face, (unsigned long)charcode);
+		FT_Face face = atresttf::getFace(this);
+		unsigned int glyphIndex = FT_Get_Char_Index(face, (unsigned long)charcode);
 		if (glyphIndex == 0)
 		{
 			return false;
 		}
-		// TODO
-		FT_Error error = FT_Load_Glyph(this->face, glyphIndex, FT_LOAD_RENDER);
-		//this->face->glyph->
-		//atres::CharacterDefinition c;
-		return false;
+		FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER);
+		if (error != 0)
+		{
+			atres::log("Error: Could not load glyph from " + this->fontFilename);
+			return false;
+		}
+		FT_GlyphSlot glyph = face->glyph;
+		int size = glyph->bitmap.rows * glyph->bitmap.width * 4;
+		unsigned char* data = new unsigned char[size];
+		memset(data, 255, size * sizeof(unsigned char));
+		int index;
+		for (int j = 0; j < glyph->bitmap.rows; j++)
+		{
+			for (int i = 0; i < glyph->bitmap.width; i++)
+			{
+				index = i + j * glyph->bitmap.width;
+				data[index * 4 + 3] = glyph->bitmap.buffer[index];
+			}
+		}
+		TextureContainer* textureContainer = this->textureContainers.back();
+		if (textureContainer->penX + glyph->bitmap.width + 4 > TEXTURE_SIZE)
+		{
+			textureContainer->penX = 2;
+			textureContainer->penY += (face->size->metrics.height >> 6) + 4;
+		}
+		if (textureContainer->penY + (face->size->metrics.height >> 6) + 4 > TEXTURE_SIZE)
+		{
+			textureContainer = new TextureContainer();
+			textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
+			this->textureContainers += textureContainer;
+		}
+		int x = textureContainer->penX;
+		int y = textureContainer->penY + (face->size->metrics.ascender >> 6) - glyph->bitmap_top;
+		textureContainer->texture->blit(x + (glyph->metrics.horiBearingX >> 6), y, data, glyph->bitmap.width,
+			glyph->bitmap.rows, 4, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
+		atres::CharacterDefinition c;
+		c.x = (float)x;
+		c.y = (float)textureContainer->penY;
+		c.w = (float)(glyph->bitmap.width + (glyph->metrics.horiBearingX >> 6));
+		c.aw = (float)((glyph->advance.x + 63) >> 6);
+		this->characters[charcode] = c;
+		textureContainer->penX += glyph->bitmap_left + glyph->bitmap.width + 4;
+		textureContainer->characters += charcode;
+		return true;
 	}
 	
 }
