@@ -9,6 +9,7 @@
   <Project Name="fontgen" Path="scripts/win32_font_generator/fontgen.project" Active="No"/>
   <Project Name="fontgen" Path="scripts/win32_font_generator/fontgen.project" Active="No"/>
   <Project Name="fontgen" Path="scripts/win32_font_generator/fontgen.project" Active="No"/>
+  <Project Name="libatresttf" Path="atresttf/libatresttf.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Project Name="libhltypes" ConfigName="Debug"/>
@@ -18,6 +19,7 @@
       <Project Name="libapril" ConfigName="DirectX_Debug"/>
       <Project Name="demo_simple" ConfigName="Debug"/>
       <Project Name="fontgen" ConfigName="Debug"/>
+      <Project Name="libatresttf" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Release" Selected="yes">
       <Project Name="libhltypes" ConfigName="Release_Win32"/>
@@ -27,6 +29,7 @@
       <Project Name="libaprilui" ConfigName="Debug"/>
       <Project Name="demo_simple" ConfigName="Debug"/>
       <Project Name="fontgen" ConfigName="Release"/>
+      <Project Name="libatresttf" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Linux_Debug" Selected="yes">
       <Project Name="libhltypes" ConfigName="Linux_Debug"/>
@@ -36,6 +39,7 @@
       <Project Name="libaprilui" ConfigName="Linux_Debug"/>
       <Project Name="demo_simple" ConfigName="Linux_Debug"/>
       <Project Name="fontgen" ConfigName="Debug"/>
+      <Project Name="libatresttf" ConfigName="Debug"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>

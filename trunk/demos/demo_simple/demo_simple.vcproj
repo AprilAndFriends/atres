@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../include;../../../gtypes/include;../../../hltypes/include;../../../atres/include;../../../april/include;../../../aprilui/include"
+				AdditionalIncludeDirectories="../../include;../../../gtypes/include;../../../hltypes/include;../../../atres/include;../../../atres/atresttf/include;../../../april/include;../../../aprilui/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,9 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libapril_d.lib libaprilui_d.lib libatres_d.lib libgtypes_d.lib libhltypes_d.lib"
+				AdditionalDependencies="libgtypes_d.lib libhltypes_d.lib libapril_d.lib libaprilui_d.lib libatres_d.lib libatresttf_d.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../lib/msvc90;../../bin/$(ConfigurationName);../../../gtypes/bin/$(ConfigurationName);../../../hltypes/bin/$(ConfigurationName);../../../atres/bin/$(ConfigurationName);../../../april/bin;../../../aprilui/bin/$(ConfigurationName)"
+				AdditionalLibraryDirectories="../../lib/msvc90;../../bin/$(ConfigurationName);../../bin/atresttf/$(ConfigurationName);../../../gtypes/bin/$(ConfigurationName);../../../hltypes/bin/$(ConfigurationName);../../../april/bin;../../../aprilui/bin/$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -89,7 +89,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\april\bin\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\hltypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\gtypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\aprilui\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\lib\msvc90\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;"
+				CommandLine="copy ..\..\..\april\bin\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\bin\atresttf\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\hltypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\gtypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\aprilui\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\lib\msvc90\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -119,7 +119,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../include;../../../gtypes/include;../../../hltypes/include;../../../atres/include;../../../april/include;../../../aprilui/include"
+				AdditionalIncludeDirectories="../../include;../../../gtypes/include;../../../hltypes/include;../../../atres/include;../../../atres/atresttf/include;../../../april/include;../../../aprilui/include"
 				PreprocessorDefinitions="WIN32;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -138,9 +138,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libapril.lib libaprilui.lib libatres.lib libgtypes.lib libhltypes.lib"
+				AdditionalDependencies="libgtypes.lib libhltypes.lib libapril.lib libaprilui.lib libatres.lib libatresttf.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../lib;../../bin/$(ConfigurationName);../../../gtypes/bin/$(ConfigurationName);../../../hltypes/bin/$(ConfigurationName);../../../atres/bin/$(ConfigurationName);../../../april/bin;../../../aprilui/bin/$(ConfigurationName)"
+				AdditionalLibraryDirectories="../../lib;../../bin/$(ConfigurationName);../../bin/atresttf/$(ConfigurationName);../../../gtypes/bin/$(ConfigurationName);../../../hltypes/bin/$(ConfigurationName);../../../april/bin;../../../aprilui/bin/$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -167,6 +167,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy ..\..\..\april\bin\*.dll ..\..\bin\$(ConfigurationName)"
 			/>
 		</Configuration>
 	</Configurations>

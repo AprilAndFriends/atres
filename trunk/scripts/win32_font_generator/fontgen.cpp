@@ -231,6 +231,7 @@ void WriteXML()
 	fprintf(f, "Scale=%g\n", scale);
 	fprintf(f, "# -----------------------------------\n");
 	fprintf(f, "# Code|X|Y|Width|Height|Advance Width\n");
+	fprintf(f, "# Code|X|Y|Width|Advance Width\n");
 	fprintf(f, "-------------------------------------\n");
 	CHARACTER* c;
 	for (int i = 0; i < nCharacters; i++)
