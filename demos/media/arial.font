@@ -2,11 +2,11 @@
 # ATRES Font definition file
 # -----------------------------------
 Name=arial
-Texture=../media/arial.png
+Texture=arial
 Height=32
 Scale=1
 # -----------------------------------
-# Code|X|Y|Width|Height|Advance Width
+# Code|X|Y|Width|Advance Width
 -------------------------------------
 32 2 2 1 8
 33 14 2 6 8

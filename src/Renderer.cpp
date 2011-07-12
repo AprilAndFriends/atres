@@ -433,6 +433,7 @@ namespace atres
 		FormatTag tag;
 		FormatTag nextTag = tags.front();
 		grect area;
+		april::Texture* texture;
 		
 		hstr fontName;
 		FontResource* fontResource = NULL;
@@ -567,35 +568,36 @@ namespace atres
 						nextTag.start = line.start + line.text.size() + 1;
 					}
 					colorChanged = sequence.color != color;
-					if (sequence.texture != fontResource->getTexture(code) || colorChanged)
+					texture = fontResource->getTexture(code);
+					if (sequence.texture != texture || colorChanged)
 					{
 						if (sequence.rectangles.size() > 0)
 						{
 							sequences += sequence;
 							sequence.rectangles.clear();
 						}
-						sequence.texture = fontResource->getTexture(code);
+						sequence.texture = texture;
 						sequence.color = color;
 					}
-					if (shadowSequence.texture != fontResource->getTexture(code) || colorChanged)
+					if (shadowSequence.texture != texture || colorChanged)
 					{
 						if (shadowSequence.rectangles.size() > 0)
 						{
 							shadowSequences += shadowSequence;
 							shadowSequence.rectangles.clear();
 						}
-						shadowSequence.texture = fontResource->getTexture(code);
+						shadowSequence.texture = texture;
 						shadowSequence.color = shadowColor;
 						shadowSequence.color.a = (unsigned char)(shadowSequence.color.a * color.a_f());
 					}
-					if (borderSequence.texture != fontResource->getTexture(code) || colorChanged)
+					if (borderSequence.texture != texture || colorChanged)
 					{
 						if (borderSequence.rectangles.size() > 0)
 						{
 							borderSequences += borderSequence;
 							borderSequence.rectangles.clear();
 						}
-						borderSequence.texture = fontResource->getTexture(code);
+						borderSequence.texture = texture;
 						borderSequence.color = borderColor;
 						borderSequence.color.a = (unsigned char)(borderSequence.color.a * color.a_f() * color.a_f());
 					}
@@ -609,6 +611,38 @@ namespace atres
 					else
 					{
 						nextTag.start = line.start + line.text.size() + 1;
+					}
+				}
+				// checking if texture contains this character image
+				texture = fontResource->getTexture(code);
+				if (texture != NULL)
+				{
+					if (sequence.texture != texture)
+					{
+						if (sequence.rectangles.size() > 0)
+						{
+							sequences += sequence;
+							sequence.rectangles.clear();
+						}
+						sequence.texture = texture;
+					}
+					if (shadowSequence.texture != texture)
+					{
+						if (shadowSequence.rectangles.size() > 0)
+						{
+							shadowSequences += shadowSequence;
+							shadowSequence.rectangles.clear();
+						}
+						shadowSequence.texture = texture;
+					}
+					if (borderSequence.texture != texture)
+					{
+						if (borderSequence.rectangles.size() > 0)
+						{
+							borderSequences += borderSequence;
+							borderSequence.rectangles.clear();
+						}
+						borderSequence.texture = texture;
 					}
 				}
 				// checking the particular character

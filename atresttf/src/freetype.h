@@ -14,13 +14,21 @@
 #ifndef ATRESTTF_FREETYPE_H
 #define ATRESTTF_FREETYPE_H
 
-#include "atresttfExport.h"
+#include <hltypes/hmap.h>
+
+namespace atres
+{
+	class FontResource;
+}
 
 namespace atresttf
 {
 	FT_Library getLibrary();
+	FT_Face getFace(atres::FontResource* fontResource);
+	void setFace(atres::FontResource* fontResource, FT_Face face);
 
 	extern FT_Library library;
+	extern hmap<atres::FontResource*, FT_Face> faces;
 
 };
 
