@@ -19,7 +19,7 @@
 
 namespace atres
 {
-	FontResource::FontResource(chstr name)
+	FontResource::FontResource(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f), lineHeight(0.0f)
 	{
 		this->name = name;
 	}
@@ -104,7 +104,8 @@ namespace atres
 		result.dest.x = area.x;
 		result.dest.y = area.y + height * (1.0f - ratioTop);
 		result.dest.w = area.w;
-		result.dest.h = height * (ratioTop + ratioBottom - 1.0f);
+		//result.dest.h = height * (ratioTop + ratioBottom - 1.0f);
+		result.dest.h = chr.h * height / this->height * (ratioTop + ratioBottom - 1.0f);
 		if (rect.intersects(result.dest)) // if destination rectangle inside drawing area
 		{
 			// horizontal cutoff of destination rectangle
@@ -114,9 +115,11 @@ namespace atres
 			result.dest.w = result.dest.w * (ratioLeft + ratioRight - 1.0f);
 			// source rectangle
 			result.src.x = chr.x + chr.w * (1.0f - ratioLeft);
-			result.src.y = chr.y + this->height * (1.0f - ratioTop);
+			//result.src.y = chr.y + this->height * (1.0f - ratioTop);
+			result.src.y = chr.y + chr.h * (1.0f - ratioTop);
 			result.src.w = chr.w * (ratioLeft + ratioRight - 1.0f);
-			result.src.h = this->height * (ratioTop + ratioBottom - 1.0f);
+			//result.src.h = this->height * (ratioTop + ratioBottom - 1.0f);
+			result.src.h = chr.h * (ratioTop + ratioBottom - 1.0f);
 		}
 		return result;
 	}

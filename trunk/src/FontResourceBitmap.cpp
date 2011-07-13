@@ -77,6 +77,7 @@ namespace atres
 				c.x = (float)data.pop_front();
 				c.y = (float)data.pop_front();
 				c.w = (float)data.pop_front();
+				c.h = this->height;
 				c.aw = (float)data.pop_front();
 				if (c.aw == 0.0f)
 				{

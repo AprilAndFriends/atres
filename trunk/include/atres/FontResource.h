@@ -28,6 +28,7 @@ namespace atres
 		float x;
 		float y;
 		float w;
+		float h;
 		float aw;
 	};
 
@@ -57,9 +58,9 @@ namespace atres
 		
 	protected:
 		hstr name;
+		float height;
 		float scale;
 		float baseScale;
-		float height;
 		float lineHeight;
 		hmap<unsigned int, CharacterDefinition> characters;
 		
