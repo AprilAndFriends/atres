@@ -188,9 +188,9 @@ namespace atresttf
 		atres::CharacterDefinition c;
 		c.x = (float)x;
 		c.y = (float)textureContainer->penY;
-		c.w = (float)(glyph->bitmap.width);
-		c.h = (float)(glyph->bitmap.rows + (face->size->metrics.ascender >> 6) - glyph->bitmap_top);
-		c.aw = (float)((glyph->advance.x >> 6) - glyph->bitmap_left);
+		c.w = (float)glyph->bitmap.width;
+		c.h = (float)((face->size->metrics.ascender >> 6) - (face->size->metrics.descender >> 6));
+		c.aw = (float)((glyph->advance.x >> 6) + hmax(0, -glyph->bitmap_left));
 		this->characters[charcode] = c;
 		textureContainer->penX += glyph->bitmap.width + 4;
 		textureContainer->characters += charcode;
