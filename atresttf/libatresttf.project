@@ -10,9 +10,10 @@
   <VirtualDirectory Name="src">
     <File Name="src/atresttf.cpp"/>
     <File Name="src/FontResourceTtf.cpp"/>
+    <File Name="fileproperties.rc"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
-	<File Name="src/freetype.h"/>
+    <File Name="src/freetype.h"/>
     <File Name="include/atresttf/atresttf.h"/>
     <File Name="include/atresttf/atresttfExport.h"/>
     <File Name="include/atresttf/FontResourceTtf.h"/>

@@ -103,6 +103,9 @@
     <ClCompile Include="src\atresttf.cpp" />
     <ClCompile Include="src\FontResourceTtf.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="fileproperties.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

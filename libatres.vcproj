@@ -178,11 +178,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\FontResourceBitmap.cpp"
+				RelativePath=".\src\FontResource.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\FontResource.cpp"
+				RelativePath=".\src\FontResourceBitmap.cpp"
 				>
 			</File>
 			<File
@@ -212,11 +212,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\atres\FontResourceBitmap.h"
+				RelativePath=".\include\atres\FontResource.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\atres\FontResource.h"
+				RelativePath=".\include\atres\FontResourceBitmap.h"
 				>
 			</File>
 			<File
@@ -225,6 +225,14 @@
 			</File>
 			<File
 				RelativePath=".\src\Util.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			>
+			<File
+				RelativePath=".\fileproperties.rc"
 				>
 			</File>
 		</Filter>
