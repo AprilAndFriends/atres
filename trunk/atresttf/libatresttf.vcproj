@@ -191,7 +191,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\src\freetype.h"
+				RelativePath=".\include\atresttf\atresttf.h"
 				>
 			</File>
 			<File
@@ -199,11 +199,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\atresttf\atresttf.h"
+				RelativePath=".\include\atresttf\FontResourceTtf.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\atresttf\FontResourceTtf.h"
+				RelativePath=".\src\freetype.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			>
+			<File
+				RelativePath=".\fileproperties.rc"
 				>
 			</File>
 		</Filter>
