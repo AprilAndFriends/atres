@@ -24,9 +24,6 @@ namespace atresttf
 {
 	FontResourceTtf::FontResourceTtf(chstr filename) : atres::FontResource(filename)
 	{
-		this->scale = 1.0f;
-		this->baseScale = 1.0f;
-		this->lineHeight = 0.0f;
 		hstr path = get_basedir(filename) + "/";
 		harray<hstr> lines = hfile::hread(filename).split("\n");
 		hstr line;
@@ -54,15 +51,55 @@ namespace atresttf
 				this->scale = (float)line.replace("Scale=", "");
 				this->baseScale = this->scale;
 			}
-			else if (line.starts_with("#"))
+		}
+		this->_initializeFont();
+	}
+
+	FontResourceTtf::FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight) : atres::FontResource(name)
+	{
+		this->fontFilename = fontFilename;
+		// TODO - should check system fonts if file does not exit!
+		this->height = height;
+		this->scale = scale;
+		this->baseScale = scale;
+		this->lineHeight = lineHeight;
+		this->_initializeFont();
+	}
+
+	FontResourceTtf::~FontResourceTtf()
+	{
+		foreach (TextureContainer*, it, this->textureContainers)
+		{
+			delete (*it)->texture;
+			delete (*it);
+		}
+		this->textureContainers.clear();
+	}
+	
+	april::Texture* FontResourceTtf::getTexture(unsigned int charcode)
+	{
+		if (!this->_addCharacterBitmap(charcode))
+		{
+			return NULL;
+		}
+		foreach (TextureContainer*, it, this->textureContainers)
+		{
+			if ((*it)->characters.contains(charcode))
 			{
-				continue;
-			}
-			else if (line.starts_with("-"))
-			{
-				break;
+				return (*it)->texture;
 			}
 		}
+		return NULL;
+	}
+
+	bool FontResourceTtf::hasChar(unsigned int charcode)
+	{
+		this->_addCharacterBitmap(charcode);
+		return FontResource::hasChar(charcode);
+	}
+	
+	void FontResourceTtf::_initializeFont()
+	{
 		if (this->lineHeight == 0.0f)
 		{
 			this->lineHeight = this->height;
@@ -101,38 +138,6 @@ namespace atresttf
 		}
 	}
 
-	FontResourceTtf::~FontResourceTtf()
-	{
-		foreach (TextureContainer*, it, this->textureContainers)
-		{
-			delete (*it)->texture;
-			delete (*it);
-		}
-		this->textureContainers.clear();
-	}
-	
-	april::Texture* FontResourceTtf::getTexture(unsigned int charcode)
-	{
-		if (!this->_addCharacterBitmap(charcode))
-		{
-			return NULL;
-		}
-		foreach (TextureContainer*, it, this->textureContainers)
-		{
-			if ((*it)->characters.contains(charcode))
-			{
-				return (*it)->texture;
-			}
-		}
-		return NULL;
-	}
-
-	bool FontResourceTtf::hasChar(unsigned int charcode)
-	{
-		this->_addCharacterBitmap(charcode);
-		return FontResource::hasChar(charcode);
-	}
-	
 	bool FontResourceTtf::_addCharacterBitmap(unsigned int charcode)
 	{
 		if (this->characters.has_key(charcode))
@@ -178,15 +183,16 @@ namespace atresttf
 		}
 		int x = textureContainer->penX;
 		int y = textureContainer->penY + (face->size->metrics.ascender >> 6) - glyph->bitmap_top;
-		textureContainer->texture->blit(x + (glyph->metrics.horiBearingX >> 6), y, data, glyph->bitmap.width,
+		textureContainer->texture->blit(x, y, data, glyph->bitmap.width,
 			glyph->bitmap.rows, 4, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
 		atres::CharacterDefinition c;
 		c.x = (float)x;
 		c.y = (float)textureContainer->penY;
-		c.w = (float)(glyph->bitmap.width + (glyph->metrics.horiBearingX >> 6));
-		c.aw = (float)((glyph->advance.x + 63) >> 6);
+		c.w = (float)(glyph->bitmap.width);
+		c.h = (float)(glyph->bitmap.rows + (face->size->metrics.ascender >> 6) - glyph->bitmap_top);
+		c.aw = (float)((glyph->advance.x >> 6) - glyph->bitmap_left);
 		this->characters[charcode] = c;
-		textureContainer->penX += glyph->bitmap_left + glyph->bitmap.width + 4;
+		textureContainer->penX += glyph->bitmap.width + 4;
 		textureContainer->characters += charcode;
 		return true;
 	}

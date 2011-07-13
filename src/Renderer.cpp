@@ -649,8 +649,10 @@ namespace atres
 				area = line.rect;
 				area.x += width;
 				area.w = characters[code].w * scale;
-				area.y += (lineHeight - fontResource->getHeight()) / 2;
+				////
+				area.h = characters[code].h * scale;
 				area.h = fontResource->getHeight();
+				area.y += (lineHeight - fontResource->getHeight()) / 2;
 				renderRect = fontResource->makeRenderRectangle(rect, area, code);
 				sequence.rectangles += renderRect;
 				destination = renderRect.dest;

@@ -12,6 +12,7 @@
 
 #include <atres/atres.h>
 #include <atres/FontResource.h>
+#include <hltypes/exception.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
@@ -20,7 +21,7 @@
 
 namespace atresttf
 {
-	FT_Library library;
+	FT_Library library = NULL;
 	hmap<atres::FontResource*, FT_Face> faces;
 
     void init()
@@ -45,6 +46,10 @@ namespace atresttf
 
 	FT_Library getLibrary()
 	{
+		if (library == NULL)
+		{
+			hl_exception("Error: AtresTtf not initialized!");
+		}
 		return library;
 	}
 
