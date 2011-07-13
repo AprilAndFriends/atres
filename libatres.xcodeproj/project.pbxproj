@@ -9,33 +9,41 @@
 /* Begin PBXBuildFile section */
 		7F3518981251E67B0005B659 /* gtypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F3518971251E67B0005B659 /* gtypes.framework */; };
 		7F35189A1251E6810005B659 /* april.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F3518991251E6810005B659 /* april.framework */; };
+		7F46F93613CD9F8A002A143C /* FontResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F46F93313CD9F8A002A143C /* FontResource.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F46F93713CD9F8A002A143C /* FontResourceBitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F46F93413CD9F8A002A143C /* FontResourceBitmap.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F46F93813CD9F8A002A143C /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F46F93513CD9F8A002A143C /* Renderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F46F93C13CD9F94002A143C /* FontResource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93913CD9F94002A143C /* FontResource.cpp */; };
+		7F46F93D13CD9F94002A143C /* FontResourceBitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93A13CD9F94002A143C /* FontResourceBitmap.cpp */; };
+		7F46F93E13CD9F94002A143C /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93B13CD9F94002A143C /* Renderer.cpp */; };
 		7FC8039911EC6C0400851062 /* hltypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FC8039811EC6C0400851062 /* hltypes.framework */; };
 		C9AE31E9135D6FD4006B491A /* atres.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9AE31E4135D6FD4006B491A /* atres.cpp */; };
 		C9AE31EA135D6FD4006B491A /* Exception.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9AE31E5135D6FD4006B491A /* Exception.cpp */; };
-		C9AE31EB135D6FD4006B491A /* Font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9AE31E6135D6FD4006B491A /* Font.cpp */; };
 		C9AE31EC135D6FD4006B491A /* Util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9AE31E7135D6FD4006B491A /* Util.cpp */; };
 		C9AE31ED135D6FD4006B491A /* Util.h in Headers */ = {isa = PBXBuildFile; fileRef = C9AE31E8135D6FD4006B491A /* Util.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9AE31F2135D7014006B491A /* atres.h in Headers */ = {isa = PBXBuildFile; fileRef = C9AE31EE135D7014006B491A /* atres.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9AE31F3135D7014006B491A /* atresExport.h in Headers */ = {isa = PBXBuildFile; fileRef = C9AE31EF135D7014006B491A /* atresExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9AE31F4135D7014006B491A /* Exception.h in Headers */ = {isa = PBXBuildFile; fileRef = C9AE31F0135D7014006B491A /* Exception.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C9AE31F5135D7014006B491A /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = C9AE31F1135D7014006B491A /* Font.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		7F3518971251E67B0005B659 /* gtypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtypes.framework; path = Library/Frameworks/gtypes.framework; sourceTree = SDKROOT; };
 		7F3518991251E6810005B659 /* april.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = april.framework; path = Library/Frameworks/april.framework; sourceTree = SDKROOT; };
+		7F46F93313CD9F8A002A143C /* FontResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontResource.h; path = include/atres/FontResource.h; sourceTree = "<group>"; };
+		7F46F93413CD9F8A002A143C /* FontResourceBitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontResourceBitmap.h; path = include/atres/FontResourceBitmap.h; sourceTree = "<group>"; };
+		7F46F93513CD9F8A002A143C /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Renderer.h; path = include/atres/Renderer.h; sourceTree = "<group>"; };
+		7F46F93913CD9F94002A143C /* FontResource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FontResource.cpp; path = src/FontResource.cpp; sourceTree = "<group>"; };
+		7F46F93A13CD9F94002A143C /* FontResourceBitmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FontResourceBitmap.cpp; path = src/FontResourceBitmap.cpp; sourceTree = "<group>"; };
+		7F46F93B13CD9F94002A143C /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Renderer.cpp; path = src/Renderer.cpp; sourceTree = "<group>"; };
 		7FC8039811EC6C0400851062 /* hltypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = hltypes.framework; path = Library/Frameworks/hltypes.framework; sourceTree = SDKROOT; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* atres.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = atres.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9AE31E4135D6FD4006B491A /* atres.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = atres.cpp; path = src/atres.cpp; sourceTree = "<group>"; };
 		C9AE31E5135D6FD4006B491A /* Exception.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Exception.cpp; path = src/Exception.cpp; sourceTree = "<group>"; };
-		C9AE31E6135D6FD4006B491A /* Font.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Font.cpp; path = src/Font.cpp; sourceTree = "<group>"; };
 		C9AE31E7135D6FD4006B491A /* Util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Util.cpp; path = src/Util.cpp; sourceTree = "<group>"; };
 		C9AE31E8135D6FD4006B491A /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Util.h; path = src/Util.h; sourceTree = "<group>"; };
 		C9AE31EE135D7014006B491A /* atres.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = atres.h; path = include/atres/atres.h; sourceTree = "<group>"; };
 		C9AE31EF135D7014006B491A /* atresExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = atresExport.h; path = include/atres/atresExport.h; sourceTree = "<group>"; };
 		C9AE31F0135D7014006B491A /* Exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Exception.h; path = include/atres/Exception.h; sourceTree = "<group>"; };
-		C9AE31F1135D7014006B491A /* Font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Font.h; path = include/atres/Font.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,10 +117,12 @@
 		7FC8037C11EC6AD400851062 /* Includes */ = {
 			isa = PBXGroup;
 			children = (
+				7F46F93313CD9F8A002A143C /* FontResource.h */,
+				7F46F93413CD9F8A002A143C /* FontResourceBitmap.h */,
+				7F46F93513CD9F8A002A143C /* Renderer.h */,
 				C9AE31EE135D7014006B491A /* atres.h */,
 				C9AE31EF135D7014006B491A /* atresExport.h */,
 				C9AE31F0135D7014006B491A /* Exception.h */,
-				C9AE31F1135D7014006B491A /* Font.h */,
 			);
 			name = Includes;
 			sourceTree = "<group>";
@@ -120,9 +130,11 @@
 		7FC8037D11EC6AD900851062 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7F46F93913CD9F94002A143C /* FontResource.cpp */,
+				7F46F93A13CD9F94002A143C /* FontResourceBitmap.cpp */,
+				7F46F93B13CD9F94002A143C /* Renderer.cpp */,
 				C9AE31E4135D6FD4006B491A /* atres.cpp */,
 				C9AE31E5135D6FD4006B491A /* Exception.cpp */,
-				C9AE31E6135D6FD4006B491A /* Font.cpp */,
 				C9AE31E7135D6FD4006B491A /* Util.cpp */,
 				C9AE31E8135D6FD4006B491A /* Util.h */,
 			);
@@ -140,7 +152,9 @@
 				C9AE31F2135D7014006B491A /* atres.h in Headers */,
 				C9AE31F3135D7014006B491A /* atresExport.h in Headers */,
 				C9AE31F4135D7014006B491A /* Exception.h in Headers */,
-				C9AE31F5135D7014006B491A /* Font.h in Headers */,
+				7F46F93613CD9F8A002A143C /* FontResource.h in Headers */,
+				7F46F93713CD9F8A002A143C /* FontResourceBitmap.h in Headers */,
+				7F46F93813CD9F8A002A143C /* Renderer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,8 +222,10 @@
 			files = (
 				C9AE31E9135D6FD4006B491A /* atres.cpp in Sources */,
 				C9AE31EA135D6FD4006B491A /* Exception.cpp in Sources */,
-				C9AE31EB135D6FD4006B491A /* Font.cpp in Sources */,
 				C9AE31EC135D6FD4006B491A /* Util.cpp in Sources */,
+				7F46F93C13CD9F94002A143C /* FontResource.cpp in Sources */,
+				7F46F93D13CD9F94002A143C /* FontResourceBitmap.cpp in Sources */,
+				7F46F93E13CD9F94002A143C /* Renderer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
