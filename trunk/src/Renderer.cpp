@@ -10,8 +10,8 @@
 
 #include <math.h>
 #include <stdio.h>
-#include <hltypes/util.h>
 
+#include <april/RenderSystem.h>
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/exception.h>
