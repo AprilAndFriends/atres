@@ -14,10 +14,7 @@
 #ifndef ATRES_UTIL_H
 #define ATRES_UTIL_H
 
-#include <april/RenderSystem.h>
 #include <hltypes/hstring.h>
-
-struct xml_node;
 
 namespace atres
 {
