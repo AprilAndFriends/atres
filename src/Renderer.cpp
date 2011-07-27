@@ -744,7 +744,14 @@ namespace atres
 			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
 		}
 		april::rendersys->setTexture(sequence.texture);
-		april::rendersys->render(april::TriangleList, vertices, i, sequence.color);
+		if (sequence.color == APRIL_COLOR_WHITE)
+		{
+			april::rendersys->render(april::TriangleList, vertices, i);
+		}
+		else
+		{
+			april::rendersys->render(april::TriangleList, vertices, i, sequence.color);
+		}
 	}
 
 	void Renderer::drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
