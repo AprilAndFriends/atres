@@ -19,6 +19,7 @@
 #include "FontResourceTtf.h"
 
 #define TEXTURE_SIZE 1024
+#define CHARACTER_SPACE 4
 
 namespace atresttf
 {
@@ -172,10 +173,10 @@ namespace atresttf
 		TextureContainer* textureContainer = this->textureContainers.back();
 		if (textureContainer->penX + glyph->bitmap.width + 4 > TEXTURE_SIZE)
 		{
-			textureContainer->penX = 2;
-			textureContainer->penY += (face->size->metrics.height >> 6) + 4;
+			textureContainer->penX = CHARACTER_SPACE;
+			textureContainer->penY += (face->size->metrics.height >> 6) + CHARACTER_SPACE * 2;
 		}
-		if (textureContainer->penY + (face->size->metrics.height >> 6) + 4 > TEXTURE_SIZE)
+		if (textureContainer->penY + (face->size->metrics.height >> 6) + CHARACTER_SPACE * 2 > TEXTURE_SIZE)
 		{
 			textureContainer = new TextureContainer();
 			textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
@@ -192,7 +193,7 @@ namespace atresttf
 		c.h = (float)((face->size->metrics.ascender >> 6) - (face->size->metrics.descender >> 6));
 		c.aw = (float)((glyph->advance.x >> 6) + hmax(0, -glyph->bitmap_left));
 		this->characters[charcode] = c;
-		textureContainer->penX += glyph->bitmap.width + 4;
+		textureContainer->penX += glyph->bitmap.width + CHARACTER_SPACE * 2;
 		textureContainer->characters += charcode;
 		return true;
 	}
