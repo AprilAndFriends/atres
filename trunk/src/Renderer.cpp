@@ -56,6 +56,10 @@ namespace atres
 		colors["white"] = APRIL_COLOR_WHITE.hex();
 		colors["grey"] = APRIL_COLOR_GREY.hex();
 		colors["black"] = APRIL_COLOR_BLACK.hex();
+		for (int i = 0; i < BUFFER_MAX_CHARACTERS * 6; i++)
+		{
+			vertices[i].z = 0.0f;
+		}
 	}
 
 	Renderer::~Renderer()
@@ -309,7 +313,7 @@ namespace atres
 						if (tag.type == FORMAT_FONT)
 						{
 							fontName = tag.data;
-							fontResource = getFontResource(fontName);
+							fontResource = this->getFontResource(fontName);
 							characters = fontResource->getCharacters();
 							scale = fontResource->getScale();
 						}
@@ -323,12 +327,12 @@ namespace atres
 						{
 							if (fontResource == NULL)
 							{
-								fontResource = getFontResource(nextTag.data);
+								fontResource = this->getFontResource(nextTag.data);
 								lineHeight = fontResource->getLineHeight();
 							}
 							else
 							{
-								fontResource = getFontResource(nextTag.data);
+								fontResource = this->getFontResource(nextTag.data);
 							}
 							fontName = nextTag.data;
 							characters = fontResource->getCharacters();
@@ -407,10 +411,10 @@ namespace atres
 		}
 		if (lines.size() > 0)
 		{
-			lines = verticalCorrection(rect, vertical, lines, offset.y, lineHeight);
+			lines = this->verticalCorrection(rect, vertical, lines, offset.y, lineHeight);
 			if (lines.size() > 0)
 			{
-				lines = horizontalCorrection(rect, horizontal, lines, offset.x, lineWidth);
+				lines = this->horizontalCorrection(rect, horizontal, lines, offset.x, lineWidth);
 			}
 		}
 		return lines;
@@ -468,7 +472,7 @@ namespace atres
 						{
 						case FORMAT_FONT:
 							fontName = tag.data;
-							fontResource = getFontResource(fontName);
+							fontResource = this->getFontResource(fontName);
 							characters = fontResource->getCharacters();
 							scale = fontResource->getScale();
 							break;
@@ -502,12 +506,12 @@ namespace atres
 							{
 								if (fontResource == NULL)
 								{
-									fontResource = getFontResource(nextTag.data);
+									fontResource = this->getFontResource(nextTag.data);
 									lineHeight = fontResource->getLineHeight();
 								}
 								else
 								{
-									fontResource = getFontResource(nextTag.data);
+									fontResource = this->getFontResource(nextTag.data);
 								}
 								fontName = nextTag.data;
 								characters = fontResource->getCharacters();
@@ -696,9 +700,9 @@ namespace atres
 		{
 			borderSequences += borderSequence;
 		}
-		borderSequences = optimizeSequences(borderSequences);
-		shadowSequences = optimizeSequences(shadowSequences);
-		return optimizeSequences(shadowSequences + borderSequences + sequences);
+		borderSequences = this->optimizeSequences(borderSequences);
+		shadowSequences = this->optimizeSequences(shadowSequences);
+		return this->optimizeSequences(shadowSequences + borderSequences + sequences);
 	}
 
 	harray<RenderSequence> Renderer::optimizeSequences(harray<RenderSequence> sequences)
@@ -736,12 +740,12 @@ namespace atres
 		int i = 0;
 		foreach (RenderRectangle, it, sequence.rectangles)
 		{
-			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = (*it).src.y / h;                 i++;
-			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
-			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
-			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].z = 0; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y;                vertices[i].u = (*it).src.x / w;                 vertices[i].v = (*it).src.y / h;                 i++;
+			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
+			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
+			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
+			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
 		}
 		april::rendersys->setTexture(sequence.texture);
 		if (sequence.color == APRIL_COLOR_WHITE)
