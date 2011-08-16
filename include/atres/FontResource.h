@@ -29,6 +29,7 @@ namespace atres
 		float y;
 		float w;
 		float h;
+		float bx;
 		float aw;
 	};
 

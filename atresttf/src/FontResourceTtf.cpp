@@ -21,6 +21,8 @@
 #define TEXTURE_SIZE 1024
 #define CHARACTER_SPACE 4
 
+#define PTSIZE2INT(value) (((value) + 63) >> 6)
+
 namespace atresttf
 {
 	FontResourceTtf::FontResourceTtf(chstr filename) : atres::FontResource(filename)
@@ -171,27 +173,30 @@ namespace atresttf
 			}
 		}
 		TextureContainer* textureContainer = this->textureContainers.back();
+		int maxHeight = PTSIZE2INT(face->size->metrics.height) + CHARACTER_SPACE * 2;
 		if (textureContainer->penX + glyph->bitmap.width + 4 > TEXTURE_SIZE)
 		{
 			textureContainer->penX = CHARACTER_SPACE;
-			textureContainer->penY += (face->size->metrics.height >> 6) + CHARACTER_SPACE * 2;
+			textureContainer->penY += maxHeight;
 		}
-		if (textureContainer->penY + (face->size->metrics.height >> 6) + CHARACTER_SPACE * 2 > TEXTURE_SIZE)
+		if (textureContainer->penY + maxHeight > TEXTURE_SIZE)
 		{
 			textureContainer = new TextureContainer();
 			textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
 			this->textureContainers += textureContainer;
 		}
+		int ascender = PTSIZE2INT(face->size->metrics.ascender);
 		int x = textureContainer->penX;
-		int y = textureContainer->penY + (face->size->metrics.ascender >> 6) - glyph->bitmap_top;
+		int y = textureContainer->penY + ascender - glyph->bitmap_top;
 		textureContainer->texture->blit(x, y, data, glyph->bitmap.width,
 			glyph->bitmap.rows, 4, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
 		atres::CharacterDefinition c;
 		c.x = (float)x;
 		c.y = (float)textureContainer->penY;
 		c.w = (float)glyph->bitmap.width;
-		c.h = (float)((face->size->metrics.ascender >> 6) - (face->size->metrics.descender >> 6));
-		c.aw = (float)((glyph->advance.x >> 6) + hmax(0, -glyph->bitmap_left));
+		c.h = (float)(ascender - PTSIZE2INT(face->size->metrics.descender));
+		c.bx = (float)PTSIZE2INT(glyph->metrics.horiBearingX);
+		c.aw = (float)PTSIZE2INT(glyph->advance.x);
 		this->characters[charcode] = c;
 		textureContainer->penX += glyph->bitmap.width + CHARACTER_SPACE * 2;
 		textureContainer->characters += charcode;

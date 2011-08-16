@@ -69,6 +69,7 @@ namespace atres
 		harray<hstr> data;
 		foreach (hstr, it, lines)
 		{
+			c.bx = 0.0f;
 			c.aw = 0.0f;
 			data = (*it).split(" ");
 			if (data.size() == 5)
@@ -78,10 +79,17 @@ namespace atres
 				c.y = (float)data.pop_front();
 				c.w = (float)data.pop_front();
 				c.h = this->height;
-				c.aw = (float)data.pop_front();
+				if (data.size() > 0)
+				{
+					c.aw = (float)data.pop_front();
+					if (data.size() > 0)
+					{
+						c.bx = (float)data.pop_front();
+					}
+				}
 				if (c.aw == 0.0f)
 				{
-					c.aw = c.w;
+					c.aw = c.w + c.bx;
 				}
 				this->characters[code] = c;
 			}
