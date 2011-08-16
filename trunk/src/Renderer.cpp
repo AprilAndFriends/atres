@@ -386,6 +386,7 @@ namespace atres
 					current = i - start;
 					break;
 				}
+				advance = hmax(0.0f, hmax(advance, -characters[code].bx * scale));
 				advance += characters[code].aw * scale;
 				if (wrapped && advance > rect.w) // current word doesn't fit anymore
 				{
@@ -651,7 +652,7 @@ namespace atres
 				}
 				// checking the particular character
 				area = line.rect;
-				area.x += width;
+				area.x += hmax(0.0f, width + characters[code].bx * scale);
 				area.w = characters[code].w * scale;
 				////
 				area.h = characters[code].h * scale;
