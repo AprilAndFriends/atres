@@ -72,7 +72,7 @@ namespace atres
 			c.bx = 0.0f;
 			c.aw = 0.0f;
 			data = (*it).split(" ");
-			if (data.size() == 5)
+			if (is_between(data.size(), 4, 6))
 			{
 				code = (unsigned int)data.pop_front();
 				c.x = (float)data.pop_front();
@@ -89,7 +89,7 @@ namespace atres
 				}
 				if (c.aw == 0.0f)
 				{
-					c.aw = c.w + c.bx;
+					c.aw = c.w;
 				}
 				this->characters[code] = c;
 			}
