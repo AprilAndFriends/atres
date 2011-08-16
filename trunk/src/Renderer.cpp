@@ -274,6 +274,7 @@ namespace atres
 		hstr fontName;
 		FontResource* fontResource = NULL;
 		hmap<unsigned int, CharacterDefinition> characters;
+		CharacterDefinition& character = CharacterDefinition();
 		float lineHeight;
 		float scale;
 		
@@ -287,6 +288,7 @@ namespace atres
 		unsigned int code;
 		float width;
 		float advance;
+		float aw;
 		float lineWidth = 0.0f;
 		float y = 0.0f;
 		
@@ -386,13 +388,21 @@ namespace atres
 					current = i - start;
 					break;
 				}
-				advance = hmax(0.0f, hmax(advance, -characters[code].bx * scale));
-				advance += characters[code].aw * scale;
+				character = characters[code];
+				if (advance < -character.bx * scale)
+				{
+					aw = (character.aw - character.bx) * scale;
+				}
+				else
+				{
+					aw = character.aw * scale;
+				}
+				advance += aw;
 				if (wrapped && advance > rect.w) // current word doesn't fit anymore
 				{
 					if (current == 0) // whole word doesn't fit into a line, just chop it off
 					{
-						width = advance - characters[code].aw * scale;
+						width = advance - aw;
 						current = i - start;
 						if (current == 0) // word doesn't fit into line at all
 						{
@@ -443,6 +453,7 @@ namespace atres
 		hstr fontName;
 		FontResource* fontResource = NULL;
 		hmap<unsigned int, CharacterDefinition> characters;
+		CharacterDefinition& character = CharacterDefinition();
 		float lineHeight;
 		float scale;
 		april::Color color;
@@ -651,11 +662,12 @@ namespace atres
 					}
 				}
 				// checking the particular character
+				character = characters[code];
 				area = line.rect;
-				area.x += hmax(0.0f, width + characters[code].bx * scale);
-				area.w = characters[code].w * scale;
+				area.x += hmax(0.0f, width + character.bx * scale);
+				area.w = character.w * scale;
 				////
-				area.h = characters[code].h * scale;
+				area.h = character.h * scale;
 				area.h = fontResource->getHeight();
 				area.y += (lineHeight - fontResource->getHeight()) / 2;
 				renderRect = fontResource->makeRenderRectangle(rect, area, code);
@@ -664,29 +676,29 @@ namespace atres
 				switch (effectMode)
 				{
 				case 1: // shadow
-					renderRect.dest = destination + shadowOffset * (globalOffsets ? 1 : scale);
+					renderRect.dest = destination + shadowOffset * (globalOffsets ? 1.0f : scale);
 					shadowSequence.rectangles += renderRect;
 					break;
 				case 2: // border
-					renderRect.dest = destination + gvec2(-borderOffset, -borderOffset) * (globalOffsets ? 1 : scale);
+					renderRect.dest = destination + gvec2(-borderOffset, -borderOffset) * (globalOffsets ? 1.0f : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(borderOffset, -borderOffset) * (globalOffsets ? 1 : scale);
+					renderRect.dest = destination + gvec2(borderOffset, -borderOffset) * (globalOffsets ? 1.0f : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(-borderOffset, borderOffset) * (globalOffsets ? 1 : scale);
+					renderRect.dest = destination + gvec2(-borderOffset, borderOffset) * (globalOffsets ? 1.0f : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(borderOffset, borderOffset) * (globalOffsets ? 1 : scale);
+					renderRect.dest = destination + gvec2(borderOffset, borderOffset) * (globalOffsets ? 1.0f : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(0.0f, -borderOffset) * (globalOffsets ? 1 : scale);
+					renderRect.dest = destination + gvec2(0.0f, -borderOffset) * (globalOffsets ? 1.0f : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * (globalOffsets ? 1 : scale);
+					renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * (globalOffsets ? 1.0f : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(borderOffset, 0.0f) * (globalOffsets ? 1 : scale);
+					renderRect.dest = destination + gvec2(borderOffset, 0.0f) * (globalOffsets ? 1.0f : scale);
 					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(0.0f, borderOffset) * (globalOffsets ? 1 : scale);
+					renderRect.dest = destination + gvec2(0.0f, borderOffset) * (globalOffsets ? 1.0f : scale);
 					borderSequence.rectangles += renderRect;
 					break;
 				}
-				width += characters[code].aw * scale;
+				width += (width < -character.bx * scale ? (character.aw - character.bx) : character.aw) * scale;
 			}
 		}
 		if (sequence.rectangles.size() > 0)
@@ -1122,6 +1134,7 @@ namespace atres
 		hstr fontName;
 		FontResource* fontResource = NULL;
 		hmap<unsigned int, CharacterDefinition> characters;
+		CharacterDefinition& character = CharacterDefinition();
 		float lineHeight;
 		float scale;
 		
@@ -1130,6 +1143,7 @@ namespace atres
 		int byteLength;
 		unsigned int code;
 		float width = 0.0f;
+		float aw;
 		
 		while (i < text.size())
 		{
@@ -1188,10 +1202,18 @@ namespace atres
 			{
 				break;
 			}
-			width += characters[code].aw * scale;
+			if (width < -character.bx * scale)
+			{
+				aw = (character.aw - character.bx) * scale;
+			}
+			else
+			{
+				aw = character.aw * scale;
+			}
+			width += aw;
 			if (width > rect.w) // line is full
 			{
-				width -= characters[code].aw * scale;
+				width -= aw;
 				break;
 			}
 			i += byteLength;
