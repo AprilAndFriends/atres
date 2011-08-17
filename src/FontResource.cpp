@@ -62,12 +62,12 @@ namespace atres
 		unsigned int code;
 		int byteLength;
 		int i = 0;
-		CharacterDefinition& character = CharacterDefinition();
+		CharacterDefinition* character;
 		while (i < text.size())
 		{
 			code = utf8_to_uint(&str[i], &byteLength);
-			character = this->characters[code];
-			result += (result < -character.bx * this->getScale() ? (character.aw - character.bx) : character.aw) * this->getScale();
+			character = &this->characters[code];
+			result += (result < -character->bx * this->getScale() ? (character->aw - character->bx) : character->aw) * this->getScale();
 			i += byteLength;
 		}
 		return result;
@@ -80,12 +80,12 @@ namespace atres
 		float width = 0.0f;
 		int byteLength;
 		int i = 0;
-		CharacterDefinition& character = CharacterDefinition();
+		CharacterDefinition* character;
 		while (i < text.size())
 		{
 			code = utf8_to_uint(&str[i], &byteLength);
-			character = this->characters[code];
-			width += (width < -character.bx * this->getScale() ? (character.aw - character.bx) : character.aw) * this->getScale();
+			character = &this->characters[code];
+			width += (width < -character->bx * this->getScale() ? (character->aw - character->bx) : character->aw) * this->getScale();
 			if (width > maxWidth)
 			{
 				break;
