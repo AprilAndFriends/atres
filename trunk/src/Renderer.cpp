@@ -274,7 +274,7 @@ namespace atres
 		hstr fontName;
 		FontResource* fontResource = NULL;
 		hmap<unsigned int, CharacterDefinition> characters;
-		CharacterDefinition& character = CharacterDefinition();
+		CharacterDefinition* character;
 		float lineHeight;
 		float scale;
 		
@@ -388,14 +388,14 @@ namespace atres
 					current = i - start;
 					break;
 				}
-				character = characters[code];
-				if (advance < -character.bx * scale)
+				character = &characters[code];
+				if (advance < -character->bx * scale)
 				{
-					aw = (character.aw - character.bx) * scale;
+					aw = (character->aw - character->bx) * scale;
 				}
 				else
 				{
-					aw = character.aw * scale;
+					aw = character->aw * scale;
 				}
 				advance += aw;
 				if (wrapped && advance > rect.w) // current word doesn't fit anymore
@@ -453,7 +453,7 @@ namespace atres
 		hstr fontName;
 		FontResource* fontResource = NULL;
 		hmap<unsigned int, CharacterDefinition> characters;
-		CharacterDefinition& character = CharacterDefinition();
+		CharacterDefinition* character;
 		float lineHeight;
 		float scale;
 		april::Color color;
@@ -662,12 +662,11 @@ namespace atres
 					}
 				}
 				// checking the particular character
-				character = characters[code];
+				character = &characters[code];
 				area = line.rect;
-				area.x += hmax(0.0f, width + character.bx * scale);
-				area.w = character.w * scale;
-				////
-				area.h = character.h * scale;
+				area.x += hmax(0.0f, width + character->bx * scale);
+				area.w = character->w * scale;
+				area.h = character->h * scale;
 				area.h = fontResource->getHeight();
 				area.y += (lineHeight - fontResource->getHeight()) / 2;
 				renderRect = fontResource->makeRenderRectangle(rect, area, code);
@@ -698,7 +697,7 @@ namespace atres
 					borderSequence.rectangles += renderRect;
 					break;
 				}
-				width += (width < -character.bx * scale ? (character.aw - character.bx) : character.aw) * scale;
+				width += (width < -character->bx * scale ? (character->aw - character->bx) : character->aw) * scale;
 			}
 		}
 		if (sequence.rectangles.size() > 0)
@@ -1134,7 +1133,7 @@ namespace atres
 		hstr fontName;
 		FontResource* fontResource = NULL;
 		hmap<unsigned int, CharacterDefinition> characters;
-		CharacterDefinition& character = CharacterDefinition();
+		CharacterDefinition* character;
 		float lineHeight;
 		float scale;
 		
@@ -1202,13 +1201,14 @@ namespace atres
 			{
 				break;
 			}
-			if (width < -character.bx * scale)
+			character = &characters[code];
+			if (width < -character->bx * scale)
 			{
-				aw = (character.aw - character.bx) * scale;
+				aw = (character->aw - character->bx) * scale;
 			}
 			else
 			{
-				aw = character.aw * scale;
+				aw = character->aw * scale;
 			}
 			width += aw;
 			if (width > rect.w) // line is full
