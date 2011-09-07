@@ -28,7 +28,7 @@ namespace atresttf
 	FontResourceTtf::FontResourceTtf(chstr filename) : atres::FontResource(filename)
 	{
 		hstr path = get_basedir(filename) + "/";
-		harray<hstr> lines = hfile::hread(filename).split("\n");
+		harray<hstr> lines = hfile::hread(filename).split("\n", -1, true);
 		hstr line;
 		while (lines.size() > 0)
 		{
