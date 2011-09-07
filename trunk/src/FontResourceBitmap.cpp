@@ -25,7 +25,7 @@ namespace atres
 		this->baseScale = 1.0f;
 		this->lineHeight = 0.0f;
 		hstr path = get_basedir(filename) + "/";
-		harray<hstr> lines = hfile::hread(filename).split("\n");
+		harray<hstr> lines = hfile::hread(filename).split("\n", -1, true);
 		hstr line;
 		while (lines.size() > 0)
 		{
@@ -71,7 +71,7 @@ namespace atres
 		{
 			c.bx = 0.0f;
 			c.aw = 0.0f;
-			data = (*it).split(" ");
+			data = (*it).split(" ", -1, true);
 			if (is_between(data.size(), 4, 6))
 			{
 				code = (unsigned int)data.pop_front();
