@@ -16,92 +16,19 @@
 #define ATRES_RENDERER_H
 
 #include <april/Color.h>
-#include <april/Texture.h>
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
+#include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
 #include "atresExport.h"
+#include "Utility.h"
 
 #define BUFFER_MAX_CHARACTERS 8192
 
 namespace atres
 {
-	enum Alignment
-	{
-		LEFT,
-		RIGHT,
-		CENTER,
-		LEFT_WRAPPED,
-		RIGHT_WRAPPED,
-		CENTER_WRAPPED,
-		TOP,
-		BOTTOM
-	};
-
-	enum Effect
-	{
-		NONE,
-		SHADOW,
-		BORDER
-	};
-	
-	enum FormatTagType
-	{
-		ESCAPE,
-		FORMAT_NORMAL,
-		FORMAT_SHADOW,
-		FORMAT_BORDER,
-		FORMAT_COLOR,
-		FORMAT_FONT,
-		CLOSE
-	};
-	
-	struct RenderRectangle
-	{
-		grect src;
-		grect dest;
-	};
-	
-	struct RenderSequence
-	{
-		april::Texture* texture;
-		april::Color color;
-		harray<RenderRectangle> rectangles;
-		RenderSequence() : texture(NULL) { }
-	};
-	
-	struct RenderLine
-	{
-		hstr text;
-		grect rect;
-		int start;
-		RenderLine() : start(0) { }
-	};
-	
-	struct FormatTag
-	{
-		FormatTagType type;
-		hstr data;
-		int start;
-		int count;
-		FormatTag() : type(ESCAPE), start(0), count(0) { }
-	};
-	
-	struct CacheEntry
-	{
-		hstr fontName;
-		int index;
-		gvec2 size;
-		Alignment horizontal;
-		Alignment vertical;
-		april::Color color;
-		gvec2 offset;
-		harray<RenderSequence> sequences;
-		CacheEntry() : index(0), horizontal(CENTER_WRAPPED), vertical(CENTER) { }
-	};
-
 	class FontResource;
 
 	class atresExport Renderer
@@ -116,6 +43,7 @@ namespace atres
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
 		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight);
 		harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
+		harray<RenderWord> createRenderWords(grect rect, chstr text, harray<FormatTag> tags);
 		harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset = gvec2());
 		harray<RenderSequence> createRenderSequences(grect rect, harray<RenderLine> lines, harray<FormatTag> tags);
 		harray<RenderSequence> optimizeSequences(harray<RenderSequence> sequences);
@@ -160,6 +88,22 @@ namespace atres
 		april::Color getBorderColor();
 		void setBorderColor(april::Color value);
 		void addColor(chstr key, chstr value);
+
+	private:
+		harray<FormatTag> _tags;
+		harray<FormatTag> _stack;
+		FormatTag _currentTag;
+		FormatTag _nextTag;
+
+		hstr _fontName;
+		FontResource* _fontResource;
+		hmap<unsigned int, CharacterDefinition> _characters;
+		CharacterDefinition* _character;
+		float _lineHeight;
+		float _scale;
+
+		void _initializeFormatTags(harray<FormatTag>& tags);
+		void _checkFormatTags(chstr text, int index);
 
 
 	};

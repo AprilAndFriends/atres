@@ -24,6 +24,7 @@
     <File Name="include/atres/Renderer.h"/>
     <File Name="include/atres/FontResourceBitmap.h"/>
     <File Name="include/atres/FontResource.h"/>
+    <File Name="include/atres/Utility.h"/>
   </VirtualDirectory>
   <Dependencies Name="Release"/>
   <Dependencies Name="Linux_Debug">

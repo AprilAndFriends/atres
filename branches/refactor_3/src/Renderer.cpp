@@ -39,7 +39,7 @@ namespace atres
 	bool globalOffsets = false;
 	april::TexturedVertex vertices[BUFFER_MAX_CHARACTERS * 6];
 
-	Renderer::Renderer()
+	Renderer::Renderer() : _fontResource(NULL)
 	{
 		colors["red"] = APRIL_COLOR_RED.hex();
 		colors["green"] = APRIL_COLOR_GREEN.hex();
@@ -185,7 +185,7 @@ namespace atres
 	harray<RenderLine> Renderer::verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight)
 	{
 		harray<RenderLine> result;
-		int count = hround((lines[lines.size() - 1].rect.y - lines[0].rect.y) / lineHeight) + 1;
+		int count = hround((lines[lines.size() - 1].words[0].rect.y - lines[0].words[0].rect.y) / lineHeight) + 1;
 		// vertical correction
 		switch (vertical)
 		{
@@ -199,10 +199,13 @@ namespace atres
 		// remove lines that cannot be seen anyway
 		foreach (RenderLine, it, lines)
 		{
-			(*it).rect.y -= y;
-			if ((*it).rect.intersects(rect))
+			foreach (RenderWord, it2, (*it).words)
 			{
-				result += (*it);
+				(*it2).rect.y -= y;
+				if ((*it2).rect.intersects(rect))
+				{
+					result += (*it);
+				}
 			}
 		}
 		return result;
@@ -215,224 +218,332 @@ namespace atres
 		{
 			foreach (RenderLine, it, lines)
 			{
-				(*it).rect.x -= x;
+				foreach (RenderWord, it2, (*it).words)
+				{
+					(*it2).rect.x -= x;
+				}
 			}
 			return lines;
 		}
 		harray<RenderLine> lineParts;
 		harray<float> widths;
-		float y = lines[0].rect.y;
+		//float y = lines[0].words[0].rect.y;
 		float width = 0.0f;
-		// find all lines
-		foreach (RenderLine, it, lines)
+		if (horizontal != JUSTIFIED)
 		{
-			if ((*it).rect.y > y)
+			// find all lines
+			foreach (RenderLine, it, lines)
 			{
-				foreach (RenderLine, it2, lineParts)
+				width = 0.0f;
+				foreach (RenderWord, it2, (*it).words)
 				{
 					width += (*it2).rect.w;
 				}
-				widths.push_back(width, lineParts.size());
-				y = (*it).rect.y;
-				width = 0.0f;
-				lineParts.clear();
+				widths.push_back(width);
 			}
-			lineParts += (*it);
-		}
-		foreach (RenderLine, it, lineParts)
-		{
-			width += (*it).rect.w;
-		}
-		widths.push_back(width, lineParts.size());
-		// horizontal correction
-		for (int i = 0; i < lines.size(); i++)
-		{
-			switch (horizontal)
+			// horizontal correction
+			for (int i = 0; i < lines.size(); i++)
 			{
-			case CENTER:
-			case CENTER_WRAPPED:
-				lines[i].rect.x += -x + (rect.w - widths[i]) / 2;
-				break;
-			case RIGHT:
-			case RIGHT_WRAPPED:
-				lines[i].rect.x += -x + rect.w - widths[i];
-				break;
+				foreach (RenderWord, it, lines[i].words)
+				{
+					switch (horizontal)
+					{
+					case CENTER:
+					case CENTER_WRAPPED:
+						(*it).rect.x += -x + (rect.w - widths[i]) / 2;
+						break;
+					case RIGHT:
+					case RIGHT_WRAPPED:
+						(*it).rect.x += -x + rect.w - widths[i];
+						break;
+					}
+				}
 			}
+		}
+		else
+		{
 		}
 		return lines;
+	}
+
+	void Renderer::_initializeFormatTags(harray<FormatTag>& tags)
+	{
+		this->_tags = tags;
+		this->_stack.clear();
+		this->_currentTag = FormatTag();
+		this->_nextTag = this->_tags.front();
+		this->_fontName = "";
+		this->_fontResource = NULL;
+		this->_characters.clear();
+		this->_lineHeight = 0.0f;
+		this->_scale = 1.0f;
+	}
+
+	void Renderer::_checkFormatTags(chstr text, int index)
+	{
+		while (this->_tags.size() > 0 && index >= this->_nextTag.start)
+		{
+			if (this->_nextTag.type == CLOSE)
+			{
+				this->_currentTag = this->_stack.pop_back();
+				if (this->_currentTag.type == FORMAT_FONT)
+				{
+					this->_fontName = this->_currentTag.data;
+					this->_fontResource = this->getFontResource(this->_fontName);
+					this->_characters = this->_fontResource->getCharacters();
+					this->_scale = this->_fontResource->getScale();
+				}
+			}
+			else if (this->_nextTag.type == FORMAT_FONT)
+			{
+				this->_currentTag.type = FORMAT_FONT;
+				this->_currentTag.data = this->_fontName;
+				this->_stack += this->_currentTag;
+				try
+				{
+					if (this->_fontResource == NULL)
+					{
+						this->_fontResource = this->getFontResource(this->_nextTag.data);
+						this->_lineHeight = this->_fontResource->getLineHeight();
+					}
+					else
+					{
+						this->_fontResource = this->getFontResource(this->_nextTag.data);
+					}
+					this->_fontName = this->_nextTag.data;
+					this->_characters = this->_fontResource->getCharacters();
+					this->_scale = this->_fontResource->getScale();
+				}
+				catch (hltypes::_resource_error e)
+				{
+#ifdef _DEBUG
+					atres::log(hsprintf("Warning: font \"%s\" does not exist", this->_nextTag.data.c_str()));
+#endif
+				}
+			}
+			else
+			{
+				this->_currentTag.type = FORMAT_NORMAL;
+				this->_stack += this->_currentTag;
+			}
+			this->_tags.pop_front();
+			if (this->_tags.size() > 0)
+			{
+				this->_nextTag = this->_tags.front();
+			}
+			else
+			{
+				this->_nextTag.start = text.size() + 1;
+			}
+		}
+	}
+
+	harray<RenderWord> Renderer::createRenderWords(grect rect, chstr text, harray<FormatTag> tags)
+	{
+		this->_initializeFormatTags(tags);
+		int zeroSize = text.find_first_of('\0');
+		if (zeroSize < 0)
+		{
+			zeroSize = text.size();
+		}
+#ifdef _DEBUG
+		else if (zeroSize < text.size())
+		{
+			atres::log(hsprintf("Warning: Text \"%s\" has \\0 character before the actual end", text.c_str()));
+		}
+#endif
+		harray<RenderWord> result;
+		RenderWord word;
+
+		const char* str = text.c_str();
+
+		unsigned int code;
+		float aw;
+		float wordWidth;
+		float lineWidth = 0.0f;
+		int i = 0;
+		int byteLength = 0;
+		int start = 0;
+		int current = 0;
+		bool checkingSpaces = true;
+		
+		while (i < zeroSize) // checking all words
+		{
+			start = i;
+			wordWidth = 0.0f;
+			while (i < zeroSize) // checking a whole word
+			{
+				code = utf8_to_uint(&str[i], &byteLength);
+				if ((code == ' ') != checkingSpaces)
+				{
+					break;
+				}
+				if (code == '\n')
+				{
+					i += byteLength;
+					break;
+				}
+				this->_checkFormatTags(text, i);
+				this->_character = &this->_characters[code];
+				if (wordWidth < -this->_character->bx * this->_scale)
+				{
+					aw = (this->_character->aw - this->_character->bx) * this->_scale;
+				}
+				else
+				{
+					aw = this->_character->aw * this->_scale;
+				}
+				if (!checkingSpaces || i > start)
+				{
+					wordWidth += aw;
+				}
+				i += byteLength;
+			}
+			if (i > start)
+			{
+				word.text = text(start, i - start);
+				word.rect = grect(rect.x + lineWidth, rect.y, wordWidth, this->_lineHeight);
+				word.start = start;
+				word.space = checkingSpaces;
+				if (checkingSpaces)
+				{
+					wordWidth *= i - start;
+				}
+				lineWidth += wordWidth;
+				result += word;
+			}
+			checkingSpaces = !checkingSpaces;
+		}
+		return result;
 	}
 
 	harray<RenderLine> Renderer::createRenderLines(grect rect, chstr text, harray<FormatTag> tags,
 		Alignment horizontal, Alignment vertical, gvec2 offset)
 	{
+		harray<RenderWord> words = this->createRenderWords(rect, text, tags);
 		harray<RenderLine> lines;
 		RenderLine line;
-		harray<FormatTag> stack;
-		FormatTag tag;
-		FormatTag nextTag = tags.front();
-		
-		hstr fontName;
-		FontResource* fontResource = NULL;
-		hmap<unsigned int, CharacterDefinition> characters;
+		RenderWord word;
 		CharacterDefinition* character;
-		float lineHeight;
-		float scale;
-		
-		const char* str = text.c_str();
-		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED);
+		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED || horizontal == JUSTIFIED);
+		bool left = (horizontal == LEFT_WRAPPED || horizontal == LEFT || horizontal == JUSTIFIED);
+		float lineWidth = 0.0f;
+		for (int i = 0; i < words.size(); i++)
+		//foreach (RenderWord, it, words)
+		{
+			word = words[i];
+			if (wrapped)
+			{
+				if (lineWidth + word.rect.w > rect.w)
+				{
+					//maxWidth = hmax(maxWidth, lineWidth);
+					if (line.words.size() == 0) // whole word doesn't fit into a line, just chop it off
+					{
+						lineWidth = word.rect.w;
+					}
+					else
+					{
+						i--;
+					}
+					break;
+				}
+			}
+			else if (left)
+			{
+				if (lineWidth + word.rect.w > rect.w)
+				{
+					lineWidth = rect.w;
+					line.words += word;
+					//lineWidth = 0.0f;
+					break;
+				}
+			}
+			word.rect = grect(rect.x, rect.y + lines.size() * this->_lineHeight, rect.w, this->_lineHeight);
+			line.words += word;
+			lineWidth += word.rect.w;
+			//checkingSpaces = !checkingSpaces;
+
+
+
+
+		}
+
+
+
+		/*
 		bool checkingSpaces = false;
 		int i = 0;
 		int start = 0;
 		int current = 0;
 		int byteLength;
 		unsigned int code;
-		float width;
-		float advance;
 		float aw;
-		float lineWidth = 0.0f;
+		float lineWidth;
+		float wordWidth;
+		float maxWidth = 0.0f;;
 		float y = 0.0f;
+		int zeroSize = text.find_first_of('\0');
+		if (zeroSize < 0)
+		{
+			zeroSize = text.size();
+		}
+#ifdef _DEBUG
+		else if (zeroSize < text.size())
+		{
+			atres::log(hsprintf("Warning: Text \"%s\" has \\0 character before the actual end", str));
+		}
+#endif
+		*/
+
+
+		/*
 		
-		while (i < text.size())
+		while (i < zeroSize)
 		{
 			i = start + current;
-			line.text = "";
+			line.words.clear();
+			word.text = "";
 			while (i < text.size() && str[i] == ' ') // skip initial spaces in the line
 			{
 				i++;
 			}
 			start = i;
 			current = 0;
-			width = 0.0f;
-			advance = 0.0f;
+			lineWidth = 0.0f;
 			checkingSpaces = false;
-			while (true) // checking how much fits into this line
-			{
-				while (tags.size() > 0 && i >= nextTag.start)
-				{
-					if (nextTag.type == CLOSE)
-					{
-						tag = stack.pop_back();
-						if (tag.type == FORMAT_FONT)
-						{
-							fontName = tag.data;
-							fontResource = this->getFontResource(fontName);
-							characters = fontResource->getCharacters();
-							scale = fontResource->getScale();
-						}
-					}
-					else if (nextTag.type == FORMAT_FONT)
-					{
-						tag.type = FORMAT_FONT;
-						tag.data = fontName;
-						stack += tag;
-						try
-						{
-							if (fontResource == NULL)
-							{
-								fontResource = this->getFontResource(nextTag.data);
-								lineHeight = fontResource->getLineHeight();
-							}
-							else
-							{
-								fontResource = this->getFontResource(nextTag.data);
-							}
-							fontName = nextTag.data;
-							characters = fontResource->getCharacters();
-							scale = fontResource->getScale();
-						}
-						catch (hltypes::_resource_error e)
-						{
-#ifdef _DEBUG
-							atres::log(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
-#endif
-						}
-					}
-					else
-					{
-						tag.type = FORMAT_NORMAL;
-						stack += tag;
-					}
-					tags.pop_front();
-					if (tags.size() > 0)
-					{
-						nextTag = tags.front();
-					}
-					else
-					{
-						nextTag.start = text.size() + 1;
-					}
-				}
-				code = utf8_to_uint(&str[i], &byteLength);
-				if (code == ' ' || code == '\0')
-				{
-					if (!checkingSpaces)
-					{
-						width = advance;
-						current = i - start;
-					}
-					checkingSpaces = true;
-					if (code == '\0')
-					{
-						i += byteLength;
-						break;
-					}
-				}
-				else
-				{
-					checkingSpaces = false;
-				}
-				if (code == '\n')
-				{
-					width = advance;
-					i += byteLength;
-					current = i - start;
-					break;
-				}
-				character = &characters[code];
-				if (advance < -character->bx * scale)
-				{
-					aw = (character->aw - character->bx) * scale;
-				}
-				else
-				{
-					aw = character->aw * scale;
-				}
-				advance += aw;
-				if (wrapped && advance > rect.w) // current word doesn't fit anymore
-				{
-					if (current == 0) // whole word doesn't fit into a line, just chop it off
-					{
-						width = advance - aw;
-						current = i - start;
-						if (current == 0) // word doesn't fit into line at all
-						{
-							i = text.size();
-						}
-					}
-					break;
-				}
-				i += byteLength;
-			}
+
+			// create render words
+
+			maxWidth = hmax(maxWidth, lineWidth);
+			lineWidth = 0.0f;
+
+			*/
+			/*
 			lineWidth = hmax(lineWidth, width);
 			line.text = text(start, current);
 			line.rect = grect(rect.x, rect.y + y, width, lineHeight);
 			line.start = start;
+			*/
+		/*
 			lines += line;
-			y += lineHeight;
+			y += this->_lineHeight;
 		}
 		if (lines.size() > 0)
 		{
-			lines = this->verticalCorrection(rect, vertical, lines, offset.y, lineHeight);
+			lines = this->verticalCorrection(rect, vertical, lines, offset.y, this->_lineHeight);
 			if (lines.size() > 0)
 			{
 				lines = this->horizontalCorrection(rect, horizontal, lines, offset.x, lineWidth);
 			}
 		}
+		*/
 		return lines;
 	}
 	
 	harray<RenderSequence> Renderer::createRenderSequences(grect rect, harray<RenderLine> lines, harray<FormatTag> tags)
 	{
+		this->_initializeFormatTags(tags);
+
 		harray<RenderSequence> sequences;
 		RenderSequence sequence;
 		harray<RenderSequence> shadowSequences;
@@ -443,19 +554,12 @@ namespace atres
 		borderSequence.color = borderColor;
 		borderSequence.color.a = (unsigned char)(borderColor.a * borderColor.a_f() * borderColor.a_f());
 		RenderRectangle renderRect;
-		harray<FormatTag> stack;
+		
 		RenderLine line;
-		FormatTag tag;
-		FormatTag nextTag = tags.front();
 		grect area;
 		april::Texture* texture;
 		
-		hstr fontName;
-		FontResource* fontResource = NULL;
-		hmap<unsigned int, CharacterDefinition> characters;
 		CharacterDefinition* character;
-		float lineHeight;
-		float scale;
 		april::Color color;
 		hstr hex;
 		int effectMode = 0;
@@ -471,233 +575,236 @@ namespace atres
 		{
 			line = lines.pop_front();
 			width = 0.0f;
-			for (int i = 0; i < line.text.size(); i += byteLength)
+			foreach (RenderWord, it, line.words)
 			{
-				// checking first formatting tag changes
-				code = utf8_to_uint(&line.text[i], &byteLength);
-				while (tags.size() > 0 && line.start + i >= nextTag.start)
+				for (int i = 0; i < (*it).text.size(); i += byteLength)
 				{
-					if (nextTag.type == CLOSE)
+					// checking first formatting tag changes
+					code = utf8_to_uint(&(*it).text[i], &byteLength);
+					while (tags.size() > 0 && (*it).start + i >= this->_nextTag.start)
 					{
-						tag = stack.pop_back();
-						switch (tag.type)
+						if (this->_nextTag.type == CLOSE)
 						{
-						case FORMAT_FONT:
-							fontName = tag.data;
-							fontResource = this->getFontResource(fontName);
-							characters = fontResource->getCharacters();
-							scale = fontResource->getScale();
-							break;
-						case FORMAT_COLOR:
-							hex = (colors.has_key(tag.data) ? colors[tag.data] : tag.data);
-							if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
+							this->_currentTag = this->_stack.pop_back();
+							switch (this->_currentTag.type)
 							{
-								color.set(hex);
-							}
-							break;
-						case FORMAT_NORMAL:
-							effectMode = 0;
-							break;
-						case FORMAT_SHADOW:
-							effectMode = 1;
-							break;
-						case FORMAT_BORDER:
-							effectMode = 2;
-							break;
-						}
-					}
-					else
-					{
-						switch (nextTag.type)
-						{
-						case FORMAT_FONT:
-							tag.type = FORMAT_FONT;
-							tag.data = fontName;
-							stack += tag;
-							try
-							{
-								if (fontResource == NULL)
+							case FORMAT_FONT:
+								this->_fontName = this->_currentTag.data;
+								this->_fontResource = this->getFontResource(this->_fontName);
+								this->_characters = this->_fontResource->getCharacters();
+								this->_scale = this->_fontResource->getScale();
+								break;
+							case FORMAT_COLOR:
+								hex = (colors.has_key(this->_currentTag.data) ? colors[this->_currentTag.data] : this->_currentTag.data);
+								if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
 								{
-									fontResource = this->getFontResource(nextTag.data);
-									lineHeight = fontResource->getLineHeight();
+									color.set(hex);
 								}
+								break;
+							case FORMAT_NORMAL:
+								effectMode = 0;
+								break;
+							case FORMAT_SHADOW:
+								effectMode = 1;
+								break;
+							case FORMAT_BORDER:
+								effectMode = 2;
+								break;
+							}
+						}
+						else
+						{
+							switch (this->_nextTag.type)
+							{
+							case FORMAT_FONT:
+								this->_currentTag.type = FORMAT_FONT;
+								this->_currentTag.data = this->_fontName;
+								this->_stack += this->_currentTag;
+								try
+								{
+									if (this->_fontResource == NULL)
+									{
+										this->_fontResource = this->getFontResource(this->_nextTag.data);
+										this->_lineHeight = this->_fontResource->getLineHeight();
+									}
+									else
+									{
+										this->_fontResource = this->getFontResource(this->_nextTag.data);
+									}
+									this->_fontName = this->_nextTag.data;
+									this->_characters = this->_fontResource->getCharacters();
+									this->_scale = this->_fontResource->getScale();
+								}
+								catch (hltypes::_resource_error e)
+								{
+	#ifdef _DEBUG
+									atres::log(hsprintf("Warning: font \"%s\" does not exist", this->_nextTag.data.c_str()));
+	#endif
+								}
+								break;
+							case FORMAT_COLOR:
+								this->_currentTag.type = FORMAT_COLOR;
+								this->_currentTag.data = color.hex();
+								this->_stack += this->_currentTag;
+								hex = (colors.has_key(this->_nextTag.data) ? colors[this->_nextTag.data] : this->_nextTag.data);
+								if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
+								{
+									color.set(hex);
+									alpha == -1 ? alpha = color.a : color.a = (unsigned char)(alpha * color.a_f());
+								}
+#ifdef _DEBUG
 								else
 								{
-									fontResource = this->getFontResource(nextTag.data);
+									atres::log(hsprintf("Warning: color \"%s\" does not exist", hex.c_str()));
 								}
-								fontName = nextTag.data;
-								characters = fontResource->getCharacters();
-								scale = fontResource->getScale();
-							}
-							catch (hltypes::_resource_error e)
-							{
-#ifdef _DEBUG
-								atres::log(hsprintf("Warning: font \"%s\" does not exist", nextTag.data.c_str()));
 #endif
+								break;
+							case FORMAT_NORMAL:
+								this->_currentTag.type = (effectMode == 2 ? FORMAT_BORDER : (effectMode == 1 ? FORMAT_SHADOW : FORMAT_NORMAL));
+								this->_stack += this->_currentTag;
+								effectMode = 0;
+								break;
+							case FORMAT_SHADOW:
+								this->_currentTag.type = (effectMode == 2 ? FORMAT_BORDER : (effectMode == 1 ? FORMAT_SHADOW : FORMAT_NORMAL));
+								this->_stack += this->_currentTag;
+								effectMode = 1;
+								break;
+							case FORMAT_BORDER:
+								this->_currentTag.type = (effectMode == 2 ? FORMAT_BORDER : (effectMode == 1 ? FORMAT_SHADOW : FORMAT_NORMAL));
+								this->_stack += this->_currentTag;
+								effectMode = 2;
+								break;
 							}
-							break;
-						case FORMAT_COLOR:
-							tag.type = FORMAT_COLOR;
-							tag.data = color.hex();
-							stack += tag;
-							hex = (colors.has_key(nextTag.data) ? colors[nextTag.data] : nextTag.data);
-							if ((hex.size() == 6 || hex.size() == 8) && is_hexstr(hex))
+						}
+						this->_tags.pop_front();
+						if (this->_tags.size() > 0)
+						{
+							this->_nextTag = this->_tags.front();
+						}
+						else if (lines.size() > 0)
+						{
+							this->_nextTag.start = line.words.back().start + line.words.back().text.size() + 1;
+						}
+						else
+						{
+							this->_nextTag.start = (*it).start + (*it).text.size() + 1;
+						}
+						colorChanged = sequence.color != color;
+						texture = this->_fontResource->getTexture(code);
+						if (sequence.texture != texture || colorChanged)
+						{
+							if (sequence.rectangles.size() > 0)
 							{
-								color.set(hex);
-								alpha == -1 ? alpha = color.a : color.a = (unsigned char)(alpha * color.a_f());
+								sequences += sequence;
+								sequence.rectangles.clear();
 							}
-#ifdef _DEBUG
-							else
+							sequence.texture = texture;
+							sequence.color = color;
+						}
+						if (shadowSequence.texture != texture || colorChanged)
+						{
+							if (shadowSequence.rectangles.size() > 0)
 							{
-								atres::log(hsprintf("Warning: color \"%s\" does not exist", hex.c_str()));
+								shadowSequences += shadowSequence;
+								shadowSequence.rectangles.clear();
 							}
-#endif
-							break;
-						case FORMAT_NORMAL:
-							tag.type = (effectMode == 2 ? FORMAT_BORDER : (effectMode == 1 ? FORMAT_SHADOW : FORMAT_NORMAL));
-							stack += tag;
-							effectMode = 0;
-							break;
-						case FORMAT_SHADOW:
-							tag.type = (effectMode == 2 ? FORMAT_BORDER : (effectMode == 1 ? FORMAT_SHADOW : FORMAT_NORMAL));
-							stack += tag;
-							effectMode = 1;
-							break;
-						case FORMAT_BORDER:
-							tag.type = (effectMode == 2 ? FORMAT_BORDER : (effectMode == 1 ? FORMAT_SHADOW : FORMAT_NORMAL));
-							stack += tag;
-							effectMode = 2;
-							break;
+							shadowSequence.texture = texture;
+							shadowSequence.color = shadowColor;
+							shadowSequence.color.a = (unsigned char)(shadowSequence.color.a * color.a_f());
 						}
-					}
-					tags.pop_front();
-					if (tags.size() > 0)
-					{
-						nextTag = tags.front();
-					}
-					else if (lines.size() > 0)
-					{
-						nextTag.start = lines.back().start + lines.back().text.size() + 1;
-					}
-					else
-					{
-						nextTag.start = line.start + line.text.size() + 1;
-					}
-					colorChanged = sequence.color != color;
-					texture = fontResource->getTexture(code);
-					if (sequence.texture != texture || colorChanged)
-					{
-						if (sequence.rectangles.size() > 0)
+						if (borderSequence.texture != texture || colorChanged)
 						{
-							sequences += sequence;
-							sequence.rectangles.clear();
+							if (borderSequence.rectangles.size() > 0)
+							{
+								borderSequences += borderSequence;
+								borderSequence.rectangles.clear();
+							}
+							borderSequence.texture = texture;
+							borderSequence.color = borderColor;
+							borderSequence.color.a = (unsigned char)(borderSequence.color.a * color.a_f() * color.a_f());
 						}
-						sequence.texture = texture;
-						sequence.color = color;
 					}
-					if (shadowSequence.texture != texture || colorChanged)
+					if (this->_tags.size() == 0)
 					{
-						if (shadowSequence.rectangles.size() > 0)
+						if (lines.size() > 0)
 						{
-							shadowSequences += shadowSequence;
-							shadowSequence.rectangles.clear();
+							this->_nextTag.start = line.words.back().start + line.words.back().text.size() + 1;
 						}
-						shadowSequence.texture = texture;
-						shadowSequence.color = shadowColor;
-						shadowSequence.color.a = (unsigned char)(shadowSequence.color.a * color.a_f());
+						else
+						{
+							this->_nextTag.start = (*it).start + (*it).text.size() + 1;
+						}
 					}
-					if (borderSequence.texture != texture || colorChanged)
+					// checking if texture contains this character image
+					texture = this->_fontResource->getTexture(code);
+					if (texture != NULL)
 					{
-						if (borderSequence.rectangles.size() > 0)
+						if (sequence.texture != texture)
 						{
-							borderSequences += borderSequence;
-							borderSequence.rectangles.clear();
+							if (sequence.rectangles.size() > 0)
+							{
+								sequences += sequence;
+								sequence.rectangles.clear();
+							}
+							sequence.texture = texture;
 						}
-						borderSequence.texture = texture;
-						borderSequence.color = borderColor;
-						borderSequence.color.a = (unsigned char)(borderSequence.color.a * color.a_f() * color.a_f());
+						if (shadowSequence.texture != texture)
+						{
+							if (shadowSequence.rectangles.size() > 0)
+							{
+								shadowSequences += shadowSequence;
+								shadowSequence.rectangles.clear();
+							}
+							shadowSequence.texture = texture;
+						}
+						if (borderSequence.texture != texture)
+						{
+							if (borderSequence.rectangles.size() > 0)
+							{
+								borderSequences += borderSequence;
+								borderSequence.rectangles.clear();
+							}
+							borderSequence.texture = texture;
+						}
 					}
+					// checking the particular character
+					character = &this->_characters[code];
+					area = (*it).rect;
+					area.x += hmax(0.0f, width + character->bx * this->_scale);
+					area.w = character->w * this->_scale;
+					area.h = character->h * this->_scale;
+					area.h = this->_fontResource->getHeight();
+					area.y += (this->_lineHeight - this->_fontResource->getHeight()) / 2;
+					renderRect = this->_fontResource->makeRenderRectangle(rect, area, code);
+					sequence.rectangles += renderRect;
+					destination = renderRect.dest;
+					switch (effectMode)
+					{
+					case 1: // shadow
+						renderRect.dest = destination + shadowOffset * (globalOffsets ? 1.0f : this->_scale);
+						shadowSequence.rectangles += renderRect;
+						break;
+					case 2: // border
+						renderRect.dest = destination + gvec2(-borderOffset, -borderOffset) * (globalOffsets ? 1.0f : this->_scale);
+						borderSequence.rectangles += renderRect;
+						renderRect.dest = destination + gvec2(borderOffset, -borderOffset) * (globalOffsets ? 1.0f : this->_scale);
+						borderSequence.rectangles += renderRect;
+						renderRect.dest = destination + gvec2(-borderOffset, borderOffset) * (globalOffsets ? 1.0f : this->_scale);
+						borderSequence.rectangles += renderRect;
+						renderRect.dest = destination + gvec2(borderOffset, borderOffset) * (globalOffsets ? 1.0f : this->_scale);
+						borderSequence.rectangles += renderRect;
+						renderRect.dest = destination + gvec2(0.0f, -borderOffset) * (globalOffsets ? 1.0f : this->_scale);
+						borderSequence.rectangles += renderRect;
+						renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * (globalOffsets ? 1.0f : this->_scale);
+						borderSequence.rectangles += renderRect;
+						renderRect.dest = destination + gvec2(borderOffset, 0.0f) * (globalOffsets ? 1.0f : this->_scale);
+						borderSequence.rectangles += renderRect;
+						renderRect.dest = destination + gvec2(0.0f, borderOffset) * (globalOffsets ? 1.0f : this->_scale);
+						borderSequence.rectangles += renderRect;
+						break;
+					}
+					width += (width < -character->bx * this->_scale ? (character->aw - character->bx) : character->aw) * this->_scale;
 				}
-				if (tags.size() == 0)
-				{
-					if (lines.size() > 0)
-					{
-						nextTag.start = lines.back().start + lines.back().text.size() + 1;
-					}
-					else
-					{
-						nextTag.start = line.start + line.text.size() + 1;
-					}
-				}
-				// checking if texture contains this character image
-				texture = fontResource->getTexture(code);
-				if (texture != NULL)
-				{
-					if (sequence.texture != texture)
-					{
-						if (sequence.rectangles.size() > 0)
-						{
-							sequences += sequence;
-							sequence.rectangles.clear();
-						}
-						sequence.texture = texture;
-					}
-					if (shadowSequence.texture != texture)
-					{
-						if (shadowSequence.rectangles.size() > 0)
-						{
-							shadowSequences += shadowSequence;
-							shadowSequence.rectangles.clear();
-						}
-						shadowSequence.texture = texture;
-					}
-					if (borderSequence.texture != texture)
-					{
-						if (borderSequence.rectangles.size() > 0)
-						{
-							borderSequences += borderSequence;
-							borderSequence.rectangles.clear();
-						}
-						borderSequence.texture = texture;
-					}
-				}
-				// checking the particular character
-				character = &characters[code];
-				area = line.rect;
-				area.x += hmax(0.0f, width + character->bx * scale);
-				area.w = character->w * scale;
-				area.h = character->h * scale;
-				area.h = fontResource->getHeight();
-				area.y += (lineHeight - fontResource->getHeight()) / 2;
-				renderRect = fontResource->makeRenderRectangle(rect, area, code);
-				sequence.rectangles += renderRect;
-				destination = renderRect.dest;
-				switch (effectMode)
-				{
-				case 1: // shadow
-					renderRect.dest = destination + shadowOffset * (globalOffsets ? 1.0f : scale);
-					shadowSequence.rectangles += renderRect;
-					break;
-				case 2: // border
-					renderRect.dest = destination + gvec2(-borderOffset, -borderOffset) * (globalOffsets ? 1.0f : scale);
-					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(borderOffset, -borderOffset) * (globalOffsets ? 1.0f : scale);
-					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(-borderOffset, borderOffset) * (globalOffsets ? 1.0f : scale);
-					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(borderOffset, borderOffset) * (globalOffsets ? 1.0f : scale);
-					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(0.0f, -borderOffset) * (globalOffsets ? 1.0f : scale);
-					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * (globalOffsets ? 1.0f : scale);
-					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(borderOffset, 0.0f) * (globalOffsets ? 1.0f : scale);
-					borderSequence.rectangles += renderRect;
-					renderRect.dest = destination + gvec2(0.0f, borderOffset) * (globalOffsets ? 1.0f : scale);
-					borderSequence.rectangles += renderRect;
-					break;
-				}
-				width += (width < -character->bx * scale ? (character->aw - character->bx) : character->aw) * scale;
 			}
 		}
 		if (sequence.rectangles.size() > 0)
@@ -1038,7 +1145,13 @@ namespace atres
 			hstr unformattedText = prepareFormatting(fontName, text, tags);
 			if (unformattedText != "")
 			{
-				return getFittingLine(grect(0, 0, 100000, 1), unformattedText, tags).rect.w;
+				float width = 0.0f;
+				RenderLine line = getFittingLine(grect(0, 0, 100000, 1), unformattedText, tags);
+				foreach (RenderWord, it, line.words)
+				{
+					width += (*it).rect.w;
+				}
+				return width;
 			}
 		}
 		return 0.0f;
@@ -1067,7 +1180,13 @@ namespace atres
 			hstr unformattedText = prepareFormatting(fontName, text, tags);
 			if (unformattedText != "")
 			{
-				return getFittingLine(grect(0, 0, maxWidth, 1), unformattedText, tags).text.size();
+				int size = 0;
+				RenderLine line = getFittingLine(grect(0, 0, maxWidth, 1), unformattedText, tags);
+				foreach (RenderWord, it, line.words)
+				{
+					size += (*it).text.size();
+				}
+				return size;
 			}
 		}
 		return 0;
@@ -1080,7 +1199,13 @@ namespace atres
 			return 0.0f;
 		}
 		harray<FormatTag> tags = prepareTags(fontName);
-		return getFittingLine(grect(0, 0, 100000, 1), text, tags).rect.w;
+		float width = 0.0f;
+		RenderLine line = getFittingLine(grect(0, 0, 100000, 1), text, tags);
+		foreach (RenderWord, it, line.words)
+		{
+			width += (*it).rect.w;
+		}
+		return width;
 	}
 
 	float Renderer::getTextHeightUnformatted(chstr fontName, chstr text, float maxWidth)
@@ -1101,7 +1226,13 @@ namespace atres
 			return 0;
 		}
 		harray<FormatTag> tags = prepareTags(fontName);
-		return getFittingLine(grect(0, 0, maxWidth, 1), text, tags).text.size();
+		int size = 0;
+		RenderLine line = getFittingLine(grect(0, 0, maxWidth, 1), text, tags);
+		foreach (RenderWord, it, line.words)
+		{
+			size += (*it).text.size();
+		}
+		return size;
 	}
 	
 	hstr Renderer::prepareFormatting(chstr fontName, chstr text, harray<FormatTag>& tags)
@@ -1126,16 +1257,9 @@ namespace atres
 	
 	RenderLine Renderer::getFittingLine(grect rect, chstr text, harray<FormatTag> tags)
 	{
-		harray<FormatTag> stack;
-		FormatTag tag;
-		FormatTag nextTag = tags.front();
+		this->_initializeFormatTags(tags);
 		
-		hstr fontName;
-		FontResource* fontResource = NULL;
-		hmap<unsigned int, CharacterDefinition> characters;
 		CharacterDefinition* character;
-		float lineHeight;
-		float scale;
 		
 		const char* str = text.c_str();
 		int i = 0;
@@ -1146,69 +1270,24 @@ namespace atres
 		
 		while (i < text.size())
 		{
-			while (tags.size() > 0 && i >= nextTag.start)
+			this->_checkFormatTags(text, i);
+			if (this->_tags.size() == 0)
 			{
-				if (nextTag.type == CLOSE)
-				{
-					tag = stack.pop_back();
-					if (tag.type == FORMAT_FONT)
-					{
-						fontName = tag.data;
-						fontResource = getFontResource(fontName);
-						characters = fontResource->getCharacters();
-						scale = fontResource->getScale();
-					}
-				}
-				else if (nextTag.type == FORMAT_FONT)
-				{
-					tag.type = FORMAT_FONT;
-					tag.data = fontName;
-					stack += tag;
-					fontName = nextTag.data;
-					if (fontResource == NULL)
-					{
-						fontResource = getFontResource(fontName);
-						lineHeight = fontResource->getLineHeight();
-					}
-					else
-					{
-						fontResource = getFontResource(fontName);
-					}
-					characters = fontResource->getCharacters();
-					scale = fontResource->getScale();
-				}
-				else
-				{
-					tag.type = FORMAT_NORMAL;
-					stack += tag;
-				}
-				tags.pop_front();
-				if (tags.size() > 0)
-				{
-					nextTag = tags.front();
-				}
-				else
-				{
-					nextTag.start = text.size() + 1;
-				}
-			}
-			if (tags.size() == 0)
-			{
-				nextTag.start = text.size() + 1;
+				this->_nextTag.start = text.size() + 1;
 			}
 			code = utf8_to_uint(&str[i], &byteLength);
 			if (code == '\0' || code == '\n')
 			{
 				break;
 			}
-			character = &characters[code];
-			if (width < -character->bx * scale)
+			character = &this->_characters[code];
+			if (width < -character->bx * this->_scale)
 			{
-				aw = (character->aw - character->bx) * scale;
+				aw = (character->aw - character->bx) * this->_scale;
 			}
 			else
 			{
-				aw = character->aw * scale;
+				aw = character->aw * this->_scale;
 			}
 			width += aw;
 			if (width > rect.w) // line is full
@@ -1219,9 +1298,9 @@ namespace atres
 			i += byteLength;
 		}
 		RenderLine result;
-		result.start = 0;
-		result.text = (i == 0 ? "" : text(0, i));
-		result.rect = grect(0, 0, width, lineHeight);
+		//result.start = 0;
+		//result.text = (i == 0 ? "" : text(0, i));
+		//result.rect = grect(0, 0, width, lineHeight);
 		return result;
 	}
 	
