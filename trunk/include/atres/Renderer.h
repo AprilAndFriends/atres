@@ -37,7 +37,8 @@ namespace atres
 		RIGHT_WRAPPED,
 		CENTER_WRAPPED,
 		TOP,
-		BOTTOM
+		BOTTOM,
+		JUSTIFIED
 	};
 
 	enum Effect
