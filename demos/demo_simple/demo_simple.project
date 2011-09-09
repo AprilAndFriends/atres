@@ -66,6 +66,7 @@
         <Command Enabled="yes">copy ..\..\..\april\bin\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\bin\atresttf\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\..\hltypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
+        <Command Enabled="yes">copy ..\..\..\hltypes\bin\hlxml\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\..\gtypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\..\aprilui\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\..\lib\*.dll ..\..\bin\$(ConfigurationName)</Command>
@@ -109,6 +110,7 @@
         <Command Enabled="yes">copy ..\..\..\april\bin\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\bin\atresttf\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\..\hltypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
+        <Command Enabled="yes">copy ..\..\..\hltypes\bin\hlxml\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\..\gtypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\..\aprilui\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\..\lib\*.dll ..\..\bin\$(ConfigurationName)</Command>
@@ -150,6 +152,7 @@
         <Command Enabled="yes">copy ..\..\..\april\bin\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\bin\atresttf\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\..\hltypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
+        <Command Enabled="yes">copy ..\..\..\hltypes\bin\hlxml\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\..\gtypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\..\aprilui\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
         <Command Enabled="yes">copy ..\..\..\lib\*.dll ..\..\bin\$(ConfigurationName)</Command>
@@ -170,11 +173,12 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
-  <Dependencies Name="Debug">
+  <Dependencies Name="Release_Win32">
     <Project Name="libgtypes"/>
     <Project Name="libhltypes"/>
     <Project Name="libapril"/>
     <Project Name="libatres"/>
+    <Project Name="libhlxml"/>
     <Project Name="libaprilui"/>
     <Project Name="libatresttf"/>
   </Dependencies>
@@ -183,14 +187,16 @@
     <Project Name="libhltypes"/>
     <Project Name="libapril"/>
     <Project Name="libatres"/>
+    <Project Name="libhlxml"/>
     <Project Name="libaprilui"/>
     <Project Name="libatresttf"/>
   </Dependencies>
-  <Dependencies Name="Release_Win32">
+  <Dependencies Name="Debug">
     <Project Name="libgtypes"/>
     <Project Name="libhltypes"/>
     <Project Name="libapril"/>
     <Project Name="libatres"/>
+    <Project Name="libhlxml"/>
     <Project Name="libaprilui"/>
     <Project Name="libatresttf"/>
   </Dependencies>

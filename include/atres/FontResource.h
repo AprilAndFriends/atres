@@ -19,20 +19,10 @@
 
 #include "atres.h"
 #include "atresExport.h"
-#include "Renderer.h"
+#include "Utility.h"
 
 namespace atres
 {
-	struct atresExport CharacterDefinition
-	{
-		float x;
-		float y;
-		float w;
-		float h;
-		float bx;
-		float aw;
-	};
-
 	class atresExport FontResource
 	{
 	public:

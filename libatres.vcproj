@@ -224,6 +224,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\atres\Utility.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Util.h"
 				>
 			</File>

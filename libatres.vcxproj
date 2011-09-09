@@ -97,6 +97,7 @@
     <ClInclude Include="include\atres\FontResource.h" />
     <ClInclude Include="include\atres\FontResourceBitmap.h" />
     <ClInclude Include="include\atres\Renderer.h" />
+    <ClInclude Include="include\atres\Utility.h" />
     <ClInclude Include="src\Util.h" />
   </ItemGroup>
   <ItemGroup>
