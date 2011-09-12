@@ -1,7 +1,7 @@
 #include <windows.h>
 
-#define VER_VERSION 2,0,1,0
-#define VER_VERSION_STR "2.0.1.0\0"
+#define VER_VERSION 2,2,0,0
+#define VER_VERSION_STR "2.2.0.0\0"
 #define VER_COMPANYNAME_STR "Cateia Games"
 #define VER_FILEDESCRIPTION_STR "Advanced Text Rendering System"
 #define VER_LEGALCOPYRIGHT_STR "© K.I.D. d.o.o. Rijeka, Croatia"
