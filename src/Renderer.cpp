@@ -196,16 +196,22 @@ namespace atres
 			y += count * lineHeight - rect.h;
 			break;
 		}
+		bool intersects;
 		// remove lines that cannot be seen anyway
 		foreach (RenderLine, it, lines)
 		{
+			intersects = false;
 			foreach (RenderWord, it2, (*it).words)
 			{
 				(*it2).rect.y -= y;
-				if ((*it2).rect.intersects(rect))
+				if (!intersects && (*it2).rect.intersects(rect))
 				{
-					result += (*it);
+					intersects = true;
 				}
+			}
+			if (intersects)
+			{
+				result += (*it);
 			}
 		}
 		return result;
@@ -218,6 +224,7 @@ namespace atres
 		{
 			foreach (RenderLine, it, lines)
 			{
+				(*it).rect.x -= x;
 				foreach (RenderWord, it2, (*it).words)
 				{
 					(*it2).rect.x -= x;
@@ -225,43 +232,69 @@ namespace atres
 			}
 			return lines;
 		}
-		harray<RenderLine> lineParts;
 		harray<float> widths;
-		//float y = lines[0].words[0].rect.y;
-		float width = 0.0f;
 		if (horizontal != JUSTIFIED)
 		{
 			// find all lines
 			foreach (RenderLine, it, lines)
 			{
-				width = 0.0f;
-				foreach (RenderWord, it2, (*it).words)
-				{
-					width += (*it2).rect.w;
-				}
-				widths.push_back(width);
+				widths += (*it).rect.w;
 			}
+			float ox;
 			// horizontal correction
 			for (int i = 0; i < lines.size(); i++)
 			{
+				switch (horizontal)
+				{
+				case CENTER:
+				case CENTER_WRAPPED:
+					ox = -x + (rect.w - widths[i]) / 2;
+					break;
+				case RIGHT:
+				case RIGHT_WRAPPED:
+					ox = -x + rect.w - widths[i];
+					break;
+				}
+				lines[i].rect.x += ox;
 				foreach (RenderWord, it, lines[i].words)
 				{
-					switch (horizontal)
-					{
-					case CENTER:
-					case CENTER_WRAPPED:
-						(*it).rect.x += -x + (rect.w - widths[i]) / 2;
-						break;
-					case RIGHT:
-					case RIGHT_WRAPPED:
-						(*it).rect.x += -x + rect.w - widths[i];
-						break;
-					}
+					(*it).rect.x += ox;
 				}
 			}
 		}
 		else
 		{
+			/*
+			//float width;
+			//space
+			// find all lines
+			foreach (RenderLine, it, lines)
+			{
+				width = 0.0f;
+				widths += (*it).rect.w;
+			}
+			float ox;
+			// horizontal correction
+			for (int i = 0; i < lines.size(); i++)
+			{
+				switch (horizontal)
+				{
+				case CENTER:
+				case CENTER_WRAPPED:
+					ox = -x + (rect.w - widths[i]) / 2;
+					break;
+				case RIGHT:
+				case RIGHT_WRAPPED:
+					ox = -x + rect.w - widths[i];
+					break;
+				}
+				lines[i].rect.x += ox;
+				foreach (RenderWord, it, lines[i].words)
+				{
+					(*it).rect.x += ox;
+				}
+			}
+			*/
 		}
 		return lines;
 	}
@@ -301,7 +334,7 @@ namespace atres
 				this->_stack += this->_currentTag;
 				try
 				{
-					if (this->_fontResource == NULL)
+					if (this->_fontResource == NULL) // if there is no previous font, lineHeight has to be obtained as well
 					{
 						this->_fontResource = this->getFontResource(this->_nextTag.data);
 						this->_lineHeight = this->_fontResource->getLineHeight();
@@ -393,10 +426,7 @@ namespace atres
 				{
 					aw = this->_character->aw * this->_scale;
 				}
-				if (!checkingSpaces || i > start)
-				{
-					wordWidth += aw;
-				}
+				wordWidth += aw;
 				i += byteLength;
 			}
 			if (i > start)
@@ -405,10 +435,6 @@ namespace atres
 				word.rect = grect(rect.x + lineWidth, rect.y, wordWidth, this->_lineHeight);
 				word.start = start;
 				word.space = checkingSpaces;
-				if (checkingSpaces)
-				{
-					wordWidth *= i - start;
-				}
 				lineWidth += wordWidth;
 				result += word;
 			}
@@ -424,48 +450,61 @@ namespace atres
 		harray<RenderLine> lines;
 		RenderLine line;
 		RenderWord word;
-		CharacterDefinition* character;
+
 		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED || horizontal == JUSTIFIED);
 		bool left = (horizontal == LEFT_WRAPPED || horizontal == LEFT || horizontal == JUSTIFIED);
-		float lineWidth = 0.0f;
+		float maxWidth = 0.0f;
+		bool nextLine;
+		bool addWord;
 		for (int i = 0; i < words.size(); i++)
-		//foreach (RenderWord, it, words)
 		{
+			nextLine = false;
+			addWord = true;
 			word = words[i];
-			if (wrapped)
+			if (line.rect.w + word.rect.w > rect.w)
 			{
-				if (lineWidth + word.rect.w > rect.w)
+				if (wrapped && line.words.size() > 0)
 				{
-					//maxWidth = hmax(maxWidth, lineWidth);
-					if (line.words.size() == 0) // whole word doesn't fit into a line, just chop it off
-					{
-						lineWidth = word.rect.w;
-					}
-					else
-					{
-						i--;
-					}
+					addWord = false;
+					i--;
+				}
+				// else the whole word is the only one in the line and doesn't fit, so just chop it off
+				nextLine = true;
+			}
+			if (addWord)
+			{
+				word.rect = grect(line.rect.w, rect.y + lines.size() * this->_lineHeight, word.rect.w, this->_lineHeight);
+				line.text += word.text;
+				line.rect.w += word.rect.w;
+				line.words += word;
+			}
+			if (nextLine)
+			{
+				maxWidth = hmax(maxWidth, line.rect.w);
+				line.rect.y = line.rect.y;
+				line.rect.h = this->_lineHeight;
+				if (left && !wrapped && line.rect.w + word.rect.w > rect.w)
+				{
+					line.rect.w = rect.w;
 					break;
 				}
+				lines += line;
+				line.rect.w = 0.0f;
+				line.words.clear();
 			}
-			else if (left)
+		}
+		maxWidth = hmin(hmax(maxWidth, line.rect.w), rect.w);
+		if (line.words.size() > 0) // adding the last line if it's not empty
+		{
+			lines += line;
+		}
+		if (lines.size() > 0)
+		{
+			lines = this->verticalCorrection(rect, vertical, lines, offset.y, this->_lineHeight);
+			if (lines.size() > 0)
 			{
-				if (lineWidth + word.rect.w > rect.w)
-				{
-					lineWidth = rect.w;
-					line.words += word;
-					//lineWidth = 0.0f;
-					break;
-				}
+				lines = this->horizontalCorrection(rect, horizontal, lines, offset.x, maxWidth);
 			}
-			word.rect = grect(rect.x, rect.y + lines.size() * this->_lineHeight, rect.w, this->_lineHeight);
-			line.words += word;
-			lineWidth += word.rect.w;
-			//checkingSpaces = !checkingSpaces;
-
-
-
-
 		}
 
 
@@ -772,7 +811,6 @@ namespace atres
 					area = (*it).rect;
 					area.x += hmax(0.0f, width + character->bx * this->_scale);
 					area.w = character->w * this->_scale;
-					area.h = character->h * this->_scale;
 					area.h = this->_fontResource->getHeight();
 					area.y += (this->_lineHeight - this->_fontResource->getHeight()) / 2;
 					renderRect = this->_fontResource->makeRenderRectangle(rect, area, code);
