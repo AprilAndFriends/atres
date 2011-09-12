@@ -57,14 +57,14 @@ bool render(float time_increase)
 
 void onMouseDown(float x, float y, int button)
 {
-	aprilui::OnMouseDown(x, y, button);
-	position = april::rendersys->getWindow()->getCursorPos() + offset;
+	aprilui::onMouseDown(x, y, button);
+	position = april::rendersys->getWindow()->getCursorPosition() + offset;
 	clicked = true;
 }
 
 void onMouseUp(float x, float y, int button)
 {
-	aprilui::OnMouseUp(x, y, button);
+	aprilui::onMouseUp(x, y, button);
 	clicked = false;
 }
 
@@ -74,12 +74,12 @@ void onMouseMove(float x, float y)
 	{
 		offset = position - gvec2(x, y);
 	}
-	aprilui::OnMouseMove(x, y);
+	aprilui::onMouseMove(x, y);
 }
 
 void onKeyDown(unsigned int keycode)
 {
-	aprilui::OnKeyDown(keycode);
+	aprilui::onKeyDown(keycode);
 }
 
 void onKeyUp(unsigned int keycode)
@@ -92,12 +92,12 @@ void onKeyUp(unsigned int keycode)
 	{
 		atres::renderer->setBorderOffset(hrandf(1.0f, 5.0f));
 	}
-	aprilui::OnKeyUp(keycode);
+	aprilui::onKeyUp(keycode);
 }
 
 void onChar(unsigned int charcode)
 {
-	aprilui::OnChar(charcode);
+	aprilui::onChar(charcode);
 }
 
 void april_init(const harray<hstr>& args)
@@ -148,7 +148,9 @@ void april_init(const harray<hstr>& args)
 #endif
 	try
 	{
-		april::init("", (int)drawRect.w, (int)drawRect.h, false, "demo_simple");
+		april::init();
+		april::createRenderSystem("");
+		april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "demo_simple");
 		april::rendersys->getWindow()->setUpdateCallback(render);
 		april::rendersys->getWindow()->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
 		april::rendersys->getWindow()->setKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
