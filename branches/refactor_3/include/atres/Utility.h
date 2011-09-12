@@ -86,11 +86,13 @@ namespace atres
 		grect rect;
 		int start;
 		bool space;
-		RenderWord() : start(0) { }
+		RenderWord() : start(0), space(false) { }
 	};
 	
 	struct RenderLine
 	{
+		hstr text;
+		grect rect;
 		harray<RenderWord> words;
 	};
 	
