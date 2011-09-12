@@ -85,15 +85,17 @@ namespace atres
 		hstr text;
 		grect rect;
 		int start;
-		bool space;
-		RenderWord() : start(0), space(false) { }
+		int spaces;
+		RenderWord() : start(0), spaces(0) { }
 	};
 	
 	struct RenderLine
 	{
 		hstr text;
 		grect rect;
+		int spaces;
 		harray<RenderWord> words;
+		RenderLine() : spaces(0) { }
 	};
 	
 	struct FormatTag

@@ -185,32 +185,26 @@ namespace atres
 	harray<RenderLine> Renderer::verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight)
 	{
 		harray<RenderLine> result;
-		int count = hround((lines[lines.size() - 1].words[0].rect.y - lines[0].words[0].rect.y) / lineHeight) + 1;
 		// vertical correction
 		switch (vertical)
 		{
 		case CENTER:
-			y += (count * lineHeight - rect.h) / 2;
+			y += (lines.size() * lineHeight - rect.h) / 2;
 			break;
 		case BOTTOM:
-			y += count * lineHeight - rect.h;
+			y += lines.size() * lineHeight - rect.h;
 			break;
 		}
-		bool intersects;
 		// remove lines that cannot be seen anyway
 		foreach (RenderLine, it, lines)
 		{
-			intersects = false;
-			foreach (RenderWord, it2, (*it).words)
+			(*it).rect.y -= y;
+			if ((*it).rect.intersects(rect))
 			{
-				(*it2).rect.y -= y;
-				if (!intersects && (*it2).rect.intersects(rect))
+				foreach (RenderWord, it2, (*it).words)
 				{
-					intersects = true;
+					(*it2).rect.y -= y;
 				}
-			}
-			if (intersects)
-			{
 				result += (*it);
 			}
 		}
@@ -235,66 +229,73 @@ namespace atres
 		harray<float> widths;
 		if (horizontal != JUSTIFIED)
 		{
-			// find all lines
-			foreach (RenderLine, it, lines)
-			{
-				widths += (*it).rect.w;
-			}
 			float ox;
 			// horizontal correction
-			for (int i = 0; i < lines.size(); i++)
+			foreach (RenderLine, it, lines)
 			{
 				switch (horizontal)
 				{
 				case CENTER:
 				case CENTER_WRAPPED:
-					ox = -x + (rect.w - widths[i]) / 2;
+					ox = -x + (rect.w - (*it).rect.w) / 2;
 					break;
 				case RIGHT:
 				case RIGHT_WRAPPED:
-					ox = -x + rect.w - widths[i];
+					ox = -x + rect.w - (*it).rect.w;
 					break;
 				}
-				lines[i].rect.x += ox;
-				foreach (RenderWord, it, lines[i].words)
+				(*it).rect.x += ox;
+				foreach (RenderWord, it2, (*it).words)
 				{
-					(*it).rect.x += ox;
+					(*it2).rect.x += ox;
 				}
 			}
 		}
 		else
 		{
-			/*
-			//float width;
-			//space
-			// find all lines
-			foreach (RenderLine, it, lines)
-			{
-				width = 0.0f;
-				widths += (*it).rect.w;
-			}
+			float width;
+			float widthPerSpace;
 			float ox;
-			// horizontal correction
-			for (int i = 0; i < lines.size(); i++)
+			harray<RenderWord> words;
+			for (int i = 0; i < lines.size() - 1; i++)
 			{
-				switch (horizontal)
+				if (lines[i].spaces > 0)
 				{
-				case CENTER:
-				case CENTER_WRAPPED:
-					ox = -x + (rect.w - widths[i]) / 2;
-					break;
-				case RIGHT:
-				case RIGHT_WRAPPED:
-					ox = -x + rect.w - widths[i];
-					break;
+					width = 0.0f;
+					foreach (RenderWord, it2, lines[i].words)
+					{
+						if ((*it2).spaces == 0)
+						{
+							width += (*it2).rect.w;
+						}
+					}
+					widthPerSpace = (rect.w - width) / lines[i].spaces;
+					width = 0.0f;
+					words.clear();
+					foreach (RenderWord, it, lines[i].words)
+					{
+						if ((*it).spaces == 0)
+						{
+							(*it).rect.x = hroundf(width);
+							words += (*it);
+						}
+						else
+						{
+							width += (*it).spaces * widthPerSpace;
+						}
+					}
+					lines[i].words = words;
 				}
-				lines[i].rect.x += ox;
-				foreach (RenderWord, it, lines[i].words)
+				else // no spaces, just force a centered horizontal alignment
 				{
-					(*it).rect.x += ox;
+					ox = -x + (rect.w - lines[i].rect.w) / 2;
+					lines[i].rect.x += ox;
+					foreach (RenderWord, it, lines[i].words)
+					{
+						(*it).rect.x += ox;
+					}
 				}
 			}
-			*/
 		}
 		return lines;
 	}
@@ -393,12 +394,11 @@ namespace atres
 		unsigned int code;
 		float aw;
 		float wordWidth;
-		float lineWidth = 0.0f;
+		int start = 0;
 		int i = 0;
 		int byteLength = 0;
-		int start = 0;
-		int current = 0;
 		bool checkingSpaces = true;
+		word.rect.h = this->_lineHeight;
 		
 		while (i < zeroSize) // checking all words
 		{
@@ -413,7 +413,10 @@ namespace atres
 				}
 				if (code == '\n')
 				{
-					i += byteLength;
+					if (i == start)
+					{
+						i += byteLength;
+					}
 					break;
 				}
 				this->_checkFormatTags(text, i);
@@ -432,10 +435,9 @@ namespace atres
 			if (i > start)
 			{
 				word.text = text(start, i - start);
-				word.rect = grect(rect.x + lineWidth, rect.y, wordWidth, this->_lineHeight);
+				word.rect.w = wordWidth;
 				word.start = start;
-				word.space = checkingSpaces;
-				lineWidth += wordWidth;
+				word.spaces = (checkingSpaces ? i - start : 0);
 				result += word;
 			}
 			checkingSpaces = !checkingSpaces;
@@ -454,16 +456,23 @@ namespace atres
 		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED || horizontal == JUSTIFIED);
 		bool left = (horizontal == LEFT_WRAPPED || horizontal == LEFT || horizontal == JUSTIFIED);
 		float maxWidth = 0.0f;
+		float lineWidth = 0.0f;
 		bool nextLine;
 		bool addWord;
+		line.rect.h = this->_lineHeight;
 		for (int i = 0; i < words.size(); i++)
 		{
-			nextLine = false;
+			nextLine = (i == words.size() - 1);
 			addWord = true;
 			word = words[i];
-			if (line.rect.w + word.rect.w > rect.w)
+			if (word.text == "\n")
 			{
-				if (wrapped && line.words.size() > 0)
+				addWord = false;
+				nextLine = true;
+			}
+			else if (lineWidth + word.rect.w > rect.w && wrapped)
+			{
+				if (line.words.size() > 0)
 				{
 					addWord = false;
 					i--;
@@ -473,31 +482,39 @@ namespace atres
 			}
 			if (addWord)
 			{
-				word.rect = grect(line.rect.w, rect.y + lines.size() * this->_lineHeight, word.rect.w, this->_lineHeight);
-				line.text += word.text;
-				line.rect.w += word.rect.w;
+				word.rect.y = lines.size() * this->_lineHeight;
+				lineWidth += word.rect.w;
 				line.words += word;
 			}
 			if (nextLine)
 			{
+				while (line.words.size() > 0 && line.words[line.words.size() - 1].spaces > 0)
+				{
+					line.words.pop_back();
+				}
+				foreach (RenderWord, it, line.words)
+				{
+					line.text += (*it).text;
+					line.spaces += (*it).spaces;
+					line.rect.w += (*it).rect.w;
+				}
 				maxWidth = hmax(maxWidth, line.rect.w);
-				line.rect.y = line.rect.y;
-				line.rect.h = this->_lineHeight;
-				if (left && !wrapped && line.rect.w + word.rect.w > rect.w)
+				line.rect.y = lines.size() * this->_lineHeight;
+				if (left && !wrapped && line.rect.w > rect.w)
 				{
 					line.rect.w = rect.w;
+					lines += line;
 					break;
 				}
 				lines += line;
+				line.text = "";
+				line.spaces = 0;
 				line.rect.w = 0.0f;
 				line.words.clear();
+				lineWidth = 0.0f;
 			}
 		}
-		maxWidth = hmin(hmax(maxWidth, line.rect.w), rect.w);
-		if (line.words.size() > 0) // adding the last line if it's not empty
-		{
-			lines += line;
-		}
+		maxWidth = hmin(maxWidth, rect.w);
 		if (lines.size() > 0)
 		{
 			lines = this->verticalCorrection(rect, vertical, lines, offset.y, this->_lineHeight);
@@ -506,82 +523,12 @@ namespace atres
 				lines = this->horizontalCorrection(rect, horizontal, lines, offset.x, maxWidth);
 			}
 		}
-
-
-
-		/*
-		bool checkingSpaces = false;
-		int i = 0;
-		int start = 0;
-		int current = 0;
-		int byteLength;
-		unsigned int code;
-		float aw;
-		float lineWidth;
-		float wordWidth;
-		float maxWidth = 0.0f;;
-		float y = 0.0f;
-		int zeroSize = text.find_first_of('\0');
-		if (zeroSize < 0)
-		{
-			zeroSize = text.size();
-		}
-#ifdef _DEBUG
-		else if (zeroSize < text.size())
-		{
-			atres::log(hsprintf("Warning: Text \"%s\" has \\0 character before the actual end", str));
-		}
-#endif
-		*/
-
-
-		/*
-		
-		while (i < zeroSize)
-		{
-			i = start + current;
-			line.words.clear();
-			word.text = "";
-			while (i < text.size() && str[i] == ' ') // skip initial spaces in the line
-			{
-				i++;
-			}
-			start = i;
-			current = 0;
-			lineWidth = 0.0f;
-			checkingSpaces = false;
-
-			// create render words
-
-			maxWidth = hmax(maxWidth, lineWidth);
-			lineWidth = 0.0f;
-
-			*/
-			/*
-			lineWidth = hmax(lineWidth, width);
-			line.text = text(start, current);
-			line.rect = grect(rect.x, rect.y + y, width, lineHeight);
-			line.start = start;
-			*/
-		/*
-			lines += line;
-			y += this->_lineHeight;
-		}
-		if (lines.size() > 0)
-		{
-			lines = this->verticalCorrection(rect, vertical, lines, offset.y, this->_lineHeight);
-			if (lines.size() > 0)
-			{
-				lines = this->horizontalCorrection(rect, horizontal, lines, offset.x, lineWidth);
-			}
-		}
-		*/
 		return lines;
 	}
 	
-	harray<RenderSequence> Renderer::createRenderSequences(grect rect, harray<RenderLine> lines, harray<FormatTag> tags)
+	harray<RenderSequence> Renderer::createRenderSequences(grect rect, harray<RenderLine> lines, harray<FormatTag> __tags)
 	{
-		this->_initializeFormatTags(tags);
+		this->_initializeFormatTags(__tags);
 
 		harray<RenderSequence> sequences;
 		RenderSequence sequence;
@@ -620,7 +567,7 @@ namespace atres
 				{
 					// checking first formatting tag changes
 					code = utf8_to_uint(&(*it).text[i], &byteLength);
-					while (tags.size() > 0 && (*it).start + i >= this->_nextTag.start)
+					while (this->_tags.size() > 0 && (*it).start + i >= this->_nextTag.start)
 					{
 						if (this->_nextTag.type == CLOSE)
 						{
@@ -1183,13 +1130,7 @@ namespace atres
 			hstr unformattedText = prepareFormatting(fontName, text, tags);
 			if (unformattedText != "")
 			{
-				float width = 0.0f;
-				RenderLine line = getFittingLine(grect(0, 0, 100000, 1), unformattedText, tags);
-				foreach (RenderWord, it, line.words)
-				{
-					width += (*it).rect.w;
-				}
-				return width;
+				return getFittingLine(grect(0, 0, 100000, 1), unformattedText, tags).rect.w;
 			}
 		}
 		return 0.0f;
@@ -1218,13 +1159,7 @@ namespace atres
 			hstr unformattedText = prepareFormatting(fontName, text, tags);
 			if (unformattedText != "")
 			{
-				int size = 0;
-				RenderLine line = getFittingLine(grect(0, 0, maxWidth, 1), unformattedText, tags);
-				foreach (RenderWord, it, line.words)
-				{
-					size += (*it).text.size();
-				}
-				return size;
+				return getFittingLine(grect(0, 0, maxWidth, 1), unformattedText, tags).text.size();
 			}
 		}
 		return 0;
@@ -1237,13 +1172,7 @@ namespace atres
 			return 0.0f;
 		}
 		harray<FormatTag> tags = prepareTags(fontName);
-		float width = 0.0f;
-		RenderLine line = getFittingLine(grect(0, 0, 100000, 1), text, tags);
-		foreach (RenderWord, it, line.words)
-		{
-			width += (*it).rect.w;
-		}
-		return width;
+		return getFittingLine(grect(0, 0, 100000, 1), text, tags).rect.w;
 	}
 
 	float Renderer::getTextHeightUnformatted(chstr fontName, chstr text, float maxWidth)
@@ -1264,13 +1193,7 @@ namespace atres
 			return 0;
 		}
 		harray<FormatTag> tags = prepareTags(fontName);
-		int size = 0;
-		RenderLine line = getFittingLine(grect(0, 0, maxWidth, 1), text, tags);
-		foreach (RenderWord, it, line.words)
-		{
-			size += (*it).text.size();
-		}
-		return size;
+		return getFittingLine(grect(0, 0, maxWidth, 1), text, tags).text.size();
 	}
 	
 	hstr Renderer::prepareFormatting(chstr fontName, chstr text, harray<FormatTag>& tags)
@@ -1295,51 +1218,57 @@ namespace atres
 	
 	RenderLine Renderer::getFittingLine(grect rect, chstr text, harray<FormatTag> tags)
 	{
-		this->_initializeFormatTags(tags);
-		
-		CharacterDefinition* character;
-		
-		const char* str = text.c_str();
-		int i = 0;
-		int byteLength;
-		unsigned int code;
-		float width = 0.0f;
-		float aw;
-		
-		while (i < text.size())
+		harray<RenderWord> words = this->createRenderWords(rect, text, tags);
+		RenderLine line;
+
+		float lineWidth = 0.0f;
+		bool nextLine;
+		bool addWord;
+		line.rect.h = this->_lineHeight;
+		for (int i = 0; i < words.size(); i++)
 		{
-			this->_checkFormatTags(text, i);
-			if (this->_tags.size() == 0)
+			nextLine = (i == words.size() - 1);
+			addWord = true;
+			if (words[i].text == "\n")
 			{
-				this->_nextTag.start = text.size() + 1;
+				addWord = false;
+				nextLine = true;
 			}
-			code = utf8_to_uint(&str[i], &byteLength);
-			if (code == '\0' || code == '\n')
+			else if (lineWidth + words[i].rect.w > rect.w)
 			{
+				if (line.words.size() > 0)
+				{
+					addWord = false;
+					i--;
+				}
+				// else the whole word is the only one in the line and doesn't fit, so just chop it off
+				nextLine = true;
+			}
+			if (addWord)
+			{
+				lineWidth += words[i].rect.w;
+				line.words += words[i];
+			}
+			if (nextLine)
+			{
+				while (line.words.size() > 0 && line.words[line.words.size() - 1].spaces > 0)
+				{
+					line.words.pop_back();
+				}
+				foreach (RenderWord, it, line.words)
+				{
+					line.text += (*it).text;
+					line.spaces += (*it).spaces;
+					line.rect.w += (*it).rect.w;
+				}
+				line.text = "";
+				line.spaces = 0;
+				line.rect.w = 0.0f;
+				line.words.clear();
 				break;
 			}
-			character = &this->_characters[code];
-			if (width < -character->bx * this->_scale)
-			{
-				aw = (character->aw - character->bx) * this->_scale;
-			}
-			else
-			{
-				aw = character->aw * this->_scale;
-			}
-			width += aw;
-			if (width > rect.w) // line is full
-			{
-				width -= aw;
-				break;
-			}
-			i += byteLength;
 		}
-		RenderLine result;
-		//result.start = 0;
-		//result.text = (i == 0 ? "" : text(0, i));
-		//result.rect = grect(0, 0, width, lineHeight);
-		return result;
+		return line;
 	}
 	
 
