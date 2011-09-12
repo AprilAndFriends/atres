@@ -69,6 +69,7 @@
       <Command>copy ..\..\..\april\bin\*.dll ..\..\bin\$(Configuration)
 copy ..\..\bin\atresttf\$(Configuration)\*.dll ..\..\bin\$(Configuration)
 copy ..\..\..\hltypes\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
+copy ..\..\..\hltypes\bin\hlxml\$(Configuration)\*.dll ..\..\bin\$(Configuration)
 copy ..\..\..\gtypes\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
 copy ..\..\..\aprilui\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
 copy ..\..\..\lib\msvc100\*.dll ..\..\bin\$(Configuration)
@@ -98,7 +99,14 @@ copy ..\..\..\lib\msvc100\*.dll ..\..\bin\$(Configuration)
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\bin\atresttf\$(Configuration)\*.dll ..\..\bin\$(Configuration)</Command>
+      <Command>copy ..\..\..\april\bin\*.dll ..\..\bin\$(Configuration)
+copy ..\..\bin\atresttf\$(Configuration)\*.dll ..\..\bin\$(Configuration)
+copy ..\..\..\hltypes\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
+copy ..\..\..\hltypes\bin\hlxml\$(Configuration)\*.dll ..\..\bin\$(Configuration)
+copy ..\..\..\gtypes\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
+copy ..\..\..\aprilui\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
+copy ..\..\..\lib\msvc100\*.dll ..\..\bin\$(Configuration)
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
