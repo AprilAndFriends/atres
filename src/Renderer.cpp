@@ -24,6 +24,9 @@
 #include "FontResource.h"
 #include "Util.h"
 
+#define ALIGNMENT_IS_WRAPPED(formatting) ((formatting) == LEFT_WRAPPED || (formatting) == CENTER_WRAPPED || (formatting) == RIGHT_WRAPPED || (formatting) == JUSTIFIED)
+#define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED)
+
 namespace atres
 {
     hmap<hstr, FontResource*> fonts;
@@ -214,7 +217,7 @@ namespace atres
 	harray<RenderLine> Renderer::horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float x, float lineWidth)
 	{
 		// horizontal correction not necessary when left aligned
-		if (horizontal == LEFT || horizontal == LEFT_WRAPPED)
+		if (ALIGNMENT_IS_LEFT(horizontal))
 		{
 			foreach (RenderLine, it, lines)
 			{
@@ -407,16 +410,16 @@ namespace atres
 			while (i < zeroSize) // checking a whole word
 			{
 				code = utf8_to_uint(&str[i], &byteLength);
-				if ((code == ' ') != checkingSpaces)
-				{
-					break;
-				}
 				if (code == '\n')
 				{
 					if (i == start)
 					{
 						i += byteLength;
 					}
+					break;
+				}
+				if ((code == ' ') != checkingSpaces)
+				{
 					break;
 				}
 				this->_checkFormatTags(text, i);
@@ -453,8 +456,8 @@ namespace atres
 		RenderLine line;
 		RenderWord word;
 
-		bool wrapped = (horizontal == LEFT_WRAPPED || horizontal == RIGHT_WRAPPED || horizontal == CENTER_WRAPPED || horizontal == JUSTIFIED);
-		bool left = (horizontal == LEFT_WRAPPED || horizontal == LEFT || horizontal == JUSTIFIED);
+		bool wrapped = ALIGNMENT_IS_WRAPPED(horizontal);
+		bool left = ALIGNMENT_IS_LEFT(horizontal);
 		float maxWidth = 0.0f;
 		float lineWidth = 0.0f;
 		bool nextLine;
@@ -488,9 +491,18 @@ namespace atres
 			}
 			if (nextLine)
 			{
-				while (line.words.size() > 0 && line.words[line.words.size() - 1].spaces > 0)
+				// remove spaces at begining and end in wrapped formatting styles
+				if (wrapped)
 				{
-					line.words.pop_back();
+					RenderWord word;
+					while (line.words.size() > 0 && line.words.front().spaces > 0)
+					{
+						line.words.pop_front();
+					}
+					while (line.words.size() > 0 && line.words.back().spaces > 0)
+					{
+						line.words.pop_back();
+					}
 				}
 				foreach (RenderWord, it, line.words)
 				{
@@ -1261,10 +1273,6 @@ namespace atres
 					line.spaces += (*it).spaces;
 					line.rect.w += (*it).rect.w;
 				}
-				line.text = "";
-				line.spaces = 0;
-				line.rect.w = 0.0f;
-				line.words.clear();
 				break;
 			}
 		}
