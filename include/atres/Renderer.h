@@ -43,10 +43,10 @@ namespace atres
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
 		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight);
 		harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
-		harray<RenderWord> createRenderWords(grect rect, chstr text, harray<FormatTag> tags);
+		harray<RenderWord> createRenderWords(grect rect, chstr text, harray<FormatTag> tags, bool limitWidth = false);
 		harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset = gvec2());
 		harray<RenderSequence> createRenderSequences(grect rect, harray<RenderLine> lines, harray<FormatTag> tags);
-		harray<RenderSequence> optimizeSequences(harray<RenderSequence> sequences);
+		harray<RenderSequence> optimizeSequences(harray<RenderSequence>& sequences);
 	
 		void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = APRIL_COLOR_WHITE, gvec2 offset = gvec2());
 		void drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = APRIL_COLOR_WHITE, gvec2 offset = gvec2());
@@ -102,8 +102,37 @@ namespace atres
 		float _lineHeight;
 		float _scale;
 
+		harray<RenderSequence> _sequences;
+		RenderSequence _sequence;
+		harray<RenderSequence> _shadowSequences;
+		RenderSequence _shadowSequence;
+		harray<RenderSequence> _borderSequences;
+		RenderSequence _borderSequence;
+		RenderRectangle _renderRect;
+
+		april::Color _color;
+		hstr _hex;
+		int _effectMode;
+		int _alpha;
+
+		harray<RenderLine> _lines;
+		RenderLine _line;
+		RenderWord _word;
+
+		april::Texture* _texture;
+		unsigned int _code;
+		bool _colorChanged;
+
+		bool _needCache;
+		CacheEntry _entry;
+		grect _drawRect;
+		harray<RenderSequence> _currentSequences;
+
 		void _initializeFormatTags(harray<FormatTag>& tags);
+		void _initializeLineProcessing(harray<RenderLine> lines = harray<RenderLine>());
+		void _initializeRenderSequences();
 		void _checkFormatTags(chstr text, int index);
+		void _processFormatTags(chstr text, int index);
 
 
 	};
