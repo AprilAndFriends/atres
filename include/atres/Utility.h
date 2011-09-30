@@ -120,6 +120,28 @@ namespace atres
 		CacheEntry() : index(0), horizontal(CENTER_WRAPPED), vertical(CENTER) { }
 	};
 
+	struct CacheUnformattedEntry
+	{
+		hstr fontName;
+		int index;
+		gvec2 size;
+		Alignment horizontal;
+		Alignment vertical;
+		april::Color color;
+		gvec2 offset;
+		harray<RenderSequence> sequences;
+		CacheUnformattedEntry() : index(0), horizontal(CENTER_WRAPPED), vertical(CENTER) { }
+	};
+
+	struct CacheLineEntry
+	{
+		hstr fontName;
+		int index;
+		gvec2 size;
+		RenderLine line;
+		CacheLineEntry() : index(0) { }
+	};
+
 };
 
 #endif
