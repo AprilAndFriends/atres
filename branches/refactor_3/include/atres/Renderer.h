@@ -71,7 +71,7 @@ namespace atres
 		int getTextCountUnformatted(chstr fontName, chstr text, float maxWidth);
 		hstr prepareFormatting(chstr fontName, chstr text, harray<FormatTag>& tags);
 		harray<FormatTag> prepareTags(chstr fontName);
-		RenderLine getFittingLine(grect rect, chstr text, harray<FormatTag> tags);
+		RenderLine getFittingLine(chstr fontName, grect rect, chstr text, harray<FormatTag> tags);
 	
 		void setDefaultFont(chstr name);
 		FontResource* getFontResource(chstr name);
@@ -124,7 +124,9 @@ namespace atres
 		bool _colorChanged;
 
 		bool _needCache;
-		CacheEntry _entry;
+		CacheEntry _cacheEntry;
+		CacheUnformattedEntry _cacheUnformattedEntry;
+		CacheLineEntry _cacheLineEntry;
 		grect _drawRect;
 		harray<RenderSequence> _currentSequences;
 
@@ -133,7 +135,7 @@ namespace atres
 		void _initializeRenderSequences();
 		void _checkFormatTags(chstr text, int index);
 		void _processFormatTags(chstr text, int index);
-
+		RenderLine _calculateFittingLine(grect rect, chstr text, harray<FormatTag> tags);
 
 	};
 	

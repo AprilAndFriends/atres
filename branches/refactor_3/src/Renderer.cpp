@@ -26,26 +26,30 @@
 
 #define ALIGNMENT_IS_WRAPPED(formatting) ((formatting) == LEFT_WRAPPED || (formatting) == CENTER_WRAPPED || (formatting) == RIGHT_WRAPPED || (formatting) == JUSTIFIED)
 #define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED)
+
 #define EFFECT_MODE_NORMAL 0
 #define EFFECT_MODE_SHADOW 1
 #define EFFECT_MODE_BORDER 2
+#define BUFFER_MAX_SIZE BUFFER_MAX_CHARACTERS * 6
 
 namespace atres
 {
     hmap<hstr, FontResource*> fonts;
 	FontResource* defaultFont = NULL;
-	int cacheSize = 100;
+	int cacheSize = 1000;
 	int cacheIndex = 0;
 	int cacheUnformattedIndex = 0;
+	int cacheLinesIndex = 0;
 	gvec2 shadowOffset(1.0f, 1.0f);
 	april::Color shadowColor = APRIL_COLOR_BLACK;
 	float borderOffset = 1.0f;
 	april::Color borderColor = APRIL_COLOR_BLACK;
 	hmap<hstr, CacheEntry> cache;
-	hmap<hstr, CacheEntry> cacheUnformatted;
+	hmap<hstr, CacheUnformattedEntry> cacheUnformatted;
+	hmap<hstr, CacheLineEntry> cacheLines;
 	hmap<hstr, hstr> colors;
 	bool globalOffsets = false;
-	april::TexturedVertex vertices[BUFFER_MAX_CHARACTERS * 6];
+	april::TexturedVertex vertices[BUFFER_MAX_SIZE];
 
 	Renderer::Renderer() : _fontResource(NULL)
 	{
@@ -64,7 +68,7 @@ namespace atres
 		colors["white"] = APRIL_COLOR_WHITE.hex();
 		colors["grey"] = APRIL_COLOR_GREY.hex();
 		colors["black"] = APRIL_COLOR_BLACK.hex();
-		for (int i = 0; i < BUFFER_MAX_CHARACTERS * 6; i++)
+		for (int i = 0; i < BUFFER_MAX_SIZE; i++)
 		{
 			vertices[i].z = 0.0f;
 		}
@@ -234,10 +238,9 @@ namespace atres
 			}
 			return lines;
 		}
-		harray<float> widths;
+		float ox;
 		if (horizontal != JUSTIFIED)
 		{
-			float ox;
 			// horizontal correction
 			foreach (RenderLine, it, lines)
 			{
@@ -259,11 +262,10 @@ namespace atres
 				}
 			}
 		}
-		else
+		else // justified correction
 		{
 			float width;
 			float widthPerSpace;
-			float ox;
 			harray<RenderWord> words;
 			for (int i = 0; i < lines.size() - 1; i++)
 			{
@@ -899,14 +901,18 @@ namespace atres
 		gvec2 offset)
 	{
 		this->_needCache = !cache.has_key(text);
-		this->_entry = CacheEntry();
+		this->_cacheEntry = CacheEntry();
 		this->_drawRect = grect(0.0f, 0.0f, rect.getSize());
 		if (!this->_needCache)
 		{
-			this->_entry = cache[text];
-			this->_needCache = (this->_entry.fontName != fontName || this->_entry.size.x != this->_drawRect.w ||
-				this->_entry.size.y != this->_drawRect.h || this->_entry.horizontal != horizontal ||
-				this->_entry.vertical != vertical || this->_entry.color != color || this->_entry.offset != offset);
+			this->_cacheEntry = cache[text];
+			this->_needCache = (this->_cacheEntry.fontName != fontName ||
+				this->_cacheEntry.size.x != this->_drawRect.w ||
+				this->_cacheEntry.size.y != this->_drawRect.h ||
+				this->_cacheEntry.horizontal != horizontal ||
+				this->_cacheEntry.vertical != vertical ||
+				this->_cacheEntry.color != color ||
+				this->_cacheEntry.offset != offset);
 		}
 		else
 		{
@@ -925,17 +931,21 @@ namespace atres
 			tag.data = fontName;
 			tags.push_front(tag);
 			harray<RenderLine> lines = this->createRenderLines(this->_drawRect, unformattedText, tags, horizontal, vertical, offset);
-			this->_entry.fontName = fontName;
-			this->_entry.index = cacheIndex;
-			this->_entry.size = rect.getSize();
-			this->_entry.horizontal = horizontal;
-			this->_entry.vertical = vertical;
-			this->_entry.color = color;
-			this->_entry.offset = offset;
-			this->_entry.sequences = this->createRenderSequences(this->_drawRect, lines, tags);
-			cache[text] = this->_entry;
+			this->_cacheEntry.fontName = fontName;
+			this->_cacheEntry.index = cacheIndex;
+			this->_cacheEntry.size = rect.getSize();
+			this->_cacheEntry.horizontal = horizontal;
+			this->_cacheEntry.vertical = vertical;
+			this->_cacheEntry.color = color;
+			this->_cacheEntry.offset = offset;
+			this->_cacheEntry.sequences = this->createRenderSequences(this->_drawRect, lines, tags);
+			cache[text] = this->_cacheEntry;
+			this->_currentSequences = this->_cacheEntry.sequences;
 		}
-		this->_currentSequences = cache[text].sequences;
+		else
+		{
+			this->_currentSequences = cache[text].sequences;
+		}
 		foreach (RenderSequence, it, this->_currentSequences)
 		{
 			foreach (RenderRectangle, it2, (*it).rectangles)
@@ -951,14 +961,19 @@ namespace atres
 		april::Color color, gvec2 offset)
 	{
 		this->_needCache = !cacheUnformatted.has_key(text);
-		this->_entry = CacheEntry();
-		this->_drawRect = grect(0.0f, 0.0f, rect.getSize());
+		this->_cacheUnformattedEntry = CacheUnformattedEntry();
+		this->_drawRect.set(0.0f, 0.0f, rect.getSize());
 		if (!this->_needCache)
 		{
-			this->_entry = cacheUnformatted[text];
-			this->_needCache = (this->_entry.fontName != fontName || this->_entry.size.x != this->_drawRect.w ||
-				this->_entry.size.y != this->_drawRect.h || this->_entry.horizontal != horizontal ||
-				this->_entry.vertical != vertical || this->_entry.color != color || this->_entry.offset != offset);
+			this->_cacheUnformattedEntry = cacheUnformatted[text];
+			this->_needCache = (
+				this->_cacheUnformattedEntry.fontName != fontName ||
+				this->_cacheUnformattedEntry.size.x != this->_drawRect.w ||
+				this->_cacheUnformattedEntry.size.y != this->_drawRect.h ||
+				this->_cacheUnformattedEntry.horizontal != horizontal ||
+				this->_cacheUnformattedEntry.vertical != vertical ||
+				this->_cacheUnformattedEntry.color != color ||
+				this->_cacheUnformattedEntry.offset != offset);
 		}
 		else
 		{
@@ -968,7 +983,6 @@ namespace atres
 		if (this->_needCache)
 		{
 			harray<FormatTag> tags;
-			hstr unformattedText = this->analyzeFormatting(text, tags);
 			FormatTag tag;
 			tag.type = FORMAT_COLOR;
 			tag.data = color.hex();
@@ -976,18 +990,22 @@ namespace atres
 			tag.type = FORMAT_FONT;
 			tag.data = fontName;
 			tags.push_front(tag);
-			harray<RenderLine> lines = this->createRenderLines(this->_drawRect, unformattedText, tags, horizontal, vertical, offset);
-			this->_entry.fontName = fontName;
-			this->_entry.index = cacheIndex;
-			this->_entry.size = rect.getSize();
-			this->_entry.horizontal = horizontal;
-			this->_entry.vertical = vertical;
-			this->_entry.color = color;
-			this->_entry.offset = offset;
-			this->_entry.sequences = this->createRenderSequences(this->_drawRect, lines, tags);
-			cacheUnformatted[text] = this->_entry;
+			harray<RenderLine> lines = this->createRenderLines(this->_drawRect, text, tags, horizontal, vertical, offset);
+			this->_cacheUnformattedEntry.fontName = fontName;
+			this->_cacheUnformattedEntry.index = cacheUnformattedIndex;
+			this->_cacheUnformattedEntry.size = rect.getSize();
+			this->_cacheUnformattedEntry.horizontal = horizontal;
+			this->_cacheUnformattedEntry.vertical = vertical;
+			this->_cacheUnformattedEntry.color = color;
+			this->_cacheUnformattedEntry.offset = offset;
+			this->_cacheUnformattedEntry.sequences = this->createRenderSequences(this->_drawRect, lines, tags);
+			cacheUnformatted[text] = this->_cacheUnformattedEntry;
+			this->_currentSequences = this->_cacheUnformattedEntry.sequences;
 		}
-		this->_currentSequences = cacheUnformatted[text].sequences;
+		else
+		{
+			this->_currentSequences = cacheUnformatted[text].sequences;
+		}
 		foreach (RenderSequence, it, this->_currentSequences)
 		{
 			foreach (RenderRectangle, it2, (*it).rectangles)
@@ -997,30 +1015,6 @@ namespace atres
 			}
 			this->drawRenderSequence(*it);
 		}
-		/*
-
-		harray<FormatTag> tags;
-		FormatTag tag;
-		tag.type = FORMAT_COLOR;
-		tag.data = color.hex();
-		tags.push_front(tag);
-		tag.type = FORMAT_FONT;
-		tag.data = fontName;
-		tags.push_front(tag);
-		this->_drawRect = grect(0.0f, 0.0f, rect.getSize());
-
-		harray<RenderLine> lines = this->createRenderLines(this->_drawRect, text, tags, horizontal, vertical, offset);
-		this->_currentSequences = this->createRenderSequences(this->_drawRect, lines, tags);
-		foreach (RenderSequence, it, this->_currentSequences)
-		{
-			foreach (RenderRectangle, it2, (*it).rectangles)
-			{
-				(*it2).dest.x += rect.x;
-				(*it2).dest.y += rect.y;
-			}
-			this->drawRenderSequence(*it);
-		}
-		*/
 	}
 
 /******* DRAW TEXT OVERLOADS *******************************************/
@@ -1154,7 +1148,7 @@ namespace atres
 		{
 			minKey = "";
 			minIndex = -1;
-			foreach_m (CacheEntry, it, cacheUnformatted)
+			foreach_m (CacheUnformattedEntry, it, cacheUnformatted)
 			{
 				if (minKey == "" || it->second.index < minIndex)
 				{
@@ -1163,6 +1157,20 @@ namespace atres
 				}
 			}
 			cacheUnformatted.remove_key(minKey);
+		}
+		while (cacheLines.size() >= cacheSize)
+		{
+			minKey = "";
+			minIndex = -1;
+			foreach_m (CacheLineEntry, it, cacheLines)
+			{
+				if (minKey == "" || it->second.index < minIndex)
+				{
+					minKey = it->first;
+					minIndex = it->second.index;
+				}
+			}
+			cacheLines.remove_key(minKey);
 		}
 	}
 	
@@ -1235,7 +1243,7 @@ namespace atres
 			hstr unformattedText = this->prepareFormatting(fontName, text, tags);
 			if (unformattedText != "")
 			{
-				return this->getFittingLine(grect(0.0f, 0.0f, 100000.0f, 1.0f), unformattedText, tags).rect.w;
+				return this->getFittingLine(fontName, grect(0.0f, 0.0f, 100000.0f, 1.0f), unformattedText, tags).rect.w;
 			}
 		}
 		return 0.0f;
@@ -1264,7 +1272,7 @@ namespace atres
 			hstr unformattedText = this->prepareFormatting(fontName, text, tags);
 			if (unformattedText != "")
 			{
-				return this->getFittingLine(grect(0.0f, 0.0f, maxWidth, 1.0f), unformattedText, tags).text.size();
+				return this->getFittingLine(fontName, grect(0.0f, 0.0f, maxWidth, 1.0f), unformattedText, tags).text.size();
 			}
 		}
 		return 0;
@@ -1275,7 +1283,7 @@ namespace atres
 		if (text != "")
 		{
 			harray<FormatTag> tags = this->prepareTags(fontName);
-			return this->getFittingLine(grect(0.0f, 0.0f, 100000.0f, 1.0f), text, tags).rect.w;
+			return this->getFittingLine(fontName, grect(0.0f, 0.0f, 100000.0f, 1.0f), text, tags).rect.w;
 		}
 		return 0.0f;
 	}
@@ -1296,7 +1304,7 @@ namespace atres
 		if (text != "")
 		{
 			harray<FormatTag> tags = this->prepareTags(fontName);
-			return this->getFittingLine(grect(0.0f, 0.0f, maxWidth, 1.0f), text, tags).text.size();
+			return this->getFittingLine(fontName, grect(0.0f, 0.0f, maxWidth, 1.0f), text, tags).text.size();
 		}
 		return 0;
 	}
@@ -1321,9 +1329,37 @@ namespace atres
 		return tags;
 	}
 	
-	RenderLine Renderer::getFittingLine(grect rect, chstr text, harray<FormatTag> tags)
+	RenderLine Renderer::getFittingLine(chstr fontName, grect rect, chstr text, harray<FormatTag> tags)
 	{
-		//*
+		this->_needCache = !cacheLines.has_key(text);
+		this->_cacheLineEntry = CacheLineEntry();
+		this->_drawRect.set(0.0f, 0.0f, rect.getSize());
+		if (!this->_needCache)
+		{
+			this->_cacheLineEntry = cacheLines[text];
+			this->_needCache = (this->_cacheLineEntry.fontName != fontName ||
+				this->_cacheLineEntry.size.x != this->_drawRect.w ||
+				this->_cacheLineEntry.size.y != this->_drawRect.h);
+		}
+		else
+		{
+			updateCache();
+			cacheLinesIndex++;
+		}
+		if (this->_needCache)
+		{
+			this->_cacheLineEntry.fontName = fontName;
+			this->_cacheLineEntry.index = cacheLinesIndex;
+			this->_cacheLineEntry.size = rect.getSize();
+			this->_cacheLineEntry.line = this->_calculateFittingLine(rect, text, tags);
+			cacheLines[text] = this->_cacheLineEntry;
+			return this->_cacheLineEntry.line;
+		}
+		return cacheLines[text].line;
+	}
+
+	RenderLine Renderer::_calculateFittingLine(grect rect, chstr text, harray<FormatTag> tags)
+	{
 		harray<RenderWord> words = this->createRenderWords(rect, text, tags, true);
 		RenderLine line;
 
@@ -1373,177 +1409,6 @@ namespace atres
 			}
 		}
 		return line;
-		//*/
-
-
-		/*
-		foreach (RenderWord, it, this->_line.words)
-		{
-			this->_word = (*it);
-			for (int i = 0; i < this->_word.text.size(); i += byteLength)
-			{
-				this->_processFormatTags(this->_word.text, i);
-				// checking first formatting tag changes
-				this->_code = utf8_to_uint(&this->_word.text[i], &byteLength);
-				// checking if texture contains this character image
-				this->_texture = this->_fontResource->getTexture(this->_code);
-				if (this->_texture != NULL)
-				{
-					if (this->_sequence.texture != this->_texture)
-					{
-						if (this->_sequence.rectangles.size() > 0)
-						{
-							this->_sequences += this->_sequence;
-							this->_sequence.rectangles.clear();
-						}
-						this->_sequence.texture = this->_texture;
-					}
-					if (this->_shadowSequence.texture != this->_texture)
-					{
-						if (this->_shadowSequence.rectangles.size() > 0)
-						{
-							this->_shadowSequences += this->_shadowSequence;
-							this->_shadowSequence.rectangles.clear();
-						}
-						this->_shadowSequence.texture = this->_texture;
-					}
-					if (this->_borderSequence.texture != this->_texture)
-					{
-						if (this->_borderSequence.rectangles.size() > 0)
-						{
-							this->_borderSequences += this->_borderSequence;
-							this->_borderSequence.rectangles.clear();
-						}
-						this->_borderSequence.texture = this->_texture;
-					}
-				}
-				// checking the particular character
-				this->_character = &this->_characters[this->_code];
-				area = this->_word.rect;
-				area.x += hmax(0.0f, width + this->_character->bx * this->_scale);
-				area.w = this->_character->w * this->_scale;
-				area.h = this->_fontResource->getHeight();
-				area.y += (this->_lineHeight - this->_fontResource->getHeight()) / 2;
-				this->_renderRect = this->_fontResource->makeRenderRectangle(rect, area, this->_code);
-				this->_sequence.rectangles += this->_renderRect;
-				destination = this->_renderRect.dest;
-				switch (this->_effectMode)
-				{
-				case EFFECT_MODE_SHADOW: // shadow
-					this->_renderRect.dest = destination + shadowOffset * (globalOffsets ? 1.0f : this->_scale);
-					this->_shadowSequence.rectangles += this->_renderRect;
-					break;
-				case EFFECT_MODE_BORDER: // border
-					this->_renderRect.dest = destination + gvec2(-borderOffset, -borderOffset) * (globalOffsets ? 1.0f : this->_scale);
-					this->_borderSequence.rectangles += this->_renderRect;
-					this->_renderRect.dest = destination + gvec2(borderOffset, -borderOffset) * (globalOffsets ? 1.0f : this->_scale);
-					this->_borderSequence.rectangles += this->_renderRect;
-					this->_renderRect.dest = destination + gvec2(-borderOffset, borderOffset) * (globalOffsets ? 1.0f : this->_scale);
-					this->_borderSequence.rectangles += this->_renderRect;
-					this->_renderRect.dest = destination + gvec2(borderOffset, borderOffset) * (globalOffsets ? 1.0f : this->_scale);
-					this->_borderSequence.rectangles += this->_renderRect;
-					this->_renderRect.dest = destination + gvec2(0.0f, -borderOffset) * (globalOffsets ? 1.0f : this->_scale);
-					this->_borderSequence.rectangles += this->_renderRect;
-					this->_renderRect.dest = destination + gvec2(-borderOffset, 0.0f) * (globalOffsets ? 1.0f : this->_scale);
-					this->_borderSequence.rectangles += this->_renderRect;
-					this->_renderRect.dest = destination + gvec2(borderOffset, 0.0f) * (globalOffsets ? 1.0f : this->_scale);
-					this->_borderSequence.rectangles += this->_renderRect;
-					this->_renderRect.dest = destination + gvec2(0.0f, borderOffset) * (globalOffsets ? 1.0f : this->_scale);
-					this->_borderSequence.rectangles += this->_renderRect;
-					break;
-				}
-				width += (width < -this->_character->bx * this->_scale ? (this->_character->aw - this->_character->bx) : this->_character->aw) * this->_scale;
-			}
-		}
-		//*/
-
-		/*
-		this->_initializeFormatTags(tags);
-		int zeroSize = text.find_first_of('\0');
-		if (zeroSize < 0)
-		{
-			zeroSize = text.size();
-		}
-#ifdef _DEBUG
-		else if (zeroSize < text.size())
-		{
-			atres::log(hsprintf("Warning: Text \"%s\" has \\0 character before the actual end", text.c_str()));
-		}
-#endif
-		RenderLine result;
-		RenderWord word;
-
-		const char* str = text.c_str();
-
-		unsigned int code;
-		float aw;
-		float wordWidth;
-		int start = 0;
-		int i = 0;
-		int byteLength = 0;
-		bool checkingSpaces = true;
-		word.rect.h = this->_lineHeight;
-		
-		while (i < zeroSize) // checking all words
-		{
-			start = i;
-			wordWidth = 0.0f;
-			while (i < zeroSize) // checking a whole word
-			{
-				code = utf8_to_uint(&str[i], &byteLength);
-				if (code == '\n')
-				{
-					if (i == start)
-					{
-						i += byteLength;
-					}
-					break;
-				}
-				if ((code == ' ') != checkingSpaces)
-				{
-					break;
-				}
-				this->_checkFormatTags(text, i);
-				this->_character = &this->_characters[code];
-				if (wordWidth < -this->_character->bx * this->_scale)
-				{
-					aw = (this->_character->aw - this->_character->bx) * this->_scale;
-				}
-				else
-				{
-					aw = this->_character->aw * this->_scale;
-				}
-				wordWidth += aw;
-				if (wordWidth > rect.w) // line is full
-				{
-					break;
-				}
-				i += byteLength;
-			}
-			if (i > start)
-			{
-				word.text = text(start, i - start);
-				word.rect.w = wordWidth;
-				word.start = start;
-				word.spaces = (checkingSpaces ? i - start : 0);
-				result.words += word;
-				if (wordWidth > rect.w) // line is full
-				{
-					break;
-				}
-			}
-			checkingSpaces = !checkingSpaces;
-		}
-		foreach (RenderWord, it, result.words)
-		{
-			result.text += (*it).text;
-			result.spaces += (*it).spaces;
-			result.rect.w += (*it).rect.w;
-		}
-		return result;
-		//*/
 	}
-	
-
 
 }
