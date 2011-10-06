@@ -194,17 +194,17 @@ namespace atres
 		return result;
 	}
 
-	harray<RenderLine> Renderer::verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight)
+	harray<RenderLine> Renderer::verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight, float height)
 	{
 		harray<RenderLine> result;
 		// vertical correction
 		switch (vertical)
 		{
 		case CENTER:
-			y += (lines.size() * lineHeight - rect.h) / 2;
+			y += ((lines.size() - 1) * lineHeight + height - rect.h) / 2;
 			break;
 		case BOTTOM:
-			y += lines.size() * lineHeight - rect.h;
+			y += (lines.size() - 1) * lineHeight + height - rect.h;
 			break;
 		}
 		// remove lines that cannot be seen anyway
@@ -320,6 +320,7 @@ namespace atres
 		this->_fontResource = NULL;
 		this->_characters.clear();
 		this->_lineHeight = 0.0f;
+		this->_height = 0.0f;
 		this->_scale = 1.0f;
 	}
 
@@ -374,6 +375,7 @@ namespace atres
 					{
 						this->_fontResource = this->getFontResource(this->_nextTag.data);
 						this->_lineHeight = this->_fontResource->getLineHeight();
+						this->_height = this->_fontResource->getHeight();
 					}
 					else
 					{
@@ -454,6 +456,7 @@ namespace atres
 						{
 							this->_fontResource = this->getFontResource(this->_nextTag.data);
 							this->_lineHeight = this->_fontResource->getLineHeight();
+							this->_height = this->_fontResource->getHeight();
 						}
 						else
 						{
@@ -591,7 +594,7 @@ namespace atres
 		int i = 0;
 		int byteLength = 0;
 		bool checkingSpaces = true;
-		word.rect.h = this->_lineHeight;
+		word.rect.h = this->_height;
 		
 		while (i < zeroSize) // checking all words
 		{
@@ -658,7 +661,7 @@ namespace atres
 		float lineWidth = 0.0f;
 		bool nextLine;
 		bool addWord;
-		this->_line.rect.h = this->_lineHeight;
+		this->_line.rect.h = this->_height;
 		for (int i = 0; i < words.size(); i++)
 		{
 			nextLine = (i == words.size() - 1);
@@ -723,7 +726,7 @@ namespace atres
 		maxWidth = hmin(maxWidth, rect.w);
 		if (this->_lines.size() > 0)
 		{
-			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight);
+			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight, this->_height);
 			if (this->_lines.size() > 0)
 			{
 				this->_lines = this->horizontalCorrection(rect, horizontal, this->_lines, offset.x, maxWidth);
@@ -1258,7 +1261,8 @@ namespace atres
 			if (unformattedText != "")
 			{
 				harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, 100000.0f), unformattedText, tags, LEFT_WRAPPED, TOP);
-				return (lines.size() * this->getFontResource(fontName)->getLineHeight());
+				FontResource* font = this->getFontResource(fontName);
+				return ((lines.size() - 1) * font->getLineHeight() + font->getHeight());
 			}
 		}
 		return 0.0f;
@@ -1294,7 +1298,8 @@ namespace atres
 		{
 			harray<FormatTag> tags = this->prepareTags(fontName);
 			harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, 100000.0f), text, tags, LEFT_WRAPPED, TOP);
-			return (lines.size() * this->getFontResource(fontName)->getLineHeight());
+			FontResource* font = this->getFontResource(fontName);
+			return ((lines.size() - 1) * font->getLineHeight() + font->getHeight());
 		}
 		return 0.0f;
 	}
@@ -1366,7 +1371,7 @@ namespace atres
 		float lineWidth = 0.0f;
 		bool nextLine;
 		bool addWord;
-		line.rect.h = this->_lineHeight;
+		line.rect.h = this->_height;
 		for (int i = 0; i < words.size(); i++)
 		{
 			nextLine = (i == words.size() - 1);

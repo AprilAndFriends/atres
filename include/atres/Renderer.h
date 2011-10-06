@@ -41,7 +41,7 @@ namespace atres
 		void registerFontResource(FontResource* fontResource);
 	
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
-		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight);
+		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight, float height);
 		harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
 		harray<RenderWord> createRenderWords(grect rect, chstr text, harray<FormatTag> tags, bool limitWidth = false);
 		harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset = gvec2());
@@ -100,6 +100,7 @@ namespace atres
 		hmap<unsigned int, CharacterDefinition> _characters;
 		CharacterDefinition* _character;
 		float _lineHeight;
+		float _height;
 		float _scale;
 
 		harray<RenderSequence> _sequences;
