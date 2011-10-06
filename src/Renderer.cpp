@@ -182,7 +182,7 @@ namespace atres
 		return result;
 	}
 
-	harray<RenderLine> Renderer::verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight)
+	harray<RenderLine> Renderer::verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float height, float lineHeight)
 	{
 		harray<RenderLine> result;
 		int count = hround((lines[lines.size() - 1].rect.y - lines[0].rect.y) / lineHeight) + 1;
@@ -190,10 +190,10 @@ namespace atres
 		switch (vertical)
 		{
 		case CENTER:
-			y += (count * lineHeight - rect.h) / 2;
+			y += ((count - 1) * lineHeight + height - rect.h) / 2;
 			break;
 		case BOTTOM:
-			y += count * lineHeight - rect.h;
+			y += (count - 1) * lineHeight + height - rect.h;
 			break;
 		}
 		// remove lines that cannot be seen anyway
@@ -275,7 +275,7 @@ namespace atres
 		FontResource* fontResource = NULL;
 		hmap<unsigned int, CharacterDefinition> characters;
 		CharacterDefinition* character;
-		float lineHeight;
+		float lineHeight, height;
 		float scale;
 		
 		const char* str = text.c_str();
@@ -331,6 +331,7 @@ namespace atres
 							{
 								fontResource = this->getFontResource(nextTag.data);
 								lineHeight = fontResource->getLineHeight();
+								height = fontResource->getHeight();
 							}
 							else
 							{
@@ -412,6 +413,20 @@ namespace atres
 					break;
 				}
 				i += byteLength;
+				// break lines on space and some unicode characters, specific to a language.
+				if (code >= 128 && ((code >= 0x3000 && code <= 0x3002) /* ideographic chars like the chinese dot */
+								  || code == 0xFF0C /* fullwith comma */
+								  || code == 0x4E00 /* fullwidth '-' char */
+								  || code == 0x30FC /* japanese '-' */))
+				{
+					if (!checkingSpaces)
+					{
+						width = advance;
+						current = i - start;
+					}
+
+					checkingSpaces = true;
+				}
 			}
 			lineWidth = hmax(lineWidth, width);
 			line.text = text(start, current);
@@ -422,7 +437,7 @@ namespace atres
 		}
 		if (lines.size() > 0)
 		{
-			lines = this->verticalCorrection(rect, vertical, lines, offset.y, lineHeight);
+			lines = this->verticalCorrection(rect, vertical, lines, offset.y, height, lineHeight);
 			if (lines.size() > 0)
 			{
 				lines = this->horizontalCorrection(rect, horizontal, lines, offset.x, lineWidth);
@@ -1053,7 +1068,8 @@ namespace atres
 			if (unformattedText != "")
 			{
 				harray<RenderLine> lines = createRenderLines(grect(0, 0, maxWidth, 100000), unformattedText, tags, LEFT_WRAPPED, TOP);
-				return (lines.size() * getFontResource(fontName)->getLineHeight());
+				FontResource* font = getFontResource(fontName);
+				return ((lines.size() - 1) * font->getLineHeight() + font->getHeight());
 			}
 		}
 		return 0.0f;
@@ -1091,7 +1107,8 @@ namespace atres
 		}
 		harray<FormatTag> tags = prepareTags(fontName);
 		harray<RenderLine> lines = createRenderLines(grect(0, 0, maxWidth, 100000), text, tags, LEFT_WRAPPED, TOP);
-		return (lines.size() * getFontResource(fontName)->getLineHeight());
+		FontResource* font = getFontResource(fontName);
+		return ((lines.size() - 1) * font->getLineHeight() + font->getHeight());
 	}
 	
 	int Renderer::getTextCountUnformatted(chstr fontName, chstr text, float maxWidth)
