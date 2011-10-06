@@ -99,11 +99,10 @@ namespace atres
 	{
 		RenderRectangle result;
 		float height = this->getHeight();
-		float lineHeight = this->getLineHeight();
 		CharacterDefinition chr = this->characters[code];
 		// vertical cutoff of destination rectangle
-		float ratioTop = (area.y < rect.y ? (area.y + area.h - rect.y) / lineHeight : 1.0f);
-		float ratioBottom = (rect.y + rect.h < area.y + area.h ? (rect.y + rect.h - area.y) / lineHeight : 1.0f);
+		float ratioTop = (area.y < rect.y ? (area.y + area.h - rect.y) / height : 1.0f);
+		float ratioBottom = (rect.y + rect.h < area.y + area.h ? (rect.y + rect.h - area.y) / height : 1.0f);
 		// destination rectangle
 		result.dest.x = area.x;
 		result.dest.y = area.y + height * (1.0f - ratioTop);
