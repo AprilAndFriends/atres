@@ -98,17 +98,16 @@ namespace atres
 	RenderRectangle FontResource::makeRenderRectangle(grect rect, grect area, unsigned int code)
 	{
 		RenderRectangle result;
-		float height = this->getHeight();
-		float lineHeight = this->getLineHeight();
+		float scaledHeight = this->getHeight();
 		CharacterDefinition chr = this->characters[code];
 		// vertical cutoff of destination rectangle
-		float ratioTop = (area.y < rect.y ? (area.y + area.h - rect.y) / lineHeight : 1.0f);
-		float ratioBottom = (rect.y + rect.h < area.y + area.h ? (rect.y + rect.h - area.y) / lineHeight : 1.0f);
+		float ratioTop = (area.y < rect.y ? (area.y + area.h - rect.y) / scaledHeight : 1.0f);
+		float ratioBottom = (rect.y + rect.h < area.y + area.h ? (rect.y + rect.h - area.y) / scaledHeight : 1.0f);
 		// destination rectangle
 		result.dest.x = area.x;
-		result.dest.y = area.y + height * (1.0f - ratioTop);
+		result.dest.y = area.y + scaledHeight * (1.0f - ratioTop);
 		result.dest.w = area.w;
-		result.dest.h = chr.h * height / this->height * (ratioTop + ratioBottom - 1.0f);
+		result.dest.h = chr.h * scaledHeight / this->height * (ratioTop + ratioBottom - 1.0f);
 		if (rect.intersects(result.dest)) // if destination rectangle inside drawing area
 		{
 			// horizontal cutoff of destination rectangle
