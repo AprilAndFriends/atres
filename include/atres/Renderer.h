@@ -25,7 +25,7 @@
 #include "atresExport.h"
 #include "Utility.h"
 
-#define BUFFER_MAX_CHARACTERS 65536
+#define BUFFER_MAX_CHARACTERS 16384
 
 namespace atres
 {
