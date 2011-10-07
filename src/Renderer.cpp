@@ -849,14 +849,6 @@ namespace atres
 
 	harray<RenderSequence> Renderer::optimizeSequences(harray<RenderSequence>& sequences)
 	{
-		// TODO - remove
-		int count;
-		count = 0;
-		foreach (RenderSequence, it, sequences)
-		{
-			count += (*it).rectangles.size();
-		}
-		atres::log("    - BEFORE " + hstr(count));
 		harray<RenderSequence> result;
 		RenderSequence current;
 		int i;
@@ -874,14 +866,6 @@ namespace atres
 			}
 			result += current;
 		}
-		// TODO - remove
-		count = 0;
-		foreach (RenderSequence, it, result)
-		{
-			count += (*it).rectangles.size();
-		}
-		atres::log("    - AFTER " + hstr(count));
-		return result;
 	}
 	
 /******* DRAW TEXT *****************************************************/
@@ -947,7 +931,6 @@ namespace atres
 		}
 		if (this->_needCache)
 		{
-			atres::log("CACHING " + text);
 			harray<FormatTag> tags;
 			hstr unformattedText = this->analyzeFormatting(text, tags);
 			FormatTag tag;
