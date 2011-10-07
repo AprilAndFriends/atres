@@ -849,6 +849,14 @@ namespace atres
 
 	harray<RenderSequence> Renderer::optimizeSequences(harray<RenderSequence>& sequences)
 	{
+		// TODO - remove
+		int count;
+		count = 0;
+		foreach (RenderSequence, it, sequences)
+		{
+			count += (*it).rectangles.size();
+		}
+		atres::log("    - BEFORE " + hstr(count));
 		harray<RenderSequence> result;
 		RenderSequence current;
 		int i;
@@ -866,6 +874,13 @@ namespace atres
 			}
 			result += current;
 		}
+		// TODO - remove
+		count = 0;
+		foreach (RenderSequence, it, result)
+		{
+			count += (*it).rectangles.size();
+		}
+		atres::log("    - AFTER " + hstr(count));
 		return result;
 	}
 	
@@ -877,26 +892,34 @@ namespace atres
 		{
 			return;
 		}
-		float w = (float)sequence.texture->getWidth();
-		float h = (float)sequence.texture->getHeight();
+		float iw = 1.0f / sequence.texture->getWidth();
+		float ih = 1.0f / sequence.texture->getHeight();
+		harray<RenderRectangle> rectangles;
 		int i = 0;
-		foreach (RenderRectangle, it, sequence.rectangles)
-		{
-			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y;                vertices[i].u = (*it).src.x / w;                 vertices[i].v = (*it).src.y / h;                 i++;
-			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
-			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y;                vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = (*it).src.y / h;                 i++;
-			vertices[i].x = (*it).dest.x + (*it).dest.w; vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].u = ((*it).src.x + (*it).src.w) / w; vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-			vertices[i].x = (*it).dest.x;                vertices[i].y = (*it).dest.y + (*it).dest.h; vertices[i].u = (*it).src.x / w;                 vertices[i].v = ((*it).src.y + (*it).src.h) / h; i++;
-		}
+		int j = 0;
 		april::rendersys->setTexture(sequence.texture);
-		if (sequence.color == APRIL_COLOR_WHITE)
+		while (j < sequence.rectangles.size())
 		{
-			april::rendersys->render(april::TriangleList, vertices, i);
-		}
-		else
-		{
-			april::rendersys->render(april::TriangleList, vertices, i, sequence.color);
+			i = 0;
+			rectangles = sequence.rectangles(j, hmin(BUFFER_MAX_CHARACTERS, sequence.rectangles.size() - j));
+			j += BUFFER_MAX_CHARACTERS;
+			foreach (RenderRectangle, it, rectangles)
+			{
+				vertices[i].x = (*it).dest.x;					vertices[i].y = (*it).dest.y;					vertices[i].u = (*it).src.x * iw;					vertices[i].v = (*it).src.y * ih;					i++;
+				vertices[i].x = (*it).dest.x + (*it).dest.w;	vertices[i].y = (*it).dest.y;					vertices[i].u = ((*it).src.x + (*it).src.w) * iw;	vertices[i].v = (*it).src.y * ih;					i++;
+				vertices[i].x = (*it).dest.x;					vertices[i].y = (*it).dest.y + (*it).dest.h;	vertices[i].u = (*it).src.x * iw;					vertices[i].v = ((*it).src.y + (*it).src.h) * ih;	i++;
+				vertices[i].x = (*it).dest.x + (*it).dest.w;	vertices[i].y = (*it).dest.y;					vertices[i].u = ((*it).src.x + (*it).src.w) * iw;	vertices[i].v = (*it).src.y * ih;					i++;
+				vertices[i].x = (*it).dest.x + (*it).dest.w;	vertices[i].y = (*it).dest.y + (*it).dest.h;	vertices[i].u = ((*it).src.x + (*it).src.w) * iw;	vertices[i].v = ((*it).src.y + (*it).src.h) * ih;	i++;
+				vertices[i].x = (*it).dest.x;					vertices[i].y = (*it).dest.y + (*it).dest.h;	vertices[i].u = (*it).src.x * iw;					vertices[i].v = ((*it).src.y + (*it).src.h) * ih;	i++;
+			}
+			if (sequence.color == APRIL_COLOR_WHITE)
+			{
+				april::rendersys->render(april::TriangleList, vertices, i);
+			}
+			else
+			{
+				april::rendersys->render(april::TriangleList, vertices, i, sequence.color);
+			}
 		}
 	}
 
@@ -924,6 +947,7 @@ namespace atres
 		}
 		if (this->_needCache)
 		{
+			atres::log("CACHING " + text);
 			harray<FormatTag> tags;
 			hstr unformattedText = this->analyzeFormatting(text, tags);
 			FormatTag tag;
