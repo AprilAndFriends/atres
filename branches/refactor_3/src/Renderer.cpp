@@ -866,6 +866,7 @@ namespace atres
 			}
 			result += current;
 		}
+		return result;
 	}
 	
 /******* DRAW TEXT *****************************************************/
