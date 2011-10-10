@@ -63,6 +63,7 @@ namespace atres
 		DEPRECATED_ATTRIBUTE void drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, gvec2 offset = gvec2());
 	
 		float getFontHeight(chstr fontName);
+		float getFontLineHeight(chstr fontName);
 		float getTextWidth(chstr fontName, chstr text);
 		float getTextHeight(chstr fontName, chstr text, float maxWidth);
 		int getTextCount(chstr fontName, chstr text, float maxWidth);
