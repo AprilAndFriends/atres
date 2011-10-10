@@ -32,11 +32,12 @@ namespace atres
 
 		hstr getName() { return this->name; }
 		float getHeight();
-		float getLineHeight();
 		float getScale();
 		void setScale(float value) { this->scale = value; }
 		float getBaseScale() { return this->baseScale; }
 		void setBaseScale(float value) { this->baseScale = value; }
+		float getLineHeight();
+		float getCorrectedHeight();
 		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
 		
 		virtual april::Texture* getTexture(unsigned int charcode) = 0;
@@ -53,7 +54,10 @@ namespace atres
 		float scale;
 		float baseScale;
 		float lineHeight;
+		float correctedHeight;
 		hmap<unsigned int, CharacterDefinition> characters;
+
+		bool _readBasicParameter(chstr line);
 		
 	};
 }

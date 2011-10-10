@@ -21,48 +21,31 @@ namespace atres
 {
 	FontResourceBitmap::FontResourceBitmap(chstr filename) : FontResource(filename)
 	{
-		this->scale = 1.0f;
-		this->baseScale = 1.0f;
-		this->lineHeight = 0.0f;
 		hstr path = get_basedir(filename) + "/";
 		harray<hstr> lines = hfile::hread(filename).split("\n", -1, true);
 		hstr line;
 		while (lines.size() > 0)
 		{
 			line = lines.pop_front();
-			if (line.starts_with("Name="))
+			if (!this->_readBasicParameter(line))
 			{
-				this->name = line.replace("Name=", "");
-			}
-			else if (line.starts_with("Texture="))
-			{
-				this->texture = april::rendersys->loadTexture(path + line.replace("Texture=", ""));
-			}
-			else if (line.starts_with("LineHeight="))
-			{
-				this->lineHeight = (float)line.replace("LineHeight=", "");
-			}
-			else if (line.starts_with("Height="))
-			{
-				this->height = (float)line.replace("Height=", "");
-			}
-			else if (line.starts_with("Scale="))
-			{
-				this->scale = (float)line.replace("Scale=", "");
-				this->baseScale = this->scale;
-			}
-			else if (line.starts_with("#"))
-			{
-				continue;
-			}
-			else if (line.starts_with("-"))
-			{
-				break;
+				if (line.starts_with("Texture="))
+				{
+					this->texture = april::rendersys->loadTexture(path + line.replace("Texture=", ""));
+				}
+				else if (line.starts_with("-"))
+				{
+					break;
+				}
 			}
 		}
 		if (this->lineHeight == 0.0f)
 		{
 			this->lineHeight = this->height;
+		}
+		if (this->correctedHeight == 0.0f)
+		{
+			this->correctedHeight = this->height;
 		}
 		CharacterDefinition c;
 		unsigned int code;

@@ -19,7 +19,7 @@
 
 namespace atres
 {
-	FontResource::FontResource(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f), lineHeight(0.0f)
+	FontResource::FontResource(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f), lineHeight(0.0f), correctedHeight(0.0f)
 	{
 		this->name = name;
 	}
@@ -34,6 +34,36 @@ namespace atres
 	{
 		this->characters.clear();
 	}
+
+	bool FontResource::_readBasicParameter(chstr line)
+	{
+		if (line.starts_with("Name="))
+		{
+			this->name = line.replace("Name=", "");
+			return true;
+		}
+		if (line.starts_with("Height="))
+		{
+			this->height = (float)line.replace("Height=", "");
+			return true;
+		}
+		if (line.starts_with("Scale="))
+		{
+			this->baseScale = (float)line.replace("Scale=", "");
+			return true;
+		}
+		if (line.starts_with("LineHeight="))
+		{
+			this->lineHeight = (float)line.replace("LineHeight=", "");
+			return true;
+		}
+		if (line.starts_with("CorrectedHeight="))
+		{
+			this->correctedHeight = (float)line.replace("CorrectedHeight=", "");
+			return true;
+		}
+		return false;
+	}
 	
 	bool FontResource::hasChar(unsigned int charcode)
 	{
@@ -45,14 +75,19 @@ namespace atres
 		return (this->height * this->scale * this->baseScale);
 	}
 	
+	float FontResource::getScale()
+	{
+		return (this->scale * this->baseScale);
+	}
+	
 	float FontResource::getLineHeight()
 	{
 		return (this->lineHeight * this->scale * this->baseScale);
 	}
-	
-	float FontResource::getScale()
+
+	float FontResource::getCorrectedHeight()
 	{
-		return (this->scale * this->baseScale);
+		return (this->correctedHeight * this->scale * this->baseScale);
 	}
 	
 	float FontResource::getTextWidth(chstr text)
