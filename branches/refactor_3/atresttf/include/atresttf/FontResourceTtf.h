@@ -40,7 +40,7 @@ namespace atresttf
 	{
 	public:
 		FontResourceTtf(chstr filename);
-		FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight = 0.0f);
+		FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight = 0.0f, float correctedHeight = 0.0f);
 		~FontResourceTtf();
 
 		april::Texture* getTexture(unsigned int charcode);

@@ -319,8 +319,9 @@ namespace atres
 		this->_fontName = "";
 		this->_fontResource = NULL;
 		this->_characters.clear();
-		this->_lineHeight = 0.0f;
 		this->_height = 0.0f;
+		this->_lineHeight = 0.0f;
+		this->_correctedHeight = 0.0f;
 		this->_scale = 1.0f;
 	}
 
@@ -374,8 +375,9 @@ namespace atres
 					if (this->_fontResource == NULL) // if there is no previous font, lineHeight has to be obtained as well
 					{
 						this->_fontResource = this->getFontResource(this->_nextTag.data);
-						this->_lineHeight = this->_fontResource->getLineHeight();
 						this->_height = this->_fontResource->getHeight();
+						this->_lineHeight = this->_fontResource->getLineHeight();
+						this->_correctedHeight = this->_fontResource->getCorrectedHeight();
 					}
 					else
 					{
@@ -455,8 +457,9 @@ namespace atres
 						if (this->_fontResource == NULL)
 						{
 							this->_fontResource = this->getFontResource(this->_nextTag.data);
-							this->_lineHeight = this->_fontResource->getLineHeight();
 							this->_height = this->_fontResource->getHeight();
+							this->_lineHeight = this->_fontResource->getLineHeight();
+							this->_correctedHeight = this->_fontResource->getCorrectedHeight();
 						}
 						else
 						{
@@ -726,7 +729,7 @@ namespace atres
 		maxWidth = hmin(maxWidth, rect.w);
 		if (this->_lines.size() > 0)
 		{
-			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight, this->_height);
+			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight, this->_correctedHeight);
 			if (this->_lines.size() > 0)
 			{
 				this->_lines = this->horizontalCorrection(rect, horizontal, this->_lines, offset.x, maxWidth);
@@ -796,8 +799,8 @@ namespace atres
 					area = this->_word.rect;
 					area.x += hmax(0.0f, width + this->_character->bx * this->_scale);
 					area.w = this->_character->w * this->_scale;
-					area.h = this->_fontResource->getHeight();
-					area.y += (this->_lineHeight - this->_fontResource->getHeight()) / 2;
+					area.h = this->_height;
+					area.y += (this->_lineHeight - this->_height) / 2;
 					this->_renderRect = this->_fontResource->makeRenderRectangle(rect, area, this->_code);
 					this->_sequence.rectangles += this->_renderRect;
 					destination = this->_renderRect.dest;
@@ -1270,7 +1273,7 @@ namespace atres
 			{
 				harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, 100000.0f), unformattedText, tags, LEFT_WRAPPED, TOP);
 				FontResource* font = this->getFontResource(fontName);
-				return ((lines.size() - 1) * font->getLineHeight() + font->getHeight());
+				return ((lines.size() - 1) * font->getLineHeight() + font->getCorrectedHeight());
 			}
 		}
 		return 0.0f;
@@ -1307,7 +1310,7 @@ namespace atres
 			harray<FormatTag> tags = this->prepareTags(fontName);
 			harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, 100000.0f), text, tags, LEFT_WRAPPED, TOP);
 			FontResource* font = this->getFontResource(fontName);
-			return ((lines.size() - 1) * font->getLineHeight() + font->getHeight());
+			return ((lines.size() - 1) * font->getLineHeight() + font->getCorrectedHeight());
 		}
 		return 0.0f;
 	}

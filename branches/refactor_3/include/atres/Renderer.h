@@ -99,8 +99,9 @@ namespace atres
 		FontResource* _fontResource;
 		hmap<unsigned int, CharacterDefinition> _characters;
 		CharacterDefinition* _character;
-		float _lineHeight;
 		float _height;
+		float _lineHeight;
+		float _correctedHeight;
 		float _scale;
 
 		harray<RenderSequence> _sequences;
