@@ -426,7 +426,7 @@ namespace atres
 					break;
 				case FORMAT_COLOR:
 					this->_hex = (colors.has_key(this->_currentTag.data) ? colors[this->_currentTag.data] : this->_currentTag.data);
-					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && is_hexstr(this->_hex))
+					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
 					{
 						this->_color.set(this->_hex);
 					}
@@ -478,7 +478,7 @@ namespace atres
 					this->_currentTag.data = this->_color.hex();
 					this->_stack += this->_currentTag;
 					this->_hex = (colors.has_key(this->_nextTag.data) ? colors[this->_nextTag.data] : this->_nextTag.data);
-					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && is_hexstr(this->_hex))
+					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
 					{
 						this->_color.set(this->_hex);
 						this->_alpha == -1 ? this->_alpha = this->_color.a : this->_color.a = (unsigned char)(this->_alpha * this->_color.a_f());
