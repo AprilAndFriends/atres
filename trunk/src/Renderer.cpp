@@ -1053,6 +1053,11 @@ namespace atres
 		return getFontResource(fontName)->getHeight();
 	}
 	
+	float Renderer::getFontLineHeight(chstr fontName)
+	{
+		return this->getFontResource(fontName)->getLineHeight();
+	}
+	
 	float Renderer::getTextWidth(chstr fontName, chstr text)
 	{
 		if (text != "")
