@@ -10,7 +10,6 @@
   <VirtualDirectory Name="src">
     <File Name="src/atres.cpp"/>
     <File Name="src/Exception.cpp"/>
-    <File Name="src/Util.cpp"/>
     <File Name="src/Renderer.cpp"/>
     <File Name="src/FontResourceBitmap.cpp"/>
     <File Name="src/FontResource.cpp"/>
@@ -20,7 +19,6 @@
     <File Name="include/atres/atres.h"/>
     <File Name="include/atres/atresExport.h"/>
     <File Name="include/atres/Exception.h"/>
-    <File Name="src/Util.h"/>
     <File Name="include/atres/Renderer.h"/>
     <File Name="include/atres/FontResourceBitmap.h"/>
     <File Name="include/atres/FontResource.h"/>
