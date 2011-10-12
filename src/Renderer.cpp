@@ -813,7 +813,7 @@ namespace atres
 		if (needCache)
 		{
 			harray<FormatTag> tags;
-			hstr unformattedText = analyzeFormatting(text, tags);
+			hstr unformattedText = this->analyzeFormatting(text, tags);
 			FormatTag tag;
 			tag.type = FORMAT_COLOR;
 			tag.data = color.hex();
@@ -821,7 +821,7 @@ namespace atres
 			tag.type = FORMAT_FONT;
 			tag.data = fontName;
 			tags.push_front(tag);
-			harray<RenderLine> lines = createRenderLines(drawRect, unformattedText, tags, horizontal, vertical, offset);
+			harray<RenderLine> lines = this->createRenderLines(drawRect, unformattedText, tags, horizontal, vertical, offset);
 			entry.fontName = fontName;
 			entry.index = cacheIndex;
 			entry.size = rect.getSize();
@@ -829,7 +829,7 @@ namespace atres
 			entry.vertical = vertical;
 			entry.color = color;
 			entry.offset = offset;
-			entry.sequences = createRenderSequences(drawRect, lines, tags);
+			entry.sequences = this->createRenderSequences(drawRect, lines, tags);
 			cache[text] = entry;
 		}
 		harray<RenderSequence> sequences = cache[text].sequences;
@@ -840,7 +840,7 @@ namespace atres
 				(*it2).dest.x += rect.x;
 				(*it2).dest.y += rect.y;
 			}
-			drawRenderSequence(*it);
+			this->drawRenderSequence(*it);
 		}
 	}
 
@@ -855,11 +855,11 @@ namespace atres
 		tag.type = FORMAT_FONT;
 		tag.data = fontName;
 		tags.push_front(tag);
-		harray<RenderLine> lines = createRenderLines(rect, text, tags, horizontal, vertical, offset);
-		harray<RenderSequence> sequences = createRenderSequences(rect, lines, tags);
+		harray<RenderLine> lines = this->createRenderLines(rect, text, tags, horizontal, vertical, offset);
+		harray<RenderSequence> sequences = this->createRenderSequences(rect, lines, tags);
 		foreach (RenderSequence, it, sequences)
 		{
-			drawRenderSequence(*it);
+			this->drawRenderSequence(*it);
 		}
 	}
 
@@ -867,61 +867,61 @@ namespace atres
 
 	void Renderer::drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
 	{
-		drawText("", rect, text, horizontal, vertical, color, offset);
+		this->drawText("", rect, text, horizontal, vertical, color, offset);
 	}
 
 	void Renderer::drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		april::Color color, gvec2 offset)
 	{
-		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
+		this->drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
 	}
 	
 	void Renderer::drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		april::Color color, gvec2 offset)
 	{
-		drawText("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
+		this->drawText("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
 	}
 	
 	void Renderer::drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
+		this->drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
 	}
 	
 	void Renderer::drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		drawText("", grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
+		this->drawText("", grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
 	}
 	
 	void Renderer::drawTextUnformatted(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
 		gvec2 offset)
 	{
-		drawTextUnformatted("", rect, text, horizontal, vertical, color, offset);
+		this->drawTextUnformatted("", rect, text, horizontal, vertical, color, offset);
 	}
 
 	void Renderer::drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal,
 		Alignment vertical, april::Color color, gvec2 offset)
 	{
-		drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
+		this->drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
 	}
 	
 	void Renderer::drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		april::Color color, gvec2 offset)
 	{
-		drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
+		this->drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
 	}
 	
 	void Renderer::drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal,
 		Alignment vertical, unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
+		this->drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
 	}
 	
 	void Renderer::drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
 		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
 	{
-		drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
+		this->drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
 	}
 	
 /******* PROPERTIES ****************************************************/
@@ -955,7 +955,7 @@ namespace atres
 		{
 			throw resource_error("Font", name, "atres");
 		}
-		fontResource = getFontResource(name(0, position));
+		fontResource = this->getFontResource(name(0, position));
 		position++;
 		fontResource->setScale((float)(name(position, name.size() - position)));
         return fontResource;
@@ -969,7 +969,7 @@ namespace atres
 	void Renderer::setCacheSize(int value)
 	{
 		cacheSize = value;
-		updateCache();
+		this->updateCache();
 	}
 	
 	void Renderer::updateCache()
@@ -1050,7 +1050,7 @@ namespace atres
 	
 	float Renderer::getFontHeight(chstr fontName)
 	{
-		return getFontResource(fontName)->getHeight();
+		return this->getFontResource(fontName)->getHeight();
 	}
 	
 	float Renderer::getFontLineHeight(chstr fontName)
@@ -1063,10 +1063,10 @@ namespace atres
 		if (text != "")
 		{
 			harray<FormatTag> tags;
-			hstr unformattedText = prepareFormatting(fontName, text, tags);
+			hstr unformattedText = this->prepareFormatting(fontName, text, tags);
 			if (unformattedText != "")
 			{
-				return getFittingLine(grect(0, 0, 100000, 1), unformattedText, tags).rect.w;
+				return this->getFittingLine(grect(0, 0, 100000, 1), unformattedText, tags).rect.w;
 			}
 		}
 		return 0.0f;
@@ -1077,11 +1077,11 @@ namespace atres
 		if (text != "")
 		{
 			harray<FormatTag> tags;
-			hstr unformattedText = prepareFormatting(fontName, text, tags);
+			hstr unformattedText = this->prepareFormatting(fontName, text, tags);
 			if (unformattedText != "")
 			{
-				harray<RenderLine> lines = createRenderLines(grect(0, 0, maxWidth, 100000), unformattedText, tags, LEFT_WRAPPED, TOP);
-				FontResource* font = getFontResource(fontName);
+				harray<RenderLine> lines = this->createRenderLines(grect(0, 0, maxWidth, 100000), unformattedText, tags, LEFT_WRAPPED, TOP);
+				FontResource* font = this->getFontResource(fontName);
 				return ((lines.size() - 1) * font->getLineHeight() + font->getHeight());
 			}
 		}
@@ -1093,10 +1093,10 @@ namespace atres
 		if (text != "")
 		{
 			harray<FormatTag> tags;
-			hstr unformattedText = prepareFormatting(fontName, text, tags);
+			hstr unformattedText = this->prepareFormatting(fontName, text, tags);
 			if (unformattedText != "")
 			{
-				return getFittingLine(grect(0, 0, maxWidth, 1), unformattedText, tags).text.size();
+				return this->getFittingLine(grect(0, 0, maxWidth, 1), unformattedText, tags).text.size();
 			}
 		}
 		return 0;
@@ -1108,8 +1108,8 @@ namespace atres
 		{
 			return 0.0f;
 		}
-		harray<FormatTag> tags = prepareTags(fontName);
-		return getFittingLine(grect(0, 0, 100000, 1), text, tags).rect.w;
+		harray<FormatTag> tags = this->prepareTags(fontName);
+		return this->getFittingLine(grect(0, 0, 100000, 1), text, tags).rect.w;
 	}
 
 	float Renderer::getTextHeightUnformatted(chstr fontName, chstr text, float maxWidth)
@@ -1118,9 +1118,9 @@ namespace atres
 		{
 			return 0.0f;
 		}
-		harray<FormatTag> tags = prepareTags(fontName);
-		harray<RenderLine> lines = createRenderLines(grect(0, 0, maxWidth, 100000), text, tags, LEFT_WRAPPED, TOP);
-		FontResource* font = getFontResource(fontName);
+		harray<FormatTag> tags = this->prepareTags(fontName);
+		harray<RenderLine> lines = this->createRenderLines(grect(0, 0, maxWidth, 100000), text, tags, LEFT_WRAPPED, TOP);
+		FontResource* font = this->getFontResource(fontName);
 		return ((lines.size() - 1) * font->getLineHeight() + font->getHeight());
 	}
 	
@@ -1130,13 +1130,13 @@ namespace atres
 		{
 			return 0;
 		}
-		harray<FormatTag> tags = prepareTags(fontName);
-		return getFittingLine(grect(0, 0, maxWidth, 1), text, tags).text.size();
+		harray<FormatTag> tags = this->prepareTags(fontName);
+		return this->getFittingLine(grect(0, 0, maxWidth, 1), text, tags).text.size();
 	}
 	
 	hstr Renderer::prepareFormatting(chstr fontName, chstr text, harray<FormatTag>& tags)
 	{
-		hstr unformattedText = analyzeFormatting(text, tags);
+		hstr unformattedText = this->analyzeFormatting(text, tags);
 		FormatTag tag;
 		tag.type = FORMAT_FONT;
 		tag.data = fontName;
@@ -1184,7 +1184,7 @@ namespace atres
 					if (tag.type == FORMAT_FONT)
 					{
 						fontName = tag.data;
-						fontResource = getFontResource(fontName);
+						fontResource = this->getFontResource(fontName);
 						characters = fontResource->getCharacters();
 						scale = fontResource->getScale();
 					}
@@ -1197,12 +1197,12 @@ namespace atres
 					fontName = nextTag.data;
 					if (fontResource == NULL)
 					{
-						fontResource = getFontResource(fontName);
+						fontResource = this->getFontResource(fontName);
 						lineHeight = fontResource->getLineHeight();
 					}
 					else
 					{
-						fontResource = getFontResource(fontName);
+						fontResource = this->getFontResource(fontName);
 					}
 					characters = fontResource->getCharacters();
 					scale = fontResource->getScale();
