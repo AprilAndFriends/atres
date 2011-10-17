@@ -39,6 +39,7 @@ namespace atres
 				}
 			}
 		}
+
 		if (this->lineHeight == 0.0f)
 		{
 			this->lineHeight = this->height;
