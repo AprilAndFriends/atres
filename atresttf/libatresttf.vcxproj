@@ -57,10 +57,16 @@
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libatres.lib;libapril.lib;libfreetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>../../lib/msvc100;../../hltypes/bin/$(Configuration);../../gtypes/bin/$(Configuration);../../april/bin;../bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\msvc100;$(SolutionDir)bin\lib\msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(TargetDir)\$(TargetName).lib</ImportLibrary>
     </Link>
+    <PostBuildEvent>
+      <Command>mkdir $(SolutionDir)bin\lib\msvc100
+copy ..\bin\atresttf\$(Configuration)\*.dll $(SolutionDir)bin\lib\msvc100
+copy ..\bin\atresttf\$(Configuration)\*.lib $(SolutionDir)bin\lib\msvc100
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='win32_Release|Win32'">
     <ClCompile>
@@ -79,13 +85,19 @@
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libatres.lib;libapril.lib;libfreetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
-      <AdditionalLibraryDirectories>../../lib/msvc100;../../hltypes/bin/$(Configuration);../../gtypes/bin/$(Configuration);../../april/bin;../bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\msvc100;$(SolutionDir)bin\lib\msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <PostBuildEvent>
+      <Command>mkdir $(SolutionDir)bin\lib\msvc100
+copy ..\bin\atresttf\$(Configuration)\*.dll $(SolutionDir)bin\lib\msvc100
+copy ..\bin\atresttf\$(Configuration)\*.lib $(SolutionDir)bin\lib\msvc100
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\hltypes\libhltypes.vcxproj">

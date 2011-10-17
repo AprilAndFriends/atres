@@ -62,7 +62,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libapril_d.lib libgtypes_d.lib libhltypes_d.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
-				AdditionalLibraryDirectories="..\april\bin;..\gtypes\bin\$(ConfigurationName);..\hltypes\bin\$(ConfigurationName)"
+				AdditionalLibraryDirectories="$(SolutionDir)bin/lib/msvc90"
 				GenerateDebugInformation="true"
 				ImportLibrary="$(TargetDir)\$(TargetName).lib"
 			/>
@@ -86,7 +86,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\hltypes\bin\$(ConfigurationName)\*.dll bin\$(ConfigurationName)&#x0D;&#x0A;"
+				CommandLine="mkdir $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.dll $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib $(SolutionDir)bin\lib\msvc90"
 			/>
 		</Configuration>
 		<Configuration
@@ -136,7 +136,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libapril.lib libgtypes.lib libhltypes.lib"
-				AdditionalLibraryDirectories="..\april\bin;..\gtypes\bin\$(ConfigurationName);..\hltypes\bin\$(ConfigurationName)"
+				AdditionalLibraryDirectories="$(SolutionDir)bin/lib/msvc90"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -158,6 +158,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="mkdir $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.dll $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib $(SolutionDir)bin\lib\msvc90"
 			/>
 		</Configuration>
 	</Configurations>
