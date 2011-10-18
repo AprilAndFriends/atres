@@ -847,7 +847,8 @@ namespace atres
 		}
 		this->_borderSequences = this->optimizeSequences(this->_borderSequences);
 		this->_shadowSequences = this->optimizeSequences(this->_shadowSequences);
-		return this->optimizeSequences(this->_shadowSequences + this->_borderSequences + this->_sequences);
+		this->_sequences = this->_shadowSequences + this->_borderSequences + this->_sequences;
+		return this->optimizeSequences(this->_sequences);
 	}
 
 	harray<RenderSequence> Renderer::optimizeSequences(harray<RenderSequence>& sequences)
