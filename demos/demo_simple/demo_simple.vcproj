@@ -62,9 +62,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libgtypes_d.lib libhltypes_d.lib libapril_d.lib libaprilui_d.lib libatres_d.lib libatresttf_d.lib"
+				AdditionalDependencies="libgtypes.lib libhltypes.lib libapril.lib libaprilui.lib libatres.lib libatresttf.lib"
+				OutputFile="$(SolutionDir)bin\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../lib/msvc90;../../bin/$(ConfigurationName);../../bin/atresttf/$(ConfigurationName);../../../gtypes/bin/$(ConfigurationName);../../../hltypes/bin/$(ConfigurationName);../../../april/bin;../../../aprilui/bin/$(ConfigurationName)"
+				AdditionalLibraryDirectories="$(SolutionDir)bin"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -89,7 +90,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\april\bin\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\bin\atresttf\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\hltypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\hltypes\bin\hlxml\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\gtypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\aprilui\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\lib\msvc90\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;"
+				CommandLine="copy $(SolutionDir)..\lib\msvc90\*.dll $(SolutionDir)bin"
 			/>
 		</Configuration>
 		<Configuration
@@ -139,8 +140,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libgtypes.lib libhltypes.lib libapril.lib libaprilui.lib libatres.lib libatresttf.lib"
+				OutputFile="$(SolutionDir)bin\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../lib;../../bin/$(ConfigurationName);../../bin/atresttf/$(ConfigurationName);../../../gtypes/bin/$(ConfigurationName);../../../hltypes/bin/$(ConfigurationName);../../../april/bin;../../../aprilui/bin/$(ConfigurationName)"
+				AdditionalLibraryDirectories="$(SolutionDir)bin"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -167,7 +169,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\april\bin\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\bin\atresttf\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\hltypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\hltypes\bin\hlxml\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\gtypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\aprilui\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;copy ..\..\..\lib\msvc90\*.dll ..\..\bin\$(ConfigurationName)&#x0D;&#x0A;"
+				CommandLine="copy $(SolutionDir)..\lib\msvc90\*.dll $(SolutionDir)bin"
 			/>
 		</Configuration>
 	</Configurations>
