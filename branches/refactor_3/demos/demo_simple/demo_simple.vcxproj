@@ -60,20 +60,14 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>libapril.lib;libaprilui.lib;libatres.lib;libatresttf.lib;libgtypes.lib;libhltypes.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../lib/msvc100;../../bin/$(Configuration);../../bin/atresttf/$(Configuration);../../../gtypes/bin/$(Configuration);../../../hltypes/bin/$(Configuration);../../../april/bin;../../../aprilui/bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>external/lib/msvc100;$(SolutionDir)bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <OutputFile>$(SolutionDir)bin\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\..\april\bin\*.dll ..\..\bin\$(Configuration)
-copy ..\..\bin\atresttf\$(Configuration)\*.dll ..\..\bin\$(Configuration)
-copy ..\..\..\hltypes\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
-copy ..\..\..\hltypes\bin\hlxml\$(Configuration)\*.dll ..\..\bin\$(Configuration)
-copy ..\..\..\gtypes\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
-copy ..\..\..\aprilui\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
-copy ..\..\..\lib\msvc100\*.dll ..\..\bin\$(Configuration)
-</Command>
+      <Command>copy $(SolutionDir)..\lib\msvc100\*.dll $(SolutionDir)bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='win32_Release|Win32'">
@@ -91,22 +85,16 @@ copy ..\..\..\lib\msvc100\*.dll ..\..\bin\$(Configuration)
     </ClCompile>
     <Link>
       <AdditionalDependencies>libapril.lib;libaprilui.lib;libatres.lib;libatresttf.lib;libgtypes.lib;libhltypes.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../lib;../../bin/$(Configuration);../../bin/atresttf/$(Configuration);../../../gtypes/bin/$(Configuration);../../../hltypes/bin/$(Configuration);../../../april/bin;../../../aprilui/bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>external/lib/msvc100;$(SolutionDir)bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <OutputFile>$(SolutionDir)bin\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\..\april\bin\*.dll ..\..\bin\$(Configuration)
-copy ..\..\bin\atresttf\$(Configuration)\*.dll ..\..\bin\$(Configuration)
-copy ..\..\..\hltypes\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
-copy ..\..\..\hltypes\bin\hlxml\$(Configuration)\*.dll ..\..\bin\$(Configuration)
-copy ..\..\..\gtypes\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
-copy ..\..\..\aprilui\bin\$(Configuration)\*.dll ..\..\bin\$(Configuration)
-copy ..\..\..\lib\msvc100\*.dll ..\..\bin\$(Configuration)
-</Command>
+      <Command>copy $(SolutionDir)..\lib\msvc100\*.dll $(SolutionDir)bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
