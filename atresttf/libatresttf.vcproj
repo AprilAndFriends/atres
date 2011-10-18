@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="win32_Debug|Win32"
-			OutputDirectory="..\bin\atresttf\$(ConfigurationName)"
-			IntermediateDirectory="..\bin\atresttf\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			>
@@ -60,9 +60,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libatres_d.lib libhltypes_d.lib libgtypes_d.lib libapril_d.lib libfreetype.lib"
-				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
-				AdditionalLibraryDirectories="../../lib/msvc90;$(SolutionDir)bin/lib/msvc90"
+				AdditionalDependencies="libatres.lib libhltypes.lib libgtypes.lib libapril.lib libfreetype.lib"
+				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				AdditionalLibraryDirectories="..\..\lib\msvc90;$(SolutionDir)bin"
 				GenerateDebugInformation="true"
 				ImportLibrary="$(TargetDir)\$(TargetName).lib"
 			/>
@@ -86,13 +86,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="mkdir $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy ..\bin\atresttf\$(ConfigurationName)\*.dll $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy ..\bin\atresttf\$(ConfigurationName)\*.lib $(SolutionDir)bin\lib\msvc90"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
 			Name="win32_Release|Win32"
-			OutputDirectory="..\bin\atresttf\$(ConfigurationName)"
-			IntermediateDirectory="..\bin\atresttf\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -137,9 +137,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libatres.lib libhltypes.lib libgtypes.lib libapril.lib libfreetype.lib"
-				OutputFile="$(OutDir)\$(ProjectName).dll"
+				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../lib/msvc90;$(SolutionDir)bin/lib/msvc90"
+				AdditionalLibraryDirectories="..\..\lib\msvc90;$(SolutionDir)bin"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -166,7 +166,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="mkdir $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy ..\bin\atresttf\$(ConfigurationName)\*.dll $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy ..\bin\atresttf\$(ConfigurationName)\*.lib $(SolutionDir)bin\lib\msvc90"
+				CommandLine=""
 			/>
 		</Configuration>
 	</Configurations>
