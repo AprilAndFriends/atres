@@ -124,7 +124,7 @@ namespace atres
 			}
 			else if (str[start + 1] == '/') // closing command
 			{
-				if (stack.size() > 0 && stack.back() != str[start + 2]) // interleaving, ignore the tag
+				if (stack.size() > 0 && stack.last() != str[start + 2]) // interleaving, ignore the tag
 				{
 					start = end;
 #ifdef _DEBUG
@@ -132,7 +132,7 @@ namespace atres
 #endif
 					continue;
 				}
-				stack.pop_back();
+				stack.pop_last();
 				tag.type = CLOSE;
 			}
 			else // opening new tag
@@ -315,7 +315,7 @@ namespace atres
 		this->_tags = tags;
 		this->_stack.clear();
 		this->_currentTag = FormatTag();
-		this->_nextTag = this->_tags.front();
+		this->_nextTag = this->_tags.first();
 		this->_fontName = "";
 		this->_fontResource = NULL;
 		this->_characters.clear();
@@ -356,7 +356,7 @@ namespace atres
 		{
 			if (this->_nextTag.type == CLOSE)
 			{
-				this->_currentTag = this->_stack.pop_back();
+				this->_currentTag = this->_stack.pop_last();
 				if (this->_currentTag.type == FORMAT_FONT)
 				{
 					this->_fontName = this->_currentTag.data;
@@ -399,10 +399,10 @@ namespace atres
 				this->_currentTag.type = FORMAT_NORMAL;
 				this->_stack += this->_currentTag;
 			}
-			this->_tags.pop_front();
+			this->_tags.pop_first();
 			if (this->_tags.size() > 0)
 			{
-				this->_nextTag = this->_tags.front();
+				this->_nextTag = this->_tags.first();
 			}
 			else
 			{
@@ -417,7 +417,7 @@ namespace atres
 		{
 			if (this->_nextTag.type == CLOSE)
 			{
-				this->_currentTag = this->_stack.pop_back();
+				this->_currentTag = this->_stack.pop_last();
 				switch (this->_currentTag.type)
 				{
 				case FORMAT_FONT:
@@ -510,14 +510,14 @@ namespace atres
 					break;
 				}
 			}
-			this->_tags.pop_front();
+			this->_tags.pop_first();
 			if (this->_tags.size() > 0)
 			{
-				this->_nextTag = this->_tags.front();
+				this->_nextTag = this->_tags.first();
 			}
 			else if (this->_lines.size() > 0)
 			{
-				this->_nextTag.start = this->_line.words.back().start + this->_line.words.back().text.size() + 1;
+				this->_nextTag.start = this->_line.words.last().start + this->_line.words.last().text.size() + 1;
 			}
 			else
 			{
@@ -562,7 +562,7 @@ namespace atres
 		{
 			if (this->_lines.size() > 0)
 			{
-				this->_nextTag.start = this->_line.words.back().start + this->_line.words.back().text.size() + 1;
+				this->_nextTag.start = this->_line.words.last().start + this->_line.words.last().text.size() + 1;
 			}
 			else
 			{
@@ -695,13 +695,13 @@ namespace atres
 				// remove spaces at begining and end in wrapped formatting styles
 				if (wrapped)
 				{
-					while (this->_line.words.size() > 0 && this->_line.words.front().spaces > 0)
+					while (this->_line.words.size() > 0 && this->_line.words.first().spaces > 0)
 					{
-						this->_line.words.pop_front();
+						this->_line.words.pop_first();
 					}
-					while (this->_line.words.size() > 0 && this->_line.words.back().spaces > 0)
+					while (this->_line.words.size() > 0 && this->_line.words.last().spaces > 0)
 					{
-						this->_line.words.pop_back();
+						this->_line.words.pop_last();
 					}
 				}
 				foreach (RenderWord, it, this->_line.words)
@@ -752,7 +752,7 @@ namespace atres
 		
 		while (this->_lines.size() > 0)
 		{
-			this->_line = this->_lines.pop_front();
+			this->_line = this->_lines.pop_first();
 			width = 0.0f;
 			foreach (RenderWord, it, this->_line.words)
 			{
@@ -858,7 +858,7 @@ namespace atres
 		int i;
 		while (sequences.size() > 0)
 		{
-			current = sequences.pop_front();
+			current = sequences.pop_first();
 			for (i = 0; i < sequences.size(); i++)
 			{
 				if (current.texture == sequences[i].texture && current.color == sequences[i].color)

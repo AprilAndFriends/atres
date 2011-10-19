@@ -32,7 +32,7 @@ namespace atresttf
 		hstr line;
 		while (lines.size() > 0)
 		{
-			line = lines.pop_front();
+			line = lines.pop_first();
 			if (!this->_readBasicParameter(line))
 			{
 				if (line.starts_with("File="))
@@ -165,7 +165,7 @@ namespace atresttf
 				data[index * 4 + 3] = glyph->bitmap.buffer[index];
 			}
 		}
-		TextureContainer* textureContainer = this->textureContainers.back();
+		TextureContainer* textureContainer = this->textureContainers.last();
 		int maxHeight = PTSIZE2INT(face->size->metrics.height) + CHARACTER_SPACE * 2;
 		if (textureContainer->penX + glyph->bitmap.width + 4 > TEXTURE_SIZE)
 		{

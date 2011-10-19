@@ -26,7 +26,7 @@ namespace atres
 		hstr line;
 		while (lines.size() > 0)
 		{
-			line = lines.pop_front();
+			line = lines.pop_first();
 			if (!this->_readBasicParameter(line))
 			{
 				if (line.starts_with("Texture="))
@@ -58,17 +58,17 @@ namespace atres
 			data = (*it).split(" ", -1, true);
 			if (is_between(data.size(), 4, 6))
 			{
-				code = (unsigned int)data.pop_front();
-				c.x = (float)data.pop_front();
-				c.y = (float)data.pop_front();
-				c.w = (float)data.pop_front();
+				code = (unsigned int)data.pop_first();
+				c.x = (float)data.pop_first();
+				c.y = (float)data.pop_first();
+				c.w = (float)data.pop_first();
 				c.h = this->height;
 				if (data.size() > 0)
 				{
-					c.aw = (float)data.pop_front();
+					c.aw = (float)data.pop_first();
 					if (data.size() > 0)
 					{
-						c.bx = (float)data.pop_front();
+						c.bx = (float)data.pop_first();
 					}
 				}
 				if (c.aw == 0.0f)
