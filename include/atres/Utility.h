@@ -94,8 +94,9 @@ namespace atres
 		hstr text;
 		grect rect;
 		int spaces;
+		bool terminated;
 		harray<RenderWord> words;
-		RenderLine() : spaces(0) { }
+		RenderLine() : spaces(0), terminated(false) { }
 	};
 	
 	struct FormatTag
