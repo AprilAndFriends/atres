@@ -267,42 +267,45 @@ namespace atres
 			float width;
 			float widthPerSpace;
 			harray<RenderWord> words;
-			for (int i = 0; i < lines.size() - 1; i++)
+			for (int i = 0; i < lines.size(); i++)
 			{
-				if (lines[i].spaces > 0)
+				if (!lines[i].terminated) // if line was not actually terminated with a \n
 				{
-					width = 0.0f;
-					foreach (RenderWord, it2, lines[i].words)
+					if (lines[i].spaces > 0)
 					{
-						if ((*it2).spaces == 0)
+						width = 0.0f;
+						foreach (RenderWord, it2, lines[i].words)
 						{
-							width += (*it2).rect.w;
+							if ((*it2).spaces == 0)
+							{
+								width += (*it2).rect.w;
+							}
 						}
+						widthPerSpace = (rect.w - width) / lines[i].spaces;
+						width = 0.0f;
+						words.clear();
+						foreach (RenderWord, it, lines[i].words)
+						{
+							if ((*it).spaces == 0)
+							{
+								(*it).rect.x = hroundf(width);
+								words += (*it);
+							}
+							else
+							{
+								width += (*it).spaces * widthPerSpace;
+							}
+						}
+						lines[i].words = words;
 					}
-					widthPerSpace = (rect.w - width) / lines[i].spaces;
-					width = 0.0f;
-					words.clear();
-					foreach (RenderWord, it, lines[i].words)
+					else // no spaces, just force a centered horizontal alignment
 					{
-						if ((*it).spaces == 0)
+						ox = -x + (rect.w - lines[i].rect.w) / 2;
+						lines[i].rect.x += ox;
+						foreach (RenderWord, it, lines[i].words)
 						{
-							(*it).rect.x = hroundf(width);
-							words += (*it);
+							(*it).rect.x += ox;
 						}
-						else
-						{
-							width += (*it).spaces * widthPerSpace;
-						}
-					}
-					lines[i].words = words;
-				}
-				else // no spaces, just force a centered horizontal alignment
-				{
-					ox = -x + (rect.w - lines[i].rect.w) / 2;
-					lines[i].rect.x += ox;
-					foreach (RenderWord, it, lines[i].words)
-					{
-						(*it).rect.x += ox;
 					}
 				}
 			}
@@ -663,16 +666,19 @@ namespace atres
 		float maxWidth = 0.0f;
 		float lineWidth = 0.0f;
 		bool nextLine;
+		bool forcedNextLine;
 		bool addWord;
 		this->_line.rect.h = this->_height;
 		for (int i = 0; i < words.size(); i++)
 		{
 			nextLine = (i == words.size() - 1);
 			addWord = true;
+			forcedNextLine = false;
 			if (words[i].text == "\n")
 			{
 				addWord = false;
 				nextLine = true;
+				forcedNextLine = true;
 			}
 			else if (lineWidth + words[i].rect.w > rect.w && wrapped)
 			{
@@ -692,7 +698,7 @@ namespace atres
 			}
 			if (nextLine)
 			{
-				// remove spaces at begining and end in wrapped formatting styles
+				// remove spaces at beginning and end in wrapped formatting styles
 				if (wrapped)
 				{
 					while (this->_line.words.size() > 0 && this->_line.words.first().spaces > 0)
@@ -712,6 +718,7 @@ namespace atres
 				}
 				maxWidth = hmax(maxWidth, this->_line.rect.w);
 				this->_line.rect.y = this->_lines.size() * this->_lineHeight;
+				this->_line.terminated = forcedNextLine;
 				if (left && !wrapped && this->_line.rect.w > rect.w)
 				{
 					this->_line.rect.w = rect.w;
@@ -729,6 +736,7 @@ namespace atres
 		maxWidth = hmin(maxWidth, rect.w);
 		if (this->_lines.size() > 0)
 		{
+			this->_lines.last().terminated = true; // last line is regarded as terminated with \n
 			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight, this->_correctedHeight);
 			if (this->_lines.size() > 0)
 			{
