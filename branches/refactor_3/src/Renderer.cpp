@@ -29,8 +29,8 @@
 
 #define CHECK_UNICODE_LINE_BREAK_CHARS(code) \
 	((code) >= 128 && (((code) >= 0x3000 && (code) <= 0x3002) ||	/* ideographic chars like the chinese dot */ \
-						(code) == 0xFF0C ||						/* fullwith comma */ \
-						(code) == 0x4E00 ||						/* fullwidth '-' char */ \
+						(code) == 0xFF0C ||							/* fullwith comma */ \
+						(code) == 0x4E00 ||							/* fullwidth '-' char */ \
 						(code) == 0x30FC							/* japanese '-' */ \
 	))
 
@@ -742,20 +742,6 @@ namespace atres
 				this->_line.rect.w = 0.0f;
 				this->_line.words.clear();
 				lineWidth = 0.0f;
-				// break lines on space and some unicode characters, specific to a language.
-				if (code >= 128 && ((code >= 0x3000 && code <= 0x3002) /* ideographic chars like the chinese dot */
-								  || code == 0xFF0C /* fullwith comma */
-								  || code == 0x4E00 /* fullwidth '-' char */
-								  || code == 0x30FC /* japanese '-' */))
-				{
-					if (!checkingSpaces)
-					{
-						width = advance;
-						current = i - start;
-					}
-
-					checkingSpaces = true;
-				}
 			}
 		}
 		maxWidth = hmin(maxWidth, rect.w);
