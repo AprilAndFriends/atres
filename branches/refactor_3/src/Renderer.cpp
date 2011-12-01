@@ -27,6 +27,13 @@
 #define ALIGNMENT_IS_WRAPPED(formatting) ((formatting) == LEFT_WRAPPED || (formatting) == CENTER_WRAPPED || (formatting) == RIGHT_WRAPPED || (formatting) == JUSTIFIED)
 #define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED)
 
+#define CHECK_UNICODE_LINE_BREAK_CHARS(code) \
+	((code) >= 128 && (((code) >= 0x3000 && (code) <= 0x3002) ||	/* ideographic chars like the chinese dot */ \
+						(code) == 0xFF0C ||						/* fullwith comma */ \
+						(code) == 0x4E00 ||						/* fullwidth '-' char */ \
+						(code) == 0x30FC							/* japanese '-' */ \
+	))
+
 #define EFFECT_MODE_NORMAL 0
 #define EFFECT_MODE_SHADOW 1
 #define EFFECT_MODE_BORDER 2
@@ -577,13 +584,13 @@ namespace atres
 	harray<RenderWord> Renderer::createRenderWords(grect rect, chstr text, harray<FormatTag> tags, bool limitWidth)
 	{
 		this->_initializeFormatTags(tags);
-		int zeroSize = text.find_first_of('\0');
-		if (zeroSize < 0)
+		int actualSize = text.find_first_of('\0');
+		if (actualSize < 0)
 		{
-			zeroSize = text.size();
+			actualSize = text.size();
 		}
 #ifdef _DEBUG
-		else if (zeroSize < text.size())
+		else if (actualSize < text.size())
 		{
 			atres::log(hsprintf("Warning: Text \"%s\" has \\0 character before the actual end", text.c_str()));
 		}
@@ -602,11 +609,11 @@ namespace atres
 		bool checkingSpaces = true;
 		word.rect.h = this->_height;
 		
-		while (i < zeroSize) // checking all words
+		while (i < actualSize) // checking all words
 		{
 			start = i;
 			wordWidth = 0.0f;
-			while (i < zeroSize) // checking a whole word
+			while (i < actualSize) // checking a whole word
 			{
 				code = utf8_to_uint(&str[i], &byteLength);
 				if (code == '\n')
@@ -637,6 +644,10 @@ namespace atres
 					break;
 				}
 				i += byteLength;
+				if (!checkingSpaces && CHECK_UNICODE_LINE_BREAK_CHARS(code))
+				{
+					break;
+				}
 			}
 			if (i > start)
 			{
@@ -731,6 +742,20 @@ namespace atres
 				this->_line.rect.w = 0.0f;
 				this->_line.words.clear();
 				lineWidth = 0.0f;
+				// break lines on space and some unicode characters, specific to a language.
+				if (code >= 128 && ((code >= 0x3000 && code <= 0x3002) /* ideographic chars like the chinese dot */
+								  || code == 0xFF0C /* fullwith comma */
+								  || code == 0x4E00 /* fullwidth '-' char */
+								  || code == 0x30FC /* japanese '-' */))
+				{
+					if (!checkingSpaces)
+					{
+						width = advance;
+						current = i - start;
+					}
+
+					checkingSpaces = true;
+				}
 			}
 		}
 		maxWidth = hmin(maxWidth, rect.w);
