@@ -105,7 +105,7 @@ namespace atres
 	{
 		const char* str = text.c_str();
 		int start = 0;
-		int end;
+		int end = 0;
 		harray<char> stack;
 		FormatTag tag;
 		harray<FormatTag> foundTags;
@@ -245,7 +245,7 @@ namespace atres
 			}
 			return lines;
 		}
-		float ox;
+		float ox = 0.0f;
 		if (horizontal != JUSTIFIED)
 		{
 			// horizontal correction
@@ -347,7 +347,7 @@ namespace atres
 		this->_borderSequence.color = borderColor;
 		this->_borderSequence.color.a = (unsigned char)(borderColor.a * borderColor.a_f() * borderColor.a_f());
 		this->_renderRect = RenderRectangle();
-		this->_color = april::Color();
+		this->_color = APRIL_COLOR_WHITE;
 		this->_hex = "";
 		this->_effectMode = 0;
 		this->_alpha = -1;
@@ -600,9 +600,9 @@ namespace atres
 
 		const char* str = text.c_str();
 
-		unsigned int code;
-		float aw;
-		float wordWidth;
+		unsigned int code = 0;
+		float aw = 0.0f;
+		float wordWidth = 0.0f;
 		int start = 0;
 		int i = 0;
 		int byteLength = 0;
@@ -676,9 +676,9 @@ namespace atres
 		bool left = ALIGNMENT_IS_LEFT(horizontal);
 		float maxWidth = 0.0f;
 		float lineWidth = 0.0f;
-		bool nextLine;
-		bool forcedNextLine;
-		bool addWord;
+		bool nextLine = false;
+		bool forcedNextLine = false;
+		bool addWord = false;
 		this->_line.rect.h = this->_height;
 		for (int i = 0; i < words.size(); i++)
 		{
@@ -762,12 +762,10 @@ namespace atres
 		this->_initializeFormatTags(tags);
 		this->_initializeRenderSequences();
 		this->_initializeLineProcessing(lines);
-
-		grect area;
-		
-		int byteLength;
-		float width;
+		int byteLength = 0;
+		float width = 0.0f;
 		grect destination;
+		grect area;
 		
 		while (this->_lines.size() > 0)
 		{
@@ -874,7 +872,7 @@ namespace atres
 	{
 		harray<RenderSequence> result;
 		RenderSequence current;
-		int i;
+		int i = 0;
 		while (sequences.size() > 0)
 		{
 			current = sequences.pop_first();
@@ -1163,7 +1161,7 @@ namespace atres
 	void Renderer::updateCache()
 	{
 		hstr minKey;
-		int minIndex;
+		int minIndex = 0;
 		while (cache.size() >= cacheSize)
 		{
 			minKey = "";
@@ -1405,8 +1403,8 @@ namespace atres
 		RenderLine line;
 
 		float lineWidth = 0.0f;
-		bool nextLine;
-		bool addWord;
+		bool nextLine = false;
+		bool addWord = false;
 		line.rect.h = this->_height;
 		for (int i = 0; i < words.size(); i++)
 		{
