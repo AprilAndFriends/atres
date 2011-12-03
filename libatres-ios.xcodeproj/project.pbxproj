@@ -287,6 +287,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -352,6 +353,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -385,6 +387,44 @@
 			};
 			name = "Release-LLVM";
 		};
+		D1555DAB14890E0200E723D1 /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(USER_LIBRARY_DIR)/SDKs/aprilSDK/$(PLATFORM_NAME).sdk/usr/local/include",
+					"$(USER_LIBRARY_DIR)/SDKs/gtypesSDK/$(PLATFORM_NAME).sdk/usr/local/include",
+					"$(USER_LIBRARY_DIR)/SDKs/hltypesSDK/$(PLATFORM_NAME).sdk/usr/local/include",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				PRODUCT_NAME = atres;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "App Store";
+		};
+		D1555DAC14890E0200E723D1 /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = "$(CONFIGURATION_BUILD_DIR)/$(PRODUCT_NAME)SDK/$(PLATFORM_NAME).sdk";
+				GCC_MODEL_TUNING = G5;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				INSTALL_PATH = /usr/local/lib;
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include/atres;
+			};
+			name = "App Store";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -394,6 +434,7 @@
 				1DEB921F08733DC00010E9CD /* Debug */,
 				C90D179D13D63EEC001DCCD5 /* Debug-LLVM */,
 				1DEB922008733DC00010E9CD /* Release */,
+				D1555DAC14890E0200E723D1 /* App Store */,
 				C90D17A013D63EF1001DCCD5 /* Release-LLVM */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -405,6 +446,7 @@
 				1DEB922308733DC00010E9CD /* Debug */,
 				C90D179C13D63EEC001DCCD5 /* Debug-LLVM */,
 				1DEB922408733DC00010E9CD /* Release */,
+				D1555DAB14890E0200E723D1 /* App Store */,
 				C90D179F13D63EF1001DCCD5 /* Release-LLVM */,
 			);
 			defaultConfigurationIsVisible = 0;
