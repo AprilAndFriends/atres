@@ -756,7 +756,7 @@ namespace atres
 	
 /******* DRAW TEXT *****************************************************/
 
-	void Renderer::drawRenderSequence(RenderSequence& sequence)
+	void Renderer::drawRenderSequence(RenderSequence& sequence, gvec2 offset)
 	{
 		if (sequence.rectangles.size() == 0)
 		{
@@ -775,12 +775,12 @@ namespace atres
 			j += BUFFER_MAX_CHARACTERS;
 			foreach (RenderRectangle, it, rectangles)
 			{
-				vertices[i].x = (*it).dest.x;					vertices[i].y = (*it).dest.y;					vertices[i].u = (*it).src.x * iw;					vertices[i].v = (*it).src.y * ih;					i++;
-				vertices[i].x = (*it).dest.x + (*it).dest.w;	vertices[i].y = (*it).dest.y;					vertices[i].u = ((*it).src.x + (*it).src.w) * iw;	vertices[i].v = (*it).src.y * ih;					i++;
-				vertices[i].x = (*it).dest.x;					vertices[i].y = (*it).dest.y + (*it).dest.h;	vertices[i].u = (*it).src.x * iw;					vertices[i].v = ((*it).src.y + (*it).src.h) * ih;	i++;
-				vertices[i].x = (*it).dest.x + (*it).dest.w;	vertices[i].y = (*it).dest.y;					vertices[i].u = ((*it).src.x + (*it).src.w) * iw;	vertices[i].v = (*it).src.y * ih;					i++;
-				vertices[i].x = (*it).dest.x + (*it).dest.w;	vertices[i].y = (*it).dest.y + (*it).dest.h;	vertices[i].u = ((*it).src.x + (*it).src.w) * iw;	vertices[i].v = ((*it).src.y + (*it).src.h) * ih;	i++;
-				vertices[i].x = (*it).dest.x;					vertices[i].y = (*it).dest.y + (*it).dest.h;	vertices[i].u = (*it).src.x * iw;					vertices[i].v = ((*it).src.y + (*it).src.h) * ih;	i++;
+				vertices[i].x = (*it).dest.x + offset.x;					vertices[i].y = (*it).dest.y + offset.y;					vertices[i].u = (*it).src.x * iw;					vertices[i].v = (*it).src.y * ih;					i++;
+				vertices[i].x = (*it).dest.x + offset.x + (*it).dest.w;	vertices[i].y = (*it).dest.y + offset.y;					vertices[i].u = ((*it).src.x + (*it).src.w) * iw;	vertices[i].v = (*it).src.y * ih;					i++;
+				vertices[i].x = (*it).dest.x + offset.x;					vertices[i].y = (*it).dest.y + offset.y + (*it).dest.h;	vertices[i].u = (*it).src.x * iw;					vertices[i].v = ((*it).src.y + (*it).src.h) * ih;	i++;
+				vertices[i].x = (*it).dest.x + offset.x + (*it).dest.w;	vertices[i].y = (*it).dest.y + offset.y;					vertices[i].u = ((*it).src.x + (*it).src.w) * iw;	vertices[i].v = (*it).src.y * ih;					i++;
+				vertices[i].x = (*it).dest.x + offset.x + (*it).dest.w;	vertices[i].y = (*it).dest.y + offset.y + (*it).dest.h;	vertices[i].u = ((*it).src.x + (*it).src.w) * iw;	vertices[i].v = ((*it).src.y + (*it).src.h) * ih;	i++;
+				vertices[i].x = (*it).dest.x + offset.x;					vertices[i].y = (*it).dest.y + offset.y + (*it).dest.h;	vertices[i].u = (*it).src.x * iw;					vertices[i].v = ((*it).src.y + (*it).src.h) * ih;	i++;
 			}
 			if (sequence.color == APRIL_COLOR_WHITE)
 			{
@@ -832,15 +832,11 @@ namespace atres
 			entry.sequences = this->createRenderSequences(drawRect, lines, tags);
 			cache[text] = entry;
 		}
-		harray<RenderSequence> sequences = cache[text].sequences;
+		gvec2 drawing_offset(rect.x, rect.y);
+		harray<RenderSequence>& sequences = cache[text].sequences;
 		foreach (RenderSequence, it, sequences)
 		{
-			foreach (RenderRectangle, it2, (*it).rectangles)
-			{
-				(*it2).dest.x += rect.x;
-				(*it2).dest.y += rect.y;
-			}
-			this->drawRenderSequence(*it);
+			this->drawRenderSequence(*it, drawing_offset);
 		}
 	}
 

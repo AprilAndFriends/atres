@@ -111,7 +111,7 @@ namespace atres
 		Renderer();
 		~Renderer();
 
-		void drawRenderSequence(RenderSequence& sequence);
+		void drawRenderSequence(RenderSequence& sequence, gvec2 offset = gvec2(0, 0));
 		void registerFontResource(FontResource* fontResource);
 	
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
