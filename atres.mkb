@@ -1,0 +1,28 @@
+option lib
+
+subproject atres
+
+options
+{
+	enable-exceptions
+}
+
+subprojects
+{
+	atres
+	hltypes
+	gtypes
+	april
+}
+
+files
+{
+	(src)
+	atres.cpp
+	Exception.cpp
+	FontResource.cpp
+	FontResourceBitmap.cpp
+	Renderer.cpp
+	Util.cpp
+}
+

@@ -21,6 +21,7 @@
 		7FF23E1E1255E39E000C729A /* Exception.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF23E1A1255E39E000C729A /* Exception.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FF23E241255E3A8000C729A /* Exception.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FF23E211255E3A8000C729A /* Exception.cpp */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+		D107539C1486F10E00980E43 /* Utility.h in Headers */ = {isa = PBXBuildFile; fileRef = D107539B1486F10E00980E43 /* Utility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		7FF23E1A1255E39E000C729A /* Exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Exception.h; path = include/atres/Exception.h; sourceTree = "<group>"; };
 		7FF23E211255E3A8000C729A /* Exception.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Exception.cpp; path = src/Exception.cpp; sourceTree = "<group>"; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D107539B1486F10E00980E43 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utility.h; path = include/atres/Utility.h; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libatres.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libatres.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -97,6 +99,7 @@
 		7FF23E121255E2BD000C729A /* Includes */ = {
 			isa = PBXGroup;
 			children = (
+				D107539B1486F10E00980E43 /* Utility.h */,
 				7F46F94E13CD9FD6002A143C /* atres.h */,
 				7F46F94F13CD9FD6002A143C /* atresExport.h */,
 				7F46F95013CD9FD6002A143C /* FontResource.h */,
@@ -115,12 +118,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				7FF23E1E1255E39E000C729A /* Exception.h in Headers */,
-				7F24B9421256107B00332426 /* Util.h in Headers */,
 				7F46F95313CD9FD6002A143C /* atres.h in Headers */,
+				D107539C1486F10E00980E43 /* Utility.h in Headers */,
 				7F46F95413CD9FD6002A143C /* atresExport.h in Headers */,
 				7F46F95513CD9FD6002A143C /* FontResource.h in Headers */,
 				7F46F95613CD9FD6002A143C /* FontResourceBitmap.h in Headers */,
 				7F46F95713CD9FD6002A143C /* Renderer.h in Headers */,
+				7F24B9421256107B00332426 /* Util.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

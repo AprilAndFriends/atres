@@ -10,7 +10,7 @@
   <Project Name="fontgen" Path="scripts/win32_font_generator/fontgen.project" Active="No"/>
   <Project Name="fontgen" Path="scripts/win32_font_generator/fontgen.project" Active="No"/>
   <Project Name="libatresttf" Path="atresttf/libatresttf.project" Active="No"/>
-  <Project Name="libhlxml" Path="../../../pharaoh/external/hltypes/hlxml/libhlxml.project" Active="No"/>
+  <Project Name="libhlxml" Path="../hltypes/hlxml/libhlxml.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Project Name="libhltypes" ConfigName="Debug"/>

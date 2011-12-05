@@ -32,40 +32,27 @@ namespace atresttf
 		hstr line;
 		while (lines.size() > 0)
 		{
-			line = lines.pop_front();
-			if (line.starts_with("Name="))
+			line = lines.pop_first();
+			if (!this->_readBasicParameter(line))
 			{
-				this->name = line.replace("Name=", "");
-			}
-			else if (line.starts_with("File="))
-			{
-				this->fontFilename = path + line.replace("File=", "");
-			}
-			else if (line.starts_with("LineHeight="))
-			{
-				this->lineHeight = (float)line.replace("LineHeight=", "");
-			}
-			else if (line.starts_with("Height="))
-			{
-				this->height = (float)line.replace("Height=", "");
-			}
-			else if (line.starts_with("Scale="))
-			{
-				this->scale = (float)line.replace("Scale=", "");
-				this->baseScale = this->scale;
+				if (line.starts_with("File="))
+				{
+					this->fontFilename = path + line.replace("File=", "");
+				}
 			}
 		}
 		this->_initializeFont();
 	}
 
-	FontResourceTtf::FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight) : atres::FontResource(name)
+	FontResourceTtf::FontResourceTtf(chstr fontFilename, chstr name, float height, float scale,
+		float lineHeight, float correctedHeight) : atres::FontResource(name)
 	{
 		this->fontFilename = fontFilename;
-		// TODO - should check system fonts if file does not exit!
-		this->height = height;
-		this->scale = scale;
 		this->baseScale = scale;
+		this->scale = scale;
+		this->height = height;
 		this->lineHeight = lineHeight;
+		this->correctedHeight = correctedHeight;
 		this->_initializeFont();
 	}
 
@@ -107,6 +94,12 @@ namespace atresttf
 		{
 			this->lineHeight = this->height;
 		}
+		if (this->correctedHeight == 0.0f)
+		{
+			this->correctedHeight = this->height;
+		}
+		// TODO - should check system fonts if file does not exit!
+
 		// libfreetype stuff
 		FT_Library library = atresttf::getLibrary();
 		FT_Face face;
@@ -172,7 +165,7 @@ namespace atresttf
 				data[index * 4 + 3] = glyph->bitmap.buffer[index];
 			}
 		}
-		TextureContainer* textureContainer = this->textureContainers.back();
+		TextureContainer* textureContainer = this->textureContainers.last();
 		int maxHeight = PTSIZE2INT(face->size->metrics.height) + CHARACTER_SPACE * 2;
 		if (textureContainer->penX + glyph->bitmap.width + 4 > TEXTURE_SIZE)
 		{

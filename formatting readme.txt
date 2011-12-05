@@ -10,7 +10,7 @@ Following formatting commands are supported:
 n - normal (no shadow / border)
 s - shadow
 b - border
-c - color change; parameter: string with hex value for color in RGB or ARGB
+c - color change; parameter: string with hex value for color in RGB or RGBA
 f - font change; parameter: string of the font name definition including optional scale factor
 
 Examples:

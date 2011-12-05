@@ -20,9 +20,6 @@
     <ClCompile Include="src\Exception.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Util.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -43,9 +40,6 @@
     <ClInclude Include="include\atres\Exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\atres\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -53,6 +47,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\atres\FontResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\atres\Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
