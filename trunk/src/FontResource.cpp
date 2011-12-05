@@ -19,7 +19,7 @@
 
 namespace atres
 {
-	FontResource::FontResource(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f), lineHeight(0.0f)
+	FontResource::FontResource(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f), lineHeight(0.0f), correctedHeight(0.0f)
 	{
 		this->name = name;
 	}
@@ -34,6 +34,36 @@ namespace atres
 	{
 		this->characters.clear();
 	}
+
+	bool FontResource::_readBasicParameter(chstr line)
+	{
+		if (line.starts_with("Name="))
+		{
+			this->name = line.replace("Name=", "");
+			return true;
+		}
+		if (line.starts_with("Height="))
+		{
+			this->height = (float)line.replace("Height=", "");
+			return true;
+		}
+		if (line.starts_with("Scale="))
+		{
+			this->baseScale = (float)line.replace("Scale=", "");
+			return true;
+		}
+		if (line.starts_with("LineHeight="))
+		{
+			this->lineHeight = (float)line.replace("LineHeight=", "");
+			return true;
+		}
+		if (line.starts_with("CorrectedHeight="))
+		{
+			this->correctedHeight = (float)line.replace("CorrectedHeight=", "");
+			return true;
+		}
+		return false;
+	}
 	
 	bool FontResource::hasChar(unsigned int charcode)
 	{
@@ -45,14 +75,19 @@ namespace atres
 		return (this->height * this->scale * this->baseScale);
 	}
 	
+	float FontResource::getScale()
+	{
+		return (this->scale * this->baseScale);
+	}
+	
 	float FontResource::getLineHeight()
 	{
 		return (this->lineHeight * this->scale * this->baseScale);
 	}
-	
-	float FontResource::getScale()
+
+	float FontResource::getCorrectedHeight()
 	{
-		return (this->scale * this->baseScale);
+		return (this->correctedHeight * this->scale * this->baseScale);
 	}
 	
 	float FontResource::getTextWidth(chstr text)
@@ -98,16 +133,16 @@ namespace atres
 	RenderRectangle FontResource::makeRenderRectangle(grect rect, grect area, unsigned int code)
 	{
 		RenderRectangle result;
-		float height = this->getHeight();
+		float scaledHeight = this->getHeight();
 		CharacterDefinition chr = this->characters[code];
 		// vertical cutoff of destination rectangle
-		float ratioTop = (area.y < rect.y ? (area.y + area.h - rect.y) / height : 1.0f);
-		float ratioBottom = (rect.y + rect.h < area.y + area.h ? (rect.y + rect.h - area.y) / height : 1.0f);
+		float ratioTop = (area.y < rect.y ? (area.y + area.h - rect.y) / scaledHeight : 1.0f);
+		float ratioBottom = (rect.y + rect.h < area.y + area.h ? (rect.y + rect.h - area.y) / scaledHeight : 1.0f);
 		// destination rectangle
 		result.dest.x = area.x;
-		result.dest.y = area.y + height * (1.0f - ratioTop);
+		result.dest.y = area.y + scaledHeight * (1.0f - ratioTop);
 		result.dest.w = area.w;
-		result.dest.h = chr.h * height / this->height * (ratioTop + ratioBottom - 1.0f);
+		result.dest.h = chr.h * scaledHeight / this->height * (ratioTop + ratioBottom - 1.0f);
 		if (rect.intersects(result.dest)) // if destination rectangle inside drawing area
 		{
 			// horizontal cutoff of destination rectangle
