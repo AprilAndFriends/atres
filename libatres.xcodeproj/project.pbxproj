@@ -24,7 +24,6 @@
 		C9AE31F3135D7014006B491A /* atresExport.h in Headers */ = {isa = PBXBuildFile; fileRef = C9AE31EF135D7014006B491A /* atresExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9AE31F4135D7014006B491A /* Exception.h in Headers */ = {isa = PBXBuildFile; fileRef = C9AE31F0135D7014006B491A /* Exception.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D10753991486EF0A00980E43 /* Utility.h in Headers */ = {isa = PBXBuildFile; fileRef = D10753981486EF0A00980E43 /* Utility.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D1981D22140F90670057C3AF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1981D21140F90670057C3AF /* Foundation.framework */; };
 		D1981D2F140F90BC0057C3AF /* FontResource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93913CD9F94002A143C /* FontResource.cpp */; };
 		D1981D30140F90BC0057C3AF /* FontResourceBitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93A13CD9F94002A143C /* FontResourceBitmap.cpp */; };
 		D1981D31140F90BC0057C3AF /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93B13CD9F94002A143C /* Renderer.cpp */; };
@@ -72,7 +71,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1981D22140F90670057C3AF /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,12 +292,11 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_VERSION = 4.0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "i386 x86_64 ppc";
 				VALID_ARCHS = "i386 x86_64 ppc";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -320,12 +317,11 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
-				GCC_VERSION = 4.0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "i386 x86_64 ppc";
 				VALID_ARCHS = "i386 x86_64 ppc";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -393,7 +389,6 @@
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				SKIP_INSTALL = YES;
 				VALID_ARCHS = i386;
-				VALID_ARCHS = i386;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = "App Store";
@@ -435,7 +430,6 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				VALID_ARCHS = "i386 x86_64 ppc";
-				VALID_ARCHS = "i386 x86_64 ppc";
 				WRAPPER_EXTENSION = framework;
 			};
 			name = "Debug-LLVM";
@@ -471,7 +465,6 @@
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "i386 x86_64 ppc";
 				VALID_ARCHS = "i386 x86_64 ppc";
 				WRAPPER_EXTENSION = framework;
 			};
