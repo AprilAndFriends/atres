@@ -481,6 +481,7 @@
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/libatres_ios.dst;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -512,6 +513,7 @@
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/libatres_ios.dst;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -542,7 +544,7 @@
 				);
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/libatres_ios.dst;
-				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../hltypes/include",
@@ -569,7 +571,7 @@
 				);
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/libatres_ios.dst;
-				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../hltypes/include",
@@ -596,7 +598,7 @@
 				);
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/libatres_ios.dst;
-				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../hltypes/include",
