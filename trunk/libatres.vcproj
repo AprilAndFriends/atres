@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="libatres"
 	ProjectGUID="{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}"
 	RootNamespace="libatres"
@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="win32_Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\"
 			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
@@ -61,7 +61,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libapril.lib libgtypes.lib libhltypes.lib"
-				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="$(SolutionDir)bin"
 				GenerateDebugInformation="true"
 				ImportLibrary="$(TargetDir)\$(TargetName).lib"
@@ -91,7 +91,7 @@
 		</Configuration>
 		<Configuration
 			Name="win32_Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\"
 			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
@@ -136,7 +136,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libapril.lib libgtypes.lib libhltypes.lib"
-				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="$(SolutionDir)bin"
 			/>
 			<Tool

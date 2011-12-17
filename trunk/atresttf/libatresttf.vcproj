@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="libatresttf"
 	ProjectGUID="{4A055F1C-7F19-4CE2-8374-583AC6C7875E}"
 	RootNamespace="xalutil"
@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="win32_Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\"
 			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -61,7 +61,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libatres.lib libhltypes.lib libgtypes.lib libapril.lib libfreetype.lib"
-				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\..\lib\msvc90;$(SolutionDir)bin"
 				GenerateDebugInformation="true"
 				ImportLibrary="$(TargetDir)\$(TargetName).lib"
@@ -91,7 +91,7 @@
 		</Configuration>
 		<Configuration
 			Name="win32_Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\"
 			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -137,7 +137,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libatres.lib libhltypes.lib libgtypes.lib libapril.lib libfreetype.lib"
-				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				OutputFile="$(OutDir)$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\lib\msvc90;$(SolutionDir)bin"
 				GenerateDebugInformation="true"
