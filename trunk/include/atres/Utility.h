@@ -86,7 +86,8 @@ namespace atres
 		grect rect;
 		int start;
 		int spaces;
-		RenderWord() : start(0), spaces(0) { }
+		float fullWidth;
+		RenderWord() : start(0), spaces(0), fullWidth(0.0f) { }
 	};
 	
 	struct RenderLine

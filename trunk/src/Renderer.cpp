@@ -601,8 +601,10 @@ namespace atres
 		const char* str = text.c_str();
 
 		unsigned int code = 0;
+		float ax = 0.0f;
 		float aw = 0.0f;
-		float wordWidth = 0.0f;
+		float wordX = 0.0f;
+		float wordW = 0.0f;
 		int start = 0;
 		int i = 0;
 		int byteLength = 0;
@@ -612,7 +614,8 @@ namespace atres
 		while (i < actualSize) // checking all words
 		{
 			start = i;
-			wordWidth = 0.0f;
+			wordX = 0.0f;
+			wordW = 0.0f;
 			while (i < actualSize) // checking a whole word
 			{
 				code = utf8_to_uint(&str[i], &byteLength);
@@ -630,16 +633,19 @@ namespace atres
 				}
 				this->_checkFormatTags(text, i);
 				this->_character = &this->_characters[code];
-				if (wordWidth < -this->_character->bx * this->_scale)
+				if (wordX < -this->_character->bx * this->_scale)
 				{
-					aw = (this->_character->aw - this->_character->bx) * this->_scale;
+					ax = (this->_character->aw - this->_character->bx) * this->_scale;
+					aw = this->_character->w * this->_scale;
 				}
 				else
 				{
-					aw = this->_character->aw * this->_scale;
+					ax = this->_character->aw * this->_scale;
+					aw = (this->_character->w + this->_character->bx) * this->_scale;
 				}
-				wordWidth += aw;
-				if (limitWidth && wordWidth > rect.w)
+				wordW = wordX + hmax(ax, aw);
+				wordX += ax;
+				if (limitWidth && wordW > rect.w)
 				{
 					break;
 				}
@@ -652,11 +658,12 @@ namespace atres
 			if (i > start)
 			{
 				word.text = text(start, i - start);
-				word.rect.w = wordWidth;
+				word.rect.w = wordX;
 				word.start = start;
 				word.spaces = (checkingSpaces ? i - start : 0);
+				word.fullWidth = wordW;
 				result += word;
-				if (limitWidth && wordWidth > rect.w)
+				if (limitWidth && wordW > rect.w)
 				{
 					break;
 				}
@@ -691,7 +698,7 @@ namespace atres
 				nextLine = true;
 				forcedNextLine = true;
 			}
-			else if (lineWidth + words[i].rect.w > rect.w && wrapped)
+			else if (lineWidth + words[i].fullWidth > rect.w && wrapped)
 			{
 				if (this->_line.words.size() > 0)
 				{
@@ -721,11 +728,15 @@ namespace atres
 						this->_line.words.pop_last();
 					}
 				}
-				foreach (RenderWord, it, this->_line.words)
+				if (this->_line.words.size() > 0)
 				{
-					this->_line.text += (*it).text;
-					this->_line.spaces += (*it).spaces;
-					this->_line.rect.w += (*it).rect.w;
+					this->_line.words.last().rect.w = hmax(this->_line.words.last().rect.w, this->_line.words.last().fullWidth);
+					foreach (RenderWord, it, this->_line.words)
+					{
+						this->_line.text += (*it).text;
+						this->_line.spaces += (*it).spaces;
+						this->_line.rect.w += (*it).rect.w;
+					}
 				}
 				maxWidth = hmax(maxWidth, this->_line.rect.w);
 				this->_line.rect.y = this->_lines.size() * this->_lineHeight;

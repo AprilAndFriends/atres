@@ -130,7 +130,7 @@ namespace atres
 		return i;
 	}
 	
-	RenderRectangle FontResource::makeRenderRectangle(grect rect, grect area, unsigned int code)
+	RenderRectangle FontResource::makeRenderRectangle(const grect& rect, grect area, unsigned int code)
 	{
 		RenderRectangle result;
 		float scaledHeight = this->getHeight();

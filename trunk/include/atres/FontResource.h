@@ -46,7 +46,7 @@ namespace atres
 		float getTextWidth(chstr text);
 		int getTextCount(chstr text, float maxWidth);
 		
-		RenderRectangle makeRenderRectangle(grect rect, grect area, unsigned int code);
+		RenderRectangle makeRenderRectangle(const grect& rect, grect area, unsigned int code);
 		
 	protected:
 		hstr name;
