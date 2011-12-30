@@ -93,26 +93,44 @@ namespace atres
 	float FontResource::getTextWidth(chstr text)
 	{
 		const char* str = text.c_str();
-		float result = 0.0f;
+		float textX = 0.0f;
+		float textW = 0.0f;
+		float ax = 0.0f;
+		float aw = 0.0f;
 		unsigned int code;
 		int byteLength;
 		int i = 0;
+		float scale = this->getScale();
 		CharacterDefinition* character;
 		while (i < text.size())
 		{
 			code = utf8_to_uint(&str[i], &byteLength);
 			character = &this->characters[code];
-			result += (result < -character->bx * this->getScale() ? (character->aw - character->bx) : character->aw) * this->getScale();
+			if (textX < -character->bx * scale)
+			{
+				ax = (character->aw - character->bx) * scale;
+				aw = character->w * scale;
+			}
+			else
+			{
+				ax = character->aw * scale;
+				aw = (character->w + character->bx) * scale;
+			}
+			textW = textX + hmax(ax, aw);
+			textX += ax;
 			i += byteLength;
 		}
-		return result;
+		return textW;
 	}
 	
 	int FontResource::getTextCount(chstr text, float maxWidth)
 	{
 		const char* str = text.c_str();
 		unsigned int code;
-		float width = 0.0f;
+		float textX = 0.0f;
+		float textW = 0.0f;
+		float ax = 0.0f;
+		float aw = 0.0f;
 		int byteLength;
 		int i = 0;
 		CharacterDefinition* character;
@@ -120,8 +138,19 @@ namespace atres
 		{
 			code = utf8_to_uint(&str[i], &byteLength);
 			character = &this->characters[code];
-			width += (width < -character->bx * this->getScale() ? (character->aw - character->bx) : character->aw) * this->getScale();
-			if (width > maxWidth)
+			if (textX < -character->bx * scale)
+			{
+				ax = (character->aw - character->bx) * scale;
+				aw = character->w * scale;
+			}
+			else
+			{
+				ax = character->aw * scale;
+				aw = (character->w + character->bx) * scale;
+			}
+			textW = textX + hmax(ax, aw);
+			textX += ax;
+			if (textW > maxWidth)
 			{
 				break;
 			}
