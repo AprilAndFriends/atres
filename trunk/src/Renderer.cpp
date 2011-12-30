@@ -1281,7 +1281,13 @@ namespace atres
 			hstr unformattedText = this->prepareFormatting(fontName, text, tags);
 			if (unformattedText != "")
 			{
-				return this->getFittingLine(fontName, grect(0.0f, 0.0f, 100000.0f, 1.0f), unformattedText, tags).rect.w;
+				float w = 0.0f;
+				harray<hstr> lines = unformattedText.split('\n', -1, true);
+				foreach (hstr, it, lines)
+				{
+					w = hmax(w, this->getFittingLine(fontName, grect(0.0f, 0.0f, 100000.0f, 1.0f), (*it), tags).rect.w);
+				}
+				return w;
 			}
 		}
 		return 0.0f;
@@ -1322,7 +1328,13 @@ namespace atres
 		if (text != "")
 		{
 			harray<FormatTag> tags = this->prepareTags(fontName);
-			return this->getFittingLine(fontName, grect(0.0f, 0.0f, 100000.0f, 1.0f), text, tags).rect.w;
+			float w = 0.0f;
+			harray<hstr> lines = text.split('\n', -1, true);
+			foreach (hstr, it, lines)
+			{
+				w = hmax(w, this->getFittingLine(fontName, grect(0.0f, 0.0f, 100000.0f, 1.0f), (*it), tags).rect.w);
+			}
+			return w;
 		}
 		return 0.0f;
 	}
