@@ -1122,7 +1122,19 @@ namespace atres
 		defaultFont = fonts[name];
 		cache.clear();
 	}
-    
+
+	void Renderer::destroyFontResource(FontResource* resource)
+	{
+		unregisterFontResource(resource);
+		delete resource;
+	}
+
+	void Renderer::unregisterFontResource(FontResource* resource)
+	{
+		fonts.remove_key(resource->getName());
+		if (defaultFont == resource) defaultFont = 0;
+	}
+
     FontResource* Renderer::getFontResource(chstr name)
     {
 		if (name == "" && defaultFont != NULL)
