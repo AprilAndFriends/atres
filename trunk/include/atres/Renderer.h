@@ -38,7 +38,9 @@ namespace atres
 		~Renderer();
 
 		void registerFontResource(FontResource* fontResource);
-	
+		void destroyFontResource(FontResource* resource);
+		void unregisterFontResource(FontResource* resource);
+
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
 		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight, float correctedHeight);
 		harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
