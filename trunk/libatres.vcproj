@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="libatres"
 	ProjectGUID="{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}"
 	RootNamespace="libatres"
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="include/atres;../april/include;../gtypes/include;../hltypes/include"
-				PreprocessorDefinitions="_DEBUG;ATRES_EXPORTS;_WIN32"
+				PreprocessorDefinitions="_WIN32;ATRES_EXPORTS;_DEBUG;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -117,7 +117,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="include/atres;../april/include;../gtypes/include;../hltypes/include"
-				PreprocessorDefinitions="ATRES_EXPORTS;_WIN32"
+				PreprocessorDefinitions="_WIN32;ATRES_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="libatresttf"
 	ProjectGUID="{4A055F1C-7F19-4CE2-8374-583AC6C7875E}"
 	RootNamespace="xalutil"
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="include/atresttf;../include;../../include/freetype;../../hltypes/include;../../gtypes/include;../../april/include;src/"
-				PreprocessorDefinitions="_WIN32;_DEBUG;ATRESTTF_EXPORTS"
+				PreprocessorDefinitions="_WIN32;ATRESTTF_EXPORTS;_DEBUG;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -117,7 +117,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="include/atresttf;../include;../../include/freetype;../../hltypes/include;../../gtypes/include;../../april/include;src/"
-				PreprocessorDefinitions="_WIN32;ATRESTTF_EXPORTS"
+				PreprocessorDefinitions="_WIN32;ATRESTTF_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
