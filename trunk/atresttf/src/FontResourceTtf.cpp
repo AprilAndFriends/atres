@@ -179,15 +179,16 @@ namespace atresttf
 			this->textureContainers += textureContainer;
 		}
 		int ascender = PTSIZE2INT(face->size->metrics.ascender);
+		int descender = PTSIZE2INT(face->size->metrics.descender);
 		int x = textureContainer->penX;
-		int y = textureContainer->penY + ascender - glyph->bitmap_top;
+		int y = textureContainer->penY + ascender - descender - glyph->bitmap_top;
 		textureContainer->texture->blit(x, y, data, glyph->bitmap.width,
 			glyph->bitmap.rows, 4, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
 		atres::CharacterDefinition c;
 		c.x = (float)x;
-		c.y = (float)textureContainer->penY;
+		c.y = (float)(textureContainer->penY - descender);
 		c.w = (float)glyph->bitmap.width;
-		c.h = (float)(ascender - PTSIZE2INT(face->size->metrics.descender));
+		c.h = (float)(ascender - descender);
 		c.bx = (float)PTSIZE2INT(glyph->metrics.horiBearingX);
 		c.aw = (float)PTSIZE2INT(glyph->advance.x);
 		this->characters[charcode] = c;
