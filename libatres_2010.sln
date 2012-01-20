@@ -74,10 +74,10 @@ Global
 		{BD643E5E-72FF-4004-BD69-31DC02E5D417}.win32_Debug|Win32.Build.0 = win32_Debug|Win32
 		{BD643E5E-72FF-4004-BD69-31DC02E5D417}.win32_Release|Win32.ActiveCfg = win32_Release|Win32
 		{BD643E5E-72FF-4004-BD69-31DC02E5D417}.win32_Release|Win32.Build.0 = win32_Release|Win32
-		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.win32_Debug|Win32.ActiveCfg = win32_Debug|Win32
-		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.win32_Debug|Win32.Build.0 = win32_Debug|Win32
-		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.win32_Release|Win32.ActiveCfg = win32_Release|Win32
-		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.win32_Release|Win32.Build.0 = win32_Release|Win32
+		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.win32_Debug|Win32.ActiveCfg = win32_LibXml2_Debug|Win32
+		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.win32_Debug|Win32.Build.0 = win32_LibXml2_Debug|Win32
+		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.win32_Release|Win32.ActiveCfg = win32_LibXml2_Release|Win32
+		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.win32_Release|Win32.Build.0 = win32_LibXml2_Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
