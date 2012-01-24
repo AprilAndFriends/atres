@@ -167,7 +167,7 @@ void april_init(const harray<hstr>& args)
 		atres::renderer->setBorderColor(APRIL_COLOR_AQUA);
 		aprilui::init();
 #ifdef _DEBUG
-		aprilui::setDebugMode(true);
+		aprilui::setDebugEnabled(true);
 #endif
 		dataset = new aprilui::Dataset("../media/demo_simple.datadef");
 		dataset->load();
