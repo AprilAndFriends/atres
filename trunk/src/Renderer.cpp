@@ -16,9 +16,9 @@
 #include <gtypes/Vector2.h>
 #include <hltypes/exception.h>
 #include <hltypes/harray.h>
+#include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
-#include <hltypes/util.h>
 
 #include "atres.h"
 #include "FontResource.h"
