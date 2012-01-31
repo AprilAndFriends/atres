@@ -25,6 +25,10 @@
 
 namespace atresttf
 {
+	TextureContainer::TextureContainer() : texture(NULL), penX(CHARACTER_SPACE), penY(CHARACTER_SPACE)
+	{
+	}
+
 	FontResourceTtf::FontResourceTtf(chstr filename) : atres::FontResource(filename)
 	{
 		hstr path = get_basedir(filename) + "/";
