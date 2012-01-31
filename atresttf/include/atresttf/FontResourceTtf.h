@@ -33,7 +33,7 @@ namespace atresttf
 		harray<unsigned int> characters;
 		int penX;
 		int penY;
-		TextureContainer() : texture(NULL), penX(2), penY(2) { }
+		TextureContainer();
 	};
 
 	class atresttfExport FontResourceTtf : public atres::FontResource
