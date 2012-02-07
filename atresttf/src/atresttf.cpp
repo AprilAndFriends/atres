@@ -24,23 +24,28 @@ namespace atresttf
 	FT_Library library = NULL;
 	hmap<atres::FontResource*, FT_Face> faces;
 
+	void log(chstr message)
+	{
+		atres::log(message, "[atresttf] ");
+	}
+
     void init()
     {
-		atres::log("initializing atresttf", "[atresttf] ");
+		atresttf::log("initializing atresttf");
 		FT_Error error = FT_Init_FreeType(&library);
 		if (error != 0)
 		{
-			atres::log("Error while initializing atresttf!", "[atresttf] ");
+			atresttf::log("Error while initializing atresttf!");
 		}
 	}
     
     void destroy()
     {
-		atres::log("destroying atresttf", "[atresttf] ");
+		atresttf::log("destroying atresttf");
 		FT_Error error = FT_Done_FreeType(library);
 		if (error != 0)
 		{
-			atres::log("Error while destroying atresttf!", "[atresttf] ");
+			atresttf::log("Error while destroying atresttf!");
 		}
     }
 
