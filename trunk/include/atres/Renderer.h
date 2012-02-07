@@ -57,6 +57,7 @@ namespace atres
 		FontResource* getFontResource(chstr name);
 		void addColor(chstr key, chstr value);
 
+		void analyzeText(chstr text);
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
 		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight, float correctedHeight);
 		harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
@@ -109,6 +110,7 @@ namespace atres
 		void _initializeRenderSequences();
 		void _checkFormatTags(chstr text, int index);
 		void _processFormatTags(chstr text, int index);
+		void _checkSequenceSwitch();
 		RenderLine _calculateFittingLine(grect rect, chstr text, harray<FormatTag> tags);
 
 		void _drawRenderSequence(RenderSequence& sequence, gvec2 offset);

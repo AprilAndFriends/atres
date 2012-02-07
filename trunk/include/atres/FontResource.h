@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -14,6 +14,7 @@
 #ifndef ATRES_FONT_RESOURCE_H
 #define ATRES_FONT_RESOURCE_H
 
+#include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
@@ -30,12 +31,11 @@ namespace atres
 		//FontResource(FontResource& f, float scale = 1.0f);
 		virtual ~FontResource();
 
-		hstr getName() { return this->name; }
+		HL_DEFINE_GET(hstr, name, Name);
 		float getHeight();
 		float getScale();
-		void setScale(float value) { this->scale = value; }
-		float getBaseScale() { return this->baseScale; }
-		void setBaseScale(float value) { this->baseScale = value; }
+		HL_DEFINE_SET(float, scale, Scale);
+		HL_DEFINE_GETSET(float, baseScale, BaseScale);
 		float getLineHeight();
 		float getCorrectedHeight();
 		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }

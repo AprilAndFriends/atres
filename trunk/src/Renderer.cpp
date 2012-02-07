@@ -205,6 +205,21 @@ namespace atres
 	
 /******* ANALYZE TEXT **************************************************/
 
+	void Renderer::analyzeText(chstr text)
+	{
+		// makes sure dynamically allocated characters are loaded
+		int size;
+		unsigned int* chars = utf8_to_unicode(text, &size);
+		foreach_m (FontResource*, it, this->fonts)
+		{
+			for (int i = 0; i < size; i++)
+			{
+				it->second->hasChar(chars[i]);
+			}
+		}
+		delete[] chars;
+	}
+
 	hstr Renderer::analyzeFormatting(chstr text, harray<FormatTag>& tags)
 	{
 		const char* str = text.c_str();
@@ -637,40 +652,9 @@ namespace atres
 			{
 				this->_nextTag.start = this->_word.start + this->_word.text.size() + 1;
 			}
-			this->_colorChanged = this->_sequence.color != this->_color;
+			this->_colorChanged = (this->_sequence.color != this->_color);
 			this->_texture = this->_fontResource->getTexture(this->_code);
-			if (this->_sequence.texture != this->_texture || this->_colorChanged)
-			{
-				if (this->_sequence.rectangles.size() > 0)
-				{
-					this->_sequences += this->_sequence;
-					this->_sequence.rectangles.clear();
-				}
-				this->_sequence.texture = this->_texture;
-				this->_sequence.color = this->_color;
-			}
-			if (this->_shadowSequence.texture != this->_texture || this->_colorChanged)
-			{
-				if (this->_shadowSequence.rectangles.size() > 0)
-				{
-					this->_shadowSequences += this->_shadowSequence;
-					this->_shadowSequence.rectangles.clear();
-				}
-				this->_shadowSequence.texture = this->_texture;
-				this->_shadowSequence.color = this->shadowColor;
-				this->_shadowSequence.color.a = (unsigned char)(this->_shadowSequence.color.a * this->_color.a_f());
-			}
-			if (this->_borderSequence.texture != this->_texture || this->_colorChanged)
-			{
-				if (this->_borderSequence.rectangles.size() > 0)
-				{
-					this->_borderSequences += this->_borderSequence;
-					this->_borderSequence.rectangles.clear();
-				}
-				this->_borderSequence.texture = this->_texture;
-				this->_borderSequence.color = this->borderColor;
-				this->_borderSequence.color.a = (unsigned char)(this->_borderSequence.color.a * this->_color.a_f() * this->_color.a_f());
-			}
+			this->_checkSequenceSwitch();
 		}
 		if (this->_tags.size() == 0)
 		{
@@ -682,6 +666,45 @@ namespace atres
 			{
 				this->_nextTag.start = this->_word.start + this->_word.text.size() + 1;
 			}
+		}
+		this->_colorChanged = false;
+		this->_texture = this->_fontResource->getTexture(this->_code);
+		this->_checkSequenceSwitch();
+	}
+
+	void Renderer::_checkSequenceSwitch()
+	{
+		if (this->_sequence.texture != this->_texture || this->_colorChanged)
+		{
+			if (this->_sequence.rectangles.size() > 0)
+			{
+				this->_sequences += this->_sequence;
+				this->_sequence.rectangles.clear();
+			}
+			this->_sequence.texture = this->_texture;
+			this->_sequence.color = this->_color;
+		}
+		if (this->_shadowSequence.texture != this->_texture || this->_colorChanged)
+		{
+			if (this->_shadowSequence.rectangles.size() > 0)
+			{
+				this->_shadowSequences += this->_shadowSequence;
+				this->_shadowSequence.rectangles.clear();
+			}
+			this->_shadowSequence.texture = this->_texture;
+			this->_shadowSequence.color = this->shadowColor;
+			this->_shadowSequence.color.a = (unsigned char)(this->_shadowSequence.color.a * this->_color.a_f());
+		}
+		if (this->_borderSequence.texture != this->_texture || this->_colorChanged)
+		{
+			if (this->_borderSequence.rectangles.size() > 0)
+			{
+				this->_borderSequences += this->_borderSequence;
+				this->_borderSequence.rectangles.clear();
+			}
+			this->_borderSequence.texture = this->_texture;
+			this->_borderSequence.color = this->borderColor;
+			this->_borderSequence.color.a = (unsigned char)(this->_borderSequence.color.a * this->_color.a_f() * this->_color.a_f());
 		}
 	}
 
@@ -780,6 +803,7 @@ namespace atres
 	harray<RenderLine> Renderer::createRenderLines(grect rect, chstr text, harray<FormatTag> tags,
 		Alignment horizontal, Alignment vertical, gvec2 offset)
 	{
+		this->analyzeText(text);
 		harray<RenderWord> words = this->createRenderWords(rect, text, tags);
 		this->_initializeLineProcessing();
 
@@ -891,41 +915,9 @@ namespace atres
 				this->_word = (*it);
 				for (int i = 0; i < this->_word.text.size(); i += byteLength)
 				{
-					this->_processFormatTags(this->_word.text, i);
-					// checking first formatting tag changes
 					this->_code = utf8_to_uint(&this->_word.text[i], &byteLength);
-					// checking if texture contains this character image
-					this->_texture = this->_fontResource->getTexture(this->_code);
-					if (this->_texture != NULL)
-					{
-						if (this->_sequence.texture != this->_texture)
-						{
-							if (this->_sequence.rectangles.size() > 0)
-							{
-								this->_sequences += this->_sequence;
-								this->_sequence.rectangles.clear();
-							}
-							this->_sequence.texture = this->_texture;
-						}
-						if (this->_shadowSequence.texture != this->_texture)
-						{
-							if (this->_shadowSequence.rectangles.size() > 0)
-							{
-								this->_shadowSequences += this->_shadowSequence;
-								this->_shadowSequence.rectangles.clear();
-							}
-							this->_shadowSequence.texture = this->_texture;
-						}
-						if (this->_borderSequence.texture != this->_texture)
-						{
-							if (this->_borderSequence.rectangles.size() > 0)
-							{
-								this->_borderSequences += this->_borderSequence;
-								this->_borderSequence.rectangles.clear();
-							}
-							this->_borderSequence.texture = this->_texture;
-						}
-					}
+					// checking first formatting tag changes
+					this->_processFormatTags(this->_word.text, i);
 					// checking the particular character
 					this->_character = &this->_characters[this->_code];
 					area = this->_word.rect;
@@ -1009,7 +1001,7 @@ namespace atres
 
 	void Renderer::_drawRenderSequence(RenderSequence& sequence, gvec2 offset)
 	{
-		if (sequence.rectangles.size() == 0 || sequence.texture == NULL)
+		if (sequence.rectangles.size() == 0)
 		{
 			return;
 		}

@@ -99,7 +99,7 @@ namespace atres
 
 		void update()
 		{
-			if (this->maxSize > 0)
+			if (this->maxSize >= 0)
 			{
 				int overSize = this->keys.size() - this->maxSize;
 				if (overSize > 0)

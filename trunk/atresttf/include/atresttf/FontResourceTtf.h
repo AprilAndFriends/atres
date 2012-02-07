@@ -33,6 +33,7 @@ namespace atresttf
 		harray<unsigned int> characters;
 		int penX;
 		int penY;
+
 		TextureContainer();
 	};
 
@@ -51,7 +52,7 @@ namespace atresttf
 		hstr fontFilename;
 
 		void _initializeFont();
-		bool _addCharacterBitmap(unsigned int charcode);
+		bool _addCharacterBitmap(unsigned int charcode, bool ignoreCharacterEnabled = false);
 
 	};
 }
