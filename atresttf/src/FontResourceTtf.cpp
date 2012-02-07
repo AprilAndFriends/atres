@@ -12,11 +12,12 @@
 
 #include <april/RenderSystem.h>
 #include <april/Texture.h>
-#include <hltypes/hstring.h>
+#include <atres/atres.h>
 #include <hltypes/hfile.h>
+#include <hltypes/hstring.h>
 
-#include "freetype.h"
 #include "FontResourceTtf.h"
+#include "freetype.h"
 
 #define TEXTURE_SIZE 1024
 #define CHARACTER_SPACE 4
@@ -129,9 +130,11 @@ namespace atresttf
 			return;
 		}
 		atresttf::setFace(this, face);
+		// creating a texture
 		TextureContainer* textureContainer = new TextureContainer();
 		textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
 		this->textureContainers += textureContainer;
+		// adding all base ASCII characters right awy
 		for (unsigned int code = 32; code < 256; code++)
 		{
 			this->_addCharacterBitmap(code);
@@ -181,6 +184,9 @@ namespace atresttf
 			textureContainer = new TextureContainer();
 			textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
 			this->textureContainers += textureContainer;
+#ifdef _DEBUG
+			atres::log(hsprintf("Font '%s': character 0x%X does not fit, creating new texture", this->name.c_str(), charcode), "[atresttf] ");
+#endif
 		}
 		int ascender = PTSIZE2INT(face->size->metrics.ascender);
 		int descender = PTSIZE2INT(face->size->metrics.descender);

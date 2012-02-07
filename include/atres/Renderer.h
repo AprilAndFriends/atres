@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.0
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -19,6 +19,7 @@
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
+#include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
@@ -37,9 +38,24 @@ namespace atres
 		Renderer();
 		~Renderer();
 
+		HL_DEFINE_GET(gvec2, shadowOffset, ShadowOffset);
+		void setShadowOffset(gvec2 value);
+		HL_DEFINE_GET(april::Color, shadowColor, ShadowColor);
+		void setShadowColor(april::Color value);
+		HL_DEFINE_GET(float, borderOffset, BorderOffset);
+		void setBorderOffset(float value);
+		HL_DEFINE_GET(april::Color, borderColor, BorderColor);
+		void setBorderColor(april::Color value);
+		HL_DEFINE_GETSET(bool, globalOffsets, GlobalOffsets);
+		void setDefaultFont(chstr name);
+		bool hasFont(chstr name);
+		void setCacheSize(int value);
+
 		void registerFontResource(FontResource* fontResource);
 		void destroyFontResource(FontResource* resource);
 		void unregisterFontResource(FontResource* resource);
+		FontResource* getFontResource(chstr name);
+		void addColor(chstr key, chstr value);
 
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
 		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight, float correctedHeight);
@@ -75,21 +91,27 @@ namespace atres
 		harray<FormatTag> prepareTags(chstr fontName);
 		RenderLine getFittingLine(chstr fontName, grect rect, chstr text, harray<FormatTag> tags);
 	
-		void setDefaultFont(chstr name);
-		FontResource* getFontResource(chstr name);
-		bool hasFont(chstr name);
-		void setCacheSize(int value);
-		void updateCache();
-		void setGlobalOffsets(bool value);
-		gvec2 getShadowOffset();
-		void setShadowOffset(gvec2 value);
-		april::Color getShadowColor();
-		void setShadowColor(april::Color value);
-		float getBorderOffset();
-		void setBorderOffset(float value);
-		april::Color getBorderColor();
-		void setBorderColor(april::Color value);
-		void addColor(chstr key, chstr value);
+	protected:
+		hmap<hstr, FontResource*> fonts;
+		FontResource* defaultFont;
+		hmap<hstr, hstr> colors;
+		gvec2 shadowOffset;
+		april::Color shadowColor;
+		float borderOffset;
+		april::Color borderColor;
+		bool globalOffsets;
+
+		void _updateCache();
+		void _clearCache();
+
+		void _initializeFormatTags(harray<FormatTag>& tags);
+		void _initializeLineProcessing(harray<RenderLine> lines = harray<RenderLine>());
+		void _initializeRenderSequences();
+		void _checkFormatTags(chstr text, int index);
+		void _processFormatTags(chstr text, int index);
+		RenderLine _calculateFittingLine(grect rect, chstr text, harray<FormatTag> tags);
+
+		void _drawRenderSequence(RenderSequence& sequence, gvec2 offset);
 
 	private:
 		harray<FormatTag> _tags;
@@ -127,12 +149,11 @@ namespace atres
 		unsigned int _code;
 		bool _colorChanged;
 
-		bool _needCache;
-		CacheEntry _cacheEntry;
-		CacheUnformattedEntry _cacheUnformattedEntry;
-		CacheLineEntry _cacheLineEntry;
+		CacheKeySequence _cacheKeySequence;
+		CacheKeyLine _cacheKeyLine;
 		grect _drawRect;
 		harray<RenderSequence> _currentSequences;
+		RenderLine _currentLine;
 
 		harray<RenderRectangle> _rectangles;
 		float _tw;
@@ -140,17 +161,10 @@ namespace atres
 		int _i;
 		int _j;
 
-		void _initializeFormatTags(harray<FormatTag>& tags);
-		void _initializeLineProcessing(harray<RenderLine> lines = harray<RenderLine>());
-		void _initializeRenderSequences();
-		void _checkFormatTags(chstr text, int index);
-		void _processFormatTags(chstr text, int index);
-		RenderLine _calculateFittingLine(grect rect, chstr text, harray<FormatTag> tags);
-
-		void _drawRenderSequence(RenderSequence& sequence, gvec2 offset);
-
 	};
 	
+	atresExport extern Renderer* renderer;
+
 };
 
 #endif
