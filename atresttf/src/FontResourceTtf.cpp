@@ -111,12 +111,12 @@ namespace atresttf
 		FT_Error error = FT_New_Face(library, this->fontFilename.c_str(), 0, &face);
 		if (error == FT_Err_Unknown_File_Format)
 		{
-			atres::log("Error: Format not supported in " + this->fontFilename);
+			atres::log("Error: Format not supported in " + this->fontFilename, "[atresttf] ");
 			return;
 		}
 		if (error != 0)
 		{
-			atres::log("Error: Could not read face 0 in " + this->fontFilename + hstr(error));
+			atres::log("Error: Could not read face 0 in " + this->fontFilename + hstr(error), "[atresttf] ");
 			return;
 		}
 		FT_Size_RequestRec request;
@@ -126,7 +126,7 @@ namespace atresttf
 		error = FT_Request_Size(face, &request);
 		if (error != 0)
 		{
-			atres::log("Error: Could not set font size in " + this->fontFilename);
+			atres::log("Error: Could not set font size in " + this->fontFilename, "[atresttf] ");
 			return;
 		}
 		atresttf::setFace(this, face);
@@ -137,11 +137,11 @@ namespace atresttf
 		// adding all base ASCII characters right awy
 		for (unsigned int code = 32; code < 256; code++)
 		{
-			this->_addCharacterBitmap(code);
+			this->_addCharacterBitmap(code, true);
 		}
 	}
 
-	bool FontResourceTtf::_addCharacterBitmap(unsigned int charcode)
+	bool FontResourceTtf::_addCharacterBitmap(unsigned int charcode, bool ignoreCharacterEnabled)
 	{
 		if (this->characters.has_key(charcode))
 		{
@@ -151,12 +151,16 @@ namespace atresttf
 		unsigned int glyphIndex = FT_Get_Char_Index(face, (unsigned long)charcode);
 		if (glyphIndex == 0)
 		{
+			if (!ignoreCharacterEnabled)
+			{
+				atres::log(hsprintf("Error: Character '0x%X' does not exist in %s", charcode, this->fontFilename.c_str()), "[atresttf] ");
+			}
 			return false;
 		}
 		FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER);
 		if (error != 0)
 		{
-			atres::log("Error: Could not load glyph from " + this->fontFilename);
+			atres::log("Error: Could not load glyph from " + this->fontFilename, "[atresttf] ");
 			return false;
 		}
 		FT_GlyphSlot glyph = face->glyph;
