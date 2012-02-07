@@ -134,7 +134,7 @@ namespace atresttf
 		TextureContainer* textureContainer = new TextureContainer();
 		textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
 		this->textureContainers += textureContainer;
-		// adding all base ASCII characters right awy
+		// adding all base ASCII characters right away
 		for (unsigned int code = 32; code < 256; code++)
 		{
 			this->_addCharacterBitmap(code, true);
