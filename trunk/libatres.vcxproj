@@ -170,6 +170,7 @@
     <ClCompile Include="src\FontResource.cpp" />
     <ClCompile Include="src\FontResourceBitmap.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\atres\atres.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="include\atres\FontResourceBitmap.h" />
     <ClInclude Include="include\atres\Renderer.h" />
     <ClInclude Include="include\atres\Utility.h" />
+    <ClInclude Include="src\Cache.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\april\libapril.vcxproj">

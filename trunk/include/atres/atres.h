@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -26,8 +26,6 @@ namespace atres
     atresFnExport void destroy();
 	atresFnExport void setLogFunction(void (*fnptr)(chstr));
 	atresFnExport void log(chstr message, chstr prefix = "[atres] ");
-
-	atresExport extern Renderer* renderer;
 
 };
 

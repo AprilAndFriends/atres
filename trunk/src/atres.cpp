@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.0
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -15,12 +15,9 @@
 #include "atres.h"
 #include "FontResource.h"
 #include "Renderer.h"
-#include "Util.h"
 
 namespace atres
 {
-	Renderer* renderer;
-
 	void atres_writelog(chstr message)
 	{
 		printf("%s\n", message.c_str());

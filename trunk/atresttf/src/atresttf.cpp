@@ -26,21 +26,21 @@ namespace atresttf
 
     void init()
     {
-		atres::log("initializing atresttf");
+		atres::log("initializing atresttf", "[atresttf] ");
 		FT_Error error = FT_Init_FreeType(&library);
 		if (error != 0)
 		{
-			atres::log("Error while initializing atresttf!");
+			atres::log("Error while initializing atresttf!", "[atresttf] ");
 		}
 	}
     
     void destroy()
     {
-		atres::log("destroying atresttf");
+		atres::log("destroying atresttf", "[atresttf] ");
 		FT_Error error = FT_Done_FreeType(library);
 		if (error != 0)
 		{
-			atres::log("Error while destroying atresttf!");
+			atres::log("Error while destroying atresttf!", "[atresttf] ");
 		}
     }
 
@@ -48,7 +48,7 @@ namespace atresttf
 	{
 		if (library == NULL)
 		{
-			hl_exception("Error: AtresTtf not initialized!");
+			hl_exception("Error: AtresTTF not initialized!");
 		}
 		return library;
 	}

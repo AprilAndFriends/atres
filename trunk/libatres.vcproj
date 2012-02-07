@@ -191,6 +191,10 @@
 				RelativePath=".\src\Renderer.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\src\Utility.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -223,6 +227,10 @@
 			</File>
 			<File
 				RelativePath=".\include\atres\Utility.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Cache.h"
 				>
 			</File>
 		</Filter>

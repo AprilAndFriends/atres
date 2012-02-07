@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.0
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -23,18 +23,10 @@
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
+#include "atresExport.h"
+
 namespace atres
 {
-	struct atresExport CharacterDefinition
-	{
-		float x;
-		float y;
-		float w;
-		float h;
-		float bx;
-		float aw;
-	};
-
 	enum Alignment
 	{
 		LEFT,
@@ -66,6 +58,18 @@ namespace atres
 		CLOSE
 	};
 	
+	struct atresExport CharacterDefinition
+	{
+		float x;
+		float y;
+		float w;
+		float h;
+		float bx;
+		float aw;
+
+		CharacterDefinition();
+	};
+
 	struct RenderRectangle
 	{
 		grect src;
@@ -77,7 +81,8 @@ namespace atres
 		april::Texture* texture;
 		april::Color color;
 		harray<RenderRectangle> rectangles;
-		RenderSequence() : texture(NULL) { }
+
+		RenderSequence();
 	};
 	
 	struct RenderWord
@@ -87,7 +92,8 @@ namespace atres
 		int start;
 		int spaces;
 		float fullWidth;
-		RenderWord() : start(0), spaces(0), fullWidth(0.0f) { }
+
+		RenderWord();
 	};
 	
 	struct RenderLine
@@ -97,7 +103,8 @@ namespace atres
 		int spaces;
 		bool terminated;
 		harray<RenderWord> words;
-		RenderLine() : spaces(0), terminated(false) { }
+
+		RenderLine();
 	};
 	
 	struct FormatTag
@@ -106,44 +113,35 @@ namespace atres
 		hstr data;
 		int start;
 		int count;
-		FormatTag() : type(ESCAPE), start(0), count(0) { }
+
+		FormatTag();
+	};
+
+	struct CacheKeySequence
+	{
+		hstr text;
+		hstr fontName;
+		gvec2 size;
+		Alignment horizontal;
+		Alignment vertical;
+		april::Color color;
+		gvec2 offset;
+
+		CacheKeySequence();
+		void set(hstr text, hstr fontName, gvec2 size, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset);
+		bool operator==(const CacheKeySequence& other) const;
 	};
 	
-	struct CacheEntry
+	struct CacheKeyLine
 	{
+		hstr text;
 		hstr fontName;
-		int index;
 		gvec2 size;
-		Alignment horizontal;
-		Alignment vertical;
-		april::Color color;
-		gvec2 offset;
-		harray<RenderSequence> sequences;
-		CacheEntry() : index(0), horizontal(CENTER_WRAPPED), vertical(CENTER) { }
-	};
 
-	struct CacheUnformattedEntry
-	{
-		hstr fontName;
-		int index;
-		gvec2 size;
-		Alignment horizontal;
-		Alignment vertical;
-		april::Color color;
-		gvec2 offset;
-		harray<RenderSequence> sequences;
-		CacheUnformattedEntry() : index(0), horizontal(CENTER_WRAPPED), vertical(CENTER) { }
+		void set(hstr text, hstr fontName, gvec2 size);
+		bool operator==(const CacheKeyLine& other) const;
 	};
-
-	struct CacheLineEntry
-	{
-		hstr fontName;
-		int index;
-		gvec2 size;
-		RenderLine line;
-		CacheLineEntry() : index(0) { }
-	};
-
+	
 };
 
 #endif

@@ -25,7 +25,7 @@
 #include <atresttf/atresttf.h>
 #include <atresttf/FontResourceTtf.h>
 #include <gtypes/Rectangle.h>
-#include <hltypes/util.h>
+#include <hltypes/hltypesUtil.h>
 
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
