@@ -21,9 +21,9 @@
 		C9C0516714BB2A16005BD333 /* FontResourceTtf.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0516114BB2A16005BD333 /* FontResourceTtf.h */; };
 		C9C0516D14BB2A6E005BD333 /* april.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9C0516814BB2A6E005BD333 /* april.framework */; };
 		C9C0516E14BB2A6E005BD333 /* atres.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9C0516914BB2A6E005BD333 /* atres.framework */; };
-		C9C0516F14BB2A6E005BD333 /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9C0516A14BB2A6E005BD333 /* freetype.framework */; };
 		C9C0517014BB2A6E005BD333 /* gtypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9C0516B14BB2A6E005BD333 /* gtypes.framework */; };
 		C9C0517114BB2A6E005BD333 /* hltypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9C0516C14BB2A6E005BD333 /* hltypes.framework */; };
+		C9FBF4B014E10B47008359C3 /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FBF4AF14E10B47008359C3 /* freetype.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +40,7 @@
 		C9C0516A14BB2A6E005BD333 /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = "../../../__build__/pharaoh/Build/Products/Debug-LLVM/freetype.framework"; sourceTree = "<group>"; };
 		C9C0516B14BB2A6E005BD333 /* gtypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtypes.framework; path = "../../../__build__/pharaoh/Build/Products/Debug-LLVM/gtypes.framework"; sourceTree = "<group>"; };
 		C9C0516C14BB2A6E005BD333 /* hltypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = hltypes.framework; path = "../../../__build__/pharaoh/Build/Products/Debug-LLVM/hltypes.framework"; sourceTree = "<group>"; };
+		C9FBF4AF14E10B47008359C3 /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = file; name = freetype.framework; path = ../../freetype/build/Release/freetype.framework; sourceTree = "<group>"; };
 		D1522F1C140F79500012F290 /* libatresttf.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libatresttf.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -48,9 +49,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9FBF4B014E10B47008359C3 /* freetype.framework in Frameworks */,
 				C9C0516D14BB2A6E005BD333 /* april.framework in Frameworks */,
 				C9C0516E14BB2A6E005BD333 /* atres.framework in Frameworks */,
-				C9C0516F14BB2A6E005BD333 /* freetype.framework in Frameworks */,
 				C9C0517014BB2A6E005BD333 /* gtypes.framework in Frameworks */,
 				C9C0517114BB2A6E005BD333 /* hltypes.framework in Frameworks */,
 			);
@@ -78,6 +79,7 @@
 		0867D691FE84028FC02AAC07 /* libatresttf */ = {
 			isa = PBXGroup;
 			children = (
+				C9FBF4AF14E10B47008359C3 /* freetype.framework */,
 				8DC2EF5A0486A6940098B216 /* Info.plist */,
 				7F42F6E811EB0E0600B1C1DF /* include */,
 				7F42F6E711EB0E0200B1C1DF /* src */,
@@ -304,7 +306,13 @@
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "${SRCROOT}/../../freetype/include";
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../april/include",
+					"${SRCROOT}/../../freetype/include",
+					"${SRCROOT}/../include",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				PRODUCT_NAME = atresttf;
@@ -320,7 +328,13 @@
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "${SRCROOT}/../../freetype/include";
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../april/include",
+					"${SRCROOT}/../../freetype/include",
+					"${SRCROOT}/../include",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = atresttf;
 				SDKROOT = macosx10.4;
@@ -335,7 +349,13 @@
 				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "${SRCROOT}/../../freetype/include";
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../april/include",
+					"${SRCROOT}/../../freetype/include",
+					"${SRCROOT}/../include",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = atresttf;
 				SDKROOT = macosx10.6;
@@ -374,7 +394,13 @@
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "${SRCROOT}/../../freetype/include";
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../april/include",
+					"${SRCROOT}/../../freetype/include",
+					"${SRCROOT}/../include",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				PRODUCT_NAME = atresttf;
@@ -416,7 +442,13 @@
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "${SRCROOT}/../../freetype/include";
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../april/include",
+					"${SRCROOT}/../../freetype/include",
+					"${SRCROOT}/../include",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = atresttf;
 				SDKROOT = macosx10.4;

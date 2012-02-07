@@ -905,7 +905,7 @@ namespace atres
 
 	void Renderer::_drawRenderSequence(RenderSequence& sequence, gvec2 offset)
 	{
-		if (sequence.rectangles.size() == 0)
+		if (sequence.rectangles.size() == 0 || sequence.texture == NULL)
 		{
 			return;
 		}
