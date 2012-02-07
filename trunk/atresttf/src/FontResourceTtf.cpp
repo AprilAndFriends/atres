@@ -12,7 +12,6 @@
 
 #include <april/RenderSystem.h>
 #include <april/Texture.h>
-#include <atres/atres.h>
 #include <hltypes/hfile.h>
 #include <hltypes/hstring.h>
 
@@ -26,6 +25,8 @@
 
 namespace atresttf
 {
+	extern void log(chstr message);
+
 	TextureContainer::TextureContainer() : texture(NULL), penX(CHARACTER_SPACE), penY(CHARACTER_SPACE)
 	{
 	}
@@ -111,12 +112,12 @@ namespace atresttf
 		FT_Error error = FT_New_Face(library, this->fontFilename.c_str(), 0, &face);
 		if (error == FT_Err_Unknown_File_Format)
 		{
-			atres::log("Error: Format not supported in " + this->fontFilename, "[atresttf] ");
+			atresttf::log("Error: Format not supported in " + this->fontFilename);
 			return;
 		}
 		if (error != 0)
 		{
-			atres::log("Error: Could not read face 0 in " + this->fontFilename + hstr(error), "[atresttf] ");
+			atresttf::log("Error: Could not read face 0 in " + this->fontFilename + hstr(error));
 			return;
 		}
 		FT_Size_RequestRec request;
@@ -126,7 +127,7 @@ namespace atresttf
 		error = FT_Request_Size(face, &request);
 		if (error != 0)
 		{
-			atres::log("Error: Could not set font size in " + this->fontFilename, "[atresttf] ");
+			atresttf::log("Error: Could not set font size in " + this->fontFilename);
 			return;
 		}
 		atresttf::setFace(this, face);
@@ -153,14 +154,14 @@ namespace atresttf
 		{
 			if (!ignoreCharacterEnabled)
 			{
-				atres::log(hsprintf("Error: Character '0x%X' does not exist in %s", charcode, this->fontFilename.c_str()), "[atresttf] ");
+				atresttf::log(hsprintf("Error: Character '0x%X' does not exist in %s", charcode, this->fontFilename.c_str()));
 			}
 			return false;
 		}
 		FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER);
 		if (error != 0)
 		{
-			atres::log("Error: Could not load glyph from " + this->fontFilename, "[atresttf] ");
+			atresttf::log("Error: Could not load glyph from " + this->fontFilename);
 			return false;
 		}
 		FT_GlyphSlot glyph = face->glyph;
@@ -189,7 +190,7 @@ namespace atresttf
 			textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
 			this->textureContainers += textureContainer;
 #ifdef _DEBUG
-			atres::log(hsprintf("Font '%s': character 0x%X does not fit, creating new texture", this->name.c_str(), charcode), "[atresttf] ");
+			atresttf::log(hsprintf("Font '%s': character 0x%X does not fit, creating new texture", this->name.c_str(), charcode));
 #endif
 		}
 		int ascender = PTSIZE2INT(face->size->metrics.ascender);
