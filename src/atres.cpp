@@ -26,6 +26,7 @@ namespace atres
 
     void init()
     {
+		atres::log("initializing atres");
 		renderer = new Renderer();
     }
     
