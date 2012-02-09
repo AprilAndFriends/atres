@@ -152,10 +152,12 @@ namespace atresttf
 		unsigned int glyphIndex = FT_Get_Char_Index(face, (unsigned long)charcode);
 		if (glyphIndex == 0)
 		{
-			if (!ignoreCharacterEnabled)
+#ifdef _DEBUG
+			if (!ignoreCharacterEnabled && charcode >= 32)
 			{
 				atresttf::log(hsprintf("Error: Character '0x%X' does not exist in %s", charcode, this->fontFilename.c_str()));
 			}
+#endif
 			return false;
 		}
 		FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER);
