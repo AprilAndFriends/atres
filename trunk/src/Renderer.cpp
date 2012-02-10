@@ -732,6 +732,7 @@ namespace atres
 		float aw = 0.0f;
 		float wordX = 0.0f;
 		float wordW = 0.0f;
+		float addW = 0.0f;
 		int start = 0;
 		int i = 0;
 		int byteLength = 0;
@@ -770,7 +771,12 @@ namespace atres
 					ax = this->_character->aw * this->_scale;
 					aw = (this->_character->w + this->_character->bx) * this->_scale;
 				}
-				wordW = wordX + hmax(ax, aw);
+				addW = hmax(ax, aw);
+				if (!limitWidth && wordW + addW > rect.w) // word too long for line, break it up
+				{
+					break;
+				}
+				wordW = wordX + addW;
 				wordX += ax;
 				if (limitWidth && wordW > rect.w)
 				{
