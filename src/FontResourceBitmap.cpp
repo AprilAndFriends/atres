@@ -11,8 +11,8 @@
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
-#include <hltypes/hfile.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
 #include "FontResourceBitmap.h"
@@ -22,7 +22,7 @@ namespace atres
 	FontResourceBitmap::FontResourceBitmap(chstr filename) : FontResource(filename)
 	{
 		hstr path = get_basedir(filename) + "/";
-		harray<hstr> lines = hfile::hread(filename).split("\n", -1, true);
+		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
 		hstr line;
 		while (lines.size() > 0)
 		{
@@ -31,6 +31,7 @@ namespace atres
 			{
 				if (line.starts_with("Texture="))
 				{
+					atres::log(path + line.replace("Texture=", ""));
 					this->texture = april::rendersys->loadTexture(path + line.replace("Texture=", ""));
 				}
 				else if (line.starts_with("-"))

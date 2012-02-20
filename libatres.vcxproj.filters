@@ -55,13 +55,13 @@
     <ClInclude Include="include\atres\Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\atres\Cache.h">
+    <ClInclude Include="src\Cache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="fileproperties.rc">
+    <None Include="fileproperties.rc">
       <Filter>Resource Files</Filter>
-    </ResourceCompile>
+    </None>
   </ItemGroup>
 </Project>

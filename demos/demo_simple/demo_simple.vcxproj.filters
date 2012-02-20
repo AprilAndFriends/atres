@@ -5,10 +5,21 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="AndroidApk">
+      <UniqueIdentifier>{ddecc084-600f-47ac-b202-71dc7b549ab5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo_simple.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="android\AndroidManifest.xml">
+      <Filter>AndroidApk</Filter>
+    </None>
+    <None Include="android\src\DemoSimple.java">
+      <Filter>AndroidApk</Filter>
+    </None>
   </ItemGroup>
 </Project>

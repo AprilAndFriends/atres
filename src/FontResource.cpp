@@ -11,7 +11,6 @@
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
-#include <hltypes/hfile.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
