@@ -12,7 +12,7 @@
 
 #include <april/RenderSystem.h>
 #include <april/Texture.h>
-#include <hltypes/hfile.h>
+#include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
 #include "FontResourceTtf.h"
@@ -34,7 +34,7 @@ namespace atresttf
 	FontResourceTtf::FontResourceTtf(chstr filename) : atres::FontResource(filename)
 	{
 		hstr path = get_basedir(filename) + "/";
-		harray<hstr> lines = hfile::hread(filename).split("\n", -1, true);
+		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
 		hstr line;
 		while (lines.size() > 0)
 		{

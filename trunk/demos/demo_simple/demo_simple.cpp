@@ -2,16 +2,21 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-//#define _ATRESTTF
+#ifdef _ANDROID
+#define APRIL_ANDROID_PACKAGE_NAME "com/example/atres/demoSimple"
+#define RESOURCE_PATH "./"
+#else
+#define RESOURCE_PATH "../media/"
+#endif
 
-#include <iostream>
+//#define _ATRESTTF
 
 #include <april/main.h>
 #include <april/RenderSystem.h>
@@ -31,8 +36,14 @@
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
+//grect viewport = drawRect;
 grect drawRect(0.0f, 0.0f, 1024.0f, 768.0f);
-grect text_area(700, 600, 240, 76);
+#ifndef _ANDROID
+grect viewport = drawRect;
+#else
+grect viewport(0.0f, 0.0f, 480.0f, 320.0f);
+#endif
+grect text_area(700.0f, 600.0f, 240.0f, 76.0f);
 aprilui::Dataset* dataset;
 aprilui::Object* root;
 
@@ -42,15 +53,15 @@ gvec2 offset;
 
 #include <atres/Renderer.h>
 
-bool render(float time_increase)
+bool render(float k)
 {
 	april::rendersys->clear();
 	april::rendersys->setOrthoProjection(drawRect);
 	aprilui::updateCursorPosition();
-	root->update(time_increase);
+	root->update(k);
 	root->draw();
 	april::rendersys->drawColoredQuad(text_area, april::Color(0, 0, 0, 128));
-	atres::renderer->drawText(grect(700, 600, 240, 76), "[b]This is a vertical test.\nIt really is. Really.",
+	atres::renderer->drawText(text_area, "[b]This is a vertical test.\nIt really is. Really.",
 		atres::CENTER, atres::CENTER, APRIL_COLOR_WHITE, offset);
 	return true;
 }
@@ -150,7 +161,7 @@ void april_init(const harray<hstr>& args)
 	{
 		april::init();
 		april::createRenderSystem("");
-		april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "demo_simple");
+		april::createRenderTarget((int)viewport.w, (int)viewport.h, false, "demo_simple");
 		april::rendersys->getWindow()->setUpdateCallback(render);
 		april::rendersys->getWindow()->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
 		april::rendersys->getWindow()->setKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
@@ -159,9 +170,9 @@ void april_init(const harray<hstr>& args)
 		atresttf::init();
 #endif
 #ifndef _ATRESTTF
-		atres::renderer->registerFontResource(new atres::FontResourceBitmap("../media/arial.font"));
+		atres::renderer->registerFontResource(new atres::FontResourceBitmap(RESOURCE_PATH "arial.font"));
 #else
-		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("../media/arial.ttfdef"));
+		atres::renderer->registerFontResource(new atresttf::FontResourceTtf(RESOURCE_PATH "arial.ttfdef"));
 #endif
 		atres::renderer->setShadowColor(APRIL_COLOR_RED);
 		atres::renderer->setBorderColor(APRIL_COLOR_AQUA);
@@ -169,7 +180,7 @@ void april_init(const harray<hstr>& args)
 #ifdef _DEBUG
 		aprilui::setDebugEnabled(true);
 #endif
-		dataset = new aprilui::Dataset("../media/demo_simple.datadef");
+		dataset = new aprilui::Dataset(RESOURCE_PATH "demo_simple.dts");
 		dataset->load();
 		aprilui::Label* label = dataset->getObject<aprilui::Label*>("test_4");
 		label->setText("This is a vertical test.\nIt really is. Really.");
@@ -177,7 +188,7 @@ void april_init(const harray<hstr>& args)
 	}
 	catch (hltypes::exception e)
 	{
-		std::cout << e.message() << "\n";
+		printf("%s\n", e.message().c_str());
 	}
 }
 
@@ -195,6 +206,6 @@ void april_destroy()
 	}
 	catch (hltypes::exception e)
 	{
-		std::cout << e.message() << "\n";
+		printf("%s\n", e.message().c_str());
 	}
 }
