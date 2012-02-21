@@ -191,7 +191,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "libatresttf" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -258,7 +258,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
@@ -315,7 +314,6 @@
 					"${SRCROOT}/../include",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PREBINDING = NO;
 				PRODUCT_NAME = atresttf;
 				SDKROOT = macosx10.4;
 			};
@@ -336,7 +334,6 @@
 					"${SRCROOT}/../../freetype/include",
 					"${SRCROOT}/../include",
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = atresttf;
 				SDKROOT = macosx10.4;
 			};
@@ -357,7 +354,6 @@
 					"${SRCROOT}/../../freetype/include",
 					"${SRCROOT}/../include",
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = atresttf;
 				SDKROOT = macosx10.6;
 			};
@@ -403,7 +399,6 @@
 					"${SRCROOT}/../include",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PREBINDING = NO;
 				PRODUCT_NAME = atresttf;
 				SDKROOT = macosx10.4;
 			};
@@ -421,7 +416,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
@@ -451,7 +445,6 @@
 					"${SRCROOT}/../../freetype/include",
 					"${SRCROOT}/../include",
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = atresttf;
 				SDKROOT = macosx10.4;
 			};
@@ -504,6 +497,7 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
@@ -538,6 +532,7 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
@@ -565,6 +560,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
@@ -593,6 +589,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
@@ -621,6 +618,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
