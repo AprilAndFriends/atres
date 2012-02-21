@@ -36,7 +36,6 @@
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
-//grect viewport = drawRect;
 grect drawRect(0.0f, 0.0f, 1024.0f, 768.0f);
 #ifndef _ANDROID
 grect viewport = drawRect;
