@@ -43,7 +43,7 @@ grect viewport = drawRect;
 #else
 grect viewport(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
-grect text_area(700.0f, 600.0f, 240.0f, 76.0f);
+grect textArea(700.0f, 600.0f, 240.0f, 76.0f);
 aprilui::Dataset* dataset;
 aprilui::Object* root;
 
@@ -58,10 +58,11 @@ bool render(float k)
 	april::rendersys->clear();
 	april::rendersys->setOrthoProjection(drawRect);
 	aprilui::updateCursorPosition();
+	april::rendersys->drawColoredQuad(drawRect, april::Color(128, 128, 0));
 	root->update(k);
 	root->draw();
-	april::rendersys->drawColoredQuad(text_area, april::Color(0, 0, 0, 128));
-	atres::renderer->drawText(text_area, "[b]This is a vertical test.\nIt really is. Really.",
+	april::rendersys->drawColoredQuad(textArea, april::Color(0, 0, 0, 128));
+	atres::renderer->drawText(textArea, "[b]This is a vertical test.\nIt really is. Really.",
 		atres::CENTER, atres::CENTER, APRIL_COLOR_WHITE, offset);
 	return true;
 }
@@ -69,7 +70,8 @@ bool render(float k)
 void onMouseDown(float x, float y, int button)
 {
 	aprilui::onMouseDown(x, y, button);
-	position = april::rendersys->getWindow()->getCursorPosition() + offset;
+	aprilui::updateCursorPosition();
+	position = aprilui::getCursorPosition() + offset * viewport.getSize() / drawRect.getSize();
 	clicked = true;
 }
 
@@ -81,11 +83,11 @@ void onMouseUp(float x, float y, int button)
 
 void onMouseMove(float x, float y)
 {
+	aprilui::onMouseMove(x, y);
 	if (clicked)
 	{
-		offset = position - gvec2(x, y);
+		offset = (position - aprilui::getCursorPosition()) * drawRect.getSize() / viewport.getSize();
 	}
-	aprilui::onMouseMove(x, y);
 }
 
 void onKeyDown(unsigned int keycode)
