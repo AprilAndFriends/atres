@@ -26,7 +26,7 @@ namespace atres
 #ifndef _ANDROID
 		printf("%s\n", message.c_str());
 #else
-		__android_log_print(ANDROID_LOG_INFO, "april", "%s", message.c_str());
+		__android_log_print(ANDROID_LOG_INFO, "atres", "%s", message.c_str());
 #endif
 	}
 	void (*g_logFunction)(chstr) = atres_writelog;
