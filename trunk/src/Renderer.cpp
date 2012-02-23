@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.4
+/// @version 2.41
 /// 
 /// @section LICENSE
 /// 
@@ -772,7 +772,7 @@ namespace atres
 					aw = (this->_character->w + this->_character->bx) * this->_scale;
 				}
 				addW = hmax(ax, aw);
-				if (!limitWidth && wordW + addW > rect.w) // word too long for line, break it up
+				if (!limitWidth && wordW + addW > rect.w) // word too long for line
 				{
 					break;
 				}
@@ -796,10 +796,10 @@ namespace atres
 				word.spaces = (checkingSpaces ? i - start : 0);
 				word.fullWidth = wordW;
 				result += word;
-				if (limitWidth && wordW > rect.w)
-				{
-					break;
-				}
+			}
+			if (limitWidth && wordW > rect.w) // makes sure to prevent an infinite loop
+			{
+				break;
 			}
 			checkingSpaces = !checkingSpaces;
 		}
