@@ -25,7 +25,8 @@ namespace atresttf
 {
 	FT_Library getLibrary();
 	FT_Face getFace(atres::FontResource* fontResource);
-	void setFace(atres::FontResource* fontResource, FT_Face face);
+	void addFace(atres::FontResource* fontResource, FT_Face face);
+	void removeFace(atres::FontResource* fontResource, FT_Face face);
 
 	extern FT_Library library;
 	extern hmap<atres::FontResource*, FT_Face> faces;

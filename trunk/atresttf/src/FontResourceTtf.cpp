@@ -31,7 +31,7 @@ namespace atresttf
 	{
 	}
 
-	FontResourceTtf::FontResourceTtf(chstr filename) : atres::FontResource(filename)
+	FontResourceTtf::FontResourceTtf(chstr filename) : atres::FontResource(filename), fontFile(NULL)
 	{
 		hstr path = get_basedir(filename) + "/";
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
@@ -64,6 +64,10 @@ namespace atresttf
 
 	FontResourceTtf::~FontResourceTtf()
 	{
+		if (this->fontFile != NULL)
+		{
+			delete[] this->fontFile;
+		}
 		foreach (TextureContainer*, it, this->textureContainers)
 		{
 			delete (*it)->texture;
@@ -109,15 +113,26 @@ namespace atresttf
 		// libfreetype stuff
 		FT_Library library = atresttf::getLibrary();
 		FT_Face face;
-		FT_Error error = FT_New_Face(library, this->fontFilename.c_str(), 0, &face);
+		hresource file(this->fontFilename);
+		if (this->fontFile != NULL) // making sure there are no memory leaks whatsoever
+		{
+			delete[] this->fontFile;
+		}
+		int size = file.size();
+		this->fontFile = new unsigned char[size];
+		file.read_raw(this->fontFile, size);
+		file.close();
+		FT_Error error = FT_New_Memory_Face(library, this->fontFile, size, 0, &face);
 		if (error == FT_Err_Unknown_File_Format)
 		{
 			atresttf::log("Error: Format not supported in " + this->fontFilename);
+			FT_Done_Face(face);
 			return;
 		}
 		if (error != 0)
 		{
-			atresttf::log("Error: Could not read face 0 in " + this->fontFilename + hstr(error));
+			atresttf::log("Error: Could not read face 0 in " + this->fontFilename + "; Error code: " + hstr(error));
+			FT_Done_Face(face);
 			return;
 		}
 		FT_Size_RequestRec request;
@@ -128,9 +143,10 @@ namespace atresttf
 		if (error != 0)
 		{
 			atresttf::log("Error: Could not set font size in " + this->fontFilename);
+			FT_Done_Face(face);
 			return;
 		}
-		atresttf::setFace(this, face);
+		atresttf::addFace(this, face);
 		// creating a texture
 		TextureContainer* textureContainer = new TextureContainer();
 		textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);

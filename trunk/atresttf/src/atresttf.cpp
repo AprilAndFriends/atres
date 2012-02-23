@@ -42,6 +42,10 @@ namespace atresttf
     void destroy()
     {
 		atresttf::log("destroying atresttf");
+		foreach_map (atres::FontResource*, FT_Face, it, faces)
+		{
+			FT_Done_Face(it->second);
+		}
 		FT_Error error = FT_Done_FreeType(library);
 		if (error != 0)
 		{
@@ -53,7 +57,7 @@ namespace atresttf
 	{
 		if (library == NULL)
 		{
-			hl_exception("Error: AtresTTF not initialized!");
+			hl_exception("Error: atresttf not initialized!");
 		}
 		return library;
 	}
@@ -63,9 +67,24 @@ namespace atresttf
 		return faces[fontResource];
 	}
 
-	void setFace(atres::FontResource* fontResource, FT_Face face)
+	void addFace(atres::FontResource* fontResource, FT_Face face)
 	{
+		if (faces.has_key(fontResource))
+		{
+			atresttf::log("Cannot add Face for Font Resource " + fontResource->getName());
+			return;
+		}
 		faces[fontResource] = face;
+	}
+
+	void removeFace(atres::FontResource* fontResource, FT_Face face)
+	{
+		if (!faces.has_key(fontResource))
+		{
+			atresttf::log("Cannot remove Face for Font Resource " + fontResource->getName());
+			return;
+		}
+		faces.remove_key(fontResource);
 	}
 
 }

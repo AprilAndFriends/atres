@@ -50,6 +50,7 @@ namespace atresttf
 	protected:
 		harray<TextureContainer*> textureContainers;
 		hstr fontFilename;
+		unsigned char* fontFile;
 
 		void _initializeFont();
 		bool _addCharacterBitmap(unsigned int charcode, bool ignoreCharacterEnabled = false);
