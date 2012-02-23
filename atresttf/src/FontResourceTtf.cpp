@@ -51,7 +51,7 @@ namespace atresttf
 	}
 
 	FontResourceTtf::FontResourceTtf(chstr fontFilename, chstr name, float height, float scale,
-		float lineHeight, float correctedHeight) : atres::FontResource(name)
+		float lineHeight, float correctedHeight) : atres::FontResource(name), fontFile(NULL)
 	{
 		this->fontFilename = fontFilename;
 		this->baseScale = scale;
