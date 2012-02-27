@@ -37,7 +37,8 @@
 
 grect drawRect(0.0f, 0.0f, 1024.0f, 768.0f);
 #ifndef _ANDROID
-grect viewport = drawRect;
+grect viewport(0.0f, 0.0f, 480.0f, 320.0f);
+//grect viewport = drawRect;
 #else
 grect viewport(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
@@ -67,24 +68,29 @@ bool render(float k)
 
 void onMouseDown(float x, float y, int button)
 {
-	aprilui::onMouseDown(x, y, button);
 	aprilui::updateCursorPosition();
-	position = aprilui::getCursorPosition() + offset * viewport.getSize() / drawRect.getSize();
+	gvec2 cursorPosition = aprilui::getCursorPosition();
+	aprilui::onMouseDown(cursorPosition.x, cursorPosition.y, button);
+	position = cursorPosition + offset;// * viewport.getSize() / drawRect.getSize();
 	clicked = true;
 }
 
 void onMouseUp(float x, float y, int button)
 {
-	aprilui::onMouseUp(x, y, button);
+	aprilui::updateCursorPosition();
+	gvec2 cursorPosition = aprilui::getCursorPosition();
+	aprilui::onMouseUp(cursorPosition.x, cursorPosition.y, button);
 	clicked = false;
 }
 
 void onMouseMove(float x, float y)
 {
-	aprilui::onMouseMove(x, y);
+	aprilui::updateCursorPosition();
+	gvec2 cursorPosition = aprilui::getCursorPosition();
+	aprilui::onMouseMove(cursorPosition.x, cursorPosition.y);
 	if (clicked)
 	{
-		offset = (position - aprilui::getCursorPosition()) * drawRect.getSize() / viewport.getSize();
+		offset = (position - cursorPosition);// * drawRect.getSize() / viewport.getSize();
 	}
 }
 
@@ -180,11 +186,17 @@ void april_init(const harray<hstr>& args)
 #ifdef _DEBUG
 		aprilui::setDebugEnabled(true);
 #endif
+		aprilui::setViewport(viewport);
+		aprilui::setScreenViewport(drawRect);
 		dataset = new aprilui::Dataset(RESOURCE_PATH "demo_simple.dts");
 		dataset->load();
 		aprilui::Label* label = dataset->getObject<aprilui::Label*>("test_4");
 		label->setText("This is a vertical test.\nIt really is. Really.");
 		root = dataset->getObject("root");
+#ifdef _ANDROID
+		aprilui::Object* editbox = dataset->getObject("editbox");
+		editbox->setSize(editbox->getSize() * drawRect.getSize() / viewport.getSize());
+#endif
 	}
 	catch (hltypes::exception e)
 	{

@@ -28,4 +28,4 @@ Notes:
 - Sequences that remain open will be automatically closed at the end.
 - The character ] will be printed normally if it is not used as closing for a formatting command.
 - The character [ can be printed using the empty formatting command [].
-- Parameters follow the command type after an equal (=) character.
+- Parameters follow the command type after any single character (preferably space " ", colon ":" or equal "=" for the sake of readability).
