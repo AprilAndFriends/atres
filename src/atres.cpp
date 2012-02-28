@@ -34,12 +34,13 @@ namespace atres
     void init()
     {
 		atres::log("initializing atres");
-		renderer = new Renderer();
+		atres::renderer = new Renderer();
     }
     
     void destroy()
     {
-		delete renderer;
+		delete atres::renderer;
+		atres::renderer = NULL;
     }
 
 	void setLogFunction(void (*fnptr)(chstr))
