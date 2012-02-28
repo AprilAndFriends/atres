@@ -37,8 +37,7 @@
 
 grect drawRect(0.0f, 0.0f, 1024.0f, 768.0f);
 #ifndef _ANDROID
-grect viewport(0.0f, 0.0f, 480.0f, 320.0f);
-//grect viewport = drawRect;
+grect viewport = drawRect;
 #else
 grect viewport(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
