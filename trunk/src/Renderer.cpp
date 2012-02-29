@@ -148,7 +148,10 @@ namespace atres
 	void Renderer::unregisterFontResource(FontResource* resource)
 	{
 		this->fonts.remove_key(resource->getName());
-		if (this->defaultFont == resource) this->defaultFont = 0;
+		if (this->defaultFont == resource)
+		{
+			this->defaultFont = NULL;
+		}
 	}
 
 	void Renderer::destroyFontResource(FontResource* resource)
@@ -217,7 +220,7 @@ namespace atres
 				it->second->hasChar(chars[i]);
 			}
 		}
-		delete[] chars;
+		delete [] chars;
 	}
 
 	hstr Renderer::analyzeFormatting(chstr text, harray<FormatTag>& tags)
