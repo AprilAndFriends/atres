@@ -66,7 +66,7 @@ namespace atresttf
 	{
 		if (this->fontFile != NULL)
 		{
-			delete[] this->fontFile;
+			delete [] this->fontFile;
 		}
 		foreach (TextureContainer*, it, this->textureContainers)
 		{
@@ -116,7 +116,7 @@ namespace atresttf
 		hresource file(this->fontFilename);
 		if (this->fontFile != NULL) // making sure there are no memory leaks whatsoever
 		{
-			delete[] this->fontFile;
+			delete [] this->fontFile;
 		}
 		int size = file.size();
 		this->fontFile = new unsigned char[size];
@@ -126,12 +126,16 @@ namespace atresttf
 		if (error == FT_Err_Unknown_File_Format)
 		{
 			atresttf::log("Error: Format not supported in " + this->fontFilename);
+			delete [] this->fontFile;
+			this->fontFile = NULL;
 			FT_Done_Face(face);
 			return;
 		}
 		if (error != 0)
 		{
 			atresttf::log("Error: Could not read face 0 in " + this->fontFilename + "; Error code: " + hstr(error));
+			delete [] this->fontFile;
+			this->fontFile = NULL;
 			FT_Done_Face(face);
 			return;
 		}
@@ -143,6 +147,8 @@ namespace atresttf
 		if (error != 0)
 		{
 			atresttf::log("Error: Could not set font size in " + this->fontFilename);
+			delete [] this->fontFile;
+			this->fontFile = NULL;
 			FT_Done_Face(face);
 			return;
 		}
