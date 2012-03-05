@@ -17,6 +17,7 @@
 
 //#define _ATRESTTF
 
+#include <april/april.h>
 #include <april/main.h>
 #include <april/RenderSystem.h>
 #include <april/Keys.h>
