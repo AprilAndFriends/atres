@@ -166,9 +166,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		8DC2EF4F0486A6940098B216 /* libatres */ = {
+		8DC2EF4F0486A6940098B216 /* atres */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "libatres" */;
+			buildConfigurationList = 1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "atres" */;
 			buildPhases = (
 				8DC2EF500486A6940098B216 /* Headers */,
 				8DC2EF520486A6940098B216 /* Resources */,
@@ -179,15 +179,15 @@
 			);
 			dependencies = (
 			);
-			name = libatres;
+			name = atres;
 			productInstallPath = "$(HOME)/Library/Frameworks";
 			productName = libatres;
 			productReference = 8DC2EF5B0486A6940098B216 /* atres.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		D1981D1F140F90670057C3AF /* libatres-ios */ = {
+		D1981D1F140F90670057C3AF /* atres (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D1981D29140F90670057C3AF /* Build configuration list for PBXNativeTarget "libatres-ios" */;
+			buildConfigurationList = D1981D29140F90670057C3AF /* Build configuration list for PBXNativeTarget "atres (iOS)" */;
 			buildPhases = (
 				D1981D1C140F90670057C3AF /* Sources */,
 				D1981D1D140F90670057C3AF /* Frameworks */,
@@ -196,7 +196,7 @@
 			);
 			dependencies = (
 			);
-			name = "libatres-ios";
+			name = "atres (iOS)";
 			productName = "libatres-ios";
 			productReference = D1981D20140F90670057C3AF /* libatres.a */;
 			productType = "com.apple.product-type.library.static";
@@ -224,8 +224,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8DC2EF4F0486A6940098B216 /* libatres */,
-				D1981D1F140F90670057C3AF /* libatres-ios */,
+				8DC2EF4F0486A6940098B216 /* atres */,
+				D1981D1F140F90670057C3AF /* atres (iOS) */,
 			);
 		};
 /* End PBXProject section */
@@ -626,7 +626,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "libatres" */ = {
+		1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "atres" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB91AE08733DA50010E9CD /* Debug */,
@@ -650,7 +650,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D1981D29140F90670057C3AF /* Build configuration list for PBXNativeTarget "libatres-ios" */ = {
+		D1981D29140F90670057C3AF /* Build configuration list for PBXNativeTarget "atres (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D1981D2A140F90670057C3AF /* Debug */,

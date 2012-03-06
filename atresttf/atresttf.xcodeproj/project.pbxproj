@@ -149,9 +149,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		8DC2EF4F0486A6940098B216 /* libatresttf */ = {
+		8DC2EF4F0486A6940098B216 /* atresttf */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "libatresttf" */;
+			buildConfigurationList = 1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "atresttf" */;
 			buildPhases = (
 				8DC2EF540486A6940098B216 /* Sources */,
 				8DC2EF560486A6940098B216 /* Frameworks */,
@@ -162,15 +162,15 @@
 			);
 			dependencies = (
 			);
-			name = libatresttf;
+			name = atresttf;
 			productInstallPath = "$(HOME)/Library/Frameworks";
 			productName = libatresttf;
 			productReference = 8DC2EF5B0486A6940098B216 /* atresttf.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		D1522F1B140F79500012F290 /* libatresttf-ios */ = {
+		D1522F1B140F79500012F290 /* atresttf (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D1522F2B140F79500012F290 /* Build configuration list for PBXNativeTarget "libatresttf-ios" */;
+			buildConfigurationList = D1522F2B140F79500012F290 /* Build configuration list for PBXNativeTarget "atresttf (iOS)" */;
 			buildPhases = (
 				D1522F18140F79500012F290 /* Sources */,
 				D1522F19140F79500012F290 /* Frameworks */,
@@ -180,7 +180,7 @@
 			);
 			dependencies = (
 			);
-			name = "libatresttf-ios";
+			name = "atresttf (iOS)";
 			productName = "libatresttf-ios";
 			productReference = D1522F1C140F79500012F290 /* libatresttf.a */;
 			productType = "com.apple.product-type.library.static";
@@ -208,8 +208,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8DC2EF4F0486A6940098B216 /* libatresttf */,
-				D1522F1B140F79500012F290 /* libatresttf-ios */,
+				8DC2EF4F0486A6940098B216 /* atresttf */,
+				D1522F1B140F79500012F290 /* atresttf (iOS) */,
 			);
 		};
 /* End PBXProject section */
@@ -633,7 +633,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "libatresttf" */ = {
+		1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "atresttf" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB91AE08733DA50010E9CD /* Debug */,
@@ -657,7 +657,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D1522F2B140F79500012F290 /* Build configuration list for PBXNativeTarget "libatresttf-ios" */ = {
+		D1522F2B140F79500012F290 /* Build configuration list for PBXNativeTarget "atresttf (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D1522F26140F79500012F290 /* Debug */,
