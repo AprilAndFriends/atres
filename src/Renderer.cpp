@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.41
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -711,7 +711,7 @@ namespace atres
 		}
 	}
 
-	harray<RenderWord> Renderer::createRenderWords(grect rect, chstr text, harray<FormatTag> tags, bool limitWidth)
+	harray<RenderWord> Renderer::createRenderWords(grect rect, chstr text, harray<FormatTag> tags)
 	{
 		this->_initializeFormatTags(tags);
 		int actualSize = text.find_first_of('\0');
@@ -727,9 +727,7 @@ namespace atres
 #endif
 		harray<RenderWord> result;
 		RenderWord word;
-
 		const char* str = text.c_str();
-
 		unsigned int code = 0;
 		float ax = 0.0f;
 		float aw = 0.0f;
@@ -775,16 +773,12 @@ namespace atres
 					aw = (this->_character->w + this->_character->bx) * this->_scale;
 				}
 				addW = hmax(ax, aw);
-				if (!limitWidth && wordW + addW > rect.w) // word too long for line
+				if (wordW + addW > rect.w) // word too long for line
 				{
 					break;
 				}
 				wordW = wordX + addW;
 				wordX += ax;
-				if (limitWidth && wordW > rect.w)
-				{
-					break;
-				}
 				i += byteLength;
 				if (!checkingSpaces && CHECK_UNICODE_LINE_BREAK_CHARS(code))
 				{
@@ -799,10 +793,6 @@ namespace atres
 				word.spaces = (checkingSpaces ? i - start : 0);
 				word.fullWidth = wordW;
 				result += word;
-			}
-			if (limitWidth && wordW > rect.w) // makes sure to prevent an infinite loop
-			{
-				break;
 			}
 			checkingSpaces = !checkingSpaces;
 		}
@@ -1293,55 +1283,62 @@ namespace atres
 
 	RenderLine Renderer::_calculateFittingLine(grect rect, chstr text, harray<FormatTag> tags)
 	{
-		harray<RenderWord> words = this->createRenderWords(rect, text, tags, true);
-		RenderLine line;
-
-		float lineWidth = 0.0f;
-		bool nextLine = false;
-		bool addWord = false;
-		line.rect.h = this->_height;
-		for (int i = 0; i < words.size(); i++)
+		this->_initializeFormatTags(tags);
+		int actualSize = text.find_first_of('\0');
+		if (actualSize < 0)
 		{
-			nextLine = (i == words.size() - 1);
-			addWord = true;
-			if (words[i].text == "\n")
-			{
-				addWord = false;
-				nextLine = true;
-			}
-			else if (lineWidth + words[i].rect.w > rect.w)
-			{
-				if (line.words.size() > 0)
-				{
-					addWord = false;
-					i--;
-				}
-				// else the whole word is the only one in the line and doesn't fit, so just chop it off
-				nextLine = true;
-			}
-			if (addWord)
-			{
-				lineWidth += words[i].rect.w;
-				line.words += words[i];
-			}
-			if (nextLine)
-			{
-				float width = 0.0f;
-				foreach (RenderWord, it, line.words)
-				{
-					width += (*it).rect.w;
-				}
+			actualSize = text.size();
+		}
+#ifdef _DEBUG
+		else if (actualSize < text.size())
+		{
+			atres::log(hsprintf("Warning: Text \"%s\" has \\0 character before the actual end", text.c_str()));
+		}
+#endif
+		const char* str = text.c_str();
 
-				foreach (RenderWord, it, line.words)
-				{
-					line.text += (*it).text;
-					line.spaces += (*it).spaces;
-					line.rect.w += (*it).rect.w;
-				}
+		unsigned int code = 0;
+		float ax = 0.0f;
+		float aw = 0.0f;
+		float lineX = 0.0f;
+		float lineW = 0.0f;
+		float addW = 0.0f;
+		int i = 0;
+		int byteLength = 0;
+		RenderLine result;
+		result.rect.h = this->_height;
+		
+		while (i < actualSize) // checking all characters
+		{
+			code = utf8_to_uint(&str[i], &byteLength);
+			if (code == '\n')
+			{
 				break;
 			}
+			this->_checkFormatTags(text, i);
+			this->_character = &this->_characters[code];
+			if (lineX < -this->_character->bx * this->_scale)
+			{
+				ax = (this->_character->aw - this->_character->bx) * this->_scale;
+				aw = this->_character->w * this->_scale;
+			}
+			else
+			{
+				ax = this->_character->aw * this->_scale;
+				aw = (this->_character->w + this->_character->bx) * this->_scale;
+			}
+			addW = hmax(ax, aw);
+			if (lineX + addW > rect.w) // doesn't fit any more in this line
+			{
+				break;
+			}
+			lineW = lineX + addW;
+			lineX += ax;
+			i += byteLength;
 		}
-		return line;
+		result.text = text(0, i);
+		result.rect.w = lineW;
+		return result;
 	}
 
 }
