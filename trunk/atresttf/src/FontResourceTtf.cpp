@@ -12,6 +12,7 @@
 
 #include <april/RenderSystem.h>
 #include <april/Texture.h>
+#include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
@@ -158,7 +159,7 @@ namespace atresttf
 		textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
 		this->textureContainers += textureContainer;
 		// adding all base ASCII characters right away
-		for (unsigned int code = 32; code < 256; code++)
+		for_itert (unsigned int, code, 32, 256)
 		{
 			this->_addCharacterBitmap(code, true);
 		}
@@ -193,9 +194,9 @@ namespace atresttf
 		unsigned char* data = new unsigned char[size];
 		memset(data, 255, size * sizeof(unsigned char));
 		int index;
-		for (int j = 0; j < glyph->bitmap.rows; j++)
+		for_iter (j, 0, glyph->bitmap.rows)
 		{
-			for (int i = 0; i < glyph->bitmap.width; i++)
+			for_iter (i, 0, glyph->bitmap.width)
 			{
 				index = i + j * glyph->bitmap.width;
 				data[index * 4 + 3] = glyph->bitmap.buffer[index];

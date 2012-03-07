@@ -215,7 +215,7 @@ namespace atres
 		unsigned int* chars = utf8_to_unicode(text, &size);
 		foreach_m (FontResource*, it, this->fonts)
 		{
-			for (int i = 0; i < size; i++)
+			for_iter (i, 0, size)
 			{
 				it->second->hasChar(chars[i]);
 			}
@@ -396,7 +396,7 @@ namespace atres
 			float width;
 			float widthPerSpace;
 			harray<RenderWord> words;
-			for (int i = 0; i < lines.size(); i++)
+			for_iter (i, 0, lines.size())
 			{
 				if (!lines[i].terminated) // if line was not actually terminated with a \n
 				{
@@ -814,7 +814,7 @@ namespace atres
 		bool forcedNextLine = false;
 		bool addWord = false;
 		this->_line.rect.h = this->_height;
-		for (int i = 0; i < words.size(); i++)
+		for_iter (i, 0, words.size())
 		{
 			nextLine = (i == words.size() - 1);
 			addWord = true;
@@ -912,7 +912,7 @@ namespace atres
 			foreach (RenderWord, it, this->_line.words)
 			{
 				this->_word = (*it);
-				for (int i = 0; i < this->_word.text.size(); i += byteLength)
+				for_iter_step (i, 0, this->_word.text.size(), byteLength)
 				{
 					this->_code = utf8_to_uint(&this->_word.text[i], &byteLength);
 					// checking first formatting tag changes
@@ -982,7 +982,7 @@ namespace atres
 		while (sequences.size() > 0)
 		{
 			current = sequences.pop_first();
-			for (i = 0; i < sequences.size(); i++)
+			for_iter (i, 0, sequences.size())
 			{
 				if (current.texture == sequences[i].texture && current.color == sequences[i].color)
 				{
