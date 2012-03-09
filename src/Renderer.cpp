@@ -978,7 +978,6 @@ namespace atres
 	{
 		harray<RenderSequence> result;
 		RenderSequence current;
-		int i = 0;
 		while (sequences.size() > 0)
 		{
 			current = sequences.pop_first();
