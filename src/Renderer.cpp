@@ -450,6 +450,7 @@ namespace atres
 		this->_nextTag = this->_tags.first();
 		this->_fontName = "";
 		this->_fontResource = NULL;
+		this->_texture = NULL;
 		this->_characters.clear();
 		this->_height = 0.0f;
 		this->_lineHeight = 0.0f;
@@ -1039,7 +1040,20 @@ namespace atres
 	{
 		this->_cacheKeySequence.set(text, fontName, rect.getSize(), horizontal, vertical, color, offset);
 		this->_drawRect = grect(0.0f, 0.0f, rect.getSize());
-		if (!cache.get(this->_cacheKeySequence, &this->_currentSequences))
+		bool found = cache.get(this->_cacheKeySequence, &this->_currentSequences);
+		if (found)
+		{
+			foreach (RenderSequence, it, this->_currentSequences)
+			{
+				if (!(*it).texture->isValid())
+				{
+					this->_clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
+					found = false;
+					break;
+				}
+			}
+		}
+		if (!found)
 		{
 			harray<FormatTag> tags;
 			hstr unformattedText = this->analyzeFormatting(text, tags);
@@ -1066,7 +1080,20 @@ namespace atres
 	{
 		this->_cacheKeySequence.set(text, fontName, rect.getSize(), horizontal, vertical, color, offset);
 		this->_drawRect = grect(0.0f, 0.0f, rect.getSize());
-		if (!cacheUnformatted.get(this->_cacheKeySequence, &this->_currentSequences))
+		bool found = cacheUnformatted.get(this->_cacheKeySequence, &this->_currentSequences);
+		if (found)
+		{
+			foreach (RenderSequence, it, this->_currentSequences)
+			{
+				if (!(*it).texture->isValid())
+				{
+					this->_clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
+					found = false;
+					break;
+				}
+			}
+		}
+		if (!found)
 		{
 			harray<FormatTag> tags;
 			FormatTag tag;

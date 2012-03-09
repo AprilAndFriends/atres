@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.31
 /// 
 /// @section LICENSE
 /// 
@@ -53,6 +53,7 @@ namespace atresttf
 		unsigned char* fontFile;
 
 		void _initializeFont();
+		void _loadBasicCharacters();
 		bool _addCharacterBitmap(unsigned int charcode, bool ignoreCharacterEnabled = false);
 
 	};

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.31
 /// 
 /// @section LICENSE
 /// 
@@ -65,20 +65,41 @@ namespace atresttf
 
 	FontResourceTtf::~FontResourceTtf()
 	{
-		if (this->fontFile != NULL)
-		{
-			delete [] this->fontFile;
-		}
 		foreach (TextureContainer*, it, this->textureContainers)
 		{
 			delete (*it)->texture;
 			delete (*it);
 		}
 		this->textureContainers.clear();
+		if (this->fontFile != NULL)
+		{
+			delete [] this->fontFile;
+		}
 	}
 	
 	april::Texture* FontResourceTtf::getTexture(unsigned int charcode)
 	{
+		bool reload = false;
+		foreach (TextureContainer*, it, this->textureContainers)
+		{
+			if (!(*it)->texture->isValid())
+			{
+				reload = true;
+				break;
+			}
+		}
+		if (reload)
+		{
+			// font textures were deleted somewhere for some reason (e.g. Android's onPause), initiate reloading
+			this->characters.clear();
+			foreach (TextureContainer*, it, this->textureContainers)
+			{
+				delete (*it)->texture;
+				delete (*it);
+			}
+			this->textureContainers.clear();
+			this->_loadBasicCharacters();
+		}
 		if (!this->_addCharacterBitmap(charcode))
 		{
 			return NULL;
@@ -154,6 +175,11 @@ namespace atresttf
 			return;
 		}
 		atresttf::addFace(this, face);
+		this->_loadBasicCharacters();
+	}
+
+	void FontResourceTtf::_loadBasicCharacters()
+	{
 		// creating a texture
 		TextureContainer* textureContainer = new TextureContainer();
 		textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
