@@ -1045,7 +1045,7 @@ namespace atres
 		{
 			foreach (RenderSequence, it, this->_currentSequences)
 			{
-				if (!(*it).texture->isValid())
+				if (!(*it).texture->isLoaded())
 				{
 					this->_clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
 					found = false;
@@ -1085,7 +1085,7 @@ namespace atres
 		{
 			foreach (RenderSequence, it, this->_currentSequences)
 			{
-				if (!(*it).texture->isValid())
+				if (!(*it).texture->isLoaded())
 				{
 					this->_clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
 					found = false;

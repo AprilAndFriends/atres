@@ -82,7 +82,7 @@ namespace atresttf
 		bool reload = false;
 		foreach (TextureContainer*, it, this->textureContainers)
 		{
-			if (!(*it)->texture->isValid())
+			if (!(*it)->texture->isLoaded())
 			{
 				reload = true;
 				break;
