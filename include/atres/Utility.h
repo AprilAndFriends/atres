@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.4
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -16,6 +16,7 @@
 #define ATRES_UTILITY_H
 
 #include <april/Color.h>
+#include <april/RenderSystem.h>
 #include <april/Texture.h>
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
@@ -80,9 +81,16 @@ namespace atres
 	{
 		april::Texture* texture;
 		april::Color color;
-		harray<RenderRectangle> rectangles;
+		april::TexturedVertex* vertexes;
+		int vertexesSize;
+		int index;
 
 		RenderSequence();
+		RenderSequence(const RenderSequence& other);
+		RenderSequence& operator=(const RenderSequence& other);
+		~RenderSequence();
+		void setRenderRectangles(harray<RenderRectangle> rectangles);
+		void addVertexes(harray<april::TexturedVertex*> vertexesCollections, harray<int> vertexesSizes);
 	};
 	
 	struct RenderWord
@@ -121,14 +129,14 @@ namespace atres
 	{
 		hstr text;
 		hstr fontName;
-		gvec2 size;
+		grect rect;
 		Alignment horizontal;
 		Alignment vertical;
 		april::Color color;
 		gvec2 offset;
 
 		CacheKeySequence();
-		void set(hstr text, hstr fontName, gvec2 size, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset);
+		void set(hstr text, hstr fontName, grect rect, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset);
 		bool operator==(const CacheKeySequence& other) const;
 	};
 	

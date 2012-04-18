@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.42
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -460,13 +460,16 @@ namespace atres
 
 	void Renderer::_initializeRenderSequences()
 	{
-		this->_sequences.clear();
 		this->_sequence = RenderSequence();
-		this->_shadowSequences.clear();
+		this->_sequences.clear();
+		this->_rectangles.clear();
 		this->_shadowSequence = RenderSequence();
+		this->_shadowSequences.clear();
+		this->_shadowRectangles.clear();
 		this->_shadowSequence.color = this->shadowColor;
-		this->_borderSequences.clear();
 		this->_borderSequence = RenderSequence();
+		this->_borderSequences.clear();
+		this->_borderRectangles.clear();
 		this->_borderSequence.color = this->borderColor;
 		this->_borderSequence.color.a = (unsigned char)(this->borderColor.a * this->borderColor.a_f() * this->borderColor.a_f());
 		this->_renderRect = RenderRectangle();
@@ -680,20 +683,22 @@ namespace atres
 	{
 		if (this->_sequence.texture != this->_texture || this->_colorChanged)
 		{
-			if (this->_sequence.rectangles.size() > 0)
+			if (this->_rectangles.size() > 0)
 			{
+				this->_sequence.setRenderRectangles(this->_rectangles);
 				this->_sequences += this->_sequence;
-				this->_sequence.rectangles.clear();
+				this->_rectangles.clear();
 			}
 			this->_sequence.texture = this->_texture;
 			this->_sequence.color = this->_color;
 		}
 		if (this->_shadowSequence.texture != this->_texture || this->_colorChanged)
 		{
-			if (this->_shadowSequence.rectangles.size() > 0)
+			if (this->_shadowRectangles.size() > 0)
 			{
+				this->_shadowSequence.setRenderRectangles(this->_shadowRectangles);
 				this->_shadowSequences += this->_shadowSequence;
-				this->_shadowSequence.rectangles.clear();
+				this->_shadowRectangles.clear();
 			}
 			this->_shadowSequence.texture = this->_texture;
 			this->_shadowSequence.color = this->shadowColor;
@@ -701,10 +706,11 @@ namespace atres
 		}
 		if (this->_borderSequence.texture != this->_texture || this->_colorChanged)
 		{
-			if (this->_borderSequence.rectangles.size() > 0)
+			if (this->_borderRectangles.size() > 0)
 			{
+				this->_borderSequence.setRenderRectangles(this->_borderRectangles);
 				this->_borderSequences += this->_borderSequence;
-				this->_borderSequence.rectangles.clear();
+				this->_borderRectangles.clear();
 			}
 			this->_borderSequence.texture = this->_texture;
 			this->_borderSequence.color = this->borderColor;
@@ -926,47 +932,50 @@ namespace atres
 					area.h = this->_height;
 					area.y += (this->_lineHeight - this->_height) / 2;
 					this->_renderRect = this->_fontResource->makeRenderRectangle(rect, area, this->_code);
-					this->_sequence.rectangles += this->_renderRect;
+					this->_rectangles += this->_renderRect;
 					destination = this->_renderRect.dest;
 					switch (this->_effectMode)
 					{
 					case EFFECT_MODE_SHADOW: // shadow
 						this->_renderRect.dest = destination + this->shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_shadowSequence.rectangles += this->_renderRect;
+						this->_shadowRectangles += this->_renderRect;
 						break;
 					case EFFECT_MODE_BORDER: // border
 						this->_renderRect.dest = destination + gvec2(-this->borderOffset, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.rectangles += this->_renderRect;
+						this->_borderRectangles += this->_renderRect;
 						this->_renderRect.dest = destination + gvec2(this->borderOffset, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.rectangles += this->_renderRect;
+						this->_borderRectangles += this->_renderRect;
 						this->_renderRect.dest = destination + gvec2(-this->borderOffset, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.rectangles += this->_renderRect;
+						this->_borderRectangles += this->_renderRect;
 						this->_renderRect.dest = destination + gvec2(this->borderOffset, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.rectangles += this->_renderRect;
+						this->_borderRectangles += this->_renderRect;
 						this->_renderRect.dest = destination + gvec2(0.0f, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.rectangles += this->_renderRect;
+						this->_borderRectangles += this->_renderRect;
 						this->_renderRect.dest = destination + gvec2(-this->borderOffset, 0.0f) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.rectangles += this->_renderRect;
+						this->_borderRectangles += this->_renderRect;
 						this->_renderRect.dest = destination + gvec2(this->borderOffset, 0.0f) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.rectangles += this->_renderRect;
+						this->_borderRectangles += this->_renderRect;
 						this->_renderRect.dest = destination + gvec2(0.0f, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.rectangles += this->_renderRect;
+						this->_borderRectangles += this->_renderRect;
 						break;
 					}
 					width += (width < -this->_character->bx * this->_scale ? (this->_character->aw - this->_character->bx) : this->_character->aw) * this->_scale;
 				}
 			}
 		}
-		if (this->_sequence.rectangles.size() > 0)
+		if (this->_rectangles.size() > 0)
 		{
+			this->_sequence.setRenderRectangles(this->_rectangles);
 			this->_sequences += this->_sequence;
 		}
-		if (this->_shadowSequence.rectangles.size() > 0)
+		if (this->_shadowRectangles.size() > 0)
 		{
+			this->_shadowSequence.setRenderRectangles(this->_shadowRectangles);
 			this->_shadowSequences += this->_shadowSequence;
 		}
-		if (this->_borderSequence.rectangles.size() > 0)
+		if (this->_borderRectangles.size() > 0)
 		{
+			this->_borderSequence.setRenderRectangles(this->_borderRectangles);
 			this->_borderSequences += this->_borderSequence;
 		}
 		this->_borderSequences = this->optimizeSequences(this->_borderSequences);
@@ -977,21 +986,58 @@ namespace atres
 
 	harray<RenderSequence> Renderer::optimizeSequences(harray<RenderSequence>& sequences)
 	{
+		hmap<april::Texture*, hmap<april::Color, harray<RenderSequence> > > groups;
+
 		harray<RenderSequence> result;
 		RenderSequence current;
 		while (sequences.size() > 0)
 		{
 			current = sequences.pop_first();
+			if (!groups.has_key(current.texture))
+			{
+				groups[current.texture] = hmap<april::Color, harray<RenderSequence> >();
+			}
+			if (!groups[current.texture].has_key(current.color))
+			{
+				groups[current.texture][current.color] = harray<RenderSequence>();
+			}
+			groups[current.texture][current.color] += current;
+			/*
+			else
+			{
+				groups[current.texture] += current;
+			}*/
+			/*
 			for_iter (i, 0, sequences.size())
 			{
 				if (current.texture == sequences[i].texture && current.color == sequences[i].color)
 				{
-					current.rectangles += sequences[i].rectangles;
+					current.addVertexes(sequences[i].vertexes, sequences[i].vertexesSize);
 					sequences.remove_at(i);
 					i--;
 				}
 			}
 			result += current;
+			*/
+		}
+		harray<april::Texture*> textures = groups.keys();
+		harray<april::TexturedVertex*> vertexesCollections;
+		harray<int> vertexesSizes;
+		foreach (april::Texture*, it, textures)
+		{
+			foreach_map (april::Color, harray<RenderSequence>, it2, groups[*it])
+			{
+				vertexesCollections.clear();
+				vertexesSizes.clear();
+				current = it2->second.pop_first();
+				foreach (RenderSequence, it3, it2->second)
+				{
+					vertexesCollections += (*it3).vertexes;
+					vertexesSizes += (*it3).vertexesSize;
+				}
+				current.addVertexes(vertexesCollections, vertexesSizes);
+				result += current;
+			}
 		}
 		return result;
 	}
@@ -1000,16 +1046,27 @@ namespace atres
 
 	void Renderer::_drawRenderSequence(RenderSequence& sequence, gvec2 offset)
 	{
-		if (sequence.rectangles.size() == 0 || sequence.texture == NULL)
+		if (sequence.vertexesSize == 0 || sequence.texture == NULL)
 		{
 			return;
 		}
-		this->_tw = 1.0f / sequence.texture->getWidth();
-		this->_th = 1.0f / sequence.texture->getHeight();
-		this->_rectangles.clear();
-		this->_i = 0;
-		this->_j = 0;
+		//this->_tw = 1.0f / sequence.texture->getWidth();
+		//this->_th = 1.0f / sequence.texture->getHeight();
+		//this->_rectangles.clear();
+		//this->_i = 0;
+		//this->_j = 0;
 		april::rendersys->setTexture(sequence.texture);
+		// TODO - change
+
+		if (sequence.color == APRIL_COLOR_WHITE)
+		{
+			april::rendersys->render(april::TriangleList, sequence.vertexes, sequence.vertexesSize);
+		}
+		else
+		{
+			april::rendersys->render(april::TriangleList, sequence.vertexes, sequence.vertexesSize, sequence.color);
+		}
+		/*
 		while (this->_j < sequence.rectangles.size())
 		{
 			this->_i = 0;
@@ -1033,12 +1090,13 @@ namespace atres
 				april::rendersys->render(april::TriangleList, vertices, this->_i, sequence.color);
 			}
 		}
+		*/
 	}
 
 	void Renderer::drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
 		gvec2 offset)
 	{
-		this->_cacheKeySequence.set(text, fontName, rect.getSize(), horizontal, vertical, color, offset);
+		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, color, offset);
 		this->_drawRect = grect(0.0f, 0.0f, rect.getSize());
 		bool found = cache.get(this->_cacheKeySequence, &this->_currentSequences);
 		if (found)
@@ -1078,7 +1136,7 @@ namespace atres
 	void Renderer::drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
 		april::Color color, gvec2 offset)
 	{
-		this->_cacheKeySequence.set(text, fontName, rect.getSize(), horizontal, vertical, color, offset);
+		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, color, offset);
 		this->_drawRect = grect(0.0f, 0.0f, rect.getSize());
 		bool found = cacheUnformatted.get(this->_cacheKeySequence, &this->_currentSequences);
 		if (found)

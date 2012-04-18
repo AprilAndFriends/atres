@@ -179,10 +179,13 @@ namespace atres
 			result.dest.x = result.dest.x + result.dest.w * (1.0f - ratioLeft);
 			result.dest.w = result.dest.w * (ratioLeft + ratioRight - 1.0f);
 			// source rectangle
-			result.src.x = chr.x + chr.w * (1.0f - ratioLeft);
-			result.src.y = chr.y + chr.h * (1.0f - ratioTop);
-			result.src.w = chr.w * (ratioLeft + ratioRight - 1.0f);
-			result.src.h = chr.h * (ratioTop + ratioBottom - 1.0f);
+			april::Texture* texture = this->getTexture(code);
+			float tiw = 1.0f / texture->getWidth();
+			float tih = 1.0f / texture->getHeight();
+			result.src.x = (chr.x + chr.w * (1.0f - ratioLeft)) * tiw;
+			result.src.y = (chr.y + chr.h * (1.0f - ratioTop)) * tih;
+			result.src.w = (chr.w * (ratioLeft + ratioRight - 1.0f)) * tiw;
+			result.src.h = (chr.h * (ratioTop + ratioBottom - 1.0f)) * tih;
 		}
 		return result;
 	}
