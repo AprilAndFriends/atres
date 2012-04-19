@@ -13,126 +13,27 @@
 
 namespace atres
 {
+	static april::TexturedVertex vert[6];
+
 	CharacterDefinition::CharacterDefinition() : x(0.0f), y(0.0f), w(0.0f), h(0.0f), bx(0.0f), aw(0.0f)
 	{
 	}
 
-	static int ind = 0;
-	RenderSequence::RenderSequence() : texture(NULL), vertexes(NULL), vertexesSize(0)
+	RenderSequence::RenderSequence() : texture(NULL)
 	{
-		ind++;
-		this->index = ind;
-		//printf("    --- CONSTRUCT %d!\n", this->index);
 	}
 
-	RenderSequence::RenderSequence(const RenderSequence& other) : texture(NULL), vertexes(NULL), vertexesSize(0)
+	void RenderSequence::addRenderRectangle(RenderRectangle rect)
 	{
-		ind++;
-		this->index = ind;
-		//printf("    --- COPY %d!\n", this->index);
-		this->texture = other.texture;
-		this->color = other.color;
-		this->vertexes = NULL;
-		this->vertexesSize = other.vertexesSize;
-		if (other.vertexes != NULL)
-		{
-			this->vertexes = new april::TexturedVertex[this->vertexesSize];
-			for_iter (i, 0, this->vertexesSize)
-			{
-				this->vertexes[i] = other.vertexes[i];
-			}
-		}
+		vert[0].x = rect.dest.x;				vert[0].y = rect.dest.y;				vert[0].u = rect.src.x;					vert[0].v = rect.src.y;
+		vert[1].x = rect.dest.x + rect.dest.w;	vert[1].y = rect.dest.y;				vert[1].u = rect.src.x + rect.src.w;	vert[1].v = rect.src.y;
+		vert[2].x = rect.dest.x;				vert[2].y = rect.dest.y + rect.dest.h;	vert[2].u = rect.src.x;					vert[2].v = rect.src.y + rect.src.h;
+		vert[3].x = rect.dest.x + rect.dest.w;	vert[3].y = rect.dest.y;				vert[3].u = rect.src.x + rect.src.w;	vert[3].v = rect.src.y;
+		vert[4].x = rect.dest.x + rect.dest.w;	vert[4].y = rect.dest.y + rect.dest.h;	vert[4].u = rect.src.x + rect.src.w;	vert[4].v = rect.src.y + rect.src.h;
+		vert[5].x = rect.dest.x;				vert[5].y = rect.dest.y + rect.dest.h;	vert[5].u = rect.src.x;					vert[5].v = rect.src.y + rect.src.h;
+		this->vertexes.add(vert, 6);
 	}
 	
-	RenderSequence& RenderSequence::operator=(const RenderSequence& other)
-	{
-		ind++;
-		this->index = ind;
-		//printf("    --- OPERATOR %d!\n", this->index);
-		this->texture = other.texture;
-		this->color = other.color;
-		this->vertexes = NULL;
-		this->vertexesSize = other.vertexesSize;
-		if (other.vertexes != NULL)
-		{
-			this->vertexes = new april::TexturedVertex[this->vertexesSize];
-			memcpy(this->vertexes, other.vertexes, this->vertexesSize * sizeof(april::TexturedVertex));
-		}
-		return *this;
-	}
-	
-	RenderSequence::~RenderSequence()
-	{
-		//printf("    --- DESTRUCT %d!\n", this->index);
-		if (this->vertexes != NULL)
-		{
-			//printf("    --- DESTROY %d!\n", this->index);
-			delete [] this->vertexes;
-			this->vertexes = NULL;
-		}
-	}
-	
-	void RenderSequence::setRenderRectangles(harray<RenderRectangle> rectangles)
-	{
-		if (this->vertexes != NULL)
-		{
-			//printf("    --- DELETE RECT %d!\n", this->index);
-			delete [] this->vertexes;
-			this->vertexes = NULL;
-		}
-		this->vertexesSize = rectangles.size() * 6;
-		if (this->vertexesSize == 0)
-		{
-			return;
-		}
-		this->vertexes = new april::TexturedVertex[this->vertexesSize];
-		//printf("    --- CREATE RECT %d!\n", this->index);
-		int i = 0;
-		foreach (RenderRectangle, it, rectangles)
-		{
-			this->vertexes[i].x = (*it).dest.x;					this->vertexes[i].y = (*it).dest.y;					this->vertexes[i].u = (*it).src.x;					this->vertexes[i].v = (*it).src.y;					i++;
-			this->vertexes[i].x = (*it).dest.x + (*it).dest.w;	this->vertexes[i].y = (*it).dest.y;					this->vertexes[i].u = (*it).src.x + (*it).src.w;	this->vertexes[i].v = (*it).src.y;					i++;
-			this->vertexes[i].x = (*it).dest.x;					this->vertexes[i].y = (*it).dest.y + (*it).dest.h;	this->vertexes[i].u = (*it).src.x;					this->vertexes[i].v = (*it).src.y + (*it).src.h;	i++;
-			this->vertexes[i].x = (*it).dest.x + (*it).dest.w;	this->vertexes[i].y = (*it).dest.y;					this->vertexes[i].u = (*it).src.x + (*it).src.w;	this->vertexes[i].v = (*it).src.y;					i++;
-			this->vertexes[i].x = (*it).dest.x + (*it).dest.w;	this->vertexes[i].y = (*it).dest.y + (*it).dest.h;	this->vertexes[i].u = (*it).src.x + (*it).src.w;	this->vertexes[i].v = (*it).src.y + (*it).src.h;	i++;
-			this->vertexes[i].x = (*it).dest.x;					this->vertexes[i].y = (*it).dest.y + (*it).dest.h;	this->vertexes[i].u = (*it).src.x;					this->vertexes[i].v = (*it).src.y + (*it).src.h;	i++;
-		}
-	}
-	
-	void RenderSequence::addVertexes(harray<april::TexturedVertex*> vertexesCollections, harray<int> vertexesSizes)
-	{
-		if (vertexesCollections.size() == 0)
-		{
-			return;
-		}
-		if (this->vertexes != NULL)
-		{
-			vertexesCollections.push_first(this->vertexes);
-			vertexesSizes.push_first(this->vertexesSize);
-		}
-		int newVertexesSize = 0;
-		foreach (int, it, vertexesSizes)
-		{
-			newVertexesSize += (*it);
-		}
-		april::TexturedVertex* newVertexes = new april::TexturedVertex[newVertexesSize];
-		int c = 0;
-		for_iter (i, 0, vertexesCollections.size())
-		{
-			memcpy(newVertexes + c, vertexesCollections[i], vertexesSizes[i] * sizeof(april::TexturedVertex));
-			c += vertexesSizes[i];
-		}
-		if (this->vertexes != NULL)
-		{
-			//printf("    --- DELETE VERT %d!\n", this->index);
-			delete [] this->vertexes;
-			this->vertexes = NULL;
-		}
-		//printf("    --- ASSIGN VERT %d!\n", this->index);
-		this->vertexes = newVertexes;
-		this->vertexesSize = newVertexesSize;
-	}
-
 	RenderWord::RenderWord() : start(0), spaces(0), fullWidth(0.0f)
 	{
 	}

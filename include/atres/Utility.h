@@ -81,16 +81,10 @@ namespace atres
 	{
 		april::Texture* texture;
 		april::Color color;
-		april::TexturedVertex* vertexes;
-		int vertexesSize;
-		int index;
+		harray<april::TexturedVertex> vertexes;
 
 		RenderSequence();
-		RenderSequence(const RenderSequence& other);
-		RenderSequence& operator=(const RenderSequence& other);
-		~RenderSequence();
-		void setRenderRectangles(harray<RenderRectangle> rectangles);
-		void addVertexes(harray<april::TexturedVertex*> vertexesCollections, harray<int> vertexesSizes);
+		void addRenderRectangle(RenderRectangle rect);
 	};
 	
 	struct RenderWord
