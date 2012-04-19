@@ -132,13 +132,10 @@ namespace atres
 
 		RenderSequence _sequence;
 		harray<RenderSequence> _sequences;
-		harray<RenderRectangle> _rectangles;
 		RenderSequence _shadowSequence;
 		harray<RenderSequence> _shadowSequences;
-		harray<RenderRectangle> _shadowRectangles;
 		RenderSequence _borderSequence;
 		harray<RenderSequence> _borderSequences;
-		harray<RenderRectangle> _borderRectangles;
 		RenderRectangle _renderRect;
 
 		april::Color _color;
