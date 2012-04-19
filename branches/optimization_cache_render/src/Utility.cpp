@@ -56,10 +56,7 @@ namespace atres
 		if (other.vertexes != NULL)
 		{
 			this->vertexes = new april::TexturedVertex[this->vertexesSize];
-			for_iter (i, 0, this->vertexesSize)
-			{
-				this->vertexes[i] = other.vertexes[i];
-			}
+			memcpy(this->vertexes, other.vertexes, this->vertexesSize * sizeof(april::TexturedVertex));
 		}
 		return *this;
 	}
@@ -122,11 +119,8 @@ namespace atres
 		int c = 0;
 		for_iter (i, 0, vertexesCollections.size())
 		{
-			for_iter (j, 0, vertexesSizes[i])
-			{
-				newVertexes[c] = vertexesCollections[i][j];
-				c++;
-			}
+			memcpy(newVertexes + c, vertexesCollections[i], vertexesSizes[i] * sizeof(april::TexturedVertex));
+			c += vertexesSizes[i];
 		}
 		if (this->vertexes != NULL)
 		{

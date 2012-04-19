@@ -986,6 +986,70 @@ namespace atres
 
 	harray<RenderSequence> Renderer::optimizeSequences(harray<RenderSequence>& sequences)
 	{
+		//return sequences;
+		//*
+		harray<hmap<april::Texture*, april::Color> > keys;
+		hmap<april::Texture*, april::Color> key;
+		harray<harray<RenderSequence> > groups;
+		harray<RenderSequence> result;
+		RenderSequence current;
+		int index;
+		while (sequences.size() > 0)
+		{
+			current = sequences.pop_first();
+			key.clear();
+			key[current.texture] = current.color;
+			if (keys.contains(key))
+			{
+				index = keys.index_of(key);
+			}
+			else
+			{
+				index = keys.size();
+				keys += key;
+				groups += harray<RenderSequence>();
+			}
+			groups[index] += current;
+		}
+		harray<april::TexturedVertex*> vertexesCollections;
+		harray<int> vertexesSizes;
+		for_iter (i, 0, keys.size())
+		{
+			current = groups[i].pop_first();
+			vertexesCollections.clear();
+			vertexesSizes.clear();
+			foreach (RenderSequence, it, groups[i])
+			{
+				vertexesCollections += (*it).vertexes;
+				vertexesSizes += (*it).vertexesSize;
+			}
+			current.addVertexes(vertexesCollections, vertexesSizes);
+			result += current;
+		}
+		return result;
+		/*
+		foreach (april::Texture*, it, textures)
+		{
+			foreach_map (april::Color, harray<RenderSequence>, it2, groups[*it])
+			{
+				vertexesCollections.clear();
+				vertexesSizes.clear();
+				current = it2->second.pop_first();
+				foreach (RenderSequence, it3, it2->second)
+				{
+					vertexesCollections += (*it3).vertexes;
+					vertexesSizes += (*it3).vertexesSize;
+				}
+				current.addVertexes(vertexesCollections, vertexesSizes);
+				result += current;
+			}
+		}
+		*/
+		//*/
+
+
+		/*
+		//harray<april
 		hmap<april::Texture*, hmap<april::Color, harray<RenderSequence> > > groups;
 
 		harray<RenderSequence> result;
@@ -1002,23 +1066,6 @@ namespace atres
 				groups[current.texture][current.color] = harray<RenderSequence>();
 			}
 			groups[current.texture][current.color] += current;
-			/*
-			else
-			{
-				groups[current.texture] += current;
-			}*/
-			/*
-			for_iter (i, 0, sequences.size())
-			{
-				if (current.texture == sequences[i].texture && current.color == sequences[i].color)
-				{
-					current.addVertexes(sequences[i].vertexes, sequences[i].vertexesSize);
-					sequences.remove_at(i);
-					i--;
-				}
-			}
-			result += current;
-			*/
 		}
 		harray<april::Texture*> textures = groups.keys();
 		harray<april::TexturedVertex*> vertexesCollections;
@@ -1039,6 +1086,7 @@ namespace atres
 				result += current;
 			}
 		}
+		*/
 		return result;
 	}
 	
