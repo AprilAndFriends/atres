@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -28,7 +28,6 @@ namespace atres
 	{
 	public:
 		FontResource(chstr name);
-		//FontResource(FontResource& f, float scale = 1.0f);
 		virtual ~FontResource();
 
 		HL_DEFINE_GET(hstr, name, Name);
