@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.42
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -31,6 +31,8 @@
 namespace atres
 {
 	class FontResource;
+	template <class K, class V>
+	class Cache;
 
 	class atresExport Renderer
 	{
@@ -115,6 +117,11 @@ namespace atres
 
 		void _drawRenderSequence(RenderSequence& sequence, gvec2 offset);
 
+	protected:
+		Cache<CacheKeySequence, harray<RenderSequence> >* cache;
+		Cache<CacheKeySequence, harray<RenderSequence> >* cacheUnformatted;
+		Cache<CacheKeyLine, RenderLine>* cacheLines;
+
 	private:
 		harray<FormatTag> _tags;
 		harray<FormatTag> _stack;
@@ -153,15 +160,8 @@ namespace atres
 
 		CacheKeySequence _cacheKeySequence;
 		CacheKeyLine _cacheKeyLine;
-		grect _drawRect;
 		harray<RenderSequence> _currentSequences;
 		RenderLine _currentLine;
-
-		harray<RenderRectangle> _rectangles;
-		float _tw;
-		float _th;
-		int _i;
-		int _j;
 
 	};
 	

@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -168,9 +168,9 @@ void april_init(const harray<hstr>& args)
 		april::init();
 		april::createRenderSystem("");
 		april::createRenderTarget((int)viewport.w, (int)viewport.h, false, "demo_simple");
-		april::rendersys->getWindow()->setUpdateCallback(render);
-		april::rendersys->getWindow()->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
-		april::rendersys->getWindow()->setKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
+		april::window->setUpdateCallback(render);
+		april::window->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
+		april::window->setKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
 		atres::init();
 #ifdef _ATRESTTF
 		atresttf::init();

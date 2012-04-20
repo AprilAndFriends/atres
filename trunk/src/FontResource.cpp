@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -22,12 +22,6 @@ namespace atres
 	{
 		this->name = name;
 	}
-	/*
-	FontResource::FontResource(FontResource& f, float scale)
-	{
-		// todo: copy constructor
-	}
-	*/
 
 	FontResource::~FontResource()
 	{
@@ -160,6 +154,7 @@ namespace atres
 	
 	RenderRectangle FontResource::makeRenderRectangle(const grect& rect, grect area, unsigned int code)
 	{
+		//rect.set(0, 0, 100000, 100000);
 		RenderRectangle result;
 		float scaledHeight = this->getHeight();
 		CharacterDefinition chr = this->characters[code];
@@ -167,8 +162,8 @@ namespace atres
 		float ratioTop = (area.y < rect.y ? (area.y + area.h - rect.y) / scaledHeight : 1.0f);
 		float ratioBottom = (rect.y + rect.h < area.y + area.h ? (rect.y + rect.h - area.y) / scaledHeight : 1.0f);
 		// destination rectangle
-		result.dest.x = area.x;
-		result.dest.y = area.y + scaledHeight * (1.0f - ratioTop);
+		result.dest.x = area.x;// - rect.w * 0.5f;
+		result.dest.y = area.y + scaledHeight * (1.0f - ratioTop);// - rect.h * 0.5f;
 		result.dest.w = area.w;
 		result.dest.h = chr.h * scaledHeight / this->height * (ratioTop + ratioBottom - 1.0f);
 		if (rect.intersects(result.dest)) // if destination rectangle inside drawing area
@@ -179,10 +174,13 @@ namespace atres
 			result.dest.x = result.dest.x + result.dest.w * (1.0f - ratioLeft);
 			result.dest.w = result.dest.w * (ratioLeft + ratioRight - 1.0f);
 			// source rectangle
-			result.src.x = chr.x + chr.w * (1.0f - ratioLeft);
-			result.src.y = chr.y + chr.h * (1.0f - ratioTop);
-			result.src.w = chr.w * (ratioLeft + ratioRight - 1.0f);
-			result.src.h = chr.h * (ratioTop + ratioBottom - 1.0f);
+			april::Texture* texture = this->getTexture(code);
+			float tiw = 1.0f / texture->getWidth();
+			float tih = 1.0f / texture->getHeight();
+			result.src.x = (chr.x + chr.w * (1.0f - ratioLeft)) * tiw;
+			result.src.y = (chr.y + chr.h * (1.0f - ratioTop)) * tih;
+			result.src.w = (chr.w * (ratioLeft + ratioRight - 1.0f)) * tiw;
+			result.src.h = (chr.h * (ratioTop + ratioBottom - 1.0f)) * tih;
 		}
 		return result;
 	}
