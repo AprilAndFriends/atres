@@ -7,14 +7,10 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#include <april/RenderSystem.h>
-
 #include "Utility.h"
 
 namespace atres
 {
-	static april::TexturedVertex vert[6];
-
 	CharacterDefinition::CharacterDefinition() : x(0.0f), y(0.0f), w(0.0f), h(0.0f), bx(0.0f), aw(0.0f)
 	{
 	}
@@ -25,13 +21,7 @@ namespace atres
 
 	void RenderSequence::addRenderRectangle(RenderRectangle rect)
 	{
-		vert[0].x = rect.dest.x;				vert[0].y = rect.dest.y;				vert[0].u = rect.src.x;					vert[0].v = rect.src.y;
-		vert[1].x = rect.dest.x + rect.dest.w;	vert[1].y = rect.dest.y;				vert[1].u = rect.src.x + rect.src.w;	vert[1].v = rect.src.y;
-		vert[2].x = rect.dest.x;				vert[2].y = rect.dest.y + rect.dest.h;	vert[2].u = rect.src.x;					vert[2].v = rect.src.y + rect.src.h;
-		vert[3].x = rect.dest.x + rect.dest.w;	vert[3].y = rect.dest.y;				vert[3].u = rect.src.x + rect.src.w;	vert[3].v = rect.src.y;
-		vert[4].x = rect.dest.x + rect.dest.w;	vert[4].y = rect.dest.y + rect.dest.h;	vert[4].u = rect.src.x + rect.src.w;	vert[4].v = rect.src.y + rect.src.h;
-		vert[5].x = rect.dest.x;				vert[5].y = rect.dest.y + rect.dest.h;	vert[5].u = rect.src.x;					vert[5].v = rect.src.y + rect.src.h;
-		this->vertexes.add(vert, 6);
+		this->rectangles += rect;
 	}
 	
 	RenderWord::RenderWord() : start(0), spaces(0), fullWidth(0.0f)

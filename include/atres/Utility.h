@@ -81,6 +81,7 @@ namespace atres
 	{
 		april::Texture* texture;
 		april::Color color;
+		harray<RenderRectangle> rectangles;
 		harray<april::TexturedVertex> vertexes;
 
 		RenderSequence();
