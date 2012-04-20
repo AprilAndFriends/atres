@@ -43,12 +43,6 @@ namespace atres
 {
 	Renderer* renderer;
 
-	Cache<CacheKeySequence, harray<RenderSequence> > cache;
-	Cache<CacheKeySequence, harray<RenderSequence> > cacheUnformatted;
-	Cache<CacheKeyLine, RenderLine> cacheLines;
-	
-	april::TexturedVertex vertices[BUFFER_MAX_SIZE];
-
 	Renderer::Renderer()
 	{
 		this->colors["red"] = APRIL_COLOR_RED.hex();
@@ -75,10 +69,17 @@ namespace atres
 		this->defaultFont = NULL;
 		// misc init
 		this->_fontResource = NULL;
+		// cache
+		this->cache = new Cache<CacheKeySequence, harray<RenderSequence> >();
+		this->cacheUnformatted = new Cache<CacheKeySequence, harray<RenderSequence> >();
+		this->cacheLines = new Cache<CacheKeyLine, RenderLine>();
 	}
 
 	Renderer::~Renderer()
 	{
+		delete this->cache;
+		delete this->cacheUnformatted;
+		delete this->cacheLines;
 		foreach_m (FontResource*, it, this->fonts)
 		{
 			delete it->second;
@@ -118,7 +119,7 @@ namespace atres
 			throw resource_error("Font", name, "atres");
 		}
 		this->defaultFont = this->fonts[name];
-		cache.clear();
+		this->cache->clear();
 	}
 
     bool Renderer::hasFont(chstr name)
@@ -128,9 +129,9 @@ namespace atres
 	
 	void Renderer::setCacheSize(int value)
 	{
-		cache.setMaxSize(value);
-		cacheUnformatted.setMaxSize(value);
-		cacheLines.setMaxSize(value);
+		this->cache->setMaxSize(value);
+		this->cacheUnformatted->setMaxSize(value);
+		this->cacheLines->setMaxSize(value);
 	}
 	
 /******* FONT **********************************************************/
@@ -194,16 +195,16 @@ namespace atres
 	
 	void Renderer::_updateCache()
 	{
-		cache.update();
-		cacheUnformatted.update();
-		cacheLines.update();
+		this->cache->update();
+		this->cacheUnformatted->update();
+		this->cacheLines->update();
 	}
 	
 	void Renderer::_clearCache()
 	{
-		cache.clear();
-		cacheUnformatted.clear();
-		cacheLines.clear();
+		this->cache->clear();
+		this->cacheUnformatted->clear();
+		this->cacheLines->clear();
 	}
 	
 /******* ANALYZE TEXT **************************************************/
@@ -680,20 +681,20 @@ namespace atres
 	{
 		if (this->_sequence.texture != this->_texture || this->_colorChanged)
 		{
-			if (this->_sequence.rectangles.size() > 0)
+			if (this->_sequence.vertexes.size() > 0)
 			{
 				this->_sequences += this->_sequence;
-				this->_sequence.rectangles.clear();
+				this->_sequence.vertexes.clear();
 			}
 			this->_sequence.texture = this->_texture;
 			this->_sequence.color = this->_color;
 		}
 		if (this->_shadowSequence.texture != this->_texture || this->_colorChanged)
 		{
-			if (this->_shadowSequence.rectangles.size() > 0)
+			if (this->_shadowSequence.vertexes.size() > 0)
 			{
 				this->_shadowSequences += this->_shadowSequence;
-				this->_shadowSequence.rectangles.clear();
+				this->_shadowSequence.vertexes.clear();
 			}
 			this->_shadowSequence.texture = this->_texture;
 			this->_shadowSequence.color = this->shadowColor;
@@ -701,10 +702,10 @@ namespace atres
 		}
 		if (this->_borderSequence.texture != this->_texture || this->_colorChanged)
 		{
-			if (this->_borderSequence.rectangles.size() > 0)
+			if (this->_borderSequence.vertexes.size() > 0)
 			{
 				this->_borderSequences += this->_borderSequence;
-				this->_borderSequence.rectangles.clear();
+				this->_borderSequence.vertexes.clear();
 			}
 			this->_borderSequence.texture = this->_texture;
 			this->_borderSequence.color = this->borderColor;
@@ -961,17 +962,20 @@ namespace atres
 				}
 			}
 		}
-		if (this->_sequence.rectangles.size() > 0)
+		if (this->_sequence.vertexes.size() > 0)
 		{
 			this->_sequences += this->_sequence;
+			this->_sequence.vertexes.clear();
 		}
-		if (this->_shadowSequence.rectangles.size() > 0)
+		if (this->_shadowSequence.vertexes.size() > 0)
 		{
 			this->_shadowSequences += this->_shadowSequence;
+			this->_shadowSequence.vertexes.clear();
 		}
-		if (this->_borderSequence.rectangles.size() > 0)
+		if (this->_borderSequence.vertexes.size() > 0)
 		{
 			this->_borderSequences += this->_borderSequence;
+			this->_borderSequence.vertexes.clear();
 		}
 		this->_borderSequences = this->optimizeSequences(this->_borderSequences);
 		this->_shadowSequences = this->optimizeSequences(this->_shadowSequences);
@@ -990,7 +994,7 @@ namespace atres
 			{
 				if (current.texture == sequences[i].texture && current.color == sequences[i].color)
 				{
-					current.rectangles += sequences[i].rectangles;
+					current.vertexes += sequences[i].vertexes;
 					sequences.remove_at(i);
 					i--;
 				}
@@ -1004,36 +1008,18 @@ namespace atres
 
 	void Renderer::_drawRenderSequence(RenderSequence& sequence, gvec2 offset)
 	{
-		if (sequence.rectangles.size() == 0 || sequence.texture == NULL)
+		if (sequence.vertexes.size() == 0 || sequence.texture == NULL)
 		{
 			return;
 		}
-		this->_rectangles.clear();
-		this->_i = 0;
-		this->_j = 0;
 		april::rendersys->setTexture(sequence.texture);
-		while (this->_j < sequence.rectangles.size())
+		if (sequence.color == APRIL_COLOR_WHITE)
 		{
-			this->_i = 0;
-			this->_rectangles = sequence.rectangles(this->_j, hmin(BUFFER_MAX_CHARACTERS, sequence.rectangles.size() - this->_j));
-			this->_j += BUFFER_MAX_CHARACTERS;
-			foreach (RenderRectangle, it, this->_rectangles)
-			{
-				vertices[this->_i].x = (*it).dest.x;				vertices[this->_i].y = (*it).dest.y;				vertices[this->_i].u = (*it).src.x;					vertices[this->_i].v = (*it).src.y;					this->_i++;
-				vertices[this->_i].x = (*it).dest.x + (*it).dest.w;	vertices[this->_i].y = (*it).dest.y;				vertices[this->_i].u = (*it).src.x + (*it).src.w;	vertices[this->_i].v = (*it).src.y;					this->_i++;
-				vertices[this->_i].x = (*it).dest.x;				vertices[this->_i].y = (*it).dest.y + (*it).dest.h;	vertices[this->_i].u = (*it).src.x;					vertices[this->_i].v = (*it).src.y + (*it).src.h;	this->_i++;
-				vertices[this->_i].x = (*it).dest.x + (*it).dest.w;	vertices[this->_i].y = (*it).dest.y;				vertices[this->_i].u = (*it).src.x + (*it).src.w;	vertices[this->_i].v = (*it).src.y;					this->_i++;
-				vertices[this->_i].x = (*it).dest.x + (*it).dest.w;	vertices[this->_i].y = (*it).dest.y + (*it).dest.h;	vertices[this->_i].u = (*it).src.x + (*it).src.w;	vertices[this->_i].v = (*it).src.y + (*it).src.h;	this->_i++;
-				vertices[this->_i].x = (*it).dest.x;				vertices[this->_i].y = (*it).dest.y + (*it).dest.h;	vertices[this->_i].u = (*it).src.x;					vertices[this->_i].v = (*it).src.y + (*it).src.h;	this->_i++;
-			}
-			if (sequence.color == APRIL_COLOR_WHITE)
-			{
-				april::rendersys->render(april::TriangleList, vertices, this->_i);
-			}
-			else
-			{
-				april::rendersys->render(april::TriangleList, vertices, this->_i, sequence.color);
-			}
+			april::rendersys->render(april::TriangleList, &sequence.vertexes[0], sequence.vertexes.size());
+		}
+		else
+		{
+			april::rendersys->render(april::TriangleList, &sequence.vertexes[0], sequence.vertexes.size(), sequence.color);
 		}
 	}
 
@@ -1041,8 +1027,7 @@ namespace atres
 		gvec2 offset)
 	{
 		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, color, offset);
-		this->_drawRect = rect;
-		bool found = cache.get(this->_cacheKeySequence, &this->_currentSequences);
+		bool found = this->cache->get(this->_cacheKeySequence, &this->_currentSequences);
 		if (found)
 		{
 			foreach (RenderSequence, it, this->_currentSequences)
@@ -1066,10 +1051,10 @@ namespace atres
 			tag.type = FORMAT_FONT;
 			tag.data = fontName;
 			tags.push_front(tag);
-			this->_lines = this->createRenderLines(this->_drawRect, unformattedText, tags, horizontal, vertical, offset);
-			this->_currentSequences = this->createRenderSequences(this->_drawRect, this->_lines, tags);
-			cache.set(this->_cacheKeySequence, this->_currentSequences);
-			cache.update();
+			this->_lines = this->createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
+			this->_currentSequences = this->createRenderSequences(rect, this->_lines, tags);
+			this->cache->set(this->_cacheKeySequence, this->_currentSequences);
+			this->cache->update();
 		}
 		foreach (RenderSequence, it, this->_currentSequences)
 		{
@@ -1081,8 +1066,7 @@ namespace atres
 		april::Color color, gvec2 offset)
 	{
 		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, color, offset);
-		this->_drawRect = rect;
-		bool found = cacheUnformatted.get(this->_cacheKeySequence, &this->_currentSequences);
+		bool found = this->cacheUnformatted->get(this->_cacheKeySequence, &this->_currentSequences);
 		if (found)
 		{
 			foreach (RenderSequence, it, this->_currentSequences)
@@ -1105,10 +1089,10 @@ namespace atres
 			tag.type = FORMAT_FONT;
 			tag.data = fontName;
 			tags.push_front(tag);
-			this->_lines = this->createRenderLines(this->_drawRect, text, tags, horizontal, vertical, offset);
-			this->_currentSequences = this->createRenderSequences(this->_drawRect, this->_lines, tags);
-			cacheUnformatted.set(this->_cacheKeySequence, this->_currentSequences);
-			cacheUnformatted.update();
+			this->_lines = this->createRenderLines(rect, text, tags, horizontal, vertical, offset);
+			this->_currentSequences = this->createRenderSequences(rect, this->_lines, tags);
+			this->cacheUnformatted->set(this->_cacheKeySequence, this->_currentSequences);
+			this->cacheUnformatted->update();
 		}
 		foreach (RenderSequence, it, this->_currentSequences)
 		{
@@ -1300,11 +1284,11 @@ namespace atres
 	RenderLine Renderer::getFittingLine(chstr fontName, grect rect, chstr text, harray<FormatTag> tags)
 	{
 		this->_cacheKeyLine.set(text, fontName, rect.getSize());
-		if (!cacheLines.get(this->_cacheKeyLine, &this->_currentLine))
+		if (!this->cacheLines->get(this->_cacheKeyLine, &this->_currentLine))
 		{
 			this->_currentLine = this->_calculateFittingLine(rect, text, tags);
-			cacheLines.set(this->_cacheKeyLine, this->_currentLine);
-			cacheLines.update();
+			this->cacheLines->set(this->_cacheKeyLine, this->_currentLine);
+			this->cacheLines->update();
 		}
 		return this->_currentLine;
 	}
