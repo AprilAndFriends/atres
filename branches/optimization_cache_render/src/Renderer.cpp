@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.43
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -377,7 +377,7 @@ namespace atres
 				{
 				case CENTER:
 				case CENTER_WRAPPED:
-					ox = -x + (rect.w - (*it).rect.w) / 2;
+					ox = -x + (rect.w - (*it).rect.w) * 0.5f;
 					break;
 				case RIGHT:
 				case RIGHT_WRAPPED:
@@ -417,7 +417,7 @@ namespace atres
 						{
 							if ((*it).spaces == 0)
 							{
-								(*it).rect.x = hroundf(width);
+								(*it).rect.x += hroundf(width);
 								words += (*it);
 							}
 							else
@@ -429,7 +429,7 @@ namespace atres
 					}
 					else // no spaces, just force a centered horizontal alignment
 					{
-						ox = -x + (rect.w - lines[i].rect.w) / 2;
+						ox = -x + (rect.w - lines[i].rect.w) * 0.5f;
 						lines[i].rect.x += ox;
 						foreach (RenderWord, it, lines[i].words)
 						{
@@ -460,13 +460,13 @@ namespace atres
 
 	void Renderer::_initializeRenderSequences()
 	{
-		this->_sequence = RenderSequence();
 		this->_sequences.clear();
-		this->_shadowSequence = RenderSequence();
+		this->_sequence = RenderSequence();
 		this->_shadowSequences.clear();
+		this->_shadowSequence = RenderSequence();
 		this->_shadowSequence.color = this->shadowColor;
-		this->_borderSequence = RenderSequence();
 		this->_borderSequences.clear();
+		this->_borderSequence = RenderSequence();
 		this->_borderSequence.color = this->borderColor;
 		this->_borderSequence.color.a = (unsigned char)(this->borderColor.a * this->borderColor.a_f() * this->borderColor.a_f());
 		this->_renderRect = RenderRectangle();
@@ -680,20 +680,20 @@ namespace atres
 	{
 		if (this->_sequence.texture != this->_texture || this->_colorChanged)
 		{
-			if (this->_sequence.vertexes.size() > 0)
+			if (this->_sequence.rectangles.size() > 0)
 			{
 				this->_sequences += this->_sequence;
-				this->_sequence.vertexes.clear();
+				this->_sequence.rectangles.clear();
 			}
 			this->_sequence.texture = this->_texture;
 			this->_sequence.color = this->_color;
 		}
 		if (this->_shadowSequence.texture != this->_texture || this->_colorChanged)
 		{
-			if (this->_shadowSequence.vertexes.size() > 0)
+			if (this->_shadowSequence.rectangles.size() > 0)
 			{
 				this->_shadowSequences += this->_shadowSequence;
-				this->_shadowSequence.vertexes.clear();
+				this->_shadowSequence.rectangles.clear();
 			}
 			this->_shadowSequence.texture = this->_texture;
 			this->_shadowSequence.color = this->shadowColor;
@@ -701,10 +701,10 @@ namespace atres
 		}
 		if (this->_borderSequence.texture != this->_texture || this->_colorChanged)
 		{
-			if (this->_borderSequence.vertexes.size() > 0)
+			if (this->_borderSequence.rectangles.size() > 0)
 			{
 				this->_borderSequences += this->_borderSequence;
-				this->_borderSequence.vertexes.clear();
+				this->_borderSequence.rectangles.clear();
 			}
 			this->_borderSequence.texture = this->_texture;
 			this->_borderSequence.color = this->borderColor;
@@ -739,6 +739,8 @@ namespace atres
 		int i = 0;
 		int byteLength = 0;
 		bool checkingSpaces = true;
+		word.rect.x = rect.x;
+		word.rect.y = rect.y;
 		word.rect.h = this->_height;
 		
 		while (i < actualSize) // checking all words
@@ -814,7 +816,9 @@ namespace atres
 		bool nextLine = false;
 		bool forcedNextLine = false;
 		bool addWord = false;
+		this->_line.rect.x = rect.x;
 		this->_line.rect.h = this->_height;
+
 		for_iter (i, 0, words.size())
 		{
 			nextLine = (i == words.size() - 1);
@@ -838,7 +842,7 @@ namespace atres
 			}
 			if (addWord)
 			{
-				words[i].rect.y = this->_lines.size() * this->_lineHeight;
+				words[i].rect.y += this->_lines.size() * this->_lineHeight;
 				lineWidth += words[i].rect.w;
 				this->_line.words += words[i];
 			}
@@ -867,7 +871,7 @@ namespace atres
 					}
 				}
 				maxWidth = hmax(maxWidth, this->_line.rect.w);
-				this->_line.rect.y = this->_lines.size() * this->_lineHeight;
+				this->_line.rect.y = rect.y + this->_lines.size() * this->_lineHeight;
 				this->_line.terminated = forcedNextLine;
 				if (left && !wrapped && this->_line.rect.w > rect.w)
 				{
@@ -922,9 +926,9 @@ namespace atres
 					this->_character = &this->_characters[this->_code];
 					area = this->_word.rect;
 					area.x += hmax(0.0f, width + this->_character->bx * this->_scale);
+					area.y += (this->_lineHeight - this->_height) * 0.5f;
 					area.w = this->_character->w * this->_scale;
 					area.h = this->_height;
-					area.y += (this->_lineHeight - this->_height) / 2;
 					this->_renderRect = this->_fontResource->makeRenderRectangle(rect, area, this->_code);
 					this->_sequence.addRenderRectangle(this->_renderRect);
 					destination = this->_renderRect.dest;
@@ -957,15 +961,15 @@ namespace atres
 				}
 			}
 		}
-		if (this->_sequence.vertexes.size() > 0)
+		if (this->_sequence.rectangles.size() > 0)
 		{
 			this->_sequences += this->_sequence;
 		}
-		if (this->_shadowSequence.vertexes.size() > 0)
+		if (this->_shadowSequence.rectangles.size() > 0)
 		{
 			this->_shadowSequences += this->_shadowSequence;
 		}
-		if (this->_borderSequence.vertexes.size() > 0)
+		if (this->_borderSequence.rectangles.size() > 0)
 		{
 			this->_borderSequences += this->_borderSequence;
 		}
@@ -986,7 +990,7 @@ namespace atres
 			{
 				if (current.texture == sequences[i].texture && current.color == sequences[i].color)
 				{
-					current.vertexes += sequences[i].vertexes;
+					current.rectangles += sequences[i].rectangles;
 					sequences.remove_at(i);
 					i--;
 				}
@@ -994,34 +998,20 @@ namespace atres
 			result += current;
 		}
 		return result;
-		return result;
 	}
 	
 /******* DRAW TEXT *****************************************************/
 
 	void Renderer::_drawRenderSequence(RenderSequence& sequence, gvec2 offset)
 	{
-		if (sequence.vertexes.size() == 0 || sequence.texture == NULL)
+		if (sequence.rectangles.size() == 0 || sequence.texture == NULL)
 		{
 			return;
 		}
-		//this->_tw = 1.0f / sequence.texture->getWidth();
-		//this->_th = 1.0f / sequence.texture->getHeight();
-		//this->_rectangles.clear();
-		//this->_i = 0;
-		//this->_j = 0;
+		this->_rectangles.clear();
+		this->_i = 0;
+		this->_j = 0;
 		april::rendersys->setTexture(sequence.texture);
-		// TODO - change
-
-		if (sequence.color == APRIL_COLOR_WHITE)
-		{
-			april::rendersys->render(april::TriangleList, &sequence.vertexes[0], sequence.vertexes.size());
-		}
-		else
-		{
-			april::rendersys->render(april::TriangleList, &sequence.vertexes[0], sequence.vertexes.size(), sequence.color);
-		}
-		/*
 		while (this->_j < sequence.rectangles.size())
 		{
 			this->_i = 0;
@@ -1029,12 +1019,12 @@ namespace atres
 			this->_j += BUFFER_MAX_CHARACTERS;
 			foreach (RenderRectangle, it, this->_rectangles)
 			{
-				vertices[this->_i].x = (*it).dest.x + offset.x;					vertices[this->_i].y = (*it).dest.y + offset.y;					vertices[this->_i].u = (*it).src.x * this->_tw;					vertices[this->_i].v = (*it).src.y * this->_th;					this->_i++;
-				vertices[this->_i].x = (*it).dest.x + offset.x + (*it).dest.w;	vertices[this->_i].y = (*it).dest.y + offset.y;					vertices[this->_i].u = ((*it).src.x + (*it).src.w) * this->_tw;	vertices[this->_i].v = (*it).src.y * this->_th;					this->_i++;
-				vertices[this->_i].x = (*it).dest.x + offset.x;					vertices[this->_i].y = (*it).dest.y + offset.y + (*it).dest.h;	vertices[this->_i].u = (*it).src.x * this->_tw;					vertices[this->_i].v = ((*it).src.y + (*it).src.h) * this->_th;	this->_i++;
-				vertices[this->_i].x = (*it).dest.x + offset.x + (*it).dest.w;	vertices[this->_i].y = (*it).dest.y + offset.y;					vertices[this->_i].u = ((*it).src.x + (*it).src.w) * this->_tw;	vertices[this->_i].v = (*it).src.y * this->_th;					this->_i++;
-				vertices[this->_i].x = (*it).dest.x + offset.x + (*it).dest.w;	vertices[this->_i].y = (*it).dest.y + offset.y + (*it).dest.h;	vertices[this->_i].u = ((*it).src.x + (*it).src.w) * this->_tw;	vertices[this->_i].v = ((*it).src.y + (*it).src.h) * this->_th;	this->_i++;
-				vertices[this->_i].x = (*it).dest.x + offset.x;					vertices[this->_i].y = (*it).dest.y + offset.y + (*it).dest.h;	vertices[this->_i].u = (*it).src.x * this->_tw;					vertices[this->_i].v = ((*it).src.y + (*it).src.h) * this->_th;	this->_i++;
+				vertices[this->_i].x = (*it).dest.x;				vertices[this->_i].y = (*it).dest.y;				vertices[this->_i].u = (*it).src.x;					vertices[this->_i].v = (*it).src.y;					this->_i++;
+				vertices[this->_i].x = (*it).dest.x + (*it).dest.w;	vertices[this->_i].y = (*it).dest.y;				vertices[this->_i].u = (*it).src.x + (*it).src.w;	vertices[this->_i].v = (*it).src.y;					this->_i++;
+				vertices[this->_i].x = (*it).dest.x;				vertices[this->_i].y = (*it).dest.y + (*it).dest.h;	vertices[this->_i].u = (*it).src.x;					vertices[this->_i].v = (*it).src.y + (*it).src.h;	this->_i++;
+				vertices[this->_i].x = (*it).dest.x + (*it).dest.w;	vertices[this->_i].y = (*it).dest.y;				vertices[this->_i].u = (*it).src.x + (*it).src.w;	vertices[this->_i].v = (*it).src.y;					this->_i++;
+				vertices[this->_i].x = (*it).dest.x + (*it).dest.w;	vertices[this->_i].y = (*it).dest.y + (*it).dest.h;	vertices[this->_i].u = (*it).src.x + (*it).src.w;	vertices[this->_i].v = (*it).src.y + (*it).src.h;	this->_i++;
+				vertices[this->_i].x = (*it).dest.x;				vertices[this->_i].y = (*it).dest.y + (*it).dest.h;	vertices[this->_i].u = (*it).src.x;					vertices[this->_i].v = (*it).src.y + (*it).src.h;	this->_i++;
 			}
 			if (sequence.color == APRIL_COLOR_WHITE)
 			{
@@ -1045,14 +1035,13 @@ namespace atres
 				april::rendersys->render(april::TriangleList, vertices, this->_i, sequence.color);
 			}
 		}
-		*/
 	}
 
 	void Renderer::drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
 		gvec2 offset)
 	{
 		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, color, offset);
-		this->_drawRect = grect(0.0f, 0.0f, rect.getSize());
+		this->_drawRect = rect;
 		bool found = cache.get(this->_cacheKeySequence, &this->_currentSequences);
 		if (found)
 		{
@@ -1092,7 +1081,7 @@ namespace atres
 		april::Color color, gvec2 offset)
 	{
 		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, color, offset);
-		this->_drawRect = grect(0.0f, 0.0f, rect.getSize());
+		this->_drawRect = rect;
 		bool found = cacheUnformatted.get(this->_cacheKeySequence, &this->_currentSequences);
 		if (found)
 		{

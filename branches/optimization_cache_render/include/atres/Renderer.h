@@ -130,12 +130,12 @@ namespace atres
 		float _correctedHeight;
 		float _scale;
 
-		RenderSequence _sequence;
 		harray<RenderSequence> _sequences;
-		RenderSequence _shadowSequence;
+		RenderSequence _sequence;
 		harray<RenderSequence> _shadowSequences;
-		RenderSequence _borderSequence;
+		RenderSequence _shadowSequence;
 		harray<RenderSequence> _borderSequences;
+		RenderSequence _borderSequence;
 		RenderRectangle _renderRect;
 
 		april::Color _color;
@@ -156,13 +156,12 @@ namespace atres
 		grect _drawRect;
 		harray<RenderSequence> _currentSequences;
 		RenderLine _currentLine;
-		/*
+
 		harray<RenderRectangle> _rectangles;
 		float _tw;
 		float _th;
 		int _i;
 		int _j;
-		*/
 
 	};
 	

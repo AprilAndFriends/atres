@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -22,12 +22,6 @@ namespace atres
 	{
 		this->name = name;
 	}
-	/*
-	FontResource::FontResource(FontResource& f, float scale)
-	{
-		// todo: copy constructor
-	}
-	*/
 
 	FontResource::~FontResource()
 	{
@@ -160,6 +154,7 @@ namespace atres
 	
 	RenderRectangle FontResource::makeRenderRectangle(const grect& rect, grect area, unsigned int code)
 	{
+		//rect.set(0, 0, 100000, 100000);
 		RenderRectangle result;
 		float scaledHeight = this->getHeight();
 		CharacterDefinition chr = this->characters[code];
@@ -167,8 +162,8 @@ namespace atres
 		float ratioTop = (area.y < rect.y ? (area.y + area.h - rect.y) / scaledHeight : 1.0f);
 		float ratioBottom = (rect.y + rect.h < area.y + area.h ? (rect.y + rect.h - area.y) / scaledHeight : 1.0f);
 		// destination rectangle
-		result.dest.x = area.x;
-		result.dest.y = area.y + scaledHeight * (1.0f - ratioTop);
+		result.dest.x = area.x;// - rect.w * 0.5f;
+		result.dest.y = area.y + scaledHeight * (1.0f - ratioTop);// - rect.h * 0.5f;
 		result.dest.w = area.w;
 		result.dest.h = chr.h * scaledHeight / this->height * (ratioTop + ratioBottom - 1.0f);
 		if (rect.intersects(result.dest)) // if destination rectangle inside drawing area
