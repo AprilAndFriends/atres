@@ -56,11 +56,12 @@ gvec2 offset;
 
 bool render(float k)
 {
+	// animating text color
 	static float time = 0.0f;
 	time += k;
-	color.a = 192 + (unsigned char)(64 * dsin(time * 360.0f));
+	color.a = 191 + (unsigned char)(64 * dsin(time * 360.0f));
 	specialText->setTextColor(color);
-
+	// rendering
 	april::rendersys->clear();
 	april::rendersys->setOrthoProjection(drawRect);
 	aprilui::updateCursorPosition();

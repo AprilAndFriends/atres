@@ -1017,7 +1017,7 @@ namespace atres
 		}
 		foreach (RenderSequence, it, renderText.textSequences)
 		{
-			this->_drawRenderSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f())));
+			this->_drawRenderSequence((*it), april::Color((*it).color, color.a));
 		}
 	}
 
@@ -1070,7 +1070,7 @@ namespace atres
 	void Renderer::drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
 		gvec2 offset)
 	{
-		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, color, offset);
+		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
 		bool found = this->cache->get(this->_cacheKeySequence, &this->_currentRenderText);
 		if (found)
 		{
@@ -1098,7 +1098,7 @@ namespace atres
 	void Renderer::drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
 		april::Color color, gvec2 offset)
 	{
-		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, color, offset);
+		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
 		bool found = this->cacheUnformatted->get(this->_cacheKeySequence, &this->_currentRenderText);
 		if (found)
 		{
