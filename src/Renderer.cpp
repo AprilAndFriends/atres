@@ -921,42 +921,46 @@ namespace atres
 					this->_code = utf8_to_uint(&this->_word.text[i], &byteLength);
 					// checking first formatting tag changes
 					this->_processFormatTags(this->_word.text, i);
-					// checking the particular character
-					this->_character = &this->_characters[this->_code];
-					area = this->_word.rect;
-					area.x += hmax(0.0f, width + this->_character->bx * this->_scale);
-					area.y += (this->_lineHeight - this->_height) * 0.5f;
-					area.w = this->_character->w * this->_scale;
-					area.h = this->_height;
-					this->_renderRect = this->_fontResource->makeRenderRectangle(rect, area, this->_code);
-					this->_textSequence.addRenderRectangle(this->_renderRect);
-					destination = this->_renderRect.dest;
-					switch (this->_effectMode)
+					// if character exists in current font
+					if (this->_characters.has_key(this->_code))
 					{
-					case EFFECT_MODE_SHADOW: // shadow
-						this->_renderRect.dest = destination + this->shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_shadowSequence.addRenderRectangle(this->_renderRect);
-						break;
-					case EFFECT_MODE_BORDER: // border
-						this->_renderRect.dest = destination + gvec2(-this->borderOffset, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.addRenderRectangle(this->_renderRect);
-						this->_renderRect.dest = destination + gvec2(this->borderOffset, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.addRenderRectangle(this->_renderRect);
-						this->_renderRect.dest = destination + gvec2(-this->borderOffset, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.addRenderRectangle(this->_renderRect);
-						this->_renderRect.dest = destination + gvec2(this->borderOffset, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.addRenderRectangle(this->_renderRect);
-						this->_renderRect.dest = destination + gvec2(0.0f, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.addRenderRectangle(this->_renderRect);
-						this->_renderRect.dest = destination + gvec2(-this->borderOffset, 0.0f) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.addRenderRectangle(this->_renderRect);
-						this->_renderRect.dest = destination + gvec2(this->borderOffset, 0.0f) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.addRenderRectangle(this->_renderRect);
-						this->_renderRect.dest = destination + gvec2(0.0f, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-						this->_borderSequence.addRenderRectangle(this->_renderRect);
-						break;
+						// checking the particular character
+						this->_character = &this->_characters[this->_code];
+						area = this->_word.rect;
+						area.x += hmax(0.0f, width + this->_character->bx * this->_scale);
+						area.y += (this->_lineHeight - this->_height) * 0.5f;
+						area.w = this->_character->w * this->_scale;
+						area.h = this->_height;
+						this->_renderRect = this->_fontResource->makeRenderRectangle(rect, area, this->_code);
+						this->_textSequence.addRenderRectangle(this->_renderRect);
+						destination = this->_renderRect.dest;
+						switch (this->_effectMode)
+						{
+						case EFFECT_MODE_SHADOW: // shadow
+							this->_renderRect.dest = destination + this->shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+							this->_shadowSequence.addRenderRectangle(this->_renderRect);
+							break;
+						case EFFECT_MODE_BORDER: // border
+							this->_renderRect.dest = destination + gvec2(-this->borderOffset, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
+							this->_borderSequence.addRenderRectangle(this->_renderRect);
+							this->_renderRect.dest = destination + gvec2(this->borderOffset, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
+							this->_borderSequence.addRenderRectangle(this->_renderRect);
+							this->_renderRect.dest = destination + gvec2(-this->borderOffset, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
+							this->_borderSequence.addRenderRectangle(this->_renderRect);
+							this->_renderRect.dest = destination + gvec2(this->borderOffset, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
+							this->_borderSequence.addRenderRectangle(this->_renderRect);
+							this->_renderRect.dest = destination + gvec2(0.0f, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
+							this->_borderSequence.addRenderRectangle(this->_renderRect);
+							this->_renderRect.dest = destination + gvec2(-this->borderOffset, 0.0f) * (this->globalOffsets ? 1.0f : this->_scale);
+							this->_borderSequence.addRenderRectangle(this->_renderRect);
+							this->_renderRect.dest = destination + gvec2(this->borderOffset, 0.0f) * (this->globalOffsets ? 1.0f : this->_scale);
+							this->_borderSequence.addRenderRectangle(this->_renderRect);
+							this->_renderRect.dest = destination + gvec2(0.0f, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
+							this->_borderSequence.addRenderRectangle(this->_renderRect);
+							break;
+						}
+						width += (width < -this->_character->bx * this->_scale ? (this->_character->aw - this->_character->bx) : this->_character->aw) * this->_scale;
 					}
-					width += (width < -this->_character->bx * this->_scale ? (this->_character->aw - this->_character->bx) : this->_character->aw) * this->_scale;
 				}
 			}
 		}
