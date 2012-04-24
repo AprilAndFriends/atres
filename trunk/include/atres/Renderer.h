@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.5
+/// @version 2.51
 /// 
 /// @section LICENSE
 /// 
@@ -65,7 +65,7 @@ namespace atres
 		harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
 		harray<RenderWord> createRenderWords(grect rect, chstr text, harray<FormatTag> tags);
 		harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset = gvec2());
-		harray<RenderSequence> createRenderSequences(grect rect, harray<RenderLine> lines, harray<FormatTag> tags);
+		RenderText createRenderText(grect rect, harray<RenderLine> lines, harray<FormatTag> tags);
 		harray<RenderSequence> optimizeSequences(harray<RenderSequence>& sequences);
 	
 		void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = APRIL_COLOR_WHITE, gvec2 offset = gvec2());
@@ -114,12 +114,14 @@ namespace atres
 		void _processFormatTags(chstr text, int index);
 		void _checkSequenceSwitch();
 		RenderLine _calculateFittingLine(grect rect, chstr text, harray<FormatTag> tags);
+		bool _checkTextures();
 
-		void _drawRenderSequence(RenderSequence& sequence, gvec2 offset);
+		void _drawRenderText(RenderText& renderText, april::Color);
+		void _drawRenderSequence(RenderSequence& sequence, april::Color);
 
 	protected:
-		Cache<CacheKeySequence, harray<RenderSequence> >* cache;
-		Cache<CacheKeySequence, harray<RenderSequence> >* cacheUnformatted;
+		Cache<CacheKeySequence, RenderText>* cache;
+		Cache<CacheKeySequence, RenderText>* cacheUnformatted;
 		Cache<CacheKeyLine, RenderLine>* cacheLines;
 
 	private:
@@ -137,8 +139,8 @@ namespace atres
 		float _correctedHeight;
 		float _scale;
 
-		harray<RenderSequence> _sequences;
-		RenderSequence _sequence;
+		harray<RenderSequence> _textSequences;
+		RenderSequence _textSequence;
 		harray<RenderSequence> _shadowSequences;
 		RenderSequence _shadowSequence;
 		harray<RenderSequence> _borderSequences;
@@ -160,7 +162,7 @@ namespace atres
 
 		CacheKeySequence _cacheKeySequence;
 		CacheKeyLine _cacheKeyLine;
-		harray<RenderSequence> _currentSequences;
+		RenderText _currentRenderText;
 		RenderLine _currentLine;
 
 	};

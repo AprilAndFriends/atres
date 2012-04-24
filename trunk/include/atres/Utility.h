@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.5
+/// @version 2.51
 /// 
 /// @section LICENSE
 /// 
@@ -85,6 +85,13 @@ namespace atres
 
 		RenderSequence();
 		void addRenderRectangle(RenderRectangle rect);
+	};
+
+	struct RenderText
+	{
+		harray<RenderSequence> textSequences;
+		harray<RenderSequence> shadowSequences;
+		harray<RenderSequence> borderSequences;
 	};
 	
 	struct RenderWord
