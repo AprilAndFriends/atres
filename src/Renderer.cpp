@@ -1023,7 +1023,7 @@ namespace atres
 
 	void Renderer::_drawRenderSequence(RenderSequence& sequence, april::Color color)
 	{
-		if (sequence.vertexes.size() == 0 || sequence.texture == NULL)
+		if (sequence.vertexes.size() == 0 || sequence.texture == NULL || color.a == 0)
 		{
 			return;
 		}
