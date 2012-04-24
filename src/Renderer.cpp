@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.5
+/// @version 2.51
 /// 
 /// @section LICENSE
 /// 
@@ -70,8 +70,8 @@ namespace atres
 		// misc init
 		this->_fontResource = NULL;
 		// cache
-		this->cache = new Cache<CacheKeySequence, harray<RenderSequence> >();
-		this->cacheUnformatted = new Cache<CacheKeySequence, harray<RenderSequence> >();
+		this->cache = new Cache<CacheKeySequence, RenderText>();
+		this->cacheUnformatted = new Cache<CacheKeySequence, RenderText>();
 		this->cacheLines = new Cache<CacheKeyLine, RenderLine>();
 	}
 
@@ -461,8 +461,8 @@ namespace atres
 
 	void Renderer::_initializeRenderSequences()
 	{
-		this->_sequences.clear();
-		this->_sequence = RenderSequence();
+		this->_textSequences.clear();
+		this->_textSequence = RenderSequence();
 		this->_shadowSequences.clear();
 		this->_shadowSequence = RenderSequence();
 		this->_shadowSequence.color = this->shadowColor;
@@ -657,7 +657,7 @@ namespace atres
 			{
 				this->_nextTag.start = this->_word.start + this->_word.text.size() + 1;
 			}
-			this->_colorChanged = (this->_sequence.color != this->_color);
+			this->_colorChanged = (this->_textSequence.color != this->_color);
 			this->_texture = this->_fontResource->getTexture(this->_code);
 			this->_checkSequenceSwitch();
 		}
@@ -679,15 +679,15 @@ namespace atres
 
 	void Renderer::_checkSequenceSwitch()
 	{
-		if (this->_sequence.texture != this->_texture || this->_colorChanged)
+		if (this->_textSequence.texture != this->_texture || this->_colorChanged)
 		{
-			if (this->_sequence.vertexes.size() > 0)
+			if (this->_textSequence.vertexes.size() > 0)
 			{
-				this->_sequences += this->_sequence;
-				this->_sequence.vertexes.clear();
+				this->_textSequences += this->_textSequence;
+				this->_textSequence.vertexes.clear();
 			}
-			this->_sequence.texture = this->_texture;
-			this->_sequence.color = this->_color;
+			this->_textSequence.texture = this->_texture;
+			this->_textSequence.color = this->_color;
 		}
 		if (this->_shadowSequence.texture != this->_texture || this->_colorChanged)
 		{
@@ -698,7 +698,6 @@ namespace atres
 			}
 			this->_shadowSequence.texture = this->_texture;
 			this->_shadowSequence.color = this->shadowColor;
-			this->_shadowSequence.color.a = (unsigned char)(this->_shadowSequence.color.a * this->_color.a_f());
 		}
 		if (this->_borderSequence.texture != this->_texture || this->_colorChanged)
 		{
@@ -709,7 +708,6 @@ namespace atres
 			}
 			this->_borderSequence.texture = this->_texture;
 			this->_borderSequence.color = this->borderColor;
-			this->_borderSequence.color.a = (unsigned char)(this->_borderSequence.color.a * this->_color.a_f() * this->_color.a_f());
 		}
 	}
 
@@ -901,7 +899,7 @@ namespace atres
 		return this->_lines;
 	}
 	
-	harray<RenderSequence> Renderer::createRenderSequences(grect rect, harray<RenderLine> lines, harray<FormatTag> tags)
+	RenderText Renderer::createRenderText(grect rect, harray<RenderLine> lines, harray<FormatTag> tags)
 	{
 		this->_initializeFormatTags(tags);
 		this->_initializeRenderSequences();
@@ -931,7 +929,7 @@ namespace atres
 					area.w = this->_character->w * this->_scale;
 					area.h = this->_height;
 					this->_renderRect = this->_fontResource->makeRenderRectangle(rect, area, this->_code);
-					this->_sequence.addRenderRectangle(this->_renderRect);
+					this->_textSequence.addRenderRectangle(this->_renderRect);
 					destination = this->_renderRect.dest;
 					switch (this->_effectMode)
 					{
@@ -962,10 +960,10 @@ namespace atres
 				}
 			}
 		}
-		if (this->_sequence.vertexes.size() > 0)
+		if (this->_textSequence.vertexes.size() > 0)
 		{
-			this->_sequences += this->_sequence;
-			this->_sequence.vertexes.clear();
+			this->_textSequences += this->_textSequence;
+			this->_textSequence.vertexes.clear();
 		}
 		if (this->_shadowSequence.vertexes.size() > 0)
 		{
@@ -977,10 +975,11 @@ namespace atres
 			this->_borderSequences += this->_borderSequence;
 			this->_borderSequence.vertexes.clear();
 		}
-		this->_borderSequences = this->optimizeSequences(this->_borderSequences);
-		this->_shadowSequences = this->optimizeSequences(this->_shadowSequences);
-		this->_sequences = this->_shadowSequences + this->_borderSequences + this->_sequences;
-		return this->optimizeSequences(this->_sequences);
+		RenderText result;
+		result.textSequences = this->optimizeSequences(this->_textSequences);
+		result.shadowSequences = this->optimizeSequences(this->_shadowSequences);
+		result.borderSequences = this->optimizeSequences(this->_borderSequences);
+		return result;
 	}
 
 	harray<RenderSequence> Renderer::optimizeSequences(harray<RenderSequence>& sequences)
@@ -992,7 +991,7 @@ namespace atres
 			current = sequences.pop_first();
 			for_iter (i, 0, sequences.size())
 			{
-				if (current.texture == sequences[i].texture && current.color == sequences[i].color)
+				if (current.texture == sequences[i].texture && current.color.hex(true) == sequences[i].color.hex(true))
 				{
 					current.vertexes += sequences[i].vertexes;
 					sequences.remove_at(i);
@@ -1003,42 +1002,79 @@ namespace atres
 		}
 		return result;
 	}
-	
+
 /******* DRAW TEXT *****************************************************/
 
-	void Renderer::_drawRenderSequence(RenderSequence& sequence, gvec2 offset)
+	void Renderer::_drawRenderText(RenderText& renderText, april::Color color)
+	{
+		foreach (RenderSequence, it, renderText.shadowSequences)
+		{
+			this->_drawRenderSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f())));
+		}
+		foreach (RenderSequence, it, renderText.borderSequences)
+		{
+			this->_drawRenderSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f() * color.a_f())));
+		}
+		foreach (RenderSequence, it, renderText.textSequences)
+		{
+			this->_drawRenderSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f())));
+		}
+	}
+
+	void Renderer::_drawRenderSequence(RenderSequence& sequence, april::Color color)
 	{
 		if (sequence.vertexes.size() == 0 || sequence.texture == NULL)
 		{
 			return;
 		}
 		april::rendersys->setTexture(sequence.texture);
-		if (sequence.color == APRIL_COLOR_WHITE)
+		if (color == APRIL_COLOR_WHITE)
 		{
 			april::rendersys->render(april::TriangleList, &sequence.vertexes[0], sequence.vertexes.size());
 		}
 		else
 		{
-			april::rendersys->render(april::TriangleList, &sequence.vertexes[0], sequence.vertexes.size(), sequence.color);
+			april::rendersys->render(april::TriangleList, &sequence.vertexes[0], sequence.vertexes.size(), color);
 		}
 	}
 
+	bool Renderer::_checkTextures()
+	{
+		foreach (RenderSequence, it, this->_currentRenderText.textSequences)
+		{
+			if (!(*it).texture->isLoaded())
+			{
+				this->_clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
+				return false;
+			}
+		}
+		foreach (RenderSequence, it, this->_currentRenderText.shadowSequences)
+		{
+			if (!(*it).texture->isLoaded())
+			{
+				this->_clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
+				return false;
+			}
+		}
+		foreach (RenderSequence, it, this->_currentRenderText.borderSequences)
+		{
+			if (!(*it).texture->isLoaded())
+			{
+				this->_clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	void Renderer::drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
 		gvec2 offset)
 	{
 		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, color, offset);
-		bool found = this->cache->get(this->_cacheKeySequence, &this->_currentSequences);
+		bool found = this->cache->get(this->_cacheKeySequence, &this->_currentRenderText);
 		if (found)
 		{
-			foreach (RenderSequence, it, this->_currentSequences)
-			{
-				if (!(*it).texture->isLoaded())
-				{
-					this->_clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
-					found = false;
-					break;
-				}
-			}
+			found = this->_checkTextures();
 		}
 		if (!found)
 		{
@@ -1052,32 +1088,21 @@ namespace atres
 			tag.data = fontName;
 			tags.push_front(tag);
 			this->_lines = this->createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
-			this->_currentSequences = this->createRenderSequences(rect, this->_lines, tags);
-			this->cache->set(this->_cacheKeySequence, this->_currentSequences);
+			this->_currentRenderText = this->createRenderText(rect, this->_lines, tags);
+			this->cache->set(this->_cacheKeySequence, this->_currentRenderText);
 			this->cache->update();
 		}
-		foreach (RenderSequence, it, this->_currentSequences)
-		{
-			this->_drawRenderSequence((*it), rect.getPosition());
-		}
+		this->_drawRenderText(this->_currentRenderText, color);
 	}
 
 	void Renderer::drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
 		april::Color color, gvec2 offset)
 	{
 		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, color, offset);
-		bool found = this->cacheUnformatted->get(this->_cacheKeySequence, &this->_currentSequences);
+		bool found = this->cacheUnformatted->get(this->_cacheKeySequence, &this->_currentRenderText);
 		if (found)
 		{
-			foreach (RenderSequence, it, this->_currentSequences)
-			{
-				if (!(*it).texture->isLoaded())
-				{
-					this->_clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
-					found = false;
-					break;
-				}
-			}
+			found = this->_checkTextures();
 		}
 		if (!found)
 		{
@@ -1090,14 +1115,11 @@ namespace atres
 			tag.data = fontName;
 			tags.push_front(tag);
 			this->_lines = this->createRenderLines(rect, text, tags, horizontal, vertical, offset);
-			this->_currentSequences = this->createRenderSequences(rect, this->_lines, tags);
-			this->cacheUnformatted->set(this->_cacheKeySequence, this->_currentSequences);
+			this->_currentRenderText = this->createRenderText(rect, this->_lines, tags);
+			this->cacheUnformatted->set(this->_cacheKeySequence, this->_currentRenderText);
 			this->cacheUnformatted->update();
 		}
-		foreach (RenderSequence, it, this->_currentSequences)
-		{
-			this->_drawRenderSequence((*it), rect.getPosition());
-		}
+		this->_drawRenderText(this->_currentRenderText, color);
 	}
 
 /******* DRAW TEXT OVERLOADS *******************************************/

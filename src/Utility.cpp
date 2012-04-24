@@ -1,13 +1,15 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.51
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
+#include <april/Color.h>
 #include <april/RenderSystem.h>
+#include <hltypes/hstring.h>
 
 #include "Utility.h"
 
@@ -68,7 +70,7 @@ namespace atres
 			this->rect == other.rect &&
 			this->horizontal == other.horizontal &&
 			this->vertical == other.vertical &&
-			this->color == other.color &&
+			this->color.hex(true) == other.color.hex(true) && // ignores alpha value!
 			this->offset == other.offset);
 	}
 	

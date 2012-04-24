@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.51
 /// 
 /// @section LICENSE
 /// 
@@ -45,6 +45,8 @@ grect viewport(0.0f, 0.0f, 480.0f, 320.0f);
 grect textArea(700.0f, 600.0f, 240.0f, 76.0f);
 aprilui::Dataset* dataset;
 aprilui::Object* root;
+aprilui::Label* specialText;
+april::Color color = APRIL_COLOR_WHITE;
 
 bool clicked;
 gvec2 position;
@@ -54,6 +56,11 @@ gvec2 offset;
 
 bool render(float k)
 {
+	static float time = 0.0f;
+	time += k;
+	color.a = 192 + (unsigned char)(64 * dsin(time * 360.0f));
+	specialText->setTextColor(color);
+
 	april::rendersys->clear();
 	april::rendersys->setOrthoProjection(drawRect);
 	aprilui::updateCursorPosition();
@@ -193,6 +200,7 @@ void april_init(const harray<hstr>& args)
 		aprilui::Label* label = dataset->getObject<aprilui::Label*>("test_4");
 		label->setText("This is a vertical test.\nIt really is. Really.");
 		root = dataset->getObject("root");
+		specialText = dataset->getObject<aprilui::Label*>("test_5");
 #ifdef _ANDROID
 		aprilui::Object* editbox = dataset->getObject("editbox");
 		editbox->setSize(editbox->getSize() * drawRect.getSize() / viewport.getSize());
