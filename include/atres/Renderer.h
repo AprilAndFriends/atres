@@ -93,7 +93,8 @@ namespace atres
 		hstr prepareFormatting(chstr fontName, chstr text, harray<FormatTag>& tags);
 		harray<FormatTag> prepareTags(chstr fontName);
 		RenderLine getFittingLine(chstr fontName, grect rect, chstr text, harray<FormatTag> tags);
-	
+		void clearCache();
+
 	protected:
 		hmap<hstr, FontResource*> fonts;
 		FontResource* defaultFont;
@@ -105,7 +106,6 @@ namespace atres
 		bool globalOffsets;
 
 		void _updateCache();
-		void _clearCache();
 
 		void _initializeFormatTags(harray<FormatTag>& tags);
 		void _initializeLineProcessing(harray<RenderLine> lines = harray<RenderLine>());

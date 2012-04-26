@@ -91,25 +91,25 @@ namespace atres
 	void Renderer::setShadowOffset(gvec2 value)
 	{
 		this->shadowOffset = value;
-		this->_clearCache();
+		this->clearCache();
 	}
 	
 	void Renderer::setShadowColor(april::Color value)
 	{
 		this->shadowColor = value;
-		this->_clearCache();
+		this->clearCache();
 	}
 	
 	void Renderer::setBorderOffset(float value)
 	{
 		this->borderOffset = value;
-		this->_clearCache();
+		this->clearCache();
 	}
 	
 	void Renderer::setBorderColor(april::Color value)
 	{
 		this->borderColor = value;
-		this->_clearCache();
+		this->clearCache();
 	}
 	
 	void Renderer::setDefaultFont(chstr name)
@@ -200,7 +200,7 @@ namespace atres
 		this->cacheLines->update();
 	}
 	
-	void Renderer::_clearCache()
+	void Renderer::clearCache()
 	{
 		this->cache->clear();
 		this->cacheUnformatted->clear();
@@ -1048,7 +1048,7 @@ namespace atres
 		{
 			if (!(*it).texture->isLoaded())
 			{
-				this->_clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
+				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
 				return false;
 			}
 		}
@@ -1056,7 +1056,7 @@ namespace atres
 		{
 			if (!(*it).texture->isLoaded())
 			{
-				this->_clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
+				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
 				return false;
 			}
 		}
@@ -1064,7 +1064,7 @@ namespace atres
 		{
 			if (!(*it).texture->isLoaded())
 			{
-				this->_clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
+				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
 				return false;
 			}
 		}
