@@ -67,7 +67,13 @@ namespace atresttf
 #ifdef _WIN32
 	int CALLBACK _fontEnumCallback(ENUMLOGFONTEX* lpelfe, NEWTEXTMETRICEX* lpntme, DWORD FontType, LPARAM lParam)
 	{
-		fonts += unicode_to_utf8(lpelfe->elfLogFont.lfFaceName);
+		hstr fontName = unicode_to_utf8(lpelfe->elfLogFont.lfFaceName);
+		hstr styleName = unicode_to_utf8(lpelfe->elfStyle);
+		if (styleName != "" && styleName != "Regular")
+		{
+			fontName += " " + styleName;
+		}
+		fonts += fontName;
 		return 1;
 	}
 #endif
@@ -104,17 +110,24 @@ namespace atresttf
 		FT_Library library = atresttf::getLibrary();
 		FT_Face face;
 		FT_Error error;
+		hstr fontName;
+		hstr styleName;
 		foreach (hstr, it, fontFiles)
 		{
 			error = FT_New_Face(library, (*it).c_str(), 0, &face);
 			if (error == 0)
 			{
-				if (name == (char*)face->family_name)
+				fontName = hstr((char*)face->family_name);
+				styleName = hstr((char*)face->style_name);
+				FT_Done_Face(face);
+				if (styleName != "" && styleName != "Regular")
 				{
-					FT_Done_Face(face);
+					fontName += " " + styleName;
+				}
+				if (name == fontName)
+				{
 					return (*it);
 				}
-				FT_Done_Face(face);
 			}
 		}
 		return "";
