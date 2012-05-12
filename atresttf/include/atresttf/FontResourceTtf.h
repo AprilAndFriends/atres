@@ -44,6 +44,8 @@ namespace atresttf
 		FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight = 0.0f, float correctedHeight = 0.0f);
 		~FontResourceTtf();
 
+		harray<april::Texture*> getTextures();
+
 		april::Texture* getTexture(unsigned int charcode);
 		bool hasChar(unsigned int charcode);
 

@@ -76,6 +76,16 @@ namespace atresttf
 			delete [] this->fontFile;
 		}
 	}
+
+	harray<april::Texture*> FontResourceTtf::getTextures()
+	{
+		harray<april::Texture*> result;
+		foreach (TextureContainer*, it, this->textureContainers)
+		{
+			result += (*it)->texture;
+		}
+		return result;
+	}
 	
 	april::Texture* FontResourceTtf::getTexture(unsigned int charcode)
 	{
