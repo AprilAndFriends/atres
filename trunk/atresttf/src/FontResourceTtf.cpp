@@ -138,6 +138,10 @@ namespace atresttf
 		{
 			this->fontFilename = atresttf::findSystemFontFilename(this->name);
 		}
+		if (this->fontFilename == "") // no font file
+		{
+			return;
+		}
 		if (this->lineHeight == 0.0f)
 		{
 			this->lineHeight = this->height;

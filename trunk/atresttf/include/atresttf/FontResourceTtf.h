@@ -46,6 +46,7 @@ namespace atresttf
 
 		harray<april::Texture*> getTextures();
 
+		HL_DEFINE_GET(hstr, fontFilename, FontFilename);
 		april::Texture* getTexture(unsigned int charcode);
 		bool hasChar(unsigned int charcode);
 
