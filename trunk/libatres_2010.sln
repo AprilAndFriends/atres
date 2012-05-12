@@ -36,6 +36,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhlxml", "..\hltypes\hlxm
 		{E4D373BF-E227-48B9-99E6-84987E8674EC} = {E4D373BF-E227-48B9-99E6-84987E8674EC}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ttf_fontgen", "scripts\ttf_font_generator\ttf_fontgen.vcxproj", "{FC4F17E2-A496-4301-ABBB-167B6060269D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Android = Debug|Android
@@ -114,6 +116,12 @@ Global
 		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Release|Android.Build.0 = Release_TinyXml|Android
 		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Release|Win32.ActiveCfg = Release_LibXml2|Win32
 		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Release|Win32.Build.0 = Release_LibXml2|Win32
+		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Debug|Android.ActiveCfg = Debug|Win32
+		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Debug|Win32.Build.0 = Debug|Win32
+		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Release|Android.ActiveCfg = Release|Win32
+		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Release|Win32.ActiveCfg = Release|Win32
+		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

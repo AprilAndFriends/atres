@@ -38,6 +38,7 @@ namespace atres
 		float getLineHeight();
 		float getCorrectedHeight();
 		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
+		virtual harray<april::Texture*> getTextures() = 0;
 		
 		virtual april::Texture* getTexture(unsigned int charcode) = 0;
 		virtual bool hasChar(unsigned int charcode);

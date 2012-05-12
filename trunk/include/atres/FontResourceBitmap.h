@@ -28,6 +28,8 @@ namespace atres
 		FontResourceBitmap(chstr filename);
 		~FontResourceBitmap();
 
+		harray<april::Texture*> getTextures();
+
 		april::Texture* getTexture(unsigned int charcode);
 
 	protected:

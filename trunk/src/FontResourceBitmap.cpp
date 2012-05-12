@@ -85,6 +85,13 @@ namespace atres
 	{
 	}
 
+	harray<april::Texture*> FontResourceBitmap::getTextures()
+	{
+		harray<april::Texture*> result;
+		result += this->texture;
+		return result;
+	}
+
 	april::Texture* FontResourceBitmap::getTexture(unsigned int charcode)
 	{
 		return this->texture;
