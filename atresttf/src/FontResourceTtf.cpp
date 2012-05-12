@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.31
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -16,6 +16,7 @@
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
+#include "atresttf.h"
 #include "FontResourceTtf.h"
 #include "freetype.h"
 
@@ -55,6 +56,7 @@ namespace atresttf
 		float lineHeight, float correctedHeight) : atres::FontResource(name), fontFile(NULL)
 	{
 		this->fontFilename = fontFilename;
+		this->name = name;
 		this->baseScale = scale;
 		this->scale = scale;
 		this->height = height;
@@ -132,6 +134,10 @@ namespace atresttf
 	
 	void FontResourceTtf::_initializeFont()
 	{
+		if (this->fontFilename == "")
+		{
+			this->fontFilename = atresttf::findSystemFontFilename(this->name);
+		}
 		if (this->lineHeight == 0.0f)
 		{
 			this->lineHeight = this->height;
@@ -140,8 +146,6 @@ namespace atresttf
 		{
 			this->correctedHeight = this->height;
 		}
-		// TODO - should check system fonts if file does not exit!
-
 		// libfreetype stuff
 		FT_Library library = atresttf::getLibrary();
 		FT_Face face;
