@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.31
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -59,6 +59,7 @@ namespace atresttf
 		bool _addCharacterBitmap(unsigned int charcode, bool ignoreCharacterEnabled = false);
 
 	};
+
 }
 
 #endif
