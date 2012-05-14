@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.41
 /// 
 /// @section LICENSE
 /// 
@@ -28,10 +28,6 @@
 namespace atresttf
 {
 	extern void log(chstr message);
-
-	TextureContainer::TextureContainer() : texture(NULL), penX(CHARACTER_SPACE), penY(CHARACTER_SPACE)
-	{
-	}
 
 	FontResourceTtf::FontResourceTtf(chstr filename) : atres::FontResource(filename), fontFile(NULL)
 	{
@@ -67,32 +63,16 @@ namespace atresttf
 
 	FontResourceTtf::~FontResourceTtf()
 	{
-		foreach (TextureContainer*, it, this->textureContainers)
-		{
-			delete (*it)->texture;
-			delete (*it);
-		}
-		this->textureContainers.clear();
 		if (this->fontFile != NULL)
 		{
 			delete [] this->fontFile;
 		}
 	}
 
-	harray<april::Texture*> FontResourceTtf::getTextures()
-	{
-		harray<april::Texture*> result;
-		foreach (TextureContainer*, it, this->textureContainers)
-		{
-			result += (*it)->texture;
-		}
-		return result;
-	}
-	
 	april::Texture* FontResourceTtf::getTexture(unsigned int charcode)
 	{
 		bool reload = false;
-		foreach (TextureContainer*, it, this->textureContainers)
+		foreach (atres::TextureContainer*, it, this->textureContainers)
 		{
 			if (!(*it)->texture->isLoaded())
 			{
@@ -104,7 +84,7 @@ namespace atresttf
 		{
 			// font textures were deleted somewhere for some reason (e.g. Android's onPause), initiate reloading
 			this->characters.clear();
-			foreach (TextureContainer*, it, this->textureContainers)
+			foreach (atres::TextureContainer*, it, this->textureContainers)
 			{
 				delete (*it)->texture;
 				delete (*it);
@@ -116,14 +96,7 @@ namespace atresttf
 		{
 			return NULL;
 		}
-		foreach (TextureContainer*, it, this->textureContainers)
-		{
-			if ((*it)->characters.contains(charcode))
-			{
-				return (*it)->texture;
-			}
-		}
-		return NULL;
+		return FontResource::getTexture(charcode);
 	}
 
 	bool FontResourceTtf::hasChar(unsigned int charcode)
@@ -199,9 +172,11 @@ namespace atresttf
 	void FontResourceTtf::_loadBasicCharacters()
 	{
 		// creating a texture
-		TextureContainer* textureContainer = new TextureContainer();
+		atres::TextureContainer* textureContainer = new atres::TextureContainer();
 		textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
 		this->textureContainers += textureContainer;
+		this->penX = CHARACTER_SPACE;
+		this->penY = CHARACTER_SPACE;
 		// adding all base ASCII characters right away
 		for_itert (unsigned int, code, 32, 256)
 		{
@@ -238,45 +213,48 @@ namespace atresttf
 		unsigned char* data = new unsigned char[size];
 		memset(data, 255, size * sizeof(unsigned char));
 		int index;
+		int i;
 		for_iter (j, 0, glyph->bitmap.rows)
 		{
-			for_iter (i, 0, glyph->bitmap.width)
+			for_iterx (i, 0, glyph->bitmap.width)
 			{
 				index = i + j * glyph->bitmap.width;
 				data[index * 4 + 3] = glyph->bitmap.buffer[index];
 			}
 		}
-		TextureContainer* textureContainer = this->textureContainers.last();
+		atres::TextureContainer* textureContainer = this->textureContainers.last();
 		int maxHeight = PTSIZE2INT(face->size->metrics.height) + CHARACTER_SPACE * 2;
-		if (textureContainer->penX + glyph->bitmap.width + 4 > TEXTURE_SIZE)
+		if (penX + glyph->bitmap.width + 4 > TEXTURE_SIZE)
 		{
-			textureContainer->penX = CHARACTER_SPACE;
-			textureContainer->penY += maxHeight;
+			penX = CHARACTER_SPACE;
+			penY += maxHeight;
 		}
-		if (textureContainer->penY + maxHeight > TEXTURE_SIZE)
+		if (penY + maxHeight > TEXTURE_SIZE)
 		{
-			textureContainer = new TextureContainer();
+			textureContainer = new atres::TextureContainer();
 			textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
 			this->textureContainers += textureContainer;
+			this->penX = CHARACTER_SPACE;
+			this->penY = CHARACTER_SPACE;
 #ifdef _DEBUG
 			atresttf::log(hsprintf("Font '%s': character 0x%X does not fit, creating new texture", this->name.c_str(), charcode));
 #endif
 		}
 		int ascender = PTSIZE2INT(face->size->metrics.ascender);
 		int descender = PTSIZE2INT(face->size->metrics.descender);
-		int x = textureContainer->penX;
-		int y = textureContainer->penY + ascender - descender - glyph->bitmap_top;
+		int x = penX;
+		int y = penY + ascender - descender - glyph->bitmap_top;
 		textureContainer->texture->blit(x, y, data, glyph->bitmap.width,
 			glyph->bitmap.rows, 4, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
 		atres::CharacterDefinition c;
 		c.x = (float)x;
-		c.y = (float)(textureContainer->penY - descender);
+		c.y = (float)(penY - descender);
 		c.w = (float)glyph->bitmap.width;
 		c.h = (float)(ascender - descender);
 		c.bx = (float)PTSIZE2INT(glyph->metrics.horiBearingX);
 		c.aw = (float)PTSIZE2INT(glyph->advance.x);
 		this->characters[charcode] = c;
-		textureContainer->penX += glyph->bitmap.width + CHARACTER_SPACE * 2;
+		penX += glyph->bitmap.width + CHARACTER_SPACE * 2;
 		textureContainer->characters += charcode;
 		return true;
 	}

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.51
+/// @version 2.6
 /// 
 /// @section LICENSE
 /// 
@@ -88,4 +88,8 @@ namespace atres
 			this->size == other.size);
 	}
 	
+	TextureContainer::TextureContainer() : texture(NULL)
+	{
+	}
+
 }

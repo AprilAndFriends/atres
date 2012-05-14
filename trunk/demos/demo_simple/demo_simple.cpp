@@ -184,9 +184,9 @@ void april_init(const harray<hstr>& args)
 		atresttf::init();
 #endif
 #ifndef _ATRESTTF
-		atres::renderer->registerFontResource(new atres::FontResourceBitmap(RESOURCE_PATH "arial.font"));
+		atres::renderer->registerFontResource(new atres::FontResourceBitmap(RESOURCE_PATH "Playtime.font"));
 #else
-		atres::renderer->registerFontResource(new atresttf::FontResourceTtf(RESOURCE_PATH "arial.ttfdef"));
+		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("", "Arial", 32, 1.0f));
 #endif
 		atres::renderer->setShadowColor(APRIL_COLOR_RED);
 		atres::renderer->setBorderColor(APRIL_COLOR_AQUA);
