@@ -6,14 +6,16 @@
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
-
+#include <hltypes/hfile.h>
+#include <hltypes/hdir.h>
+#include <hltypes/hltypesUtil.h>
+#include <april/main.h>
 #include <april/april.h>
+#include <april/Window.h>
 #include <april/Texture.h>
 #include <atres/atres.h>
 #include <atresttf/atresttf.h>
 #include <atresttf/FontResourceTtf.h>
-#include <hltypes/hfile.h>
-#include <hltypes/hltypesUtil.h>
 
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
@@ -208,62 +210,34 @@ void generate(chstr cfgname)
 	}
 }
 
-int main(int argc, char** argv)
+void april_destroy()
 {
-#ifdef __APPLE__
-	// On MacOSX, the current working directory is not set by
-	// the Finder, since you are expected to use Core Foundation
-	// or ObjC APIs to find files. 
-	// So, when porting you probably want to set the current working
-	// directory to something sane (e.g. .../Resources/ in the app
-	// bundle).
-	// In this case, we set it to parent of the .app bundle.
-	{	// curly braces in order to localize variables 
+	// destroy systems
+	atresttf::destroy();
+	atres::destroy();
+	april::destroy();
+}
 
-		CFURLRef url = CFBundleCopyBundleURL(CFBundleGetMainBundle());
-		CFStringRef path = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
-		
-		// let's hope chdir() will be happy with utf8 encoding
-		const char* cpath=CFStringGetCStringPtr(path, kCFStringEncodingUTF8);
-		char* cpath_alloc=0;
-		if(!cpath)
-		{
-			// CFStringGetCStringPtr is allowed to return NULL. bummer.
-			// we need to use CFStringGetCString instead.
-			cpath_alloc = (char*)malloc(CFStringGetLength(path)+1);
-			CFStringGetCString(path, cpath_alloc, CFStringGetLength(path)+1, kCFStringEncodingUTF8);
-		}
-		else {
-			// even though it didn't return NULL, we still want to slice off bundle name.
-			cpath_alloc = (char*)malloc(CFStringGetLength(path)+1);
-			strcpy(cpath_alloc, cpath);
-		}
-		// just in case / is appended to .app path for some reason
-		if(cpath_alloc[CFStringGetLength(path)-1]=='/')
-			cpath_alloc[CFStringGetLength(path)-1] = 0;
-		
-		// replace pre-.app / with a null character, thus
-		// cutting off .app's name and getting parent of .app.
-		strrchr(cpath_alloc, '/')[0] = 0;
-							   
-		// change current dir using posix api
-		chdir(cpath_alloc);
-		
-		free(cpath_alloc); // even if null, still ok
-		CFRelease(path);
-		CFRelease(url);
-	}
-#endif
+bool update(float k)
+{
+	return 0;
+}
+
+void april_init(const harray<hstr>& argv)
+{
+#ifndef __APPLE__
 	// check args
-	if (argc != 1 && argc != 2)
+	if (argv.size() != 1 && argv.size() != 2)
 	{
 		printf("Wrong number of arguments supplied: [CONFIG_FILENAME]\n");
 		return 1;
 	}
+#endif
 	hstr cfgname = "ttf_fontgen.cfg";
-	if (argc >= 2)
+	if (argv.size() >= 2)
 	{
 		cfgname = hstr(argv[1]);
+		hdir::chdir(get_basedir(cfgname));
 	}
 	// init systems
 	april::init();
@@ -274,8 +248,5 @@ int main(int argc, char** argv)
 	// generate
 	atres::log("- configuration file: " + cfgname);
 	generate(cfgname);
-	// destroy systems
-	atresttf::destroy();
-	atres::destroy();
-	april::destroy();
+	april::window->setUpdateCallback(update);
 }
