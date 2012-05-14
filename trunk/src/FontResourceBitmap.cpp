@@ -100,6 +100,7 @@ namespace atres
 				this->textureContainers[textureIndex]->characters += code;
 			}
 		}
+		this->loaded = false;
 	}
 
 	FontResourceBitmap::~FontResourceBitmap()
