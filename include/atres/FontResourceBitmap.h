@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.6
 /// 
 /// @section LICENSE
 /// 
@@ -28,13 +28,6 @@ namespace atres
 		FontResourceBitmap(chstr filename);
 		~FontResourceBitmap();
 
-		harray<april::Texture*> getTextures();
-
-		april::Texture* getTexture(unsigned int charcode);
-
-	protected:
-		april::Texture* texture;
-		
 	};
 }
 

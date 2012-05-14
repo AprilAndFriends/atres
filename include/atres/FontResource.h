@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.6
 /// 
 /// @section LICENSE
 /// 
@@ -38,9 +38,9 @@ namespace atres
 		float getLineHeight();
 		float getCorrectedHeight();
 		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
-		virtual harray<april::Texture*> getTextures() = 0;
+		harray<april::Texture*> getTextures();
 		
-		virtual april::Texture* getTexture(unsigned int charcode) = 0;
+		virtual april::Texture* getTexture(unsigned int charcode);
 		virtual bool hasChar(unsigned int charcode);
 		
 		float getTextWidth(chstr text);
@@ -56,6 +56,7 @@ namespace atres
 		float lineHeight;
 		float correctedHeight;
 		hmap<unsigned int, CharacterDefinition> characters;
+		harray<TextureContainer*> textureContainers;
 
 		bool _readBasicParameter(chstr line);
 		

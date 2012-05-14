@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.51
+/// @version 2.6
 /// 
 /// @section LICENSE
 /// 
@@ -151,6 +151,14 @@ namespace atres
 		bool operator==(const CacheKeyLine& other) const;
 	};
 	
+	struct atresExport TextureContainer
+	{
+		april::Texture* texture;
+		harray<unsigned int> characters;
+
+		TextureContainer();
+	};
+
 };
 
 #endif

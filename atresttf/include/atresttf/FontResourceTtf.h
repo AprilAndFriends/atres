@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.41
 /// 
 /// @section LICENSE
 /// 
@@ -15,6 +15,7 @@
 #define ATRESTTF_FONT_RESOURCE_TTF_H
 
 #include <atres/FontResource.h>
+#include <atres/Utility.h>
 #include <hltypes/harray.h>
 #include <hltypes/hstring.h>
 
@@ -27,16 +28,6 @@ namespace april
 
 namespace atresttf
 {
-	struct TextureContainer
-	{
-		april::Texture* texture;
-		harray<unsigned int> characters;
-		int penX;
-		int penY;
-
-		TextureContainer();
-	};
-
 	class atresttfExport FontResourceTtf : public atres::FontResource
 	{
 	public:
@@ -44,14 +35,13 @@ namespace atresttf
 		FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight = 0.0f, float correctedHeight = 0.0f);
 		~FontResourceTtf();
 
-		harray<april::Texture*> getTextures();
-
 		HL_DEFINE_GET(hstr, fontFilename, FontFilename);
 		april::Texture* getTexture(unsigned int charcode);
 		bool hasChar(unsigned int charcode);
 
 	protected:
-		harray<TextureContainer*> textureContainers;
+		int penX;
+		int penY;
 		hstr fontFilename;
 		unsigned char* fontFile;
 

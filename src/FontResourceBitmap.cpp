@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.6
 /// 
 /// @section LICENSE
 /// 
@@ -24,6 +24,8 @@ namespace atres
 		hstr path = get_basedir(filename) + "/";
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
 		hstr line;
+		bool multiTexture = false;
+		atres::TextureContainer* textureContainer = NULL;
 		while (lines.size() > 0)
 		{
 			line = lines.pop_first();
@@ -31,8 +33,20 @@ namespace atres
 			{
 				if (line.starts_with("Texture="))
 				{
-					atres::log(path + line.replace("Texture=", ""));
-					this->texture = april::rendersys->loadTexture(path + line.replace("Texture=", ""));
+					textureContainer = new atres::TextureContainer();
+					textureContainer->texture = april::rendersys->loadTexture(path + line.replace("Texture=", ""));
+					this->textureContainers += textureContainer;
+				}
+				else if (line.starts_with("MultiTexture="))
+				{
+					harray<hstr> textureNames = line.replace("MultiTexture=", "").split("\t");
+					foreach (hstr, it, textureNames)
+					{
+						textureContainer = new atres::TextureContainer();
+						textureContainer->texture = april::rendersys->loadTexture(path + (*it));
+						this->textureContainers += textureContainer;
+					}
+					multiTexture = true;
 				}
 				else if (line.starts_with("-"))
 				{
@@ -40,7 +54,6 @@ namespace atres
 				}
 			}
 		}
-
 		if (this->lineHeight == 0.0f)
 		{
 			this->lineHeight = this->height;
@@ -52,14 +65,21 @@ namespace atres
 		CharacterDefinition c;
 		unsigned int code;
 		harray<hstr> data;
+		int minAttribute = (multiTexture ? 5 : 4);
+		int maxAttribute = (multiTexture ? 7 : 6);
+		int textureIndex = 0;
 		foreach (hstr, it, lines)
 		{
 			c.bx = 0.0f;
 			c.aw = 0.0f;
 			data = (*it).split(" ", -1, true);
-			if (is_between(data.size(), 4, 6))
+			if (is_between(data.size(), minAttribute, maxAttribute))
 			{
 				code = (unsigned int)data.pop_first();
+				if (multiTexture)
+				{
+					textureIndex = (int)data.pop_first();
+				}
 				c.x = (float)data.pop_first();
 				c.y = (float)data.pop_first();
 				c.w = (float)data.pop_first();
@@ -77,24 +97,13 @@ namespace atres
 					c.aw = c.w;
 				}
 				this->characters[code] = c;
+				this->textureContainers[textureIndex]->characters += code;
 			}
 		}
 	}
 
 	FontResourceBitmap::~FontResourceBitmap()
 	{
-	}
-
-	harray<april::Texture*> FontResourceBitmap::getTextures()
-	{
-		harray<april::Texture*> result;
-		result += this->texture;
-		return result;
-	}
-
-	april::Texture* FontResourceBitmap::getTexture(unsigned int charcode)
-	{
-		return this->texture;
 	}
 
 }

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.6
 /// 
 /// @section LICENSE
 /// 
@@ -98,6 +98,11 @@ void generate(chstr cfgname)
 			}
 		}
 	}
+	if (rangeStarts.size() == 0)
+	{
+		rangeStarts += 0x1F;
+		rangeEnds += 0x7F;
+	}
 	// create font
 	atres::log("- creating font");
 	atres::FontResource* font = new atresttf::FontResourceTtf(fontFilename, fontName, height, scale, lineHeight, correctedHeight);
@@ -114,11 +119,7 @@ void generate(chstr cfgname)
 	}
 	// check for more than one texture
 	harray<april::Texture*> textures = font->getTextures();
-	if (textures.size() > 1)
-	{
-		atres::log("ERROR! Too many character codes. Character table does not fit in one texture.");
-		return;
-	}
+	bool multiTexture = (textures.size() > 1);
 	// export definition
 	atres::log("- exporting definition");
 	hfile definition(fontName + ".font", hfile::WRITE);
@@ -126,7 +127,19 @@ void generate(chstr cfgname)
 	definition.write_line("# ATRES Font definition file");
 	definition.write_line("# -----------------------------------");
 	definition.write_line("Name=" + fontName);
-	definition.write_line("Texture=" + fontName);
+	if (!multiTexture)
+	{
+		definition.write_line("Texture=" + fontName);
+	}
+	else
+	{
+		harray<hstr> textureNames;
+		for_iter (i, 0, textures.size())
+		{
+			textureNames += fontName + "_" + hstr(i);
+		}
+		definition.write_line("MultiTexture=" + textureNames.join("\t"));
+	}
 	definition.write_line("Height=" + hsprintf("%g", height));
 	definition.write_line("Scale=" + hsprintf("%g", scale));
 	if (lineHeight != 0)
@@ -141,37 +154,58 @@ void generate(chstr cfgname)
 	definition.write_line("# Code|X|Y|Width");
 	definition.write_line("# Code|X|Y|Width|Advance Width");
 	definition.write_line("# Code|X|Y|Width|Advance Width|Bearing X");
+	definition.write_line("# Code|MultiTextureIndex|X|Y|Width");
+	definition.write_line("# Code|MultiTextureIndex|X|Y|Width|Advance Width");
+	definition.write_line("# Code|MultiTextureIndex|X|Y|Width|Advance Width|Bearing X");
 	definition.write_line("-------------------------------------");
 	hmap<unsigned int, atres::CharacterDefinition> characters = font->getCharacters();
 	harray<unsigned int> codes = characters.keys().sorted();
 	atres::CharacterDefinition c;
-	foreach (unsigned int, it, codes)
+	if (!multiTexture)
 	{
-		c = characters[*it];
-		definition.write_line(hsprintf("%d %g %g %g %g %g", (*it), c.x, c.y, c.w, c.aw, c.bx));
+		foreach (unsigned int, it, codes)
+		{
+			c = characters[*it];
+			definition.write_line(hsprintf("%d %g %g %g %g %g", (*it), c.x, c.y, c.w, c.aw, c.bx));
+		}
+	}
+	else
+	{
+		int index;
+		foreach (unsigned int, it, codes)
+		{
+			c = characters[*it];
+			index = textures.index_of(font->getTexture(*it));
+			definition.write_line(hsprintf("%d %d %g %g %g %g %g", (*it), index, c.x, c.y, c.w, c.aw, c.bx));
+		}
 	}
 	definition.close();
 	// export texture
-	atres::log("- exporting texture");
-	april::Texture* texture = textures.first();
-	unsigned char* buffer;
-	if (!texture->copyPixelData(&buffer))
-	{
-		atres::log("ERROR! Could not fetch pixel data!");
-		return;
-	}
+	atres::log("- exporting textures");
 	unsigned char preHeader[12] = {0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	TgaHeader header;
-	header.bpp = 32;
-	header.w = texture->getWidth();
-	header.h = texture->getHeight();
-	header.Flags = 33;
-	hfile tga(fontName + ".tga", hfile::WRITE);
-	tga.write_raw(preHeader, 12);
-	tga.write_raw(&header, sizeof(header));
-	tga.write_raw(buffer, header.w * header.h * 4);
-	delete [] buffer;
-	tga.close();
+	unsigned char* buffer;
+	hfile tga;
+	april::Texture* texture = NULL;
+	for_iter (i, 0, textures.size())
+	{
+		texture = textures[i];
+		if (!texture->copyPixelData(&buffer))
+		{
+			atres::log("ERROR! Could not fetch pixel data!");
+			continue;
+		}
+		TgaHeader header;
+		header.bpp = 32;
+		header.w = texture->getWidth();
+		header.h = texture->getHeight();
+		header.Flags = 33;
+		tga.open(fontName + (multiTexture ? "_" + hstr(i) : hstr("")) + ".tga", hfile::WRITE);
+		tga.write_raw(preHeader, 12);
+		tga.write_raw(&header, sizeof(header));
+		tga.write_raw(buffer, header.w * header.h * 4);
+		delete [] buffer;
+		tga.close();
+	}
 }
 
 int main(int argc, char** argv)

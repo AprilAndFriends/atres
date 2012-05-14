@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.6
 /// 
 /// @section LICENSE
 /// 
@@ -26,6 +26,12 @@ namespace atres
 	FontResource::~FontResource()
 	{
 		this->characters.clear();
+		foreach (TextureContainer*, it, this->textureContainers)
+		{
+			delete (*it)->texture;
+			delete (*it);
+		}
+		this->textureContainers.clear();
 	}
 
 	bool FontResource::_readBasicParameter(chstr line)
@@ -83,6 +89,28 @@ namespace atres
 		return (this->correctedHeight * this->scale * this->baseScale);
 	}
 	
+	harray<april::Texture*> FontResource::getTextures()
+	{
+		harray<april::Texture*> result;
+		foreach (TextureContainer*, it, this->textureContainers)
+		{
+			result += (*it)->texture;
+		}
+		return result;
+	}
+	
+	april::Texture* FontResource::getTexture(unsigned int charcode)
+	{
+		foreach (TextureContainer*, it, this->textureContainers)
+		{
+			if ((*it)->characters.contains(charcode))
+			{
+				return (*it)->texture;
+			}
+		}
+		return NULL;
+	}
+
 	float FontResource::getTextWidth(chstr text)
 	{
 		const char* str = text.c_str();
@@ -162,8 +190,8 @@ namespace atres
 		float ratioTop = (area.y < rect.y ? (area.y + area.h - rect.y) / scaledHeight : 1.0f);
 		float ratioBottom = (rect.y + rect.h < area.y + area.h ? (rect.y + rect.h - area.y) / scaledHeight : 1.0f);
 		// destination rectangle
-		result.dest.x = area.x;// - rect.w * 0.5f;
-		result.dest.y = area.y + scaledHeight * (1.0f - ratioTop);// - rect.h * 0.5f;
+		result.dest.x = area.x;
+		result.dest.y = area.y + scaledHeight * (1.0f - ratioTop);
 		result.dest.w = area.w;
 		result.dest.h = chr.h * scaledHeight / this->height * (ratioTop + ratioBottom - 1.0f);
 		if (rect.intersects(result.dest)) // if destination rectangle inside drawing area
