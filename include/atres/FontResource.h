@@ -37,6 +37,7 @@ namespace atres
 		HL_DEFINE_GETSET(float, baseScale, BaseScale);
 		float getLineHeight();
 		float getCorrectedHeight();
+		HL_DEFINE_IS(bool, loaded, Loaded);
 		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
 		harray<april::Texture*> getTextures();
 		
@@ -55,6 +56,7 @@ namespace atres
 		float baseScale;
 		float lineHeight;
 		float correctedHeight;
+		bool loaded;
 		hmap<unsigned int, CharacterDefinition> characters;
 		harray<TextureContainer*> textureContainers;
 

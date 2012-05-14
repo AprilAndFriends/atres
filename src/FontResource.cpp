@@ -18,7 +18,8 @@
 
 namespace atres
 {
-	FontResource::FontResource(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f), lineHeight(0.0f), correctedHeight(0.0f)
+	FontResource::FontResource(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f),
+		lineHeight(0.0f), correctedHeight(0.0f), loaded(false)
 	{
 		this->name = name;
 	}

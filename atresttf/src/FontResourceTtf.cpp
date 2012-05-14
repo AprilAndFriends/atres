@@ -115,6 +115,11 @@ namespace atresttf
 		{
 			return;
 		}
+		if (!hresource::exists(this->fontFilename)) // font file does not exist
+		{
+			atresttf::log("Error: could not find " + this->fontFilename);
+			return;
+		}
 		if (this->lineHeight == 0.0f)
 		{
 			this->lineHeight = this->height;
@@ -167,6 +172,7 @@ namespace atresttf
 		}
 		atresttf::addFace(this, face);
 		this->_loadBasicCharacters();
+		this->loaded = true;
 	}
 
 	void FontResourceTtf::_loadBasicCharacters()

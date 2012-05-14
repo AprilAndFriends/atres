@@ -108,12 +108,17 @@ void generate(chstr cfgname)
 	// create font
 	atres::log("- creating font");
 	atres::FontResource* font = new atresttf::FontResourceTtf(fontFilename, fontName, height, scale, lineHeight, correctedHeight);
+	if (!font->isLoaded())
+	{
+		delete font;
+		return;
+	}
 	atres::renderer->registerFontResource(font);
 	// add custom code ranges
 	atres::log("- adding custom code ranges");
 	for_iter (i, 0, rangeStarts.size())
 	{
-		atres::log(hsprintf("    - adding code range: %x-%x", rangeStarts[i], rangeEnds[i]));
+		atres::log(hsprintf("    - adding code range: %X-%X", rangeStarts[i], rangeEnds[i]));
 		for_itert (unsigned int, code, rangeStarts[i], rangeEnds[i] + 1)
 		{
 			font->hasChar(code);
@@ -210,17 +215,9 @@ void generate(chstr cfgname)
 	}
 }
 
-void april_destroy()
-{
-	// destroy systems
-	atresttf::destroy();
-	atres::destroy();
-	april::destroy();
-}
-
 bool update(float k)
 {
-	return 0;
+	return false;
 }
 
 void april_init(const harray<hstr>& argv)
@@ -230,7 +227,7 @@ void april_init(const harray<hstr>& argv)
 	if (argv.size() != 1 && argv.size() != 2)
 	{
 		printf("Wrong number of arguments supplied: [CONFIG_FILENAME]\n");
-		return 1;
+		return;
 	}
 #endif
 	hstr cfgname = "ttf_fontgen.cfg";
@@ -243,10 +240,18 @@ void april_init(const harray<hstr>& argv)
 	april::init();
 	april::createRenderSystem("");
 	april::createRenderTarget(100, 100, false, "TTF Font Generator");
+	april::window->setUpdateCallback(update);
 	atres::init();
 	atresttf::init();
 	// generate
 	atres::log("- configuration file: " + cfgname);
 	generate(cfgname);
-	april::window->setUpdateCallback(update);
 }
+
+void april_destroy()
+{
+	atresttf::destroy();
+	atres::destroy();
+	april::destroy();
+}
+
