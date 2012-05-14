@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.51
+/// @version 2.61
 /// 
 /// @section LICENSE
 /// 
@@ -184,7 +184,7 @@ void april_init(const harray<hstr>& args)
 		atresttf::init();
 #endif
 #ifndef _ATRESTTF
-		atres::renderer->registerFontResource(new atres::FontResourceBitmap(RESOURCE_PATH "Playtime.font"));
+		atres::renderer->registerFontResource(new atres::FontResourceBitmap(RESOURCE_PATH "arial.font"));
 #else
 		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("", "Arial", 32, 1.0f));
 #endif

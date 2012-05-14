@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.51
+/// @version 2.61
 /// 
 /// @section LICENSE
 /// 
@@ -738,6 +738,7 @@ namespace atres
 		int i = 0;
 		int byteLength = 0;
 		bool checkingSpaces = true;
+		bool tooLong = false;
 		word.rect.x = rect.x;
 		word.rect.y = rect.y;
 		word.rect.h = this->_height;
@@ -777,6 +778,10 @@ namespace atres
 				addW = hmax(ax, aw);
 				if (wordW + addW > rect.w) // word too long for line
 				{
+					if (!checkingSpaces)
+					{
+						tooLong = true;
+					}
 					break;
 				}
 				wordW = wordX + addW;
@@ -795,6 +800,10 @@ namespace atres
 				word.spaces = (checkingSpaces ? i - start : 0);
 				word.fullWidth = wordW;
 				result += word;
+			}
+			else if (tooLong) // this prevents an infinite loop if not at least one character fits in the line
+			{
+				break;
 			}
 			checkingSpaces = !checkingSpaces;
 		}
@@ -1221,7 +1230,7 @@ namespace atres
 
 	float Renderer::getTextHeight(chstr fontName, chstr text, float maxWidth)
 	{
-		if (text != "")
+		if (text != "" && maxWidth > 0.0f)
 		{
 			harray<FormatTag> tags;
 			hstr unformattedText = this->prepareFormatting(fontName, text, tags);
@@ -1237,7 +1246,7 @@ namespace atres
 	
 	int Renderer::getTextCount(chstr fontName, chstr text, float maxWidth)
 	{
-		if (text != "")
+		if (text != "" && maxWidth > 0.0f)
 		{
 			harray<FormatTag> tags;
 			hstr unformattedText = this->prepareFormatting(fontName, text, tags);
@@ -1267,7 +1276,7 @@ namespace atres
 
 	float Renderer::getTextHeightUnformatted(chstr fontName, chstr text, float maxWidth)
 	{
-		if (text != "")
+		if (text != "" && maxWidth > 0.0f)
 		{
 			harray<FormatTag> tags = this->prepareTags(fontName);
 			harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, 100000.0f), text, tags, LEFT_WRAPPED, TOP);
@@ -1279,7 +1288,7 @@ namespace atres
 	
 	int Renderer::getTextCountUnformatted(chstr fontName, chstr text, float maxWidth)
 	{
-		if (text != "")
+		if (text != "" && maxWidth > 0.0f)
 		{
 			harray<FormatTag> tags = this->prepareTags(fontName);
 			return this->getFittingLine(fontName, grect(0.0f, 0.0f, maxWidth, 1.0f), text, tags).text.size();
