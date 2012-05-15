@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.51
+/// @version 2.62
 /// 
 /// @section LICENSE
 /// 
@@ -61,6 +61,7 @@ namespace atres
 
 		void analyzeText(chstr text);
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
+		harray<RenderLine> removeOutOfBoundLines(grect rect, harray<RenderLine> lines);
 		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight, float correctedHeight);
 		harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
 		harray<RenderWord> createRenderWords(grect rect, chstr text, harray<FormatTag> tags);
