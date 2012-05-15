@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.61
+/// @version 2.62
 /// 
 /// @section LICENSE
 /// 
@@ -324,6 +324,20 @@ namespace atres
 		return result;
 	}
 
+	harray<RenderLine> Renderer::removeOutOfBoundLines(grect rect, harray<RenderLine> lines)
+	{
+		harray<RenderLine> result;
+		foreach (RenderLine, it, lines)
+		{
+			// zero-length rectangles should be included
+			if ((*it).rect.w == 0.0f || (*it).rect.h == 0.0f || (*it).rect.intersects(rect))
+			{
+				result += (*it);
+			}
+		}
+		return result;
+	}
+	
 	harray<RenderLine> Renderer::verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight, float correctedHeight)
 	{
 		harray<RenderLine> result;
@@ -341,14 +355,11 @@ namespace atres
 		foreach (RenderLine, it, lines)
 		{
 			(*it).rect.y -= y;
-			if ((*it).rect.intersects(rect))
+			foreach (RenderWord, it2, (*it).words)
 			{
-				foreach (RenderWord, it2, (*it).words)
-				{
-					(*it2).rect.y -= y;
-				}
-				result += (*it);
+				(*it2).rect.y -= y;
 			}
+			result += (*it);
 		}
 		return result;
 	}
@@ -899,6 +910,7 @@ namespace atres
 		if (this->_lines.size() > 0)
 		{
 			this->_lines.last().terminated = true; // last line is regarded as terminated with \n
+			this->_lines = this->removeOutOfBoundLines(rect, this->_lines);
 			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight, this->_correctedHeight);
 			if (this->_lines.size() > 0)
 			{
