@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.41
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -179,7 +179,7 @@ namespace atresttf
 	{
 		// creating a texture
 		atres::TextureContainer* textureContainer = new atres::TextureContainer();
-		textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
+		textureContainer->texture = april::rendersys->createEmptyTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ALPHA);
 		this->textureContainers += textureContainer;
 		this->penX = CHARACTER_SPACE;
 		this->penY = CHARACTER_SPACE;
@@ -215,9 +215,10 @@ namespace atresttf
 			return false;
 		}
 		FT_GlyphSlot glyph = face->glyph;
-		int size = glyph->bitmap.rows * glyph->bitmap.width * 4;
+		/*
+		int size = glyph->bitmap.rows * glyph->bitmap.width;
 		unsigned char* data = new unsigned char[size];
-		memset(data, 255, size * sizeof(unsigned char));
+		memset(data, 0, size * sizeof(unsigned char));
 		int index;
 		int i;
 		for_iter (j, 0, glyph->bitmap.rows)
@@ -225,9 +226,10 @@ namespace atresttf
 			for_iterx (i, 0, glyph->bitmap.width)
 			{
 				index = i + j * glyph->bitmap.width;
-				data[index * 4 + 3] = glyph->bitmap.buffer[index];
+				data[index] = glyph->bitmap.buffer[index];
 			}
 		}
+		*/
 		atres::TextureContainer* textureContainer = this->textureContainers.last();
 		int maxHeight = PTSIZE2INT(face->size->metrics.height) + CHARACTER_SPACE * 2;
 		if (penX + glyph->bitmap.width + 4 > TEXTURE_SIZE)
@@ -238,7 +240,7 @@ namespace atresttf
 		if (penY + maxHeight > TEXTURE_SIZE)
 		{
 			textureContainer = new atres::TextureContainer();
-			textureContainer->texture = april::rendersys->createBlankTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ARGB);
+			textureContainer->texture = april::rendersys->createEmptyTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ALPHA);
 			this->textureContainers += textureContainer;
 			this->penX = CHARACTER_SPACE;
 			this->penY = CHARACTER_SPACE;
@@ -250,8 +252,8 @@ namespace atresttf
 		int descender = PTSIZE2INT(face->size->metrics.descender);
 		int x = penX;
 		int y = penY + ascender - descender - glyph->bitmap_top;
-		textureContainer->texture->blit(x, y, data, glyph->bitmap.width,
-			glyph->bitmap.rows, 4, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
+		textureContainer->texture->blit(x, y, glyph->bitmap.buffer, glyph->bitmap.width,
+			glyph->bitmap.rows, 1, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
 		atres::CharacterDefinition c;
 		c.x = (float)x;
 		c.y = (float)(penY - descender);
