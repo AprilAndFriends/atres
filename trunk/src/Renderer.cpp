@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.63
+/// @version 2.65
 /// 
 /// @section LICENSE
 /// 
@@ -816,6 +816,7 @@ namespace atres
 			{
 				break;
 			}
+			tooLong = false;
 			checkingSpaces = !checkingSpaces;
 		}
 		return result;
