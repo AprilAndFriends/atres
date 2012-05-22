@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.65
+/// @version 2.66
 /// 
 /// @section LICENSE
 /// 
@@ -1345,6 +1345,7 @@ namespace atres
 
 	RenderLine Renderer::_calculateFittingLine(grect rect, chstr text, harray<FormatTag> tags)
 	{
+		this->analyzeText(text);
 		this->_initializeFormatTags(tags);
 		int actualSize = text.find_first_of('\0');
 		if (actualSize < 0)
@@ -1402,5 +1403,65 @@ namespace atres
 		result.rect.w = lineW;
 		return result;
 	}
+
+	/*
+		while (i < actualSize) // checking all words
+		{
+			start = i;
+			wordX = 0.0f;
+			wordW = 0.0f;
+			while (i < actualSize) // checking a whole word
+			{
+				code = utf8_to_uint(&str[i], &byteLength);
+				if (code == '\n')
+				{
+					break;
+				}
+				this->_checkFormatTags(text, i);
+				this->_character = &this->_characters[code];
+				if (wordX < -this->_character->bx * this->_scale)
+				{
+					ax = (this->_character->aw - this->_character->bx) * this->_scale;
+					aw = this->_character->w * this->_scale;
+				}
+				else
+				{
+					ax = this->_character->aw * this->_scale;
+					aw = (this->_character->w + this->_character->bx) * this->_scale;
+				}
+				addW = hmax(ax, aw);
+				if (wordW + addW > rect.w) // word too long for line
+				{
+					if (!checkingSpaces)
+					{
+						tooLong = true;
+					}
+					break;
+				}
+				wordW = wordX + addW;
+				wordX += ax;
+				i += byteLength;
+				if (!checkingSpaces && CHECK_UNICODE_LINE_BREAK_CHARS(code))
+				{
+					break;
+				}
+			}
+			if (i > start)
+			{
+				word.text = text(start, i - start);
+				word.rect.w = wordX;
+				word.start = start;
+				word.spaces = (checkingSpaces ? i - start : 0);
+				word.fullWidth = wordW;
+				result += word;
+			}
+			else if (tooLong) // this prevents an infinite loop if not at least one character fits in the line
+			{
+				break;
+			}
+			tooLong = false;
+			checkingSpaces = !checkingSpaces;
+		}
+	*/
 
 }
