@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -34,6 +34,7 @@ namespace atresttf
 	hmap<atres::FontResource*, FT_Face> faces;
 	harray<hstr> fonts;
 	harray<hstr> fontFiles;
+	int textureSize = 1024;
 
 	void log(chstr message)
 	{
@@ -63,6 +64,16 @@ namespace atresttf
 			atresttf::log("Error while destroying atresttf!");
 		}
     }
+
+	int getTextureSize()
+	{
+		return textureSize;
+	}
+
+	void setTextureSize(int value)
+	{
+		textureSize = value;
+	}
 
 #ifdef _WIN32
 	int CALLBACK _fontEnumCallback(ENUMLOGFONTEX* lpelfe, NEWTEXTMETRICEX* lpntme, DWORD FontType, LPARAM lParam)

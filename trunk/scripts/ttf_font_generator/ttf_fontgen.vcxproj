@@ -206,10 +206,6 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\aprilui\libaprilui.vcxproj">
-      <Project>{56ff74d1-34d0-4ddb-8b89-f6f9200842b8}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\april\libapril.vcxproj">
       <Project>{2d053cda-686b-4b36-80eb-1da5f0cef8f9}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
@@ -221,6 +217,9 @@
     <ProjectReference Include="..\..\..\hltypes\libhltypes.vcxproj">
       <Project>{e4d373bf-e227-48b9-99e6-84987e8674ec}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\atresttf\libatresttf.vcxproj">
+      <Project>{bd643e5e-72ff-4004-bd69-31dc02e5d417}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\libatres.vcxproj">
       <Project>{a1e808a0-fe36-47fe-9e3b-cf195ea31f0a}</Project>

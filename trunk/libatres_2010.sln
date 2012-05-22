@@ -22,8 +22,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libapril", "..\april\libapr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libgtypes", "..\gtypes\libgtypes.vcxproj", "{9C043B29-DB40-48D5-97D8-1BC44128E3BA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fontgen", "scripts\win32_font_generator\fontgen.vcxproj", "{0FC9EEDA-7001-476C-846A-06AC6330B3B1}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libatresttf", "atresttf\libatresttf.vcxproj", "{BD643E5E-72FF-4004-BD69-31DC02E5D417}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA} = {9C043B29-DB40-48D5-97D8-1BC44128E3BA}
@@ -37,6 +35,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhlxml", "..\hltypes\hlxm
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ttf_fontgen", "scripts\ttf_font_generator\ttf_fontgen.vcxproj", "{FC4F17E2-A496-4301-ABBB-167B6060269D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BD643E5E-72FF-4004-BD69-31DC02E5D417} = {BD643E5E-72FF-4004-BD69-31DC02E5D417}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,12 +95,6 @@ Global
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release|Android.Build.0 = Release|Android
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release|Win32.ActiveCfg = Release|Win32
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release|Win32.Build.0 = Release|Win32
-		{0FC9EEDA-7001-476C-846A-06AC6330B3B1}.Debug|Android.ActiveCfg = Debug|Android
-		{0FC9EEDA-7001-476C-846A-06AC6330B3B1}.Debug|Win32.ActiveCfg = Debug|Win32
-		{0FC9EEDA-7001-476C-846A-06AC6330B3B1}.Debug|Win32.Build.0 = Debug|Win32
-		{0FC9EEDA-7001-476C-846A-06AC6330B3B1}.Release|Android.ActiveCfg = Release|Android
-		{0FC9EEDA-7001-476C-846A-06AC6330B3B1}.Release|Win32.ActiveCfg = Release|Win32
-		{0FC9EEDA-7001-476C-846A-06AC6330B3B1}.Release|Win32.Build.0 = Release|Win32
 		{BD643E5E-72FF-4004-BD69-31DC02E5D417}.Debug|Android.ActiveCfg = Debug|Android
 		{BD643E5E-72FF-4004-BD69-31DC02E5D417}.Debug|Android.Build.0 = Debug|Android
 		{BD643E5E-72FF-4004-BD69-31DC02E5D417}.Debug|Win32.ActiveCfg = Debug|Win32
