@@ -1,11 +1,12 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.6
+/// @version 2.63
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+
 #include <hltypes/hfile.h>
 #include <hltypes/hdir.h>
 #include <hltypes/hltypesUtil.h>
@@ -23,10 +24,10 @@
 
 struct TgaHeader
 {
-	short w;
-	short h;
-	unsigned char bpp;
-	unsigned char Flags;
+    short width;
+    short height;
+    unsigned char bits;
+    unsigned char descriptor;
 };
 
 void generate(chstr cfgname)
@@ -38,6 +39,7 @@ void generate(chstr cfgname)
 	float scale = 1.0f;
 	float lineHeight = 0.0f;
 	float correctedHeight = 0.0f;
+	int textureSize = 1024;
 	harray<unsigned int> rangeStarts;
 	harray<unsigned int> rangeEnds;
 	unsigned int rangeSegment;
@@ -81,6 +83,11 @@ void generate(chstr cfgname)
 			atres::log("    - found: " + (*it));
 			correctedHeight = (float)(*it)(16, (*it).size() - 16);
 		}
+		else if ((*it).lower().starts_with("texturesize:"))
+		{
+			atres::log("    - found: " + (*it));
+			textureSize = (int)(*it)(12, (*it).size() - 12);
+		}
 		else if ((*it).lower().starts_with("coderanges:"))
 		{
 			atres::log("    - found: " + (*it));
@@ -105,9 +112,10 @@ void generate(chstr cfgname)
 		rangeStarts += 0x1F;
 		rangeEnds += 0x7F;
 	}
+	atresttf::setTextureSize(textureSize);
 	// create font
 	atres::log("- creating font");
-	atres::FontResource* font = new atresttf::FontResourceTtf(fontFilename, fontName, height, scale, lineHeight, correctedHeight);
+	atres::FontResource* font = new atresttf::FontResourceTtf(fontFilename, fontName, height, 1.0f, lineHeight, correctedHeight);
 	if (!font->isLoaded())
 	{
 		delete font;
@@ -161,9 +169,11 @@ void generate(chstr cfgname)
 	definition.write_line("# Code|X|Y|Width");
 	definition.write_line("# Code|X|Y|Width|Advance Width");
 	definition.write_line("# Code|X|Y|Width|Advance Width|Bearing X");
+	definition.write_line("# Code|X|Y|Width|Height|Advance Width|Bearing X");
 	definition.write_line("# Code|MultiTextureIndex|X|Y|Width");
 	definition.write_line("# Code|MultiTextureIndex|X|Y|Width|Advance Width");
 	definition.write_line("# Code|MultiTextureIndex|X|Y|Width|Advance Width|Bearing X");
+	definition.write_line("# Code|MultiTextureIndex|X|Y|Width|Height|Advance Width|Bearing X");
 	definition.write_line("-------------------------------------");
 	hmap<unsigned int, atres::CharacterDefinition> characters = font->getCharacters();
 	harray<unsigned int> codes = characters.keys().sorted();
@@ -173,7 +183,7 @@ void generate(chstr cfgname)
 		foreach (unsigned int, it, codes)
 		{
 			c = characters[*it];
-			definition.write_line(hsprintf("%d %g %g %g %g %g", (*it), c.x, c.y, c.w, c.aw, c.bx));
+			definition.write_line(hsprintf("%d %g %g %g %g %g %g", (*it), c.x, c.y, c.w, c.h, c.aw, c.bx));
 		}
 	}
 	else
@@ -183,16 +193,21 @@ void generate(chstr cfgname)
 		{
 			c = characters[*it];
 			index = textures.index_of(font->getTexture(*it));
-			definition.write_line(hsprintf("%d %d %g %g %g %g %g", (*it), index, c.x, c.y, c.w, c.aw, c.bx));
+			definition.write_line(hsprintf("%d %d %g %g %g %g %g %g", (*it), index, c.x, c.y, c.w, c.h, c.aw, c.bx));
 		}
 	}
 	definition.close();
 	// export texture
 	atres::log("- exporting textures");
-	unsigned char preHeader[12] = {0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	unsigned char preHeader[12] = {0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	unsigned char* buffer;
 	hfile tga;
 	april::Texture* texture = NULL;
+	TgaHeader header;
+	header.width = 0;
+	header.height = 0;
+	header.bits = 8;
+	header.descriptor = 32;
 	for_iter (i, 0, textures.size())
 	{
 		texture = textures[i];
@@ -201,17 +216,14 @@ void generate(chstr cfgname)
 			atres::log("ERROR! Could not fetch pixel data!");
 			continue;
 		}
-		TgaHeader header;
-		header.bpp = 32;
-		header.w = texture->getWidth();
-		header.h = texture->getHeight();
-		header.Flags = 33;
+		header.width = texture->getWidth();
+		header.height = texture->getHeight();
 		tga.open(fontName + (multiTexture ? "_" + hstr(i) : hstr("")) + ".tga", hfile::WRITE);
 		tga.write_raw(preHeader, 12);
 		tga.write_raw(&header, sizeof(header));
-		tga.write_raw(buffer, header.w * header.h * 4);
-		delete [] buffer;
+		tga.write_raw(buffer, header.width * header.height);
 		tga.close();
+		delete [] buffer;
 	}
 }
 

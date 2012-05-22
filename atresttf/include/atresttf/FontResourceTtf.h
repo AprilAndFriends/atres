@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.41
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -42,6 +42,7 @@ namespace atresttf
 	protected:
 		int penX;
 		int penY;
+		int rowHeight;
 		hstr fontFilename;
 		unsigned char* fontFile;
 

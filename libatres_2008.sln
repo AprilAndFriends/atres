@@ -36,8 +36,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libapril", "..\april\libapr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libgtypes", "..\gtypes\libgtypes.vcproj", "{9C043B29-DB40-48D5-97D8-1BC44128E3BA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fontgen", "scripts\win32_font_generator\fontgen.vcproj", "{0FC9EEDA-7001-476C-846A-06AC6330B3B1}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libatresttf", "atresttf\libatresttf.vcproj", "{4A055F1C-7F19-4CE2-8374-583AC6C7875E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA} = {9C043B29-DB40-48D5-97D8-1BC44128E3BA}
@@ -83,10 +81,6 @@ Global
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Debug|Win32.Build.0 = Debug|Win32
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release|Win32.ActiveCfg = Release|Win32
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release|Win32.Build.0 = Release|Win32
-		{0FC9EEDA-7001-476C-846A-06AC6330B3B1}.Debug|Win32.ActiveCfg = Debug|Win32
-		{0FC9EEDA-7001-476C-846A-06AC6330B3B1}.Debug|Win32.Build.0 = Debug|Win32
-		{0FC9EEDA-7001-476C-846A-06AC6330B3B1}.Release|Win32.ActiveCfg = Release|Win32
-		{0FC9EEDA-7001-476C-846A-06AC6330B3B1}.Release|Win32.Build.0 = Release|Win32
 		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.Debug|Win32.ActiveCfg = Debug|Win32
 		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.Debug|Win32.Build.0 = Debug|Win32
 		{4A055F1C-7F19-4CE2-8374-583AC6C7875E}.Release|Win32.ActiveCfg = Release|Win32

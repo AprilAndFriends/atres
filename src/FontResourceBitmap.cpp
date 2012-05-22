@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.6
+/// @version 2.64
 /// 
 /// @section LICENSE
 /// 
@@ -66,7 +66,7 @@ namespace atres
 		unsigned int code;
 		harray<hstr> data;
 		int minAttribute = (multiTexture ? 5 : 4);
-		int maxAttribute = (multiTexture ? 7 : 6);
+		int maxAttribute = (multiTexture ? 8 : 7);
 		int textureIndex = 0;
 		foreach (hstr, it, lines)
 		{
@@ -90,6 +90,12 @@ namespace atres
 					if (data.size() > 0)
 					{
 						c.bx = (float)data.pop_first();
+						if (data.size() > 0)
+						{
+							c.h = c.aw;
+							c.aw = c.bx;
+							c.bx = (float)data.pop_first();
+						}
 					}
 				}
 				if (c.aw == 0.0f)

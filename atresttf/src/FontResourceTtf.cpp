@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.42
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -20,8 +20,8 @@
 #include "FontResourceTtf.h"
 #include "freetype.h"
 
-#define TEXTURE_SIZE 1024
-#define CHARACTER_SPACE 4
+#define SAFE_SPACE 1
+#define CHARACTER_SPACE 0
 
 #define PTSIZE2INT(value) (((value) + 63) >> 6)
 
@@ -179,10 +179,12 @@ namespace atresttf
 	{
 		// creating a texture
 		atres::TextureContainer* textureContainer = new atres::TextureContainer();
-		textureContainer->texture = april::rendersys->createEmptyTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ALPHA);
+		int textureSize = atresttf::getTextureSize();
+		textureContainer->texture = april::rendersys->createEmptyTexture(textureSize, textureSize, april::AT_ALPHA);
 		this->textureContainers += textureContainer;
-		this->penX = CHARACTER_SPACE;
-		this->penY = CHARACTER_SPACE;
+		this->penX = 0;
+		this->penY = 0;
+		this->rowHeight = 0;
 		// adding all base ASCII characters right away
 		for_itert (unsigned int, code, 32, 256)
 		{
@@ -208,61 +210,63 @@ namespace atresttf
 #endif
 			return false;
 		}
-		FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER);
+		FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT);
 		if (error != 0)
 		{
 			atresttf::log("Error: Could not load glyph from " + this->fontFilename);
 			return false;
 		}
 		FT_GlyphSlot glyph = face->glyph;
-		/*
-		int size = glyph->bitmap.rows * glyph->bitmap.width;
-		unsigned char* data = new unsigned char[size];
-		memset(data, 0, size * sizeof(unsigned char));
-		int index;
-		int i;
-		for_iter (j, 0, glyph->bitmap.rows)
+		if (glyph->format != FT_GLYPH_FORMAT_BITMAP)
 		{
-			for_iterx (i, 0, glyph->bitmap.width)
+			error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
+			if (error != 0)
 			{
-				index = i + j * glyph->bitmap.width;
-				data[index] = glyph->bitmap.buffer[index];
+				atresttf::log("Error: Could not render glyph from " + this->fontFilename);
+				return false;
 			}
 		}
-		*/
 		atres::TextureContainer* textureContainer = this->textureContainers.last();
-		int maxHeight = PTSIZE2INT(face->size->metrics.height) + CHARACTER_SPACE * 2;
-		if (penX + glyph->bitmap.width + 4 > TEXTURE_SIZE)
+		// calculate some standard parameters
+		int textureSize = atresttf::getTextureSize();
+		int ascender = -PTSIZE2INT(face->size->metrics.ascender);
+		int descender = -PTSIZE2INT(face->size->metrics.descender);
+		// this makes sure that there is no vertical overlap between characters
+		int height = descender - ascender;
+		int renderOffset = height - glyph->bitmap_top;
+		int charHeight = renderOffset + glyph->bitmap.rows + SAFE_SPACE * 2;
+		int charWidth = glyph->bitmap.width + SAFE_SPACE * 2;
+		this->rowHeight = hmax(this->rowHeight, charHeight);
+		// if character bitmap width exceeds space, go into next line
+		if (this->penX + glyph->bitmap.width + CHARACTER_SPACE > textureSize)
 		{
-			penX = CHARACTER_SPACE;
-			penY += maxHeight;
+			this->penX = 0;
+			this->penY += this->rowHeight + CHARACTER_SPACE * 2;
+			this->rowHeight = charHeight;
 		}
-		if (penY + maxHeight > TEXTURE_SIZE)
+		if (this->penY + this->rowHeight + CHARACTER_SPACE > textureSize)
 		{
-			textureContainer = new atres::TextureContainer();
-			textureContainer->texture = april::rendersys->createEmptyTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::AT_ALPHA);
-			this->textureContainers += textureContainer;
-			this->penX = CHARACTER_SPACE;
-			this->penY = CHARACTER_SPACE;
 #ifdef _DEBUG
 			atresttf::log(hsprintf("Font '%s': character 0x%X does not fit, creating new texture", this->name.c_str(), charcode));
 #endif
+			textureContainer = new atres::TextureContainer();
+			textureContainer->texture = april::rendersys->createEmptyTexture(textureSize, textureSize, april::AT_ALPHA);
+			this->textureContainers += textureContainer;
+			this->penX = 0;
+			this->penY = 0;
+			// if the character's height is higher than the texture, this will obviously not work too well
 		}
-		int ascender = PTSIZE2INT(face->size->metrics.ascender);
-		int descender = PTSIZE2INT(face->size->metrics.descender);
-		int x = penX;
-		int y = penY + ascender - descender - glyph->bitmap_top;
-		textureContainer->texture->blit(x, y, glyph->bitmap.buffer, glyph->bitmap.width,
-			glyph->bitmap.rows, 1, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
+		textureContainer->texture->blit(this->penX + SAFE_SPACE, this->penY + renderOffset + SAFE_SPACE, glyph->bitmap.buffer,
+			glyph->bitmap.width, glyph->bitmap.rows, 1, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
 		atres::CharacterDefinition c;
-		c.x = (float)x;
-		c.y = (float)(penY - descender);
-		c.w = (float)glyph->bitmap.width;
-		c.h = (float)(ascender - descender);
+		c.x = (float)this->penX;
+		c.y = (float)(this->penY + descender);
+		c.w = (float)charWidth;
+		c.h = (float)(charHeight - descender);
 		c.bx = (float)PTSIZE2INT(glyph->metrics.horiBearingX);
 		c.aw = (float)PTSIZE2INT(glyph->advance.x);
 		this->characters[charcode] = c;
-		penX += glyph->bitmap.width + CHARACTER_SPACE * 2;
+		this->penX += charWidth + CHARACTER_SPACE * 2;
 		textureContainer->characters += charcode;
 		return true;
 	}
