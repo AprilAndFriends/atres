@@ -39,8 +39,12 @@ namespace atres
     
     void destroy()
     {
-		delete atres::renderer;
-		atres::renderer = NULL;
+		if (atres::renderer != NULL)
+		{
+			atres::log("destroying atres");
+			delete atres::renderer;
+			atres::renderer = NULL;
+		}
     }
 
 	void setLogFunction(void (*fnptr)(chstr))
