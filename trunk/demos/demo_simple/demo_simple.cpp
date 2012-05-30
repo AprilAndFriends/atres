@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.61
+/// @version 2.66
 /// 
 /// @section LICENSE
 /// 
@@ -18,9 +18,11 @@
 //#define _ATRESTTF
 
 #include <april/april.h>
-#include <april/main.h>
-#include <april/RenderSystem.h>
 #include <april/Keys.h>
+#include <april/main.h>
+#include <april/Platform.h>
+#include <april/RenderSystem.h>
+#include <april/TextureManager.h>
 #include <april/Window.h>
 #include <aprilui/aprilui.h>
 #include <aprilui/Dataset.h>
@@ -74,31 +76,28 @@ bool render(float k)
 	return true;
 }
 
-void onMouseDown(float x, float y, int button)
+void onMouseDown(int button)
 {
 	aprilui::updateCursorPosition();
-	gvec2 cursorPosition = aprilui::getCursorPosition();
-	aprilui::onMouseDown(cursorPosition.x, cursorPosition.y, button);
-	position = cursorPosition + offset;// * viewport.getSize() / drawRect.getSize();
+	aprilui::onMouseDown(button);
+	position = aprilui::getCursorPosition() + offset;
 	clicked = true;
 }
 
-void onMouseUp(float x, float y, int button)
+void onMouseUp(int button)
 {
 	aprilui::updateCursorPosition();
-	gvec2 cursorPosition = aprilui::getCursorPosition();
-	aprilui::onMouseUp(cursorPosition.x, cursorPosition.y, button);
+	aprilui::onMouseUp(button);
 	clicked = false;
 }
 
-void onMouseMove(float x, float y)
+void onMouseMove()
 {
 	aprilui::updateCursorPosition();
-	gvec2 cursorPosition = aprilui::getCursorPosition();
-	aprilui::onMouseMove(cursorPosition.x, cursorPosition.y);
+	aprilui::onMouseMove();
 	if (clicked)
 	{
-		offset = (position - cursorPosition);// * drawRect.getSize() / viewport.getSize();
+		offset = (position - aprilui::getCursorPosition());
 	}
 }
 
@@ -109,13 +108,16 @@ void onKeyDown(unsigned int keycode)
 
 void onKeyUp(unsigned int keycode)
 {
-	if (keycode == april::AK_BACK)
+	switch (keycode)
 	{
+	case april::AK_BACK:
 		atres::renderer->setBorderColor(april::Color(hrand(256), hrand(256), hrand(256)));
-	}
-	if (keycode == april::AK_SPACE)
-	{
+		break;
+	case april::AK_SPACE:
 		atres::renderer->setBorderOffset(hrandf(1.0f, 5.0f));
+		break;
+	default:
+		break;
 	}
 	aprilui::onKeyUp(keycode);
 }
@@ -173,11 +175,14 @@ void april_init(const harray<hstr>& args)
 #endif
 	try
 	{
+#ifdef _ANDROID
+		viewport.setSize(april::getDisplayResolution());
+#endif
 		april::init();
 		april::createRenderSystem("");
 		april::createRenderTarget((int)viewport.w, (int)viewport.h, false, "demo_simple");
 		april::window->setUpdateCallback(render);
-		april::window->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
+		april::window->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove, NULL);
 		april::window->setKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
 		atres::init();
 #ifdef _ATRESTTF
@@ -186,7 +191,7 @@ void april_init(const harray<hstr>& args)
 #ifndef _ATRESTTF
 		atres::renderer->registerFontResource(new atres::FontResourceBitmap(RESOURCE_PATH "arial.font"));
 #else
-		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("", "Arial", 32, 1.0f));
+		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("arial.ttf", "Arial", 32, 1.0f)); // invokes the installed system Arial font
 #endif
 		atres::renderer->setShadowColor(APRIL_COLOR_RED);
 		atres::renderer->setBorderColor(APRIL_COLOR_AQUA);
@@ -202,10 +207,6 @@ void april_init(const harray<hstr>& args)
 		label->setText("This is a vertical test.\nIt really is. Really.");
 		root = dataset->getObject("root");
 		specialText = dataset->getObject<aprilui::Label*>("test_5");
-#ifdef _ANDROID
-		aprilui::Object* editbox = dataset->getObject("editbox");
-		editbox->setSize(editbox->getSize() * drawRect.getSize() / viewport.getSize());
-#endif
 	}
 	catch (hltypes::exception e)
 	{

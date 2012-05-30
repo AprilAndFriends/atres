@@ -120,7 +120,7 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>-lhltypes;-lgtypes;-lhlxml;-ltinyxml;-lapril;-latres;-laprilui;-ljpeg;-lpng;-lzip;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lhltypes;-lgtypes;-lhlxml;-ltinyxml;-lapril;-latres;-latresttf;-laprilui;-ljpeg;-lpng;-lzip;-lfreetype;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\lib\android;$(SolutionDir)bin\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -186,7 +186,7 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>-lhltypes;-lgtypes;-lhlxml;-ltinyxml;-lapril;-latres;-laprilui;-ljpeg;-lpng;-lzip;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lhltypes;-lgtypes;-lhlxml;-ltinyxml;-lapril;-latres;-latresttf;-laprilui;-ljpeg;-lpng;-lzip;-lfreetype;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\lib\android;$(SolutionDir)bin\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>

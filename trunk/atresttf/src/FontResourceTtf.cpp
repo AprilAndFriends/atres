@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.51
 /// 
 /// @section LICENSE
 /// 
@@ -177,7 +177,7 @@ namespace atresttf
 
 	void FontResourceTtf::_loadBasicCharacters()
 	{
-		// creating a texture
+		// creating an initial texture and texture container
 		atres::TextureContainer* textureContainer = new atres::TextureContainer();
 		int textureSize = atresttf::getTextureSize();
 		textureContainer->texture = april::rendersys->createEmptyTexture(textureSize, textureSize, april::AT_ALPHA);
@@ -186,7 +186,7 @@ namespace atresttf
 		this->penY = 0;
 		this->rowHeight = 0;
 		// adding all base ASCII characters right away
-		for_itert (unsigned int, code, 32, 256)
+		for_itert (unsigned int, code, 32, 128)
 		{
 			this->_addCharacterBitmap(code, true);
 		}
