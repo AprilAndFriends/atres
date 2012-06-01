@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.6
+/// @version 2.67
 /// 
 /// @section LICENSE
 /// 
@@ -183,33 +183,33 @@ namespace atres
 	
 	RenderRectangle FontResource::makeRenderRectangle(const grect& rect, grect area, unsigned int code)
 	{
-		//rect.set(0, 0, 100000, 100000);
 		RenderRectangle result;
-		float scaledHeight = this->getHeight();
-		CharacterDefinition chr = this->characters[code];
-		// vertical cutoff of destination rectangle
-		float ratioTop = (area.y < rect.y ? (area.y + area.h - rect.y) / scaledHeight : 1.0f);
-		float ratioBottom = (rect.y + rect.h < area.y + area.h ? (rect.y + rect.h - area.y) / scaledHeight : 1.0f);
-		// destination rectangle
-		result.dest.x = area.x;
-		result.dest.y = area.y + scaledHeight * (1.0f - ratioTop);
-		result.dest.w = area.w;
-		result.dest.h = chr.h * scaledHeight / this->height * (ratioTop + ratioBottom - 1.0f);
-		if (rect.intersects(result.dest)) // if destination rectangle inside drawing area
+		result.dest = area;
+		// if destination rectangle not entirely inside drawing area
+		if (rect.intersects(result.dest))
 		{
-			// horizontal cutoff of destination rectangle
-			float ratioLeft = (result.dest.x < rect.x ? (result.dest.x + result.dest.w - rect.x) / result.dest.w : 1.0f);
-			float ratioRight = (rect.x + rect.w < result.dest.x + result.dest.w ? (rect.x + rect.w - result.dest.x) / result.dest.w : 1.0f);
-			result.dest.x = result.dest.x + result.dest.w * (1.0f - ratioLeft);
-			result.dest.w = result.dest.w * (ratioLeft + ratioRight - 1.0f);
-			// source rectangle
-			april::Texture* texture = this->getTexture(code);
-			float tiw = 1.0f / texture->getWidth();
-			float tih = 1.0f / texture->getHeight();
-			result.src.x = (chr.x + chr.w * (1.0f - ratioLeft)) * tiw;
-			result.src.y = (chr.y + chr.h * (1.0f - ratioTop)) * tih;
-			result.src.w = (chr.w * (ratioLeft + ratioRight - 1.0f)) * tiw;
-			result.src.h = (chr.h * (ratioTop + ratioBottom - 1.0f)) * tih;
+			static gvec2 fullSize(1.0f, 1.0f);
+			static gvec2 leftTop;
+			static gvec2 rightBottom;
+			static gvec2 textureInvertedSize;
+			static CharacterDefinition& chr = CharacterDefinition();
+			static grect charRect;
+			static april::Texture* texture;
+			texture = this->getTexture(code);
+			textureInvertedSize.set(1.0f / texture->getWidth(), 1.0f / texture->getHeight());
+			chr = this->characters[code];
+			charRect.set(chr.x, chr.y, chr.w, chr.h);
+			// vertical/horizontal cutoff of destination rectangle (using left/right/top/bottom semantics for consistency)
+			leftTop.x = (area.left() < rect.left() ? (area.right() - rect.left()) / area.w : fullSize.x);
+			leftTop.y = (area.top() < rect.top() ? (area.bottom() - rect.top()) / area.h : fullSize.y);
+			rightBottom.x = (rect.right() < area.right() ? (rect.right() - area.left()) / area.w : fullSize.x);
+			rightBottom.y = (rect.bottom() < area.bottom() ? (rect.bottom() - area.top()) / area.h : fullSize.y);
+			// apply cutoff on destination
+			result.dest.setPosition(area.getPosition() + area.getSize() * (fullSize - leftTop));
+			result.dest.setSize(area.getSize() * (leftTop + rightBottom - fullSize));
+			// apply cutoff on source
+			result.src.setPosition((charRect.getPosition() + charRect.getSize() * (fullSize - leftTop)) * textureInvertedSize);
+			result.src.setSize((charRect.getSize() * (leftTop + rightBottom - fullSize)) * textureInvertedSize);
 		}
 		return result;
 	}

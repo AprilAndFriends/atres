@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.66
+/// @version 2.67
 /// 
 /// @section LICENSE
 /// 
@@ -952,7 +952,7 @@ namespace atres
 						area.x += hmax(0.0f, width + this->_character->bx * this->_scale);
 						area.y += (this->_lineHeight - this->_height) * 0.5f;
 						area.w = this->_character->w * this->_scale;
-						area.h = this->_height;
+						area.h = this->_character->h * this->_scale;
 						this->_renderRect = this->_fontResource->makeRenderRectangle(rect, area, this->_code);
 						this->_textSequence.addRenderRectangle(this->_renderRect);
 						destination = this->_renderRect.dest;
