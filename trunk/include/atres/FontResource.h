@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.6
+/// @version 2.67
 /// 
 /// @section LICENSE
 /// 
@@ -59,10 +59,11 @@ namespace atres
 		bool loaded;
 		hmap<unsigned int, CharacterDefinition> characters;
 		harray<TextureContainer*> textureContainers;
-
+		
 		bool _readBasicParameter(chstr line);
 		
 	};
+
 }
 
 #endif
