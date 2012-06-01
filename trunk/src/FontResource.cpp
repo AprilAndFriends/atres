@@ -192,7 +192,8 @@ namespace atres
 			static gvec2 leftTop;
 			static gvec2 rightBottom;
 			static gvec2 textureInvertedSize;
-			static CharacterDefinition& chr = CharacterDefinition();
+			static CharacterDefinition _chr; // this is because of the llvm compiler, need's to have something to reference initially.
+			static CharacterDefinition& chr = _chr;
 			static grect charRect;
 			static april::Texture* texture;
 			texture = this->getTexture(code);
