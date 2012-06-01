@@ -207,7 +207,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0432;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "atres" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -339,7 +339,7 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = atres;
-				SDKROOT = macosx10.4;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -359,7 +359,7 @@
 					"${SRCROOT}/include/atres",
 				);
 				PRODUCT_NAME = atres;
-				SDKROOT = macosx10.4;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -379,7 +379,7 @@
 					"${SRCROOT}/include/atres",
 				);
 				PRODUCT_NAME = atres;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 			};
 			name = "App Store";
 		};
@@ -425,7 +425,7 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = atres;
-				SDKROOT = macosx10.4;
+				SDKROOT = macosx;
 			};
 			name = "Debug-LLVM";
 		};
@@ -472,7 +472,7 @@
 					"${SRCROOT}/include/atres",
 				);
 				PRODUCT_NAME = atres;
-				SDKROOT = macosx10.4;
+				SDKROOT = macosx;
 			};
 			name = "Release-LLVM";
 		};
