@@ -1054,7 +1054,7 @@ namespace atres
 			return;
 		}
 		april::rendersys->setTexture(sequence.texture);
-		april::rendersys->setColorMode(april::ALPHA_MAP);
+		april::rendersys->setTextureColorMode(april::ALPHA_MAP);
 		if (color == APRIL_COLOR_WHITE)
 		{
 			april::rendersys->render(april::TriangleList, &sequence.vertexes[0], sequence.vertexes.size());
@@ -1063,7 +1063,7 @@ namespace atres
 		{
 			april::rendersys->render(april::TriangleList, &sequence.vertexes[0], sequence.vertexes.size(), color);
 		}
-		april::rendersys->setColorMode(april::NORMAL);
+		april::rendersys->setTextureColorMode(april::NORMAL);
 	}
 
 	bool Renderer::_checkTextures()
