@@ -99,7 +99,7 @@ namespace atresttf
 		LOGFONT logFont;
 		logFont.lfFaceName[0] = NULL;
 		logFont.lfCharSet = DEFAULT_CHARSET;
-		HWND hWnd = (HWND)april::window->getIDFromBackend();
+		HWND hWnd = (HWND)april::window->getBackendId();
 		HDC hDC = GetDC(hWnd);
 		EnumFontFamiliesEx(hDC, &logFont, (FONTENUMPROC)&_fontEnumCallback, 0, 0);
 		ReleaseDC(hWnd, hDC);
