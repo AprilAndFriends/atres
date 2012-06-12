@@ -180,7 +180,7 @@ namespace atresttf
 		// creating an initial texture and texture container
 		atres::TextureContainer* textureContainer = new atres::TextureContainer();
 		int textureSize = atresttf::getTextureSize();
-		textureContainer->texture = april::rendersys->createEmptyTexture(textureSize, textureSize, april::Texture::FORMAT_ALPHA);
+		textureContainer->texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ALPHA);
 		this->textureContainers += textureContainer;
 		this->penX = 0;
 		this->penY = 0;
@@ -250,7 +250,7 @@ namespace atresttf
 			atresttf::log(hsprintf("Font '%s': character 0x%X does not fit, creating new texture", this->name.c_str(), charcode));
 #endif
 			textureContainer = new atres::TextureContainer();
-			textureContainer->texture = april::rendersys->createEmptyTexture(textureSize, textureSize, april::Texture::FORMAT_ALPHA);
+			textureContainer->texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ALPHA);
 			this->textureContainers += textureContainer;
 			this->penX = 0;
 			this->penY = 0;
