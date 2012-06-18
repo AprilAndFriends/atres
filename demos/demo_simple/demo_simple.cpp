@@ -22,7 +22,6 @@
 #include <april/main.h>
 #include <april/Platform.h>
 #include <april/RenderSystem.h>
-#include <april/TextureManager.h>
 #include <april/Window.h>
 #include <aprilui/aprilui.h>
 #include <aprilui/Dataset.h>
@@ -67,10 +66,10 @@ bool render(float k)
 	april::rendersys->clear();
 	april::rendersys->setOrthoProjection(drawRect);
 	aprilui::updateCursorPosition();
-	april::rendersys->drawColoredQuad(drawRect, april::Color(128, 128, 0));
+	april::rendersys->drawFilledRect(drawRect, april::Color(128, 128, 0));
 	root->update(k);
 	root->draw();
-	april::rendersys->drawColoredQuad(textArea, april::Color(0, 0, 0, 128));
+	april::rendersys->drawFilledRect(textArea, april::Color(0, 0, 0, 128));
 	atres::renderer->drawText(textArea, "[b]This is a vertical test.\nIt really is. Really.",
 		atres::CENTER, atres::CENTER, APRIL_COLOR_WHITE, offset);
 	return true;
@@ -178,9 +177,9 @@ void april_init(const harray<hstr>& args)
 #ifdef _ANDROID
 		viewport.setSize(april::getDisplayResolution());
 #endif
-		april::init();
-		april::createRenderSystem("");
-		april::createRenderTarget((int)viewport.w, (int)viewport.h, false, "demo_simple");
+		april::init(april::RS_DEFAULT, april::WS_DEFAULT);
+		april::createRenderSystem();
+		april::createWindow((int)viewport.w, (int)viewport.h, false, "demo_simple");
 		april::window->setUpdateCallback(render);
 		april::window->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove, NULL);
 		april::window->setKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
