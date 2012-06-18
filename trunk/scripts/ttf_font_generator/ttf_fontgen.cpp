@@ -249,9 +249,9 @@ void april_init(const harray<hstr>& argv)
 		hdir::chdir(get_basedir(cfgname));
 	}
 	// init systems
-	april::init();
-	april::createRenderSystem("");
-	april::createRenderTarget(100, 100, false, "TTF Font Generator");
+	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
+	april::createRenderSystem();
+	april::createWindow(100, 100, false, "TTF Font Generator");
 	april::window->setUpdateCallback(update);
 	atres::init();
 	atresttf::init();

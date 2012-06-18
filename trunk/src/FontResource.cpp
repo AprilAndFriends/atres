@@ -192,14 +192,13 @@ namespace atres
 			static gvec2 leftTop;
 			static gvec2 rightBottom;
 			static gvec2 textureInvertedSize;
-			static CharacterDefinition _chr; // this is because of the llvm compiler, need's to have something to reference initially.
-			static CharacterDefinition& chr = _chr;
+			static CharacterDefinition* chr = NULL;
 			static grect charRect;
 			static april::Texture* texture;
 			texture = this->getTexture(code);
 			textureInvertedSize.set(1.0f / texture->getWidth(), 1.0f / texture->getHeight());
-			chr = this->characters[code];
-			charRect.set(chr.x, chr.y, chr.w, chr.h);
+			chr = &this->characters[code];
+			charRect.set(chr->x, chr->y, chr->w, chr->h);
 			// vertical/horizontal cutoff of destination rectangle (using left/right/top/bottom semantics for consistency)
 			leftTop.x = (area.left() < rect.left() ? (area.right() - rect.left()) / area.w : fullSize.x);
 			leftTop.y = (area.top() < rect.top() ? (area.bottom() - rect.top()) / area.h : fullSize.y);
