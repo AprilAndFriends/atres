@@ -126,7 +126,7 @@ namespace atres
 		FormatTag();
 	};
 
-	struct CacheKeySequence
+	struct CacheEntryText
 	{
 		hstr text;
 		hstr fontName;
@@ -135,20 +135,24 @@ namespace atres
 		Alignment vertical;
 		april::Color color;
 		gvec2 offset;
+		RenderText value;
 
-		CacheKeySequence();
+		CacheEntryText();
 		void set(hstr text, hstr fontName, grect rect, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset);
-		bool operator==(const CacheKeySequence& other) const;
+		bool operator==(const CacheEntryText& other) const;
+		unsigned int hash() const;
 	};
 	
-	struct CacheKeyLine
+	struct CacheEntryLine
 	{
 		hstr text;
 		hstr fontName;
 		gvec2 size;
-
+		RenderLine value;
+		
 		void set(hstr text, hstr fontName, gvec2 size);
-		bool operator==(const CacheKeyLine& other) const;
+		bool operator==(const CacheEntryLine& other) const;
+		unsigned int hash() const;
 	};
 	
 	struct atresExport TextureContainer
