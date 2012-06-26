@@ -70,9 +70,9 @@ namespace atres
 		// misc init
 		this->_fontResource = NULL;
 		// cache
-		this->cache = new Cache<CacheKeySequence, RenderText>();
-		this->cacheUnformatted = new Cache<CacheKeySequence, RenderText>();
-		this->cacheLines = new Cache<CacheKeyLine, RenderLine>();
+		this->cache = new Cache<CacheEntryText>();
+		this->cacheUnformatted = new Cache<CacheEntryText>();
+		this->cacheLines = new Cache<CacheEntryLine>();
 	}
 
 	Renderer::~Renderer()
@@ -1068,7 +1068,7 @@ namespace atres
 
 	bool Renderer::_checkTextures()
 	{
-		foreach (RenderSequence, it, this->_currentRenderText.textSequences)
+		foreach (RenderSequence, it, this->_cacheEntryText.value.textSequences)
 		{
 			if (!(*it).texture->isLoaded())
 			{
@@ -1076,7 +1076,7 @@ namespace atres
 				return false;
 			}
 		}
-		foreach (RenderSequence, it, this->_currentRenderText.shadowSequences)
+		foreach (RenderSequence, it, this->_cacheEntryText.value.shadowSequences)
 		{
 			if (!(*it).texture->isLoaded())
 			{
@@ -1084,7 +1084,7 @@ namespace atres
 				return false;
 			}
 		}
-		foreach (RenderSequence, it, this->_currentRenderText.borderSequences)
+		foreach (RenderSequence, it, this->_cacheEntryText.value.borderSequences)
 		{
 			if (!(*it).texture->isLoaded())
 			{
@@ -1098,8 +1098,8 @@ namespace atres
 	void Renderer::drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
 		gvec2 offset)
 	{
-		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
-		bool found = this->cache->get(this->_cacheKeySequence, &this->_currentRenderText);
+		this->_cacheEntryText.set(text, fontName, rect, horizontal, vertical, color, offset);
+		bool found = this->cache->get(this->_cacheEntryText);
 		if (found)
 		{
 			found = this->_checkTextures();
@@ -1116,18 +1116,18 @@ namespace atres
 			tag.data = fontName;
 			tags.push_front(tag);
 			this->_lines = this->createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
-			this->_currentRenderText = this->createRenderText(rect, this->_lines, tags);
-			this->cache->set(this->_cacheKeySequence, this->_currentRenderText);
+			this->_cacheEntryText.value = this->createRenderText(rect, this->_lines, tags);
+			this->cache->add(this->_cacheEntryText);
 			this->cache->update();
 		}
-		this->_drawRenderText(this->_currentRenderText, color);
+		this->_drawRenderText(this->_cacheEntryText.value, color);
 	}
 
 	void Renderer::drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
 		april::Color color, gvec2 offset)
 	{
-		this->_cacheKeySequence.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
-		bool found = this->cacheUnformatted->get(this->_cacheKeySequence, &this->_currentRenderText);
+		this->_cacheEntryText.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
+		bool found = this->cacheUnformatted->get(this->_cacheEntryText);
 		if (found)
 		{
 			found = this->_checkTextures();
@@ -1143,11 +1143,11 @@ namespace atres
 			tag.data = fontName;
 			tags.push_front(tag);
 			this->_lines = this->createRenderLines(rect, text, tags, horizontal, vertical, offset);
-			this->_currentRenderText = this->createRenderText(rect, this->_lines, tags);
-			this->cacheUnformatted->set(this->_cacheKeySequence, this->_currentRenderText);
+			this->_cacheEntryText.value = this->createRenderText(rect, this->_lines, tags);
+			this->cacheUnformatted->add(this->_cacheEntryText);
 			this->cacheUnformatted->update();
 		}
-		this->_drawRenderText(this->_currentRenderText, color);
+		this->_drawRenderText(this->_cacheEntryText.value, color);
 	}
 
 /******* DRAW TEXT OVERLOADS *******************************************/
@@ -1333,14 +1333,14 @@ namespace atres
 	
 	RenderLine Renderer::getFittingLine(chstr fontName, grect rect, chstr text, harray<FormatTag> tags)
 	{
-		this->_cacheKeyLine.set(text, fontName, rect.getSize());
-		if (!this->cacheLines->get(this->_cacheKeyLine, &this->_currentLine))
+		this->_cacheEntryLine.set(text, fontName, rect.getSize());
+		if (!this->cacheLines->get(this->_cacheEntryLine))
 		{
-			this->_currentLine = this->_calculateFittingLine(rect, text, tags);
-			this->cacheLines->set(this->_cacheKeyLine, this->_currentLine);
+			this->_cacheEntryLine.value = this->_calculateFittingLine(rect, text, tags);
+			this->cacheLines->add(this->_cacheEntryLine);
 			this->cacheLines->update();
 		}
-		return this->_currentLine;
+		return this->_cacheEntryLine.value;
 	}
 
 	RenderLine Renderer::_calculateFittingLine(grect rect, chstr text, harray<FormatTag> tags)

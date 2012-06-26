@@ -48,44 +48,87 @@ namespace atres
 	{
 	}
 
-	CacheKeySequence::CacheKeySequence() : horizontal(CENTER_WRAPPED), vertical(CENTER)
+	CacheEntryText::CacheEntryText() : horizontal(CENTER_WRAPPED), vertical(CENTER)
 	{
 	}
 
-	void CacheKeySequence::set(hstr text, hstr fontName, grect rect, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
+	void CacheEntryText::set(hstr text, hstr fontName, grect rect, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
 	{
 		this->text = text;
 		this->fontName = fontName;
 		this->rect = rect;
 		this->horizontal = horizontal;
 		this->vertical = vertical;
-		this->color = color;
+		this->color = april::Color(color, 255);
 		this->offset = offset;
 	}
 
-	bool CacheKeySequence::operator==(const CacheKeySequence& other) const
+	bool CacheEntryText::operator==(const CacheEntryText& other) const
 	{
 		return (this->text == other.text &&
 			this->fontName == other.fontName &&
 			this->rect == other.rect &&
 			this->horizontal == other.horizontal &&
 			this->vertical == other.vertical &&
-			this->color.hex(true) == other.color.hex(true) && // ignores alpha value!
+			this->color.r == other.color.r &&
+			this->color.g == other.color.g &&
+			this->color.b == other.color.b &&
 			this->offset == other.offset);
 	}
+
+	unsigned int CacheEntryText::hash() const
+	{
+		unsigned int result = 0xFFFFFFFF;
+		for_iter (i, 0, this->text.size())
+		{
+			result ^= this->text[i] << ((i % 4) * 8);
+		}
+		for_iter (i, 0, this->fontName.size())
+		{
+			result ^= this->fontName[i] << ((i % 4) * 8);
+		}
+		result ^= *((unsigned int*)(&this->rect.x));
+		result ^= *((unsigned int*)(&this->rect.y));
+		result ^= *((unsigned int*)(&this->rect.w));
+		result ^= *((unsigned int*)(&this->rect.h));
+		result ^= (((unsigned int)(this->vertical)) & 0xFFFF);
+		result ^= (((unsigned int)(this->horizontal) << 16) & 0xFFFF);
+		result ^= (this->color.r << 8);
+		result ^= (this->color.g << 16);
+		result ^= (this->color.b << 24);
+		result ^= *((unsigned int*)(&this->offset.x));
+		result ^= *((unsigned int*)(&this->offset.y));
+		return result;
+	}
 	
-	void CacheKeyLine::set(hstr text, hstr fontName, gvec2 size)
+	void CacheEntryLine::set(hstr text, hstr fontName, gvec2 size)
 	{
 		this->text = text;
 		this->fontName = fontName;
 		this->size = size;
 	}
 
-	bool CacheKeyLine::operator==(const CacheKeyLine& other) const
+	bool CacheEntryLine::operator==(const CacheEntryLine& other) const
 	{
 		return (this->text == other.text &&
 			this->fontName == other.fontName &&
 			this->size == other.size);
+	}
+	
+	unsigned int CacheEntryLine::hash() const
+	{
+		unsigned int result = 0xFFFFFFFF;
+		for_iter (i, 0, this->text.size())
+		{
+			result ^= this->text[i] << ((i % 4) * 8);
+		}
+		for_iter (i, 0, this->fontName.size())
+		{
+			result ^= this->fontName[i] << ((i % 4) * 8);
+		}
+		result ^= *((unsigned int*)(&this->size.x));
+		result ^= *((unsigned int*)(&this->size.y));
+		return result;
 	}
 	
 	TextureContainer::TextureContainer() : texture(NULL)

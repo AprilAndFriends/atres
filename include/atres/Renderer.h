@@ -31,7 +31,7 @@
 namespace atres
 {
 	class FontResource;
-	template <class K, class V>
+	template <class T>
 	class Cache;
 
 	class atresExport Renderer
@@ -121,9 +121,9 @@ namespace atres
 		void _drawRenderSequence(RenderSequence& sequence, april::Color);
 
 	protected:
-		Cache<CacheKeySequence, RenderText>* cache;
-		Cache<CacheKeySequence, RenderText>* cacheUnformatted;
-		Cache<CacheKeyLine, RenderLine>* cacheLines;
+		Cache<CacheEntryText>* cache;
+		Cache<CacheEntryText>* cacheUnformatted;
+		Cache<CacheEntryLine>* cacheLines;
 
 	private:
 		harray<FormatTag> _tags;
@@ -161,10 +161,8 @@ namespace atres
 		unsigned int _code;
 		bool _colorChanged;
 
-		CacheKeySequence _cacheKeySequence;
-		CacheKeyLine _cacheKeyLine;
-		RenderText _currentRenderText;
-		RenderLine _currentLine;
+		CacheEntryText _cacheEntryText;
+		CacheEntryLine _cacheEntryLine;
 
 	};
 	
