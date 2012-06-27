@@ -14,6 +14,7 @@
 #ifndef ATRES_CACHE_H
 #define ATRES_CACHE_H
 
+#include <hltypes/harray.h>
 #include <hltypes/hlist.h>
 #include <hltypes/hmap.h>
 
@@ -28,6 +29,8 @@ namespace atres
 	template <class T>
 	class Cache
 	{
+		typedef typename std::vector<T>::iterator iterator_t;
+		typedef typename std::list<T>::iterator list_iterator_t;
 	public:
 		Cache()
 		{
@@ -57,10 +60,12 @@ namespace atres
 
 		bool get(T& entry)
 		{
+			iterator_t it;
 			unsigned int hash = entry.hash();
 			if (this->data.has_key(hash))
 			{
-				foreach (T, it, this->data[hash])
+				harray<T>& array = this->data[hash];
+				for (it = array.begin(); it != array.end(); it++)
 				{
 					if (entry == (*it))
 					{
@@ -107,7 +112,7 @@ namespace atres
 				if (overSize > 0)
 				{
 					hlist<T> removed = this->entries(0, overSize);
-					foreach_l (T, it, removed)
+					for (list_iterator_t it = removed.begin(); it != removed.end(); it++)
 					{
 						this->removeEntry(*it);
 					}
