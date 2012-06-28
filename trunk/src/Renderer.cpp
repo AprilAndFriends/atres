@@ -1013,7 +1013,6 @@ namespace atres
 						area.y += (this->_lineHeight - this->_height) * 0.5f;
 						area.w = this->_character->w * this->_scale;
 						area.h = this->_character->h * this->_scale;
-						area.y += area.h * (1.0f - this->_scale) * 0.5f;
 						this->_renderRect = this->_fontResource->makeRenderRectangle(rect, area, this->_code);
 						this->_textSequence.addRenderRectangle(this->_renderRect);
 						destination = this->_renderRect.dest;
