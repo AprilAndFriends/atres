@@ -33,7 +33,7 @@ namespace atres
 		vert[3].x = rect.dest.right();	vert[3].y = rect.dest.top();	vert[3].u = rect.src.right();	vert[3].v = rect.src.top();
 		vert[4].x = rect.dest.right();	vert[4].y = rect.dest.bottom();	vert[4].u = rect.src.right();	vert[4].v = rect.src.bottom();
 		vert[5].x = rect.dest.left();	vert[5].y = rect.dest.bottom();	vert[5].u = rect.src.left();	vert[5].v = rect.src.bottom();
-		this->vertexes.add(vert, 6);
+		this->vertices.add(vert, 6);
 	}
 	
 	RenderWord::RenderWord() : start(0), spaces(0), fullWidth(0.0f)
