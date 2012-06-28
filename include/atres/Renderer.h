@@ -54,8 +54,9 @@ namespace atres
 		void setCacheSize(int value);
 
 		void registerFontResource(FontResource* fontResource);
-		void destroyFontResource(FontResource* resource);
-		void unregisterFontResource(FontResource* resource);
+		void destroyFontResource(FontResource* fontResource);
+		void unregisterFontResource(FontResource* fontResource);
+		void registerFontResourceAlias(chstr name, chstr alias);
 		FontResource* getFontResource(chstr name);
 		void addColor(chstr key, chstr value);
 

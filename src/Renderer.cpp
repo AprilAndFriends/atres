@@ -116,7 +116,7 @@ namespace atres
 	{
 		if (!this->fonts.has_key(name))
 		{
-			throw resource_error("Font", name, "atres");
+			throw resource_not_exists("Font", name, "atres");
 		}
 		this->defaultFont = this->fonts[name];
 		this->cache->clear();
@@ -138,27 +138,55 @@ namespace atres
 
     void Renderer::registerFontResource(FontResource* fontResource)
     {
-		atres::log(hsprintf("registering font resource %s", fontResource->getName().c_str()));
-        this->fonts[fontResource->getName()] = fontResource;
+		hstr name = fontResource->getName();
+		atres::log(hsprintf("registering font resource '%s'", name.c_str()));
+		if (this->fonts.has_key(name))
+		{
+			throw resource_already_exists("font resource", name, "atres");
+		}
+        this->fonts[name] = fontResource;
 		if (this->defaultFont == NULL)
 		{
 			this->defaultFont = fontResource;
 		}
     }
     
-	void Renderer::unregisterFontResource(FontResource* resource)
+	void Renderer::unregisterFontResource(FontResource* fontResource)
 	{
-		this->fonts.remove_key(resource->getName());
-		if (this->defaultFont == resource)
+		if (!this->fonts.has_value(fontResource))
 		{
-			this->defaultFont = NULL;
+			throw resource_not_exists("font resource", fontResource->getName(), "atres");
 		}
+		harray<hstr> keys = this->fonts.keys();
+		foreach (hstr, it, keys)
+		{
+			if (this->fonts[*it] == fontResource)
+			{
+				this->fonts.remove_key(*it);
+			}
+		}
+		if (this->defaultFont == fontResource)
+		{
+			this->defaultFont = (this->fonts.size() > 0 ? this->fonts.values().first() : NULL);
+		}
+		this->cache->clear();
 	}
 
-	void Renderer::destroyFontResource(FontResource* resource)
+    void Renderer::registerFontResourceAlias(chstr name, chstr alias)
+    {
+		if (this->fonts.has_key(alias))
+		{
+			throw resource_already_exists("font resource", alias, "atres");
+		}
+		FontResource* fontResource = this->getFontResource(name);
+		atres::log(hsprintf("registering font resource alias '%s' for '%s'", alias.c_str(), fontResource->getName().c_str()));
+        this->fonts[alias] = fontResource;
+    }
+    
+	void Renderer::destroyFontResource(FontResource* fontResource)
 	{
-		this->unregisterFontResource(resource);
-		delete resource;
+		this->unregisterFontResource(fontResource);
+		delete fontResource;
 	}
 
     FontResource* Renderer::getFontResource(chstr name)
@@ -178,7 +206,7 @@ namespace atres
 		int position = name.find(":");
 		if (position < 0)
 		{
-			throw resource_error("Font", name, "atres");
+			throw resource_not_exists("font resource", name, "atres");
 		}
 		fontResource = this->getFontResource(name(0, position));
 		position++;
@@ -258,7 +286,7 @@ namespace atres
 				{
 					start = end;
 #ifdef _DEBUG
-					atres::log(hsprintf("Warning: closing tag that was not opened (\"[/%c]\" in \"%s\")", str[start + 2], str));
+					atres::log(hsprintf("WARNING: Closing tag that was not opened ('[/%c]' in '%s')!", str[start + 2], str));
 #endif
 					continue;
 				}
@@ -532,10 +560,10 @@ namespace atres
 					this->_characters = this->_fontResource->getCharacters();
 					this->_scale = this->_fontResource->getScale();
 				}
-				catch (hltypes::_resource_error e)
+				catch (hltypes::_resource_not_exists e)
 				{
 #ifdef _DEBUG
-					atres::log(hsprintf("Warning: font \"%s\" does not exist", this->_nextTag.data.c_str()));
+					atres::log(hsprintf("WARNING: Font '%s' does not exist!", this->_nextTag.data.c_str()));
 #endif
 				}
 			}
@@ -614,10 +642,10 @@ namespace atres
 						this->_characters = this->_fontResource->getCharacters();
 						this->_scale = this->_fontResource->getScale();
 					}
-					catch (hltypes::_resource_error e)
+					catch (hltypes::_resource_not_exists e)
 					{
 #ifdef _DEBUG
-						atres::log(hsprintf("Warning: font \"%s\" does not exist", this->_nextTag.data.c_str()));
+						atres::log(hsprintf("WARNING: Font '%s' does not exist!", this->_nextTag.data.c_str()));
 #endif
 					}
 					break;
@@ -634,7 +662,7 @@ namespace atres
 #ifdef _DEBUG
 					else
 					{
-						atres::log(hsprintf("Warning: color \"%s\" does not exist", this->_hex.c_str()));
+						atres::log(hsprintf("WARNING: Color '%s' does not exist!", this->_hex.c_str()));
 					}
 #endif
 					break;
@@ -733,7 +761,7 @@ namespace atres
 #ifdef _DEBUG
 		else if (actualSize < text.size())
 		{
-			atres::log(hsprintf("Warning: Text \"%s\" has \\0 character before the actual end", text.c_str()));
+			atres::log(hsprintf("WARNING: Text '%s' has \\0 character before the actual end!", text.c_str()));
 		}
 #endif
 		harray<RenderWord> result;
@@ -1355,7 +1383,7 @@ namespace atres
 #ifdef _DEBUG
 		else if (actualSize < text.size())
 		{
-			atres::log(hsprintf("Warning: Text \"%s\" has \\0 character before the actual end", text.c_str()));
+			atres::log(hsprintf("WARNING: Text '%s' has \\0 character before the actual end!", text.c_str()));
 		}
 #endif
 		const char* str = text.c_str();
