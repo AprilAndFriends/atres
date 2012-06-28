@@ -44,7 +44,7 @@ namespace atres
 	{
 	}
 	
-	FormatTag::FormatTag() : type(ESCAPE), start(0), count(0)
+	FormatTag::FormatTag() : type(TAG_TYPE_ESCAPE), start(0), count(0)
 	{
 	}
 

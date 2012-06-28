@@ -278,7 +278,7 @@ namespace atres
 			tag.count = end - start;
 			if (tag.count == 2) // empty command
 			{
-				tag.type = ESCAPE;
+				tag.type = TAG_TYPE_ESCAPE;
 			}
 			else if (str[start + 1] == '/') // closing command
 			{
@@ -291,26 +291,29 @@ namespace atres
 					continue;
 				}
 				stack.pop_last();
-				tag.type = CLOSE;
+				tag.type = TAG_TYPE_CLOSE;
 			}
 			else // opening new tag
 			{
 				switch (str[start + 1])
 				{
-				case 'n':
-					tag.type = FORMAT_NORMAL;
-					break;
-				case 's':
-					tag.type = FORMAT_SHADOW;
-					break;
-				case 'b':
-					tag.type = FORMAT_BORDER;
+				case 'f':
+					tag.type = TAG_TYPE_FONT;
 					break;
 				case 'c':
-					tag.type = FORMAT_COLOR;
+					tag.type = TAG_TYPE_COLOR;
 					break;
-				case 'f':
-					tag.type = FORMAT_FONT;
+				case 'x':
+					tag.type = TAG_TYPE_SCALE;
+					break;
+				case 'n':
+					tag.type = TAG_TYPE_NORMAL;
+					break;
+				case 's':
+					tag.type = TAG_TYPE_SHADOW;
+					break;
+				case 'b':
+					tag.type = TAG_TYPE_BORDER;
 					break;
 				default: // command not supported, regard as normal text
 					start = end;
@@ -332,7 +335,7 @@ namespace atres
 		{
 			result += text(index, (*it).start - index);
 			index = (*it).start + (*it).count;
-			if ((*it).type != ESCAPE)
+			if ((*it).type != TAG_TYPE_ESCAPE)
 			{
 				(*it).start -= count;
 				tags += (*it);
@@ -495,6 +498,8 @@ namespace atres
 		this->_height = 0.0f;
 		this->_lineHeight = 0.0f;
 		this->_correctedHeight = 0.0f;
+		this->_fontScale = 1.0f;
+		this->_textScale = 1.0f;
 		this->_scale = 1.0f;
 	}
 
@@ -527,25 +532,29 @@ namespace atres
 	{
 		while (this->_tags.size() > 0 && index >= this->_nextTag.start)
 		{
-			if (this->_nextTag.type == CLOSE)
+			if (this->_nextTag.type == TAG_TYPE_CLOSE)
 			{
 				this->_currentTag = this->_stack.pop_last();
-				if (this->_currentTag.type == FORMAT_FONT)
+				if (this->_currentTag.type == TAG_TYPE_FONT)
 				{
 					this->_fontName = this->_currentTag.data;
 					this->_fontResource = this->getFontResource(this->_fontName);
 					this->_characters = this->_fontResource->getCharacters();
-					this->_scale = this->_fontResource->getScale();
+					this->_fontScale = this->_fontResource->getScale();
+				}
+				else if (this->_currentTag.type == TAG_TYPE_SCALE)
+				{
+					this->_textScale = this->_currentTag.data;
 				}
 			}
-			else if (this->_nextTag.type == FORMAT_FONT)
+			else if (this->_nextTag.type == TAG_TYPE_FONT)
 			{
-				this->_currentTag.type = FORMAT_FONT;
+				this->_currentTag.type = TAG_TYPE_FONT;
 				this->_currentTag.data = this->_fontName;
 				this->_stack += this->_currentTag;
 				try
 				{
-					if (this->_fontResource == NULL) // if there is no previous font, lineHeight has to be obtained as well
+					if (this->_fontResource == NULL) // if there is no previous font, the height values have to be obtained as well
 					{
 						this->_fontResource = this->getFontResource(this->_nextTag.data);
 						this->_height = this->_fontResource->getHeight();
@@ -558,7 +567,7 @@ namespace atres
 					}
 					this->_fontName = this->_nextTag.data;
 					this->_characters = this->_fontResource->getCharacters();
-					this->_scale = this->_fontResource->getScale();
+					this->_fontScale = this->_fontResource->getScale();
 				}
 				catch (hltypes::_resource_not_exists e)
 				{
@@ -567,9 +576,21 @@ namespace atres
 #endif
 				}
 			}
+			else if (this->_nextTag.type == TAG_TYPE_COLOR)
+			{
+				this->_currentTag.type = TAG_TYPE_COLOR;
+				this->_stack += this->_currentTag;
+			}
+			else if (this->_nextTag.type == TAG_TYPE_SCALE)
+			{
+				this->_currentTag.type = TAG_TYPE_SCALE;
+				this->_currentTag.data = this->_textScale;
+				this->_stack += this->_currentTag;
+				this->_textScale = this->_nextTag.data;
+			}
 			else
 			{
-				this->_currentTag.type = FORMAT_NORMAL;
+				this->_currentTag.type = TAG_TYPE_NORMAL;
 				this->_stack += this->_currentTag;
 			}
 			this->_tags.pop_first();
@@ -588,31 +609,34 @@ namespace atres
 	{
 		while (this->_tags.size() > 0 && this->_word.start + index >= this->_nextTag.start)
 		{
-			if (this->_nextTag.type == CLOSE)
+			if (this->_nextTag.type == TAG_TYPE_CLOSE)
 			{
 				this->_currentTag = this->_stack.pop_last();
 				switch (this->_currentTag.type)
 				{
-				case FORMAT_FONT:
+				case TAG_TYPE_FONT:
 					this->_fontName = this->_currentTag.data;
 					this->_fontResource = this->getFontResource(this->_fontName);
 					this->_characters = this->_fontResource->getCharacters();
-					this->_scale = this->_fontResource->getScale();
+					this->_fontScale = this->_fontResource->getScale();
 					break;
-				case FORMAT_COLOR:
+				case TAG_TYPE_COLOR:
 					this->_hex = (this->colors.has_key(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
 					{
 						this->_color.set(this->_hex);
 					}
 					break;
-				case FORMAT_NORMAL:
+				case TAG_TYPE_SCALE:
+					this->_textScale = this->_currentTag.data;
+					break;
+				case TAG_TYPE_NORMAL:
 					this->_effectMode = EFFECT_MODE_NORMAL;
 					break;
-				case FORMAT_SHADOW:
+				case TAG_TYPE_SHADOW:
 					this->_effectMode = EFFECT_MODE_SHADOW;
 					break;
-				case FORMAT_BORDER:
+				case TAG_TYPE_BORDER:
 					this->_effectMode = EFFECT_MODE_BORDER;
 					break;
 				}
@@ -621,8 +645,8 @@ namespace atres
 			{
 				switch (this->_nextTag.type)
 				{
-				case FORMAT_FONT:
-					this->_currentTag.type = FORMAT_FONT;
+				case TAG_TYPE_FONT:
+					this->_currentTag.type = TAG_TYPE_FONT;
 					this->_currentTag.data = this->_fontName;
 					this->_stack += this->_currentTag;
 					try
@@ -640,7 +664,7 @@ namespace atres
 						}
 						this->_fontName = this->_nextTag.data;
 						this->_characters = this->_fontResource->getCharacters();
-						this->_scale = this->_fontResource->getScale();
+						this->_fontScale = this->_fontResource->getScale();
 					}
 					catch (hltypes::_resource_not_exists e)
 					{
@@ -649,8 +673,8 @@ namespace atres
 #endif
 					}
 					break;
-				case FORMAT_COLOR:
-					this->_currentTag.type = FORMAT_COLOR;
+				case TAG_TYPE_COLOR:
+					this->_currentTag.type = TAG_TYPE_COLOR;
 					this->_currentTag.data = this->_color.hex();
 					this->_stack += this->_currentTag;
 					this->_hex = (this->colors.has_key(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
@@ -666,18 +690,24 @@ namespace atres
 					}
 #endif
 					break;
-				case FORMAT_NORMAL:
-					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? FORMAT_BORDER : (this->_effectMode == EFFECT_MODE_SHADOW ? FORMAT_SHADOW : FORMAT_NORMAL));
+				case TAG_TYPE_SCALE:
+					this->_currentTag.type = TAG_TYPE_SCALE;
+					this->_currentTag.data = this->_textScale;
+					this->_stack += this->_currentTag;
+					this->_textScale = this->_nextTag.data;
+					break;
+				case TAG_TYPE_NORMAL:
+					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? TAG_TYPE_BORDER : (this->_effectMode == EFFECT_MODE_SHADOW ? TAG_TYPE_SHADOW : TAG_TYPE_NORMAL));
 					this->_stack += this->_currentTag;
 					this->_effectMode = EFFECT_MODE_NORMAL;
 					break;
-				case FORMAT_SHADOW:
-					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? FORMAT_BORDER : (this->_effectMode == EFFECT_MODE_SHADOW ? FORMAT_SHADOW : FORMAT_NORMAL));
+				case TAG_TYPE_SHADOW:
+					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? TAG_TYPE_BORDER : (this->_effectMode == EFFECT_MODE_SHADOW ? TAG_TYPE_SHADOW : TAG_TYPE_NORMAL));
 					this->_stack += this->_currentTag;
 					this->_effectMode = EFFECT_MODE_SHADOW;
 					break;
-				case FORMAT_BORDER:
-					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? FORMAT_BORDER : (this->_effectMode == EFFECT_MODE_SHADOW ? FORMAT_SHADOW : FORMAT_NORMAL));
+				case TAG_TYPE_BORDER:
+					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? TAG_TYPE_BORDER : (this->_effectMode == EFFECT_MODE_SHADOW ? TAG_TYPE_SHADOW : TAG_TYPE_NORMAL));
 					this->_stack += this->_currentTag;
 					this->_effectMode = EFFECT_MODE_BORDER;
 					break;
@@ -804,6 +834,7 @@ namespace atres
 				}
 				this->_checkFormatTags(text, i);
 				this->_character = &this->_characters[code];
+				this->_scale = this->_fontScale * this->_textScale;
 				if (wordX < -this->_character->bx * this->_scale)
 				{
 					ax = (this->_character->aw - this->_character->bx) * this->_scale;
@@ -975,12 +1006,14 @@ namespace atres
 					if (this->_characters.has_key(this->_code))
 					{
 						// checking the particular character
+						this->_scale = this->_fontScale * this->_textScale;
 						this->_character = &this->_characters[this->_code];
 						area = this->_word.rect;
 						area.x += hmax(0.0f, width + this->_character->bx * this->_scale);
 						area.y += (this->_lineHeight - this->_height) * 0.5f;
 						area.w = this->_character->w * this->_scale;
 						area.h = this->_character->h * this->_scale;
+						area.y += area.h * (1.0f - this->_scale) * 0.5f;
 						this->_renderRect = this->_fontResource->makeRenderRectangle(rect, area, this->_code);
 						this->_textSequence.addRenderRectangle(this->_renderRect);
 						destination = this->_renderRect.dest;
@@ -1137,10 +1170,10 @@ namespace atres
 			harray<FormatTag> tags;
 			hstr unformattedText = this->analyzeFormatting(text, tags);
 			FormatTag tag;
-			tag.type = FORMAT_COLOR;
+			tag.type = TAG_TYPE_COLOR;
 			tag.data = color.hex();
 			tags.push_front(tag);
-			tag.type = FORMAT_FONT;
+			tag.type = TAG_TYPE_FONT;
 			tag.data = fontName;
 			tags.push_front(tag);
 			this->_lines = this->createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
@@ -1164,10 +1197,10 @@ namespace atres
 		{
 			harray<FormatTag> tags;
 			FormatTag tag;
-			tag.type = FORMAT_COLOR;
+			tag.type = TAG_TYPE_COLOR;
 			tag.data = color.hex();
 			tags.push_front(tag);
-			tag.type = FORMAT_FONT;
+			tag.type = TAG_TYPE_FONT;
 			tag.data = fontName;
 			tags.push_front(tag);
 			this->_lines = this->createRenderLines(rect, text, tags, horizontal, vertical, offset);
@@ -1343,7 +1376,7 @@ namespace atres
 	{
 		hstr unformattedText = this->analyzeFormatting(text, tags);
 		FormatTag tag;
-		tag.type = FORMAT_FONT;
+		tag.type = TAG_TYPE_FONT;
 		tag.data = fontName;
 		tags.push_front(tag);
 		return unformattedText;
@@ -1353,7 +1386,7 @@ namespace atres
 	{
 		harray<FormatTag> tags;
 		FormatTag tag;
-		tag.type = FORMAT_FONT;
+		tag.type = TAG_TYPE_FONT;
 		tag.data = fontName;
 		tags.push_front(tag);
 		return tags;
@@ -1408,6 +1441,7 @@ namespace atres
 			}
 			this->_checkFormatTags(text, i);
 			this->_character = &this->_characters[code];
+			this->_scale = this->_fontScale * this->_textScale;
 			if (lineX < -this->_character->bx * this->_scale)
 			{
 				ax = (this->_character->aw - this->_character->bx) * this->_scale;
@@ -1431,65 +1465,5 @@ namespace atres
 		result.rect.w = lineW;
 		return result;
 	}
-
-	/*
-		while (i < actualSize) // checking all words
-		{
-			start = i;
-			wordX = 0.0f;
-			wordW = 0.0f;
-			while (i < actualSize) // checking a whole word
-			{
-				code = utf8_to_uint(&str[i], &byteLength);
-				if (code == '\n')
-				{
-					break;
-				}
-				this->_checkFormatTags(text, i);
-				this->_character = &this->_characters[code];
-				if (wordX < -this->_character->bx * this->_scale)
-				{
-					ax = (this->_character->aw - this->_character->bx) * this->_scale;
-					aw = this->_character->w * this->_scale;
-				}
-				else
-				{
-					ax = this->_character->aw * this->_scale;
-					aw = (this->_character->w + this->_character->bx) * this->_scale;
-				}
-				addW = hmax(ax, aw);
-				if (wordW + addW > rect.w) // word too long for line
-				{
-					if (!checkingSpaces)
-					{
-						tooLong = true;
-					}
-					break;
-				}
-				wordW = wordX + addW;
-				wordX += ax;
-				i += byteLength;
-				if (!checkingSpaces && CHECK_UNICODE_LINE_BREAK_CHARS(code))
-				{
-					break;
-				}
-			}
-			if (i > start)
-			{
-				word.text = text(start, i - start);
-				word.rect.w = wordX;
-				word.start = start;
-				word.spaces = (checkingSpaces ? i - start : 0);
-				word.fullWidth = wordW;
-				result += word;
-			}
-			else if (tooLong) // this prevents an infinite loop if not at least one character fits in the line
-			{
-				break;
-			}
-			tooLong = false;
-			checkingSpaces = !checkingSpaces;
-		}
-	*/
 
 }
