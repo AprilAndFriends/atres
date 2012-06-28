@@ -750,30 +750,30 @@ namespace atres
 	{
 		if (this->_textSequence.texture != this->_texture || this->_colorChanged)
 		{
-			if (this->_textSequence.vertexes.size() > 0)
+			if (this->_textSequence.vertices.size() > 0)
 			{
 				this->_textSequences += this->_textSequence;
-				this->_textSequence.vertexes.clear();
+				this->_textSequence.vertices.clear();
 			}
 			this->_textSequence.texture = this->_texture;
 			this->_textSequence.color = this->_color;
 		}
 		if (this->_shadowSequence.texture != this->_texture || this->_colorChanged)
 		{
-			if (this->_shadowSequence.vertexes.size() > 0)
+			if (this->_shadowSequence.vertices.size() > 0)
 			{
 				this->_shadowSequences += this->_shadowSequence;
-				this->_shadowSequence.vertexes.clear();
+				this->_shadowSequence.vertices.clear();
 			}
 			this->_shadowSequence.texture = this->_texture;
 			this->_shadowSequence.color = this->shadowColor;
 		}
 		if (this->_borderSequence.texture != this->_texture || this->_colorChanged)
 		{
-			if (this->_borderSequence.vertexes.size() > 0)
+			if (this->_borderSequence.vertices.size() > 0)
 			{
 				this->_borderSequences += this->_borderSequence;
-				this->_borderSequence.vertexes.clear();
+				this->_borderSequence.vertices.clear();
 			}
 			this->_borderSequence.texture = this->_texture;
 			this->_borderSequence.color = this->borderColor;
@@ -1047,20 +1047,20 @@ namespace atres
 				}
 			}
 		}
-		if (this->_textSequence.vertexes.size() > 0)
+		if (this->_textSequence.vertices.size() > 0)
 		{
 			this->_textSequences += this->_textSequence;
-			this->_textSequence.vertexes.clear();
+			this->_textSequence.vertices.clear();
 		}
-		if (this->_shadowSequence.vertexes.size() > 0)
+		if (this->_shadowSequence.vertices.size() > 0)
 		{
 			this->_shadowSequences += this->_shadowSequence;
-			this->_shadowSequence.vertexes.clear();
+			this->_shadowSequence.vertices.clear();
 		}
-		if (this->_borderSequence.vertexes.size() > 0)
+		if (this->_borderSequence.vertices.size() > 0)
 		{
 			this->_borderSequences += this->_borderSequence;
-			this->_borderSequence.vertexes.clear();
+			this->_borderSequence.vertices.clear();
 		}
 		RenderText result;
 		result.textSequences = this->optimizeSequences(this->_textSequences);
@@ -1080,7 +1080,7 @@ namespace atres
 			{
 				if (current.texture == sequences[i].texture && current.color.hex(true) == sequences[i].color.hex(true))
 				{
-					current.vertexes += sequences[i].vertexes;
+					current.vertices += sequences[i].vertices;
 					sequences.remove_at(i);
 					i--;
 				}
@@ -1110,7 +1110,7 @@ namespace atres
 
 	void Renderer::_drawRenderSequence(RenderSequence& sequence, april::Color color)
 	{
-		if (sequence.vertexes.size() == 0 || sequence.texture == NULL || color.a == 0)
+		if (sequence.vertices.size() == 0 || sequence.texture == NULL || color.a == 0)
 		{
 			return;
 		}
@@ -1118,11 +1118,11 @@ namespace atres
 		april::rendersys->setTextureColorMode(april::ALPHA_MAP);
 		if (color == APRIL_COLOR_WHITE)
 		{
-			april::rendersys->render(april::TriangleList, &sequence.vertexes[0], sequence.vertexes.size());
+			april::rendersys->render(april::TriangleList, &sequence.vertices[0], sequence.vertices.size());
 		}
 		else
 		{
-			april::rendersys->render(april::TriangleList, &sequence.vertexes[0], sequence.vertexes.size(), color);
+			april::rendersys->render(april::TriangleList, &sequence.vertices[0], sequence.vertices.size(), color);
 		}
 		april::rendersys->setTextureColorMode(april::NORMAL);
 	}
