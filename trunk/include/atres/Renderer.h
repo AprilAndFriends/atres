@@ -139,6 +139,8 @@ namespace atres
 		float _height;
 		float _lineHeight;
 		float _correctedHeight;
+		float _fontScale;
+		float _textScale;
 		float _scale;
 
 		harray<RenderSequence> _textSequences;

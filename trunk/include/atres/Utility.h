@@ -50,13 +50,14 @@ namespace atres
 	
 	enum FormatTagType
 	{
-		ESCAPE,
-		FORMAT_NORMAL,
-		FORMAT_SHADOW,
-		FORMAT_BORDER,
-		FORMAT_COLOR,
-		FORMAT_FONT,
-		CLOSE
+		TAG_TYPE_ESCAPE,
+		TAG_TYPE_FONT,
+		TAG_TYPE_COLOR,
+		TAG_TYPE_SCALE,
+		TAG_TYPE_NORMAL,
+		TAG_TYPE_SHADOW,
+		TAG_TYPE_BORDER,
+		TAG_TYPE_CLOSE
 	};
 	
 	struct atresExport CharacterDefinition
