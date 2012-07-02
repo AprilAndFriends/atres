@@ -41,8 +41,8 @@ namespace atresttf
 		atres::log(message, "[atresttf] ");
 	}
 
-    void init()
-    {
+	void init()
+	{
 		atresttf::log("initializing atresttf");
 		FT_Error error = FT_Init_FreeType(&library);
 		if (error != 0)
@@ -50,9 +50,9 @@ namespace atresttf
 			atresttf::log("Error while initializing atresttf!");
 		}
 	}
-    
-    void destroy()
-    {
+	
+	void destroy()
+	{
 		atresttf::log("destroying atresttf");
 		foreach_map (atres::FontResource*, FT_Face, it, faces)
 		{
@@ -63,7 +63,7 @@ namespace atresttf
 		{
 			atresttf::log("Error while destroying atresttf!");
 		}
-    }
+	}
 
 	int getTextureSize()
 	{

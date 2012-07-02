@@ -22,8 +22,8 @@
 
 namespace atres
 {
-    atresFnExport void init();
-    atresFnExport void destroy();
+	atresFnExport void init();
+	atresFnExport void destroy();
 	atresFnExport void setLogFunction(void (*fnptr)(chstr));
 	atresFnExport void log(chstr message, chstr prefix = "[atres] ");
 

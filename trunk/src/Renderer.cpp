@@ -122,10 +122,10 @@ namespace atres
 		this->cache->clear();
 	}
 
-    bool Renderer::hasFont(chstr name)
-    {
+	bool Renderer::hasFont(chstr name)
+	{
 		return this->fonts.has_key(name);
-    }
+	}
 	
 	void Renderer::setCacheSize(int value)
 	{
@@ -136,21 +136,21 @@ namespace atres
 	
 /******* FONT **********************************************************/
 
-    void Renderer::registerFontResource(FontResource* fontResource)
-    {
+	void Renderer::registerFontResource(FontResource* fontResource)
+	{
 		hstr name = fontResource->getName();
 		atres::log(hsprintf("registering font resource '%s'", name.c_str()));
 		if (this->fonts.has_key(name))
 		{
 			throw resource_already_exists("font resource", name, "atres");
 		}
-        this->fonts[name] = fontResource;
+		this->fonts[name] = fontResource;
 		if (this->defaultFont == NULL)
 		{
 			this->defaultFont = fontResource;
 		}
-    }
-    
+	}
+	
 	void Renderer::unregisterFontResource(FontResource* fontResource)
 	{
 		if (!this->fonts.has_value(fontResource))
@@ -172,31 +172,31 @@ namespace atres
 		this->cache->clear();
 	}
 
-    void Renderer::registerFontResourceAlias(chstr name, chstr alias)
-    {
+	void Renderer::registerFontResourceAlias(chstr name, chstr alias)
+	{
 		if (this->fonts.has_key(alias))
 		{
 			throw resource_already_exists("font resource", alias, "atres");
 		}
 		FontResource* fontResource = this->getFontResource(name);
 		atres::log(hsprintf("registering font resource alias '%s' for '%s'", alias.c_str(), fontResource->getName().c_str()));
-        this->fonts[alias] = fontResource;
-    }
-    
+		this->fonts[alias] = fontResource;
+	}
+	
 	void Renderer::destroyFontResource(FontResource* fontResource)
 	{
 		this->unregisterFontResource(fontResource);
 		delete fontResource;
 	}
 
-    FontResource* Renderer::getFontResource(chstr name)
-    {
+	FontResource* Renderer::getFontResource(chstr name)
+	{
 		if (name == "" && this->defaultFont != NULL)
 		{
 			this->defaultFont->setScale(1.0f);
 			return this->defaultFont;
 		}
-        FontResource* fontResource;
+		FontResource* fontResource;
 		if (this->fonts.has_key(name))
 		{
 			fontResource = this->fonts[name];
@@ -211,8 +211,8 @@ namespace atres
 		fontResource = this->getFontResource(name(0, position));
 		position++;
 		fontResource->setScale((float)(name(position, name.size() - position)));
-        return fontResource;
-    }
+		return fontResource;
+	}
 	
 /******* MISC **********************************************************/
 

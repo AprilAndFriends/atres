@@ -31,21 +31,21 @@ namespace atres
 	}
 	void (*g_logFunction)(chstr) = atres_writelog;
 
-    void init()
-    {
+	void init()
+	{
 		atres::log("initializing atres");
 		atres::renderer = new Renderer();
-    }
-    
-    void destroy()
-    {
+	}
+	
+	void destroy()
+	{
 		if (atres::renderer != NULL)
 		{
 			atres::log("destroying atres");
 			delete atres::renderer;
 			atres::renderer = NULL;
 		}
-    }
+	}
 
 	void setLogFunction(void (*fnptr)(chstr))
 	{
