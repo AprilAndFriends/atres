@@ -21,8 +21,8 @@
 
 namespace atresttf
 {
-    atresttfFnExport void init();
-    atresttfFnExport void destroy();
+	atresttfFnExport void init();
+	atresttfFnExport void destroy();
 	atresttfFnExport int getTextureSize();
 	atresttfFnExport void setTextureSize(int value);
 	atresttfFnExport harray<hstr> getSystemFonts();
