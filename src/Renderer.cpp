@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.67
+/// @version 2.68
 /// 
 /// @section LICENSE
 /// 
@@ -124,7 +124,7 @@ namespace atres
 
 	bool Renderer::hasFont(chstr name)
 	{
-		return this->fonts.has_key(name);
+		return (name == "" && this->defaultFont != NULL || this->fonts.has_key(name));
 	}
 	
 	void Renderer::setCacheSize(int value)
