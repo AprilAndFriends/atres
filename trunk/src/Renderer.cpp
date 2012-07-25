@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.68
+/// @version 2.69
 /// 
 /// @section LICENSE
 /// 
@@ -970,8 +970,8 @@ namespace atres
 		if (this->_lines.size() > 0)
 		{
 			this->_lines.last().terminated = true; // last line is regarded as terminated with \n
-			this->_lines = this->removeOutOfBoundLines(rect, this->_lines);
 			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight, this->_correctedHeight);
+			this->_lines = this->removeOutOfBoundLines(rect, this->_lines);
 			if (this->_lines.size() > 0)
 			{
 				this->_lines = this->horizontalCorrection(rect, horizontal, this->_lines, offset.x, maxWidth);
