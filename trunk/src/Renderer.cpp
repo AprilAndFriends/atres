@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.69
+/// @version 2.7
 /// 
 /// @section LICENSE
 /// 
@@ -1115,7 +1115,14 @@ namespace atres
 			return;
 		}
 		april::rendersys->setTexture(sequence.texture);
-		april::rendersys->setTextureColorMode(april::ALPHA_MAP);
+		if (sequence.texture->getFormat() == april::Texture::FORMAT_ALPHA)
+		{
+			april::rendersys->setTextureColorMode(april::ALPHA_MAP);
+		}
+		else
+		{
+			april::rendersys->setTextureColorMode(april::NORMAL);
+		}
 		if (color == APRIL_COLOR_WHITE)
 		{
 			april::rendersys->render(april::TriangleList, &sequence.vertices[0], sequence.vertices.size());

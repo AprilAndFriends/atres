@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.51
+/// @version 2.7
 /// 
 /// @section LICENSE
 /// 
@@ -175,12 +175,24 @@ namespace atresttf
 		this->loaded = true;
 	}
 
+	april::Texture* FontResourceTtf::_createTexture()
+	{
+		int textureSize = atresttf::getTextureSize();
+		april::Texture* texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ALPHA);
+		if (!texture->isLoaded())
+		{
+			delete texture;
+			atresttf::log("trying april::Texture::FORMAT_ARGB");
+			texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ARGB);
+		}
+		return texture;
+	}
+
 	void FontResourceTtf::_loadBasicCharacters()
 	{
 		// creating an initial texture and texture container
 		atres::TextureContainer* textureContainer = new atres::TextureContainer();
-		int textureSize = atresttf::getTextureSize();
-		textureContainer->texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ALPHA);
+		textureContainer->texture = this->_createTexture();
 		this->textureContainers += textureContainer;
 		this->penX = 0;
 		this->penY = 0;
@@ -250,14 +262,35 @@ namespace atresttf
 			atresttf::log(hsprintf("Font '%s': character 0x%X does not fit, creating new texture", this->name.c_str(), charcode));
 #endif
 			textureContainer = new atres::TextureContainer();
-			textureContainer->texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ALPHA);
+			textureContainer->texture = this->_createTexture();
 			this->textureContainers += textureContainer;
 			this->penX = 0;
 			this->penY = 0;
 			// if the character's height is higher than the texture, this will obviously not work too well
 		}
-		textureContainer->texture->blit(this->penX + SAFE_SPACE, this->penY + renderOffset + SAFE_SPACE, glyph->bitmap.buffer,
-			glyph->bitmap.width, glyph->bitmap.rows, 1, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
+		if (textureContainer->texture->getFormat() == april::Texture::FORMAT_ALPHA)
+		{
+			textureContainer->texture->blit(this->penX + SAFE_SPACE, this->penY + renderOffset + SAFE_SPACE, glyph->bitmap.buffer,
+				glyph->bitmap.width, glyph->bitmap.rows, 1, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
+		}
+		else
+		{
+			int size = glyph->bitmap.width * glyph->bitmap.rows * 4;
+			unsigned char* glyphData = new unsigned char[size];
+			memset(glyphData, 255, size * sizeof(unsigned char));
+			int offset;
+			for_iter (j, 0, glyph->bitmap.rows)
+			{
+				for_iter (i, 0, glyph->bitmap.width)
+				{
+					offset = i + j * glyph->bitmap.width;
+					glyphData[offset * 4 + 3] = glyph->bitmap.buffer[offset];
+				}
+			}
+			textureContainer->texture->blit(this->penX + SAFE_SPACE, this->penY + renderOffset + SAFE_SPACE, glyphData,
+				glyph->bitmap.width, glyph->bitmap.rows, 4, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
+			delete glyphData;
+		}
 		atres::CharacterDefinition c;
 		c.x = (float)this->penX;
 		c.y = (float)(this->penY + descender);

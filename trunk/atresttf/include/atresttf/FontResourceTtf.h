@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.7
 /// 
 /// @section LICENSE
 /// 
@@ -47,6 +47,7 @@ namespace atresttf
 		unsigned char* fontFile;
 
 		void _initializeFont();
+		april::Texture* _createTexture();
 		void _loadBasicCharacters();
 		bool _addCharacterBitmap(unsigned int charcode, bool ignoreCharacterEnabled = false);
 
