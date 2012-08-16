@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.7
+/// @version 2.71
 /// 
 /// @section LICENSE
 /// 
@@ -130,7 +130,7 @@ namespace atresttf
 		}
 		// libfreetype stuff
 		FT_Library library = atresttf::getLibrary();
-		FT_Face face;
+		FT_Face face = NULL;
 		hresource file(this->fontFilename);
 		if (this->fontFile != NULL) // making sure there are no memory leaks whatsoever
 		{
@@ -146,7 +146,6 @@ namespace atresttf
 			atresttf::log("Error: Format not supported in " + this->fontFilename);
 			delete [] this->fontFile;
 			this->fontFile = NULL;
-			FT_Done_Face(face);
 			return;
 		}
 		if (error != 0)
@@ -154,7 +153,6 @@ namespace atresttf
 			atresttf::log("Error: Could not read face 0 in " + this->fontFilename + "; Error code: " + hstr(error));
 			delete [] this->fontFile;
 			this->fontFile = NULL;
-			FT_Done_Face(face);
 			return;
 		}
 		FT_Size_RequestRec request;
