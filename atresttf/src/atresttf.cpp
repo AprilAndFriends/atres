@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.71
 /// 
 /// @section LICENSE
 /// 
@@ -147,7 +147,7 @@ namespace atresttf
 	hstr getSystemFontsPath()
 	{
 #ifdef _WIN32
-		return (normalize_path(hstr(getenv("WinDir"))) + "/Fonts/");
+		return (normalize_path(get_environment_variable("WinDir")) + "/Fonts/");
 #elif defined(__APPLE__)
 		return "/Library/Fonts/";
 #elif defined(_UNIX)
@@ -161,7 +161,7 @@ namespace atresttf
 	{
 		if (library == NULL)
 		{
-			hl_exception("Error: atresttf not initialized!");
+			throw hl_exception("Error: atresttf not initialized!");
 		}
 		return library;
 	}
