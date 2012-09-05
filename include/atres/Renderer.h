@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.62
+/// @version 2.8
 /// 
 /// @section LICENSE
 /// 
@@ -151,7 +151,9 @@ namespace atres
 		RenderSequence _borderSequence;
 		RenderRectangle _renderRect;
 
-		april::Color _color;
+		april::Color _textColor;
+		april::Color _shadowColor;
+		april::Color _borderColor;
 		hstr _hex;
 		int _effectMode;
 		int _alpha;
@@ -162,7 +164,6 @@ namespace atres
 
 		april::Texture* _texture;
 		unsigned int _code;
-		bool _colorChanged;
 
 		CacheEntryText _cacheEntryText;
 		CacheEntryLine _cacheEntryLine;

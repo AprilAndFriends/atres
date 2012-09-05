@@ -8,14 +8,14 @@ The command and the parameter can be separated with any character.
 Following formatting commands are supported:
 
 n - normal (no shadow / border)
-s - shadow
-b - border
+s - shadow; parameter (optional): string with hex value for color in RGB or RGBA
+b - border; parameter (optional): string with hex value for color in RGB or RGBA
 c - color change; parameter: string with hex value for color in RGB or RGBA
 f - font change; parameter: string of the font name definition including optional scale factor
 
 Examples:
 
-The word [b]border[/b] has a border.
+The word [b]border[/b] has a border. The word [b=0000FF]blue[/b] has a blue border.
 This [f arial:0.9]word[/f] is displayed in "arial" with a scaling factor 0.9.
 The color of the word at the end is [c:00FF00]green[/c].
 
