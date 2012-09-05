@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.7
+/// @version 2.8
 /// 
 /// @section LICENSE
 /// 
@@ -515,7 +515,9 @@ namespace atres
 		this->_borderSequence.color = this->borderColor;
 		this->_borderSequence.color.a = (unsigned char)(this->borderColor.a * this->borderColor.a_f() * this->borderColor.a_f());
 		this->_renderRect = RenderRectangle();
-		this->_color = APRIL_COLOR_WHITE;
+		this->_textColor = APRIL_COLOR_WHITE;
+		this->_shadowColor = this->shadowColor;
+		this->_borderColor = this->borderColor;
 		this->_hex = "";
 		this->_effectMode = 0;
 		this->_alpha = -1;
@@ -624,7 +626,7 @@ namespace atres
 					this->_hex = (this->colors.has_key(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
 					{
-						this->_color.set(this->_hex);
+						this->_textColor.set(this->_hex);
 					}
 					break;
 				case TAG_TYPE_SCALE:
@@ -635,9 +637,19 @@ namespace atres
 					break;
 				case TAG_TYPE_SHADOW:
 					this->_effectMode = EFFECT_MODE_SHADOW;
+					this->_hex = (this->colors.has_key(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
+					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
+					{
+						this->_shadowColor.set(this->_hex);
+					}
 					break;
 				case TAG_TYPE_BORDER:
 					this->_effectMode = EFFECT_MODE_BORDER;
+					this->_hex = (this->colors.has_key(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
+					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
+					{
+						this->_borderColor.set(this->_hex);
+					}
 					break;
 				}
 			}
@@ -675,13 +687,13 @@ namespace atres
 					break;
 				case TAG_TYPE_COLOR:
 					this->_currentTag.type = TAG_TYPE_COLOR;
-					this->_currentTag.data = this->_color.hex();
+					this->_currentTag.data = this->_textColor.hex();
 					this->_stack += this->_currentTag;
 					this->_hex = (this->colors.has_key(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
 					{
-						this->_color.set(this->_hex);
-						this->_alpha == -1 ? this->_alpha = this->_color.a : this->_color.a = (unsigned char)(this->_alpha * this->_color.a_f());
+						this->_textColor.set(this->_hex);
+						this->_alpha == -1 ? this->_alpha = this->_textColor.a : this->_textColor.a = (unsigned char)(this->_alpha * this->_textColor.a_f());
 					}
 #ifdef _DEBUG
 					else
@@ -703,13 +715,45 @@ namespace atres
 					break;
 				case TAG_TYPE_SHADOW:
 					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? TAG_TYPE_BORDER : (this->_effectMode == EFFECT_MODE_SHADOW ? TAG_TYPE_SHADOW : TAG_TYPE_NORMAL));
+					this->_currentTag.data = this->_shadowColor.hex();
 					this->_stack += this->_currentTag;
 					this->_effectMode = EFFECT_MODE_SHADOW;
+					this->_shadowColor = this->shadowColor;
+					if (this->_nextTag.data != "")
+					{
+						this->_hex = (this->colors.has_key(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
+						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
+						{
+							this->_shadowColor.set(this->_hex);
+						}
+#ifdef _DEBUG
+						else
+						{
+							atres::log(hsprintf("WARNING: Color '%s' does not exist!", this->_hex.c_str()));
+						}
+#endif
+					}
 					break;
 				case TAG_TYPE_BORDER:
 					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? TAG_TYPE_BORDER : (this->_effectMode == EFFECT_MODE_SHADOW ? TAG_TYPE_SHADOW : TAG_TYPE_NORMAL));
+					this->_currentTag.data = this->_borderColor.hex();
 					this->_stack += this->_currentTag;
 					this->_effectMode = EFFECT_MODE_BORDER;
+					this->_borderColor = this->borderColor;
+					if (this->_nextTag.data != "")
+					{
+						this->_hex = (this->colors.has_key(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
+						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
+						{
+							this->_borderColor.set(this->_hex);
+						}
+#ifdef _DEBUG
+						else
+						{
+							atres::log(hsprintf("WARNING: Color '%s' does not exist!", this->_hex.c_str()));
+						}
+#endif
+					}
 					break;
 				}
 			}
@@ -726,7 +770,6 @@ namespace atres
 			{
 				this->_nextTag.start = this->_word.start + this->_word.text.size() + 1;
 			}
-			this->_colorChanged = (this->_textSequence.color != this->_color);
 			this->_texture = this->_fontResource->getTexture(this->_code);
 			this->_checkSequenceSwitch();
 		}
@@ -741,14 +784,14 @@ namespace atres
 				this->_nextTag.start = this->_word.start + this->_word.text.size() + 1;
 			}
 		}
-		this->_colorChanged = false;
+		// this additional check is required in case the texture had to be changed
 		this->_texture = this->_fontResource->getTexture(this->_code);
 		this->_checkSequenceSwitch();
 	}
 
 	void Renderer::_checkSequenceSwitch()
 	{
-		if (this->_textSequence.texture != this->_texture || this->_colorChanged)
+		if (this->_textSequence.texture != this->_texture || this->_textSequence.color != this->_textColor)
 		{
 			if (this->_textSequence.vertices.size() > 0)
 			{
@@ -756,9 +799,9 @@ namespace atres
 				this->_textSequence.vertices.clear();
 			}
 			this->_textSequence.texture = this->_texture;
-			this->_textSequence.color = this->_color;
+			this->_textSequence.color = this->_textColor;
 		}
-		if (this->_shadowSequence.texture != this->_texture || this->_colorChanged)
+		if (this->_shadowSequence.texture != this->_texture || this->_shadowSequence.color != this->_shadowColor)
 		{
 			if (this->_shadowSequence.vertices.size() > 0)
 			{
@@ -766,9 +809,9 @@ namespace atres
 				this->_shadowSequence.vertices.clear();
 			}
 			this->_shadowSequence.texture = this->_texture;
-			this->_shadowSequence.color = this->shadowColor;
+			this->_shadowSequence.color = this->_shadowColor;
 		}
-		if (this->_borderSequence.texture != this->_texture || this->_colorChanged)
+		if (this->_borderSequence.texture != this->_texture || this->_borderSequence.color != this->_borderColor)
 		{
 			if (this->_borderSequence.vertices.size() > 0)
 			{
@@ -776,7 +819,7 @@ namespace atres
 				this->_borderSequence.vertices.clear();
 			}
 			this->_borderSequence.texture = this->_texture;
-			this->_borderSequence.color = this->borderColor;
+			this->_borderSequence.color = this->_borderColor;
 		}
 	}
 
