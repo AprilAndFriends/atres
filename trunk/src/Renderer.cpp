@@ -49,7 +49,7 @@ namespace atres
 		this->colors["green"] = APRIL_COLOR_GREEN.hex();
 		this->colors["blue"] = APRIL_COLOR_BLUE.hex();
 		this->colors["yellow"] = APRIL_COLOR_YELLOW.hex();
-		this->colors["mangenta"] = APRIL_COLOR_MANGENTA.hex();
+		this->colors["magenta"] = APRIL_COLOR_MAGENTA.hex();
 		this->colors["cyan"] = APRIL_COLOR_CYAN.hex();
 		this->colors["orange"] = APRIL_COLOR_ORANGE.hex();
 		this->colors["pink"] = APRIL_COLOR_PINK.hex();
