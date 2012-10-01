@@ -20,7 +20,7 @@
 #include "FontResourceTtf.h"
 #include "freetype.h"
 
-#define SAFE_SPACE 1
+#define SAFE_SPACE 2
 #define CHARACTER_SPACE 0
 
 #define PTSIZE2INT(value) (((value) + 63) >> 6)
