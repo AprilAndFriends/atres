@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.8
+/// @version 2.81
 /// 
 /// @section LICENSE
 /// 
@@ -80,9 +80,20 @@ namespace atres
 		delete this->cache;
 		delete this->cacheUnformatted;
 		delete this->cacheLines;
-		foreach_m (FontResource*, it, this->fonts)
+		FontResource* fontResource;
+		harray<hstr> keys;
+		while (this->fonts.size() > 0)
 		{
-			delete it->second;
+			keys = this->fonts.keys();
+			fontResource = this->fonts[keys.first()];
+			foreach (hstr, it, keys)
+			{
+				if (this->fonts[*it] == fontResource)
+				{
+					this->fonts.remove_key(*it);
+				}
+			}
+			delete fontResource;
 		}
 	}
 
