@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.63
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -165,16 +165,19 @@ void generate(chstr cfgname)
 	{
 		definition.write_line("CorrectedHeight=" + hsprintf("%g", correctedHeight));
 	}
-	definition.write_line("# -----------------------------------");
+	definition.write_line("# -------------------------------------------------------------------------");
 	definition.write_line("# Code|X|Y|Width");
 	definition.write_line("# Code|X|Y|Width|Advance Width");
 	definition.write_line("# Code|X|Y|Width|Advance Width|Bearing X");
 	definition.write_line("# Code|X|Y|Width|Height|Advance Width|Bearing X");
+	definition.write_line("# Code|X|Y|Width|Height|Advance Width|Bearing X|Bearing Y");
+	definition.write_line("# -------------------------------------------------------------------------");
 	definition.write_line("# Code|MultiTextureIndex|X|Y|Width");
 	definition.write_line("# Code|MultiTextureIndex|X|Y|Width|Advance Width");
 	definition.write_line("# Code|MultiTextureIndex|X|Y|Width|Advance Width|Bearing X");
 	definition.write_line("# Code|MultiTextureIndex|X|Y|Width|Height|Advance Width|Bearing X");
-	definition.write_line("-------------------------------------");
+	definition.write_line("# Code|MultiTextureIndex|X|Y|Width|Height|Advance Width|Bearing X|Bearing Y");
+	definition.write_line("# -------------------------------------------------------------------------");
 	hmap<unsigned int, atres::CharacterDefinition> characters = font->getCharacters();
 	harray<unsigned int> codes = characters.keys().sorted();
 	atres::CharacterDefinition c;
@@ -183,7 +186,7 @@ void generate(chstr cfgname)
 		foreach (unsigned int, it, codes)
 		{
 			c = characters[*it];
-			definition.write_line(hsprintf("%d %g %g %g %g %g %g", (*it), c.x, c.y, c.w, c.h, c.aw, c.bx));
+			definition.write_line(hsprintf("%d %g %g %g %g %g %g %g", (*it), c.x, c.y, c.w, c.h, c.aw, c.bx, c.by));
 		}
 	}
 	else
@@ -193,7 +196,7 @@ void generate(chstr cfgname)
 		{
 			c = characters[*it];
 			index = textures.index_of(font->getTexture(*it));
-			definition.write_line(hsprintf("%d %d %g %g %g %g %g %g", (*it), index, c.x, c.y, c.w, c.h, c.aw, c.bx));
+			definition.write_line(hsprintf("%d %d %g %g %g %g %g %g %g", (*it), index, c.x, c.y, c.w, c.h, c.aw, c.bx, c.by));
 		}
 	}
 	definition.close();

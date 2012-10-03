@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.81
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -1043,6 +1043,7 @@ namespace atres
 		float width = 0.0f;
 		grect destination;
 		grect area;
+		grect drawRect;
 		
 		while (this->_lines.size() > 0)
 		{
@@ -1068,7 +1069,10 @@ namespace atres
 						area.w = this->_character->w * this->_scale;
 						area.h = this->_character->h * this->_scale;
 						area.y += area.h * (1.0f - this->_textScale) * 0.5f;
-						this->_renderRect = this->_fontResource->makeRenderRectangle(rect, area, this->_code);
+						drawRect = rect;
+						drawRect.h += this->_character->by * this->_scale;
+						this->_renderRect = this->_fontResource->makeRenderRectangle(drawRect, area, this->_code);
+						this->_renderRect.dest.y -= this->_character->by * this->_scale;
 						this->_textSequence.addRenderRectangle(this->_renderRect);
 						destination = this->_renderRect.dest;
 						switch (this->_effectMode)

@@ -178,10 +178,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Exception.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\FontResource.cpp"
 				>
 			</File>
@@ -213,10 +209,6 @@
 			</File>
 			<File
 				RelativePath=".\src\Cache.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\atres\Exception.h"
 				>
 			</File>
 			<File

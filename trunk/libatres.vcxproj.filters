@@ -17,9 +17,6 @@
     <ClCompile Include="src\atres.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Exception.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -38,9 +35,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\atres\atresExport.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\atres\Exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\atres\Renderer.h">

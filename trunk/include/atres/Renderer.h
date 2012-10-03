@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.8
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
