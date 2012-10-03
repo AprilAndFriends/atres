@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.71
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -176,7 +176,8 @@ namespace atresttf
 	april::Texture* FontResourceTtf::_createTexture()
 	{
 		int textureSize = atresttf::getTextureSize();
-		april::Texture* texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ALPHA);
+		// TODO
+		april::Texture* texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ARGB/*FORMAT_ALPHA*/);
 		if (!texture->isLoaded())
 		{
 			delete texture;
@@ -291,10 +292,11 @@ namespace atresttf
 		}
 		atres::CharacterDefinition c;
 		c.x = (float)this->penX;
-		c.y = (float)(this->penY + descender);
+		c.y = (float)this->penY;
 		c.w = (float)charWidth;
-		c.h = (float)(charHeight - descender);
+		c.h = (float)charHeight;
 		c.bx = (float)PTSIZE2INT(glyph->metrics.horiBearingX);
+		c.by = (float)descender;
 		c.aw = (float)PTSIZE2INT(glyph->advance.x);
 		this->characters[charcode] = c;
 		this->penX += charWidth + CHARACTER_SPACE * 2;

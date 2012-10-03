@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 2.6
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -67,6 +67,7 @@ namespace atres
 		float w;
 		float h;
 		float bx;
+		float by;
 		float aw;
 
 		CharacterDefinition();

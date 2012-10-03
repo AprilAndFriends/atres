@@ -175,7 +175,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\atres.cpp" />
-    <ClCompile Include="src\Exception.cpp" />
     <ClCompile Include="src\FontResource.cpp" />
     <ClCompile Include="src\FontResourceBitmap.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
@@ -184,7 +183,6 @@
   <ItemGroup>
     <ClInclude Include="include\atres\atres.h" />
     <ClInclude Include="include\atres\atresExport.h" />
-    <ClInclude Include="include\atres\Exception.h" />
     <ClInclude Include="include\atres\FontResource.h" />
     <ClInclude Include="include\atres\FontResourceBitmap.h" />
     <ClInclude Include="include\atres\Renderer.h" />

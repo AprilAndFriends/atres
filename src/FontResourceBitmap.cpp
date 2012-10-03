@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.64
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -71,6 +71,7 @@ namespace atres
 		foreach (hstr, it, lines)
 		{
 			c.bx = 0.0f;
+			c.by = 0.0f;
 			c.aw = 0.0f;
 			data = (*it).split(" ", -1, true);
 			if (is_between(data.size(), minAttribute, maxAttribute))
@@ -95,6 +96,10 @@ namespace atres
 							c.h = c.aw;
 							c.aw = c.bx;
 							c.bx = (float)data.pop_first();
+							if (data.size() > 0)
+							{
+								c.by = (float)data.pop_first();
+							}
 						}
 					}
 				}
