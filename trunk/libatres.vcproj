@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="libatres"
 	ProjectGUID="{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}"
 	RootNamespace="libatres"
@@ -20,7 +20,7 @@
 			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -94,7 +94,7 @@
 			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
-			CharacterSet="2"
+			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
