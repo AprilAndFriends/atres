@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="libatresttf"
 	ProjectGUID="{4A055F1C-7F19-4CE2-8374-583AC6C7875E}"
 	RootNamespace="xalutil"
