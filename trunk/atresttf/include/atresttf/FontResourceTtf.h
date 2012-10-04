@@ -36,8 +36,8 @@ namespace atresttf
 		~FontResourceTtf();
 
 		HL_DEFINE_GET(hstr, fontFilename, FontFilename);
-		april::Texture* getTexture(unsigned int charcode);
-		bool hasChar(unsigned int charcode);
+		april::Texture* getTexture(unsigned int charCode);
+		bool hasChar(unsigned int charCode);
 
 	protected:
 		int penX;
@@ -49,7 +49,7 @@ namespace atresttf
 		void _initializeFont();
 		april::Texture* _createTexture();
 		void _loadBasicCharacters();
-		bool _addCharacterBitmap(unsigned int charcode, bool ignoreCharacterEnabled = false);
+		bool _addCharacterBitmap(unsigned int charCode, bool ignoreCharacterEnabled = false);
 
 	};
 

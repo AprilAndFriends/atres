@@ -882,7 +882,7 @@ namespace atres
 					}
 					break;
 				}
-				if ((code == ' ') != checkingSpaces)
+				if ((code == 0x20) != checkingSpaces)
 				{
 					break;
 				}

@@ -41,8 +41,8 @@ namespace atres
 		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
 		harray<april::Texture*> getTextures();
 		
-		virtual april::Texture* getTexture(unsigned int charcode);
-		virtual bool hasChar(unsigned int charcode);
+		virtual april::Texture* getTexture(unsigned int charCode);
+		virtual bool hasChar(unsigned int charCode);
 		
 		float getTextWidth(chstr text);
 		int getTextCount(chstr text, float maxWidth);
