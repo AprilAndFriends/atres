@@ -65,9 +65,9 @@ namespace atres
 		return false;
 	}
 	
-	bool FontResource::hasChar(unsigned int charcode)
+	bool FontResource::hasChar(unsigned int charCode)
 	{
-		return this->characters.has_key(charcode);
+		return this->characters.has_key(charCode);
 	}
 	
 	float FontResource::getHeight()
@@ -100,11 +100,11 @@ namespace atres
 		return result;
 	}
 	
-	april::Texture* FontResource::getTexture(unsigned int charcode)
+	april::Texture* FontResource::getTexture(unsigned int charCode)
 	{
 		foreach (TextureContainer*, it, this->textureContainers)
 		{
-			if ((*it)->characters.contains(charcode))
+			if ((*it)->characters.contains(charCode))
 			{
 				return (*it)->texture;
 			}

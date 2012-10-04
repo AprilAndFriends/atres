@@ -69,7 +69,7 @@ namespace atresttf
 		}
 	}
 
-	april::Texture* FontResourceTtf::getTexture(unsigned int charcode)
+	april::Texture* FontResourceTtf::getTexture(unsigned int charCode)
 	{
 		bool reload = false;
 		foreach (atres::TextureContainer*, it, this->textureContainers)
@@ -92,17 +92,17 @@ namespace atresttf
 			this->textureContainers.clear();
 			this->_loadBasicCharacters();
 		}
-		if (!this->_addCharacterBitmap(charcode))
+		if (!this->_addCharacterBitmap(charCode))
 		{
 			return NULL;
 		}
-		return FontResource::getTexture(charcode);
+		return FontResource::getTexture(charCode);
 	}
 
-	bool FontResourceTtf::hasChar(unsigned int charcode)
+	bool FontResourceTtf::hasChar(unsigned int charCode)
 	{
-		this->_addCharacterBitmap(charcode);
-		return FontResource::hasChar(charcode);
+		this->_addCharacterBitmap(charCode);
+		return FontResource::hasChar(charCode);
 	}
 	
 	void FontResourceTtf::_initializeFont()
@@ -203,20 +203,25 @@ namespace atresttf
 		}
 	}
 
-	bool FontResourceTtf::_addCharacterBitmap(unsigned int charcode, bool ignoreCharacterEnabled)
+	bool FontResourceTtf::_addCharacterBitmap(unsigned int charCode, bool ignoreCharacterEnabled)
 	{
-		if (this->characters.has_key(charcode))
+		if (this->characters.has_key(charCode))
 		{
 			return true;
 		}
 		FT_Face face = atresttf::getFace(this);
-		unsigned int glyphIndex = FT_Get_Char_Index(face, (unsigned long)charcode);
+		unsigned long charIndex = charCode;
+		if (charIndex == 0xA0) // non-breaking space character should be treated just like a normal space when retrieving the glyph from the font
+		{
+			charIndex = 0x20;
+		}
+		unsigned int glyphIndex = FT_Get_Char_Index(face, charIndex);
 		if (glyphIndex == 0)
 		{
 #ifdef _DEBUG
-			if (!ignoreCharacterEnabled && charcode >= 32)
+			if (!ignoreCharacterEnabled && charCode >= 0x20)
 			{
-				atresttf::log(hsprintf("Error: Character '0x%X' does not exist in %s", charcode, this->fontFilename.c_str()));
+				atresttf::log(hsprintf("Error: Character '0x%X' does not exist in %s", charCode, this->fontFilename.c_str()));
 			}
 #endif
 			return false;
@@ -258,7 +263,7 @@ namespace atresttf
 		if (this->penY + this->rowHeight + CHARACTER_SPACE > textureSize)
 		{
 #ifdef _DEBUG
-			atresttf::log(hsprintf("Font '%s': character 0x%X does not fit, creating new texture", this->name.c_str(), charcode));
+			atresttf::log(hsprintf("Font '%s': character 0x%X does not fit, creating new texture", this->name.c_str(), charCode));
 #endif
 			textureContainer = new atres::TextureContainer();
 			textureContainer->texture = this->_createTexture();
@@ -298,9 +303,9 @@ namespace atresttf
 		c.bx = (float)PTSIZE2INT(glyph->metrics.horiBearingX);
 		c.by = (float)descender;
 		c.aw = (float)PTSIZE2INT(glyph->advance.x);
-		this->characters[charcode] = c;
+		this->characters[charCode] = c;
 		this->penX += charWidth + CHARACTER_SPACE * 2;
-		textureContainer->characters += charcode;
+		textureContainer->characters += charCode;
 		return true;
 	}
 	
