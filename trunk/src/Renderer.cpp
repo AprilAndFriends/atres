@@ -251,16 +251,14 @@ namespace atres
 	void Renderer::analyzeText(chstr text)
 	{
 		// makes sure dynamically allocated characters are loaded
-		int size;
-		unsigned int* chars = utf8_to_unicode(text, &size);
+		std::basic_string<unsigned int> chars = utf8_to_unicode(text);
 		foreach_m (FontResource*, it, this->fonts)
 		{
-			for_iter (i, 0, size)
+			for_itert (unsigned int, i, 0, chars.size())
 			{
 				it->second->hasChar(chars[i]);
 			}
 		}
-		delete [] chars;
 	}
 
 	hstr Renderer::analyzeFormatting(chstr text, harray<FormatTag>& tags)
