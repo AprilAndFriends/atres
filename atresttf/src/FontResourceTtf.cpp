@@ -248,10 +248,13 @@ namespace atresttf
 		int ascender = -PTSIZE2INT(face->size->metrics.ascender);
 		int descender = -PTSIZE2INT(face->size->metrics.descender);
 		// this makes sure that there is no vertical overlap between characters
-		int height = descender - ascender;
-		int renderOffset = height - glyph->bitmap_top;
-		int charHeight = renderOffset + glyph->bitmap.rows + SAFE_SPACE * 2;
-		int charWidth = glyph->bitmap.width + SAFE_SPACE * 2;
+		int lineOffset = (int)this->height - descender;
+		int offsetY = hmax(lineOffset - glyph->bitmap_top, 0);
+		int bearingY = -hmin(lineOffset - glyph->bitmap_top, 0);
+		int offsetX = hmax(glyph->bitmap_left, 0);
+		int bearingX = -hmin(glyph->bitmap_left, 0);
+		int charHeight = offsetY + glyph->bitmap.rows + SAFE_SPACE * 2;
+		int charWidth = offsetX + glyph->bitmap.width + SAFE_SPACE * 2;
 		this->rowHeight = hmax(this->rowHeight, charHeight);
 		// if character bitmap width exceeds space, go into next line
 		if (this->penX + glyph->bitmap.width + CHARACTER_SPACE > textureSize)
@@ -272,10 +275,12 @@ namespace atresttf
 			this->penY = 0;
 			// if the character's height is higher than the texture, this will obviously not work too well
 		}
+		int renderX = this->penX + offsetX + SAFE_SPACE;
+		int renderY = this->penY + offsetY + SAFE_SPACE;
 		if (textureContainer->texture->getFormat() == april::Texture::FORMAT_ALPHA)
 		{
-			textureContainer->texture->blit(this->penX + SAFE_SPACE, this->penY + renderOffset + SAFE_SPACE, glyph->bitmap.buffer,
-				glyph->bitmap.width, glyph->bitmap.rows, 1, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
+			textureContainer->texture->blit(renderX, renderY, glyph->bitmap.buffer, glyph->bitmap.width,
+				glyph->bitmap.rows, 1, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
 		}
 		else
 		{
@@ -291,8 +296,8 @@ namespace atresttf
 					glyphData[offset * 4 + 3] = glyph->bitmap.buffer[offset];
 				}
 			}
-			textureContainer->texture->blit(this->penX + SAFE_SPACE, this->penY + renderOffset + SAFE_SPACE, glyphData,
-				glyph->bitmap.width, glyph->bitmap.rows, 4, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
+			textureContainer->texture->blit(renderX, renderY, glyphData, glyph->bitmap.width,
+				glyph->bitmap.rows, 4, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
 			delete glyphData;
 		}
 		atres::CharacterDefinition c;
@@ -300,8 +305,8 @@ namespace atresttf
 		c.y = (float)this->penY;
 		c.w = (float)charWidth;
 		c.h = (float)charHeight;
-		c.bx = (float)PTSIZE2INT(glyph->metrics.horiBearingX);
-		c.by = (float)descender;
+		c.bx = (float)(bearingX + PTSIZE2INT(glyph->metrics.horiBearingX));
+		c.by = (float)(bearingY + lineOffset + ascender);
 		c.aw = (float)PTSIZE2INT(glyph->advance.x);
 		this->characters[charCode] = c;
 		this->penX += charWidth + CHARACTER_SPACE * 2;
