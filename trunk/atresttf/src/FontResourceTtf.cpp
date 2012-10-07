@@ -243,25 +243,27 @@ namespace atresttf
 			}
 		}
 		atres::TextureContainer* textureContainer = this->textureContainers.last();
+		this->penX += hmax(glyph->bitmap_left, 0);
 		// calculate some standard parameters
 		int textureSize = atresttf::getTextureSize();
 		int ascender = -PTSIZE2INT(face->size->metrics.ascender);
 		int descender = -PTSIZE2INT(face->size->metrics.descender);
 		// this makes sure that there is no vertical overlap between characters
 		int lineOffset = (int)this->height - descender;
-		int offsetY = hmax(lineOffset - glyph->bitmap_top, 0);
 		int bearingY = -hmin(lineOffset - glyph->bitmap_top, 0);
-		int offsetX = hmax(glyph->bitmap_left, 0);
-		int bearingX = -hmin(glyph->bitmap_left, 0);
-		int charHeight = offsetY + glyph->bitmap.rows + SAFE_SPACE * 2;
-		int charWidth = offsetX + glyph->bitmap.width + SAFE_SPACE * 2;
-		this->rowHeight = hmax(this->rowHeight, charHeight);
+		int offsetY = hmax(lineOffset - glyph->bitmap_top, 0);
+		int charHeight = glyph->bitmap.rows + SAFE_SPACE * 2;
+		int charWidth = glyph->bitmap.width + SAFE_SPACE * 2;
 		// if character bitmap width exceeds space, go into next line
-		if (this->penX + glyph->bitmap.width + CHARACTER_SPACE > textureSize)
+		if (this->penX + charWidth + CHARACTER_SPACE > textureSize)
 		{
 			this->penX = 0;
 			this->penY += this->rowHeight + CHARACTER_SPACE * 2;
-			this->rowHeight = charHeight;
+			this->rowHeight = charHeight + offsetY;
+		}
+		else
+		{
+			this->rowHeight = hmax(this->rowHeight, charHeight + offsetY);
 		}
 		if (this->penY + this->rowHeight + CHARACTER_SPACE > textureSize)
 		{
@@ -275,7 +277,7 @@ namespace atresttf
 			this->penY = 0;
 			// if the character's height is higher than the texture, this will obviously not work too well
 		}
-		int renderX = this->penX + offsetX + SAFE_SPACE;
+		int renderX = this->penX + SAFE_SPACE;
 		int renderY = this->penY + offsetY + SAFE_SPACE;
 		if (textureContainer->texture->getFormat() == april::Texture::FORMAT_ALPHA)
 		{
@@ -302,11 +304,11 @@ namespace atresttf
 		}
 		atres::CharacterDefinition c;
 		c.x = (float)this->penX;
-		c.y = (float)this->penY;
+		c.y = (float)(this->penY + offsetY);
 		c.w = (float)charWidth;
 		c.h = (float)charHeight;
-		c.bx = (float)(bearingX + PTSIZE2INT(glyph->metrics.horiBearingX));
-		c.by = (float)(bearingY + lineOffset + ascender);
+		c.bx = (float)PTSIZE2INT(glyph->metrics.horiBearingX);
+		c.by = (float)(lineOffset + ascender + bearingY - offsetY);
 		c.aw = (float)PTSIZE2INT(glyph->advance.x);
 		this->characters[charCode] = c;
 		this->penX += charWidth + CHARACTER_SPACE * 2;
