@@ -288,7 +288,7 @@ namespace atresttf
 		{
 			int size = glyph->bitmap.width * glyph->bitmap.rows * 4;
 			unsigned char* glyphData = new unsigned char[size];
-			memset(glyphData, 255, size * sizeof(unsigned char));
+			memset(glyphData, 255, size);
 			int offset;
 			for_iter (j, 0, glyph->bitmap.rows)
 			{
