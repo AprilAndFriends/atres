@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.0
+/// @version 3.01
 /// 
 /// @section LICENSE
 /// 
@@ -9,10 +9,8 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #include <stdio.h>
-#ifdef _ANDROID
-#include <android/log.h>
-#endif
 
+#include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
 #include "atres.h"
@@ -21,19 +19,20 @@
 
 namespace atres
 {
-	void atres_writelog(chstr message)
-	{
-#ifndef _ANDROID
-		printf("%s\n", message.c_str());
-#else
-		__android_log_print(ANDROID_LOG_INFO, "atres", "%s", message.c_str());
-#endif
-	}
-	void (*g_logFunction)(chstr) = atres_writelog;
+	hstr logTag = "atres";
 
+	void log(chstr message, chstr prefix)
+	{
+		hlog::write(atres::logTag, message);
+	}
+	
+	void setLogFunction(void (*fnptr)(chstr))
+	{
+	}
+	
 	void init()
 	{
-		atres::log("initializing atres");
+		hlog::write(atres::logTag, "Initializing Atres.");
 		atres::renderer = new Renderer();
 	}
 	
@@ -41,20 +40,10 @@ namespace atres
 	{
 		if (atres::renderer != NULL)
 		{
-			atres::log("destroying atres");
+			hlog::write(atres::logTag, "Destroying Atres.");
 			delete atres::renderer;
 			atres::renderer = NULL;
 		}
 	}
 
-	void setLogFunction(void (*fnptr)(chstr))
-	{
-		g_logFunction = fnptr;
-	}
-	
-	void log(chstr message, chstr prefix)
-	{
-		g_logFunction(prefix + message);
-	}
-	
 }

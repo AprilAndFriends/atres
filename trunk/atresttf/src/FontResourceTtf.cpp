@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.01
 /// 
 /// @section LICENSE
 /// 
@@ -12,6 +12,7 @@
 
 #include <april/RenderSystem.h>
 #include <april/Texture.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
@@ -117,7 +118,7 @@ namespace atresttf
 		}
 		if (!hresource::exists(this->fontFilename)) // font file does not exist
 		{
-			atresttf::log("Error: could not find " + this->fontFilename);
+			hlog::error(atresttf::logTag, "Could not find: " + this->fontFilename);
 			return;
 		}
 		if (this->lineHeight == 0.0f)
@@ -143,14 +144,14 @@ namespace atresttf
 		FT_Error error = FT_New_Memory_Face(library, this->fontFile, size, 0, &face);
 		if (error == FT_Err_Unknown_File_Format)
 		{
-			atresttf::log("Error: Format not supported in " + this->fontFilename);
+			hlog::error(atresttf::logTag, "Format not supported in: " + this->fontFilename);
 			delete [] this->fontFile;
 			this->fontFile = NULL;
 			return;
 		}
 		if (error != 0)
 		{
-			atresttf::log("Error: Could not read face 0 in " + this->fontFilename + "; Error code: " + hstr(error));
+			hlog::error(atresttf::logTag, "Could not read face 0 in: " + this->fontFilename + "; Error code: " + hstr(error));
 			delete [] this->fontFile;
 			this->fontFile = NULL;
 			return;
@@ -162,7 +163,7 @@ namespace atresttf
 		error = FT_Request_Size(face, &request);
 		if (error != 0)
 		{
-			atresttf::log("Error: Could not set font size in " + this->fontFilename);
+			hlog::error(atresttf::logTag, "Could not set font size in: " + this->fontFilename);
 			delete [] this->fontFile;
 			this->fontFile = NULL;
 			FT_Done_Face(face);
@@ -176,12 +177,11 @@ namespace atresttf
 	april::Texture* FontResourceTtf::_createTexture()
 	{
 		int textureSize = atresttf::getTextureSize();
-		// TODO
-		april::Texture* texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ARGB/*FORMAT_ALPHA*/);
+		april::Texture* texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ALPHA);
 		if (!texture->isLoaded())
 		{
 			delete texture;
-			atresttf::log("trying april::Texture::FORMAT_ARGB");
+			hlog::write(atresttf::logTag, "Trying april::Texture::FORMAT_ARGB format.");
 			texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ARGB);
 		}
 		return texture;
@@ -218,18 +218,16 @@ namespace atresttf
 		unsigned int glyphIndex = FT_Get_Char_Index(face, charIndex);
 		if (glyphIndex == 0)
 		{
-#ifdef _DEBUG
 			if (!ignoreCharacterEnabled && charCode >= 0x20)
 			{
-				atresttf::log(hsprintf("Error: Character '0x%X' does not exist in %s", charCode, this->fontFilename.c_str()));
+				hlog::debugf(atresttf::logTag, "Character '0x%X' does not exist in: %s", charCode, this->fontFilename.c_str());
 			}
-#endif
 			return false;
 		}
 		FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT);
 		if (error != 0)
 		{
-			atresttf::log("Error: Could not load glyph from " + this->fontFilename);
+			hlog::error(atresttf::logTag, "Could not load glyph from: " + this->fontFilename);
 			return false;
 		}
 		FT_GlyphSlot glyph = face->glyph;
@@ -238,7 +236,7 @@ namespace atresttf
 			error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
 			if (error != 0)
 			{
-				atresttf::log("Error: Could not render glyph from " + this->fontFilename);
+				hlog::error(atresttf::logTag, "Could not render glyph from: " + this->fontFilename);
 				return false;
 			}
 		}
@@ -267,9 +265,7 @@ namespace atresttf
 		}
 		if (this->penY + this->rowHeight + CHARACTER_SPACE > textureSize)
 		{
-#ifdef _DEBUG
-			atresttf::log(hsprintf("Font '%s': character 0x%X does not fit, creating new texture", this->name.c_str(), charCode));
-#endif
+			hlog::debugf(atresttf::logTag, "Font '%s': character 0x%X does not fit, creating new texture.", this->name.c_str(), charCode);
 			textureContainer = new atres::TextureContainer();
 			textureContainer->texture = this->_createTexture();
 			this->textureContainers += textureContainer;

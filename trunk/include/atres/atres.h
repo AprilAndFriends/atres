@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.01
 /// 
 /// @section LICENSE
 /// 
@@ -22,12 +22,15 @@
 
 namespace atres
 {
+	extern hstr logTag;
+
 	atresFnExport void init();
 	atresFnExport void destroy();
-	atresFnExport void setLogFunction(void (*fnptr)(chstr));
-	atresFnExport void log(chstr message, chstr prefix = "[atres] ");
+	
+	DEPRECATED_ATTRIBUTE atresFnExport void setLogFunction(void (*fnptr)(chstr));
+	DEPRECATED_ATTRIBUTE atresFnExport void log(chstr message, chstr prefix = "[atres] ");
 
-};
+}
 
 #endif
 

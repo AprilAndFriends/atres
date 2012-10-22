@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.0
+/// @version 3.01
 /// 
 /// @section LICENSE
 /// 
@@ -16,6 +16,7 @@
 #include <gtypes/Vector2.h>
 #include <hltypes/exception.h>
 #include <hltypes/harray.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
@@ -150,7 +151,7 @@ namespace atres
 	void Renderer::registerFontResource(FontResource* fontResource)
 	{
 		hstr name = fontResource->getName();
-		atres::log(hsprintf("registering font resource '%s'", name.c_str()));
+		hlog::write(atres::logTag, "Registering font resource: " + name);
 		if (this->fonts.has_key(name))
 		{
 			throw resource_already_exists("font resource", name, "atres");
@@ -190,7 +191,7 @@ namespace atres
 			throw resource_already_exists("font resource", alias, "atres");
 		}
 		FontResource* fontResource = this->getFontResource(name);
-		atres::log(hsprintf("registering font resource alias '%s' for '%s'", alias.c_str(), fontResource->getName().c_str()));
+		hlog::writef(atres::logTag, "Registering font resource alias '%s' for '%s'.", alias.c_str(), fontResource->getName().c_str());
 		this->fonts[alias] = fontResource;
 	}
 	
@@ -294,9 +295,7 @@ namespace atres
 				if (stack.size() > 0 && stack.last() != str[start + 2]) // interleaving, ignore the tag
 				{
 					start = end;
-#ifdef _DEBUG
-					atres::log(hsprintf("WARNING: Closing tag that was not opened ('[/%c]' in '%s')!", str[start + 2], str));
-#endif
+					hlog::warnf(atres::logTag, "Closing tag that was not opened ('[/%c]' in '%s')!", str[start + 2], str);
 					continue;
 				}
 				stack.pop_last();
@@ -582,9 +581,7 @@ namespace atres
 				}
 				catch (hltypes::_resource_not_exists e)
 				{
-#ifdef _DEBUG
-					atres::log(hsprintf("WARNING: Font '%s' does not exist!", this->_nextTag.data.c_str()));
-#endif
+					hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.c_str());
 				}
 			}
 			else if (this->_nextTag.type == TAG_TYPE_COLOR)
@@ -689,9 +686,7 @@ namespace atres
 					}
 					catch (hltypes::_resource_not_exists e)
 					{
-#ifdef _DEBUG
-						atres::log(hsprintf("WARNING: Font '%s' does not exist!", this->_nextTag.data.c_str()));
-#endif
+						hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.c_str());
 					}
 					break;
 				case TAG_TYPE_COLOR:
@@ -704,12 +699,10 @@ namespace atres
 						this->_textColor.set(this->_hex);
 						this->_alpha == -1 ? this->_alpha = this->_textColor.a : this->_textColor.a = (unsigned char)(this->_alpha * this->_textColor.a_f());
 					}
-#ifdef _DEBUG
 					else
 					{
-						atres::log(hsprintf("WARNING: Color '%s' does not exist!", this->_hex.c_str()));
+						hlog::warnf(atres::logTag, "Color '%s' does not exist!", this->_hex.c_str());
 					}
-#endif
 					break;
 				case TAG_TYPE_SCALE:
 					this->_currentTag.type = TAG_TYPE_SCALE;
@@ -735,12 +728,10 @@ namespace atres
 						{
 							this->_shadowColor.set(this->_hex);
 						}
-#ifdef _DEBUG
 						else
 						{
-							atres::log(hsprintf("WARNING: Color '%s' does not exist!", this->_hex.c_str()));
+							hlog::warnf(atres::logTag, "Color '%s' does not exist!", this->_hex.c_str());
 						}
-#endif
 					}
 					break;
 				case TAG_TYPE_BORDER:
@@ -756,12 +747,10 @@ namespace atres
 						{
 							this->_borderColor.set(this->_hex);
 						}
-#ifdef _DEBUG
 						else
 						{
-							atres::log(hsprintf("WARNING: Color '%s' does not exist!", this->_hex.c_str()));
+							hlog::warnf(atres::logTag, "Color '%s' does not exist!", this->_hex.c_str());
 						}
-#endif
 					}
 					break;
 				}
@@ -840,12 +829,10 @@ namespace atres
 		{
 			actualSize = text.size();
 		}
-#ifdef _DEBUG
 		else if (actualSize < text.size())
 		{
-			atres::log(hsprintf("WARNING: Text '%s' has \\0 character before the actual end!", text.c_str()));
+			hlog::warnf(atres::logTag, "Text '%s' has \\0 character before the actual end!", text.c_str());
 		}
-#endif
 		harray<RenderWord> result;
 		RenderWord word;
 		const char* str = text.c_str();
@@ -1476,12 +1463,10 @@ namespace atres
 		{
 			actualSize = text.size();
 		}
-#ifdef _DEBUG
 		else if (actualSize < text.size())
 		{
-			atres::log(hsprintf("WARNING: Text '%s' has \\0 character before the actual end!", text.c_str()));
+			hlog::warnf(atres::logTag, "Text '%s' has \\0 character before the actual end!", text.c_str());
 		}
-#endif
 		const char* str = text.c_str();
 
 		unsigned int code = 0;
