@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.01
 /// 
 /// @section LICENSE
 /// 
@@ -21,6 +21,8 @@
 
 namespace atresttf
 {
+	extern hstr logTag;
+
 	atresttfFnExport void init();
 	atresttfFnExport void destroy();
 	atresttfFnExport int getTextureSize();

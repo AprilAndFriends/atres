@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.01
 /// 
 /// @section LICENSE
 /// 
@@ -22,6 +22,7 @@
 #include <hltypes/exception.h>
 #include <hltypes/harray.h>
 #include <hltypes/hdir.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
@@ -30,30 +31,27 @@
 
 namespace atresttf
 {
+	hstr logTag = "atresttf";
+
 	FT_Library library = NULL;
 	hmap<atres::FontResource*, FT_Face> faces;
 	harray<hstr> fonts;
 	harray<hstr> fontFiles;
 	int textureSize = 1024;
 
-	void log(chstr message)
-	{
-		atres::log(message, "[atresttf] ");
-	}
-
 	void init()
 	{
-		atresttf::log("initializing atresttf");
+		hlog::write(atresttf::logTag, "Initializing AtresTTF");
 		FT_Error error = FT_Init_FreeType(&library);
 		if (error != 0)
 		{
-			atresttf::log("Error while initializing atresttf!");
+			hlog::error(atresttf::logTag, "Could not initialize FreeType library!");
 		}
 	}
 	
 	void destroy()
 	{
-		atresttf::log("destroying atresttf");
+		hlog::write(atresttf::logTag, "Destroying AtresTTF");
 		foreach_map (atres::FontResource*, FT_Face, it, faces)
 		{
 			FT_Done_Face(it->second);
@@ -61,7 +59,7 @@ namespace atresttf
 		FT_Error error = FT_Done_FreeType(library);
 		if (error != 0)
 		{
-			atresttf::log("Error while destroying atresttf!");
+			hlog::error(atresttf::logTag, "Could not finalize FreeType library!");
 		}
 	}
 
@@ -161,7 +159,7 @@ namespace atresttf
 	{
 		if (library == NULL)
 		{
-			throw hl_exception("Error: atresttf not initialized!");
+			throw hl_exception("AtresTTF not initialized!");
 		}
 		return library;
 	}
@@ -175,7 +173,7 @@ namespace atresttf
 	{
 		if (faces.has_key(fontResource))
 		{
-			atresttf::log("Cannot add Face for Font Resource " + fontResource->getName());
+			hlog::error(atresttf::logTag, "Cannot add Face for Font Resource: " + fontResource->getName());
 			return;
 		}
 		faces[fontResource] = face;
@@ -185,7 +183,7 @@ namespace atresttf
 	{
 		if (!faces.has_key(fontResource))
 		{
-			atresttf::log("Cannot remove Face for Font Resource " + fontResource->getName());
+			hlog::error(atresttf::logTag, "Cannot remove Face for Font Resource: " + fontResource->getName());
 			return;
 		}
 		faces.remove_key(fontResource);
