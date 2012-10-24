@@ -46,26 +46,26 @@ namespace atres
 
 	Renderer::Renderer()
 	{
-		this->colors["red"] = APRIL_COLOR_RED.hex();
-		this->colors["green"] = APRIL_COLOR_GREEN.hex();
-		this->colors["blue"] = APRIL_COLOR_BLUE.hex();
-		this->colors["yellow"] = APRIL_COLOR_YELLOW.hex();
-		this->colors["magenta"] = APRIL_COLOR_MAGENTA.hex();
-		this->colors["cyan"] = APRIL_COLOR_CYAN.hex();
-		this->colors["orange"] = APRIL_COLOR_ORANGE.hex();
-		this->colors["pink"] = APRIL_COLOR_PINK.hex();
-		this->colors["teal"] = APRIL_COLOR_TEAL.hex();
-		this->colors["neon"] = APRIL_COLOR_NEON.hex();
-		this->colors["purple"] = APRIL_COLOR_PURPLE.hex();
-		this->colors["aqua"] = APRIL_COLOR_AQUA.hex();
-		this->colors["white"] = APRIL_COLOR_WHITE.hex();
-		this->colors["grey"] = APRIL_COLOR_GREY.hex();
-		this->colors["black"] = APRIL_COLOR_BLACK.hex();
+		this->colors["red"] = april::Color::Red.hex();
+		this->colors["green"] = april::Color::Green.hex();
+		this->colors["blue"] = april::Color::Blue.hex();
+		this->colors["yellow"] = april::Color::Yellow.hex();
+		this->colors["magenta"] = april::Color::Magenta.hex();
+		this->colors["cyan"] = april::Color::Cyan.hex();
+		this->colors["orange"] = april::Color::Orange.hex();
+		this->colors["pink"] = april::Color::Pink.hex();
+		this->colors["teal"] = april::Color::Teal.hex();
+		this->colors["neon"] = april::Color::Neon.hex();
+		this->colors["purple"] = april::Color::Purple.hex();
+		this->colors["aqua"] = april::Color::Aqua.hex();
+		this->colors["white"] = april::Color::White.hex();
+		this->colors["grey"] = april::Color::Grey.hex();
+		this->colors["black"] = april::Color::Black.hex();
 		// init
 		this->shadowOffset.set(1.0f, 1.0f);
-		this->shadowColor = APRIL_COLOR_BLACK;
+		this->shadowColor = april::Color::Black;
 		this->borderOffset = 1.0f;
-		this->borderColor = APRIL_COLOR_BLACK;
+		this->borderColor = april::Color::Black;
 		this->globalOffsets = false;
 		this->defaultFont = NULL;
 		// misc init
@@ -523,7 +523,7 @@ namespace atres
 		this->_borderSequence.color = this->borderColor;
 		this->_borderSequence.color.a = (unsigned char)(this->borderColor.a * this->borderColor.a_f() * this->borderColor.a_f());
 		this->_renderRect = RenderRectangle();
-		this->_textColor = APRIL_COLOR_WHITE;
+		this->_textColor = april::Color::White;
 		this->_shadowColor = this->shadowColor;
 		this->_borderColor = this->borderColor;
 		this->_hex = "";
@@ -1166,7 +1166,7 @@ namespace atres
 		{
 			april::rendersys->setTextureColorMode(april::NORMAL);
 		}
-		if (color == APRIL_COLOR_WHITE)
+		if (color == april::Color::White)
 		{
 			april::rendersys->render(april::TriangleList, &sequence.vertices[0], sequence.vertices.size());
 		}
