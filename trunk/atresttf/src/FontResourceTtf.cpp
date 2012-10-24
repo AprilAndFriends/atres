@@ -28,8 +28,6 @@
 
 namespace atresttf
 {
-	extern void log(chstr message);
-
 	FontResourceTtf::FontResourceTtf(chstr filename) : atres::FontResource(filename), fontFile(NULL)
 	{
 		hstr path = get_basedir(filename) + "/";
