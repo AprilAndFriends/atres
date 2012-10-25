@@ -179,7 +179,7 @@ namespace atresttf
 		if (!texture->isLoaded())
 		{
 			delete texture;
-			hlog::write(atresttf::logTag, "Trying april::Texture::FORMAT_ARGB format.");
+			hlog::warn(atresttf::logTag, "Trying april::Texture::FORMAT_ARGB format.");
 			texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ARGB);
 		}
 		return texture;

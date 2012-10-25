@@ -38,7 +38,6 @@
 #define EFFECT_MODE_NORMAL 0
 #define EFFECT_MODE_SHADOW 1
 #define EFFECT_MODE_BORDER 2
-#define BUFFER_MAX_SIZE BUFFER_MAX_CHARACTERS * 6
 
 namespace atres
 {

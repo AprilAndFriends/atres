@@ -26,8 +26,6 @@
 #include "atresExport.h"
 #include "Utility.h"
 
-#define BUFFER_MAX_CHARACTERS 16384
-
 namespace atres
 {
 	class FontResource;
