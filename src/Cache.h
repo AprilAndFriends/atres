@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.02
+/// @version 3.03
 /// 
 /// @section LICENSE
 /// 
@@ -96,6 +96,7 @@ namespace atres
 		void clear()
 		{
 			this->data.clear();
+			this->entries.clear();
 		}
 		
 		int size()
