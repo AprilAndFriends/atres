@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.02
 /// 
 /// @section LICENSE
 /// 
@@ -36,17 +36,17 @@ namespace atres
 		{
 			this->maxSize = 1000;
 		}
-
+		
 		~Cache()
 		{
 		}
-
+		
 		void setMaxSize(int value)
 		{
 			this->maxSize = value;
 			this->update();
 		}
-
+		
 		void add(T& entry)
 		{
 			unsigned int hash = entry.hash();
@@ -57,15 +57,14 @@ namespace atres
 			this->data[hash] += entry;
 			this->entries += this->data[hash].last();
 		}
-
+		
 		bool get(T& entry)
 		{
-			iterator_t it;
 			unsigned int hash = entry.hash();
 			if (this->data.has_key(hash))
 			{
 				harray<T>& array = this->data[hash];
-				for (it = array.begin(); it != array.end(); it++)
+				for (iterator_t it = array.begin(); it != array.end(); it++)
 				{
 					if (entry == (*it))
 					{
@@ -76,7 +75,7 @@ namespace atres
 			}
 			return false;
 		}
-
+		
 		void removeEntry(const T& entry)
 		{
 			unsigned int hash = entry.hash();
@@ -93,17 +92,17 @@ namespace atres
 				this->entries.remove(entry);
 			}
 		}
-
+		
 		void clear()
 		{
 			this->data.clear();
 		}
-
+		
 		int size()
 		{
 			return this->data.size();
 		}
-
+		
 		void update()
 		{
 			if (this->maxSize >= 0)
@@ -119,14 +118,14 @@ namespace atres
 				}
 			}
 		}
-
+		
 	protected:
 		int maxSize;
 		hmap<unsigned int, harray<T> > data;
-		hlist<T> entries;
+		hlist<T> entries; // hlist because add/remove has a constant complexity while harray would have to reorder/resize all elements
 		
 	};
-
+	
 }
 
 #endif
