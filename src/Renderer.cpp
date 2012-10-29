@@ -241,12 +241,21 @@ namespace atres
 	
 	void Renderer::clearCache()
 	{
-		hlog::writef(atres::logTag, "Clearing %d text cache entries...", this->cache->size());
-		this->cache->clear();
-		hlog::writef(atres::logTag, "Clearing %d unformatted text cache entries...", this->cacheUnformatted->size());
-		this->cacheUnformatted->clear();
-		hlog::writef(atres::logTag, "Clearing %d line calculation cache entries...", this->cacheLines->size());
-		this->cacheLines->clear();
+		if (this->cache->size() > 0)
+		{
+			hlog::writef(atres::logTag, "Clearing %d text cache entries...", this->cache->size());
+			this->cache->clear();
+		}
+		if (this->cacheUnformatted->size() > 0)
+		{
+			hlog::writef(atres::logTag, "Clearing %d unformatted text cache entries...", this->cacheUnformatted->size());
+			this->cacheUnformatted->clear();
+		}
+		if (this->cacheLines->size() > 0)
+		{
+			hlog::writef(atres::logTag, "Clearing %d line calculation cache entries...", this->cacheLines->size());
+			this->cacheLines->clear();
+		}
 	}
 	
 /******* ANALYZE TEXT **************************************************/
