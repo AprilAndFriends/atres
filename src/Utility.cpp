@@ -59,6 +59,8 @@ namespace atres
 		this->rect = rect;
 		this->horizontal = horizontal;
 		this->vertical = vertical;
+		// overrides alpha to 255 because of a conflict within AprilUI that would cause alpha-animated
+		// text to be cached for every possible alpha value (0-255) and rendered very slowly
 		this->color = april::Color(color, 255);
 		this->offset = offset;
 	}

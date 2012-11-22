@@ -23,10 +23,13 @@ The color of the word at the end is [c:00FF00]green[/c].
 Notes:
 
 - Font changes will not change line height. Keep that in mind when using fonts of different sizes.
-- After closing a formatting sequence, the previous formatting sequence will be continued (stacking formatting sequences).
+- After closing a formatting sequence, the previous formatting sequence will be continued (stacking
+  formatting sequences).
 - Improperly formed formatting code will be regarded as normal text.
 - Sequences that remain open will be automatically closed at the end.
 - The character ] will be printed normally if it is not used as closing for a formatting command.
 - The character [ can be printed using the empty formatting command [].
-- Parameters follow the command type after any single character (preferably space " ", colon ":" or equal "=" for the sake of readability).
-- The c command does not support alpha, because of a conflict within rendering of colors so any alpha values are disregarded.
+- Parameters follow the command type after any single character (preferably space " ", colon ":" or
+  equal "=" for the sake of readability).
+- The c command does not support alpha, because of a conflict within AprilUI that would cause
+  alpha-animated text to be cached for every possible alpha value (0-255) and rendered very slowly.
