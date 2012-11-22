@@ -10,7 +10,7 @@ Following formatting commands are supported:
 n - normal (no shadow / border)
 s - shadow; parameter (optional): string with hex value for color in RGB or RGBA
 b - border; parameter (optional): string with hex value for color in RGB or RGBA
-c - color change; parameter: string with hex value for color in RGB or RGBA
+c - color change; parameter: string with hex value for color in RGB
 f - font change; parameter: string of the font name definition including optional scale factor
 
 Examples:
@@ -29,3 +29,4 @@ Notes:
 - The character ] will be printed normally if it is not used as closing for a formatting command.
 - The character [ can be printed using the empty formatting command [].
 - Parameters follow the command type after any single character (preferably space " ", colon ":" or equal "=" for the sake of readability).
+- The c command does not support alpha, because of a conflict within rendering of colors so any alpha values are disregarded.
