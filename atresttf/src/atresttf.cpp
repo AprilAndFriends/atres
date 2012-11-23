@@ -9,9 +9,6 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#ifdef _WIN32
-#include <windows.h>
-#endif
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
@@ -24,6 +21,7 @@
 #include <hltypes/hdir.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hmap.h>
+#include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
 #include "atresttf.h"
