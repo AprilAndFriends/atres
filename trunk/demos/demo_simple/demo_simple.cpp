@@ -2,17 +2,22 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.66
+/// @version 3.04
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _ANDROID
-#define RESOURCE_PATH "./"
-#else
+#include <hltypes/hplatform.h>
+#ifndef _ANDROID
+#if !_HL_WINRT
 #define RESOURCE_PATH "../media/"
+#else
+#define RESOURCE_PATH "media/"
+#endif
+#else
+#define RESOURCE_PATH "./"
 #endif
 
 //#define _ATRESTTF
@@ -28,6 +33,7 @@
 #include <aprilui/Objects.h>
 #include <atres/atres.h>
 #include <atres/FontResourceBitmap.h>
+#include <atres/Renderer.h>
 #include <atresttf/atresttf.h>
 #include <atresttf/FontResourceTtf.h>
 #include <gtypes/Rectangle.h>
@@ -47,13 +53,11 @@ grect textArea(700.0f, 600.0f, 240.0f, 76.0f);
 aprilui::Dataset* dataset;
 aprilui::Object* root;
 aprilui::Label* specialText;
-april::Color color = APRIL_COLOR_WHITE;
+april::Color color = april::Color::White;
 
 bool clicked;
 gvec2 position;
 gvec2 offset;
-
-#include <atres/Renderer.h>
 
 bool render(float k)
 {
@@ -71,7 +75,7 @@ bool render(float k)
 	root->draw();
 	april::rendersys->drawFilledRect(textArea, april::Color(0, 0, 0, 128));
 	atres::renderer->drawText(textArea, "[b]This is a vertical test.\nIt really is. Really.",
-		atres::CENTER, atres::CENTER, APRIL_COLOR_WHITE, offset);
+		atres::CENTER, atres::CENTER, april::Color::White, offset);
 	return true;
 }
 
@@ -192,14 +196,12 @@ void april_init(const harray<hstr>& args)
 #else
 		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("arial.ttf", "Arial", 32, 1.0f)); // invokes the installed system Arial font
 #endif
-		atres::renderer->setShadowColor(APRIL_COLOR_RED);
-		atres::renderer->setBorderColor(APRIL_COLOR_AQUA);
+		atres::renderer->setShadowColor(april::Color::Red);
+		atres::renderer->setBorderColor(april::Color::Aqua);
 		aprilui::init();
 #ifdef _DEBUG
 		aprilui::setDebugEnabled(true);
 #endif
-		aprilui::setViewport(viewport);
-		aprilui::setScreenViewport(drawRect);
 		dataset = new aprilui::Dataset(RESOURCE_PATH "demo_simple.dts");
 		dataset->load();
 		aprilui::Label* label = dataset->getObject<aprilui::Label*>("test_4");
