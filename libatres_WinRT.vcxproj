@@ -12,20 +12,25 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}</ProjectGuid>
-    <RootNamespace>libatres</RootNamespace>
+    <ProjectName>libatres</ProjectName>
+    <RootNamespace>atres</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <AppContainerApplication>true</AppContainerApplication>
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <WindowsAppContainer>true</WindowsAppContainer>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <WindowsAppContainer>true</WindowsAppContainer>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -44,12 +49,8 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)bin\$(Platform)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)bin\$(Platform)\lib\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>libatres</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>libatres</TargetName>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -66,16 +67,14 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>libapril.lib;libgtypes.lib;libhltypes.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -94,17 +93,13 @@
     <Link>
       <AdditionalDependencies>libapril.lib;libgtypes.lib;libhltypes.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\atres.cpp" />
@@ -123,7 +118,7 @@
     <ClInclude Include="src\Cache.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\april\libapril.vcxproj">
+    <ProjectReference Include="..\april\libapril_WinRT.vcxproj">
       <Project>{2d053cda-686b-4b36-80eb-1da5f0cef8f9}</Project>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <Private>true</Private>
@@ -131,10 +126,15 @@
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
-    <ProjectReference Include="..\gtypes\libgtypes.vcxproj">
+    <ProjectReference Include="..\gtypes\libgtypes_WinRT.vcxproj">
       <Project>{9c043b29-db40-48d5-97d8-1bc44128e3ba}</Project>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
-    <ProjectReference Include="..\hltypes\libhltypes.vcxproj">
+    <ProjectReference Include="..\hltypes\libhltypes_WinRT.vcxproj">
       <Project>{e4d373bf-e227-48b9-99e6-84987e8674ec}</Project>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <Private>true</Private>
