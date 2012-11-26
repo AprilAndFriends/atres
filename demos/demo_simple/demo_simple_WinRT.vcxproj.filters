@@ -33,9 +33,6 @@
     <None Include="demo_simple_TemporaryKey.pfx">
       <Filter>Win8xap</Filter>
     </None>
-    <None Include="..\..\bin\Win32\libxml2.dll">
-      <Filter>DLLs</Filter>
-    </None>
     <None Include="media\arial.font">
       <Filter>Win8xap\media</Filter>
     </None>

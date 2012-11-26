@@ -188,13 +188,17 @@ void april_init(const harray<hstr>& args)
 		april::window->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove, NULL);
 		april::window->setKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
 		atres::init();
-#ifdef _ATRESTTF
-		atresttf::init();
-#endif
 #ifndef _ATRESTTF
 		atres::renderer->registerFontResource(new atres::FontResourceBitmap(RESOURCE_PATH "arial.font"));
 #else
-		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("arial.ttf", "Arial", 32, 1.0f)); // invokes the installed system Arial font
+		atresttf::init();
+		harray<hstr> fonts = atresttf::getSystemFonts();
+		foreach (hstr, it, fonts)
+		{
+			hlog::write(hsprintf("%03d", fonts.index_of(*it)), *it);
+		}
+		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("arial.ttf", "Arial", 32, 1.0f)); // invokes a provided font
+		//atres::renderer->registerFontResource(new atresttf::FontResourceTtf("", "Arial", 32, 1.0f)); // invokes the installed system font Arial
 #endif
 		atres::renderer->setShadowColor(april::Color::Red);
 		atres::renderer->setBorderColor(april::Color::Aqua);
