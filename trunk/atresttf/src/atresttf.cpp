@@ -27,6 +27,12 @@
 #include "atresttf.h"
 #include "freetype.h"
 
+#if _HL_WINRT
+#include <dwrite.h>
+//using namespace FontEnumeration;
+using namespace Microsoft::WRL;
+#endif
+
 namespace atresttf
 {
 	hstr logTag = "atresttf";
@@ -71,7 +77,7 @@ namespace atresttf
 		textureSize = value;
 	}
 
-#ifdef _WIN32
+#if defined(_WIN32) && !_HL_WINRT
 	int CALLBACK _fontEnumCallback(ENUMLOGFONTEX* lpelfe, NEWTEXTMETRICEX* lpntme, DWORD FontType, LPARAM lParam)
 	{
 		hstr fontName = unicode_to_utf8(lpelfe->elfLogFont.lfFaceName);
@@ -92,6 +98,7 @@ namespace atresttf
 			return fonts;
 		}
 #ifdef _WIN32
+#if !_HL_WINRT
 		LOGFONT logFont;
 		logFont.lfFaceName[0] = NULL;
 		logFont.lfCharSet = DEFAULT_CHARSET;
@@ -99,6 +106,73 @@ namespace atresttf
 		HDC hDC = GetDC(hWnd);
 		EnumFontFamiliesEx(hDC, &logFont, (FONTENUMPROC)&_fontEnumCallback, 0, 0);
 		ReleaseDC(hWnd, hDC);
+#else
+		ComPtr<IDWriteFactory> dWriteFactory;
+		HRESULT hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dWriteFactory);
+		ComPtr<IDWriteFontCollection> fontCollection;
+		if (FAILED(hr))
+		{
+			return fonts;
+		}
+		hr = dWriteFactory->GetSystemFontCollection(fontCollection.GetAddressOf());
+		if (FAILED(hr))
+		{
+			dWriteFactory = nullptr;
+			return fonts;
+		}
+		unsigned int familyCount = fontCollection->GetFontFamilyCount();
+		unsigned int index = 0;
+		BOOL exists = false;
+		wchar_t localeName[LOCALE_NAME_MAX_LENGTH] = {0};
+		int defaultLocaleSuccess = GetUserDefaultLocaleName(localeName, LOCALE_NAME_MAX_LENGTH);
+		for_itert (unsigned int, i, 0, familyCount)
+		{
+			ComPtr<IDWriteFontFamily> fontFamily;
+			hr = fontCollection->GetFontFamily(i, fontFamily.GetAddressOf());
+			if (!FAILED(hr))
+			{
+				ComPtr<IDWriteLocalizedStrings> familyNames;
+				hr = fontFamily->GetFamilyNames(familyNames.GetAddressOf());
+				if (!FAILED(hr))
+				{
+					if (defaultLocaleSuccess > 0)
+					{
+						hr = familyNames->FindLocaleName(localeName, &index, &exists);
+					}
+					if (!FAILED(hr) && !exists)
+					{
+						hr = familyNames->FindLocaleName(L"en-us", &index, &exists);
+						if (FAILED(hr))
+						{
+							familyNames = nullptr;
+							fontFamily = nullptr;
+							continue;
+						}
+					}
+					if (!exists)
+					{
+						index = 0;
+					}
+					unsigned int length = 0;
+					hr = familyNames->GetStringLength(index, &length);
+					if (!FAILED(hr))
+					{
+						wchar_t* name = new wchar_t[length + 1];
+						hr = familyNames->GetString(index, name, length + 1);
+						if (!FAILED(hr))
+						{
+							fonts += unicode_to_utf8(name);
+						}
+						delete [] name;
+					}
+					familyNames = nullptr;
+				}
+				fontFamily = nullptr;
+			}
+		}
+		dWriteFactory = nullptr;
+		fontCollection = nullptr;
+#endif
 #elif defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 #elif defined(__APPLE__) && !TARGET_OS_MAC && TARGET_OS_IPHONE
 #elif defined(__UNIX__)
@@ -143,7 +217,11 @@ namespace atresttf
 	hstr getSystemFontsPath()
 	{
 #ifdef _WIN32
+#if !_HL_WINRT
 		return (normalize_path(get_environment_variable("WinDir")) + "/Fonts/");
+#else
+		return "";
+#endif
 #elif defined(__APPLE__)
 		return "/Library/Fonts/";
 #elif defined(_UNIX)
