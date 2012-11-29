@@ -107,17 +107,17 @@ namespace atresttf
 		EnumFontFamiliesEx(hDC, &logFont, (FONTENUMPROC)&_fontEnumCallback, 0, 0);
 		ReleaseDC(hWnd, hDC);
 #else
-		ComPtr<IDWriteFactory> dWriteFactory;
-		HRESULT hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dWriteFactory);
-		ComPtr<IDWriteFontCollection> fontCollection;
+		IDWriteFactory* dWriteFactory = NULL;
+		HRESULT hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(&dWriteFactory));
 		if (FAILED(hr))
 		{
 			return fonts;
 		}
-		hr = dWriteFactory->GetSystemFontCollection(fontCollection.GetAddressOf());
+		IDWriteFontCollection* fontCollection = NULL;
+		hr = dWriteFactory->GetSystemFontCollection(&fontCollection);
 		if (FAILED(hr))
 		{
-			dWriteFactory = nullptr;
+			_HL_TRY_RELEASE(dWriteFactory);
 			return fonts;
 		}
 		unsigned int familyCount = fontCollection->GetFontFamilyCount();
@@ -127,12 +127,12 @@ namespace atresttf
 		int defaultLocaleSuccess = GetUserDefaultLocaleName(localeName, LOCALE_NAME_MAX_LENGTH);
 		for_itert (unsigned int, i, 0, familyCount)
 		{
-			ComPtr<IDWriteFontFamily> fontFamily;
-			hr = fontCollection->GetFontFamily(i, fontFamily.GetAddressOf());
+			IDWriteFontFamily* fontFamily = NULL;
+			hr = fontCollection->GetFontFamily(i, &fontFamily);
 			if (!FAILED(hr))
 			{
-				ComPtr<IDWriteLocalizedStrings> familyNames;
-				hr = fontFamily->GetFamilyNames(familyNames.GetAddressOf());
+				IDWriteLocalizedStrings* familyNames = NULL;
+				hr = fontFamily->GetFamilyNames(&familyNames);
 				if (!FAILED(hr))
 				{
 					if (defaultLocaleSuccess > 0)
@@ -144,8 +144,8 @@ namespace atresttf
 						hr = familyNames->FindLocaleName(L"en-us", &index, &exists);
 						if (FAILED(hr))
 						{
-							familyNames = nullptr;
-							fontFamily = nullptr;
+							_HL_TRY_RELEASE(familyNames);
+							_HL_TRY_RELEASE(fontFamily);
 							continue;
 						}
 					}
@@ -165,13 +165,13 @@ namespace atresttf
 						}
 						delete [] name;
 					}
-					familyNames = nullptr;
+					_HL_TRY_RELEASE(familyNames);
 				}
-				fontFamily = nullptr;
+				_HL_TRY_RELEASE(fontFamily);
 			}
 		}
-		dWriteFactory = nullptr;
-		fontCollection = nullptr;
+		_HL_TRY_RELEASE(fontCollection);
+		_HL_TRY_RELEASE(dWriteFactory);
 #endif
 #elif defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 #elif defined(__APPLE__) && !TARGET_OS_MAC && TARGET_OS_IPHONE
