@@ -273,28 +273,31 @@ namespace atresttf
 		}
 		int renderX = this->penX + SAFE_SPACE;
 		int renderY = this->penY + offsetY + SAFE_SPACE;
-		if (textureContainer->texture->getFormat() == april::Texture::FORMAT_ALPHA)
+		if (glyph->bitmap.buffer != NULL)
 		{
-			textureContainer->texture->blit(renderX, renderY, glyph->bitmap.buffer, glyph->bitmap.width,
-				glyph->bitmap.rows, 1, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
-		}
-		else
-		{
-			int size = glyph->bitmap.width * glyph->bitmap.rows * 4;
-			unsigned char* glyphData = new unsigned char[size];
-			memset(glyphData, 255, size);
-			int offset;
-			for_iter (j, 0, glyph->bitmap.rows)
+			if (textureContainer->texture->getFormat() == april::Texture::FORMAT_ALPHA)
 			{
-				for_iter (i, 0, glyph->bitmap.width)
-				{
-					offset = i + j * glyph->bitmap.width;
-					glyphData[offset * 4 + 3] = glyph->bitmap.buffer[offset];
-				}
+				textureContainer->texture->blit(renderX, renderY, glyph->bitmap.buffer, glyph->bitmap.width,
+					glyph->bitmap.rows, 1, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
 			}
-			textureContainer->texture->blit(renderX, renderY, glyphData, glyph->bitmap.width,
-				glyph->bitmap.rows, 4, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
-			delete glyphData;
+			else
+			{
+				int size = glyph->bitmap.width * glyph->bitmap.rows * 4;
+				unsigned char* glyphData = new unsigned char[size];
+				memset(glyphData, 255, size);
+				int offset;
+				for_iter (j, 0, glyph->bitmap.rows)
+				{
+					for_iter (i, 0, glyph->bitmap.width)
+					{
+						offset = i + j * glyph->bitmap.width;
+						glyphData[offset * 4 + 3] = glyph->bitmap.buffer[offset];
+					}
+				}
+				textureContainer->texture->blit(renderX, renderY, glyphData, glyph->bitmap.width,
+					glyph->bitmap.rows, 4, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
+				delete glyphData;
+			}
 		}
 		atres::CharacterDefinition c;
 		c.x = (float)this->penX;
