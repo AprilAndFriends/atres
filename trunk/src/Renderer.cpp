@@ -395,7 +395,7 @@ namespace atres
 		switch (vertical)
 		{
 		case CENTER:
-			y += ((lines.size() - 1) * lineHeight + correctedHeight - rect.h) / 2;
+			y += ((lines.size() - 1) * lineHeight + correctedHeight - rect.h) * 0.5f;
 			break;
 		case BOTTOM:
 			y += (lines.size() - 1) * lineHeight + correctedHeight - rect.h;
