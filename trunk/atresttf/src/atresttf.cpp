@@ -60,6 +60,7 @@ namespace atresttf
 		{
 			FT_Done_Face(it->second);
 		}
+		faces.clear();
 		FT_Error error = FT_Done_FreeType(library);
 		if (error != 0)
 		{
