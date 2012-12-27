@@ -77,10 +77,10 @@ namespace atres
 
 	Renderer::~Renderer()
 	{
+		this->destroyAllFontResources();
 		delete this->cache;
 		delete this->cacheUnformatted;
 		delete this->cacheLines;
-		this->destroyAllFontResources();
 	}
 
 /******* PROPERTIES ****************************************************/
@@ -183,7 +183,7 @@ namespace atres
 	void Renderer::destroyAllFontResources()
 	{
 		this->defaultFont = NULL;
-		clearCache();
+		this->clearCache();
 		FontResource* fontResource;
 		harray<hstr> keys;
 		while (this->fonts.size() > 0)
