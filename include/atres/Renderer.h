@@ -52,6 +52,7 @@ namespace atres
 		void setCacheSize(int value);
 
 		void registerFontResource(FontResource* fontResource);
+		void destroyAllFontResources();
 		void destroyFontResource(FontResource* fontResource);
 		void unregisterFontResource(FontResource* fontResource);
 		void registerFontResourceAlias(chstr name, chstr alias);

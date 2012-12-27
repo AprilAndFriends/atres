@@ -80,21 +80,7 @@ namespace atres
 		delete this->cache;
 		delete this->cacheUnformatted;
 		delete this->cacheLines;
-		FontResource* fontResource;
-		harray<hstr> keys;
-		while (this->fonts.size() > 0)
-		{
-			keys = this->fonts.keys();
-			fontResource = this->fonts[keys.first()];
-			foreach (hstr, it, keys)
-			{
-				if (this->fonts[*it] == fontResource)
-				{
-					this->fonts.remove_key(*it);
-				}
-			}
-			delete fontResource;
-		}
+		this->destroyAllFontResources();
 	}
 
 /******* PROPERTIES ****************************************************/
@@ -192,6 +178,27 @@ namespace atres
 		FontResource* fontResource = this->getFontResource(name);
 		hlog::writef(atres::logTag, "Registering font resource alias '%s' for '%s'.", alias.c_str(), fontResource->getName().c_str());
 		this->fonts[alias] = fontResource;
+	}
+	
+	void Renderer::destroyAllFontResources()
+	{
+		this->defaultFont = NULL;
+		clearCache();
+		FontResource* fontResource;
+		harray<hstr> keys;
+		while (this->fonts.size() > 0)
+		{
+			keys = this->fonts.keys();
+			fontResource = this->fonts[keys.first()];
+			foreach (hstr, it, keys)
+			{
+				if (this->fonts[*it] == fontResource)
+				{
+					this->fonts.remove_key(*it);
+				}
+			}
+			delete fontResource;
+		}
 	}
 	
 	void Renderer::destroyFontResource(FontResource* fontResource)
