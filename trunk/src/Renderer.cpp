@@ -29,10 +29,13 @@
 #define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED)
 
 #define CHECK_UNICODE_LINE_BREAK_CHARS(code) \
-	((code) >= 128 && (((code) >= 0x3000 && (code) <= 0x3002) ||	/* ideographic chars like the chinese dot */ \
-						(code) == 0xFF0C ||							/* fullwith comma */ \
+	((code) >= 128 && (((code) >= 0x3000 && (code) <= 0x3002) ||	/* ideographic chars like the Chinese fullstop */ \
+						(code) == 0x2026 ||							/* triple-fullstop char */ \
+						(code) == 0xFF01 ||							/* fullwidth exclamation mark */ \
+						(code) == 0xFF0C ||							/* fullwidth comma */ \
+						(code) == 0xFF1F ||							/* fullwidth question mark */ \
 						(code) == 0x4E00 ||							/* fullwidth '-' char */ \
-						(code) == 0x30FC							/* japanese '-' */ \
+						(code) == 0x30FC							/* Japanese '-' char */ \
 	))
 
 #define EFFECT_MODE_NORMAL 0
