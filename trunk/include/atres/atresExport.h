@@ -32,7 +32,7 @@
 			#endif
 		#else
 			#define atresExport __attribute__ ((visibility("default")))
-			#define atresFnExport
+			#define atresFnExport __attribute__ ((visibility("default")))
 		#endif
 	#endif
 	#ifndef DEPRECATED_ATTRIBUTE
