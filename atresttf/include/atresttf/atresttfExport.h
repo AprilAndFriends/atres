@@ -32,7 +32,7 @@
 			#endif
 		#else
 			#define atresttfExport __attribute__ ((visibility("default")))
-			#define atresttfFnExport
+			#define atresttfFnExport __attribute__ ((visibility("default")))
 		#endif
 	#endif
 	#ifndef DEPRECATED_ATTRIBUTE
