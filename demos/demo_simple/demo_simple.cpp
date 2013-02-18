@@ -23,10 +23,13 @@
 //#define _ATRESTTF
 
 #include <april/april.h>
+#include <april/KeyboardDelegate.h>
 #include <april/Keys.h>
 #include <april/main.h>
+#include <april/MouseDelegate.h>
 #include <april/Platform.h>
 #include <april/RenderSystem.h>
+#include <april/UpdateDelegate.h>
 #include <april/Window.h>
 #include <aprilui/aprilui.h>
 #include <aprilui/Dataset.h>
@@ -43,92 +46,125 @@
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
-grect drawRect(0.0f, 0.0f, 1024.0f, 768.0f);
-#ifndef _ANDROID
-grect viewport = drawRect;
-#else
-grect viewport(0.0f, 0.0f, 480.0f, 320.0f);
-#endif
+grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+grect viewport(0.0f, 0.0f, 1024.0f, 768.0f);
 grect textArea(700.0f, 600.0f, 240.0f, 76.0f);
 aprilui::Dataset* dataset;
 aprilui::Object* root;
 aprilui::Label* specialText;
-april::Color color = april::Color::White;
 
-bool clicked;
-gvec2 position;
-gvec2 offset;
-
-bool render(float k)
+class KeyboardDelegate : public april::KeyboardDelegate
 {
-	// animating text color
-	static float time = 0.0f;
-	time += k;
-	color.a = 191 + (unsigned char)(64 * dsin(time * 360.0f));
-	specialText->setTextColor(color);
-	// rendering
-	april::rendersys->clear();
-	april::rendersys->setOrthoProjection(drawRect);
-	aprilui::updateCursorPosition();
-	april::rendersys->drawFilledRect(drawRect, april::Color(128, 128, 0));
-	root->update(k);
-	root->draw();
-	april::rendersys->drawFilledRect(textArea, april::Color(0, 0, 0, 128));
-	atres::renderer->drawText(textArea, "[b]This is a vertical test.\nIt really is. Really.",
-		atres::CENTER, atres::CENTER, april::Color::White, offset);
-	return true;
-}
-
-void onMouseDown(int button)
-{
-	aprilui::updateCursorPosition();
-	aprilui::onMouseDown(button);
-	position = aprilui::getCursorPosition() + offset;
-	clicked = true;
-}
-
-void onMouseUp(int button)
-{
-	aprilui::updateCursorPosition();
-	aprilui::onMouseUp(button);
-	clicked = false;
-}
-
-void onMouseMove()
-{
-	aprilui::updateCursorPosition();
-	aprilui::onMouseMove();
-	if (clicked)
+public:
+	void onKeyDown(april::Key keyCode)
 	{
-		offset = (position - aprilui::getCursorPosition());
+		aprilui::onKeyDown(keyCode);
 	}
-}
 
-void onKeyDown(unsigned int keycode)
-{
-	aprilui::onKeyDown(keycode);
-}
-
-void onKeyUp(unsigned int keycode)
-{
-	switch (keycode)
+	void onKeyUp(april::Key keyCode)
 	{
-	case april::AK_BACK:
-		atres::renderer->setBorderColor(april::Color(hrand(256), hrand(256), hrand(256)));
-		break;
-	case april::AK_SPACE:
-		atres::renderer->setBorderOffset(hrandf(1.0f, 5.0f));
-		break;
-	default:
-		break;
+		switch (keyCode)
+		{
+		case april::AK_BACK:
+			atres::renderer->setBorderColor(april::Color(hrand(256), hrand(256), hrand(256)));
+			break;
+		case april::AK_SPACE:
+			atres::renderer->setBorderOffset(hrandf(1.0f, 5.0f));
+			break;
+		default:
+			break;
+		}
+		aprilui::onKeyUp(keyCode);
 	}
-	aprilui::onKeyUp(keycode);
-}
 
-void onChar(unsigned int charcode)
+	void onChar(unsigned int charCode)
+	{
+		aprilui::onChar(charCode);
+	}
+
+};
+
+class MouseDelegate : public april::MouseDelegate
 {
-	aprilui::onChar(charcode);
-}
+public:
+	gvec2 offset;
+
+	MouseDelegate::MouseDelegate() : clicked(false)
+	{
+	}
+
+	void onMouseDown(april::Key button)
+	{
+		aprilui::updateCursorPosition();
+		aprilui::onMouseDown(button);
+		this->position = aprilui::getCursorPosition() + this->offset;
+		this->clicked = true;
+	}
+
+	void onMouseUp(april::Key button)
+	{
+		aprilui::updateCursorPosition();
+		aprilui::onMouseUp(button);
+		this->clicked = false;
+	}
+
+	void onMouseMove()
+	{
+		aprilui::updateCursorPosition();
+		aprilui::onMouseMove();
+		if (this->clicked)
+		{
+			this->offset = (this->position - aprilui::getCursorPosition());
+		}
+	}
+
+	void onMouseScroll(float x, float y)
+	{
+		aprilui::onMouseScroll(x, y);
+	}
+
+protected:
+	bool clicked;
+	gvec2 position;
+
+};
+
+static KeyboardDelegate* keyboardDelegate = NULL;
+static MouseDelegate* mouseDelegate = NULL;
+
+class UpdateDelegate : public april::UpdateDelegate
+{
+public:
+	UpdateDelegate::UpdateDelegate() : time(0.0f)
+	{
+		this->color = april::Color::White;
+	}
+
+	bool UpdateDelegate::onUpdate(float timeSinceLastFrame)
+	{
+		this->time += timeSinceLastFrame;
+		this->color.a = 191 + (unsigned char)(64 * dsin(this->time * 360.0f));
+		specialText->setTextColor(this->color);
+		// rendering
+		april::rendersys->clear();
+		april::rendersys->setOrthoProjection(viewport);
+		aprilui::updateCursorPosition();
+		april::rendersys->drawFilledRect(viewport, april::Color(128, 128, 0));
+		root->update(timeSinceLastFrame);
+		root->draw();
+		april::rendersys->drawFilledRect(textArea, april::Color(0, 0, 0, 128));
+		atres::renderer->drawText(textArea, "[b]This is a vertical test.\nIt really is. Really.",
+			atres::CENTER, atres::CENTER, april::Color::White, mouseDelegate->offset);
+		return true;
+	}
+
+protected:
+	float time;
+	april::Color color;
+
+};
+
+static UpdateDelegate* updateDelegate = NULL;
 
 void april_init(const harray<hstr>& args)
 {
@@ -144,49 +180,51 @@ void april_init(const harray<hstr>& args)
 
 		CFURLRef url = CFBundleCopyBundleURL(CFBundleGetMainBundle());
 		CFStringRef path = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
-		
 		// let's hope chdir() will be happy with utf8 encoding
-		const char* cpath=CFStringGetCStringPtr(path, kCFStringEncodingUTF8);
-		char* cpath_alloc=0;
-		if(!cpath)
+		const char* cpath = CFStringGetCStringPtr(path, kCFStringEncodingUTF8);
+		char* cpath_alloc = NULL;
+		if (cpath == NULL)
 		{
 			// CFStringGetCStringPtr is allowed to return NULL. bummer.
 			// we need to use CFStringGetCString instead.
-			cpath_alloc = (char*)malloc(CFStringGetLength(path)+1);
-			CFStringGetCString(path, cpath_alloc, CFStringGetLength(path)+1, kCFStringEncodingUTF8);
+			cpath_alloc = (char*)malloc(CFStringGetLength(path) + 1);
+			CFStringGetCString(path, cpath_alloc, CFStringGetLength(path) + 1, kCFStringEncodingUTF8);
 		}
-		else {
+		else
+		{
 			// even though it didn't return NULL, we still want to slice off bundle name.
-			cpath_alloc = (char*)malloc(CFStringGetLength(path)+1);
+			cpath_alloc = (char*)malloc(CFStringGetLength(path) + 1);
 			strcpy(cpath_alloc, cpath);
 		}
 		// just in case / is appended to .app path for some reason
-		if(cpath_alloc[CFStringGetLength(path)-1]=='/')
-			cpath_alloc[CFStringGetLength(path)-1] = 0;
-		
+		if (cpath_alloc[CFStringGetLength(path) - 1] == '/')
+		{
+			cpath_alloc[CFStringGetLength(path) - 1] = 0;
+		}
 		// replace pre-.app / with a null character, thus
 		// cutting off .app's name and getting parent of .app.
 		strrchr(cpath_alloc, '/')[0] = 0;
-							   
 		// change current dir using posix api
 		chdir(cpath_alloc);
-		
 		free(cpath_alloc); // even if null, still ok
 		CFRelease(path);
 		CFRelease(url);
 	}
 #endif
+	updateDelegate = new UpdateDelegate();
+	keyboardDelegate = new KeyboardDelegate();
+	mouseDelegate = new MouseDelegate();
 	try
 	{
-#ifdef _ANDROID
-		viewport.setSize(april::getDisplayResolution());
+#if defined(_ANDROID) || defined(_IOS)
+		drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
 		april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 		april::createRenderSystem();
-		april::createWindow((int)viewport.w, (int)viewport.h, false, "demo_simple");
-		april::window->setUpdateCallback(render);
-		april::window->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove, NULL);
-		april::window->setKeyboardCallbacks(&onKeyDown, &onKeyUp, &onChar);
+		april::createWindow((int)drawRect.w, (int)drawRect.h, false, "demo_simple");
+		april::window->setUpdateDelegate(updateDelegate);
+		april::window->setKeyboardDelegate(keyboardDelegate);
+		april::window->setMouseDelegate(mouseDelegate);
 		atres::init();
 #ifndef _ATRESTTF
 		atres::renderer->registerFontResource(new atres::FontResourceBitmap(RESOURCE_PATH "arial.font"));
@@ -235,4 +273,10 @@ void april_destroy()
 	{
 		printf("%s\n", e.message().c_str());
 	}
+	delete updateDelegate;
+	updateDelegate = NULL;
+	delete keyboardDelegate;
+	keyboardDelegate = NULL;
+	delete mouseDelegate;
+	mouseDelegate = NULL;
 }

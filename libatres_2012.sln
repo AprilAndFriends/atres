@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual C++ Express 2012
+# Visual Studio Express 2012 for Windows Desktop
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libatres", "libatres.vcxproj", "{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA} = {9C043B29-DB40-48D5-97D8-1BC44128E3BA}
@@ -105,12 +105,12 @@ Global
 		{BD643E5E-72FF-4004-BD69-31DC02E5D417}.Release|Win32.Build.0 = Release|Win32
 		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Debug|Android.ActiveCfg = Debug_TinyXml|Android
 		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Debug|Android.Build.0 = Debug_TinyXml|Android
-		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Debug|Win32.ActiveCfg = Debug_LibXml2|Win32
-		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Debug|Win32.Build.0 = Debug_LibXml2|Win32
+		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Debug|Win32.ActiveCfg = Debug_TinyXml|Win32
+		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Debug|Win32.Build.0 = Debug_TinyXml|Win32
 		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Release|Android.ActiveCfg = Release_TinyXml|Android
 		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Release|Android.Build.0 = Release_TinyXml|Android
-		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Release|Win32.ActiveCfg = Release_LibXml2|Win32
-		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Release|Win32.Build.0 = Release_LibXml2|Win32
+		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Release|Win32.ActiveCfg = Release_TinyXml|Win32
+		{601BCB9E-AAF2-412E-8AEB-9FC77D0505D8}.Release|Win32.Build.0 = Release_TinyXml|Win32
 		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Debug|Android.ActiveCfg = Debug|Win32
 		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Debug|Win32.ActiveCfg = Debug|Win32
 		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Debug|Win32.Build.0 = Debug|Win32
