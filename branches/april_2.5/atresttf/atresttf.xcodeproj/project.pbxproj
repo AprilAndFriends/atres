@@ -1,0 +1,950 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C9C0515914BB2A0D005BD333 /* atresttf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C0515614BB2A0D005BD333 /* atresttf.cpp */; };
+		C9C0515A14BB2A0D005BD333 /* atresttf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C0515614BB2A0D005BD333 /* atresttf.cpp */; };
+		C9C0515B14BB2A0D005BD333 /* FontResourceTtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C0515714BB2A0D005BD333 /* FontResourceTtf.cpp */; };
+		C9C0515C14BB2A0D005BD333 /* FontResourceTtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C0515714BB2A0D005BD333 /* FontResourceTtf.cpp */; };
+		C9C0515D14BB2A0D005BD333 /* freetype.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0515814BB2A0D005BD333 /* freetype.h */; };
+		C9C0515E14BB2A0D005BD333 /* freetype.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0515814BB2A0D005BD333 /* freetype.h */; };
+		C9C0516214BB2A16005BD333 /* atresttf.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0515F14BB2A16005BD333 /* atresttf.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C9C0516314BB2A16005BD333 /* atresttf.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0515F14BB2A16005BD333 /* atresttf.h */; };
+		C9C0516414BB2A16005BD333 /* atresttfExport.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0516014BB2A16005BD333 /* atresttfExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C9C0516514BB2A16005BD333 /* atresttfExport.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0516014BB2A16005BD333 /* atresttfExport.h */; };
+		C9C0516614BB2A16005BD333 /* FontResourceTtf.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0516114BB2A16005BD333 /* FontResourceTtf.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C9C0516714BB2A16005BD333 /* FontResourceTtf.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0516114BB2A16005BD333 /* FontResourceTtf.h */; };
+		C9C0516D14BB2A6E005BD333 /* april.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9C0516814BB2A6E005BD333 /* april.framework */; };
+		C9C0516E14BB2A6E005BD333 /* atres.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9C0516914BB2A6E005BD333 /* atres.framework */; };
+		C9C0517014BB2A6E005BD333 /* gtypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9C0516B14BB2A6E005BD333 /* gtypes.framework */; };
+		C9C0517114BB2A6E005BD333 /* hltypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9C0516C14BB2A6E005BD333 /* hltypes.framework */; };
+		C9FBF4B014E10B47008359C3 /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FBF4AF14E10B47008359C3 /* freetype.framework */; };
+		D178E4F61560F3FA0026CCD0 /* ttf_fontgen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D178E4F51560F3FA0026CCD0 /* ttf_fontgen.cpp */; };
+		D178E4FC1560F56C0026CCD0 /* atresttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* atresttf.framework */; };
+		D178E5011560F56C0026CCD0 /* april.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D178E4FD1560F56C0026CCD0 /* april.framework */; };
+		D178E5021560F56C0026CCD0 /* atres.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D178E4FE1560F56C0026CCD0 /* atres.framework */; };
+		D178E5031560F56C0026CCD0 /* gtypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D178E4FF1560F56C0026CCD0 /* gtypes.framework */; };
+		D178E5041560F56C0026CCD0 /* hltypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5001560F56C0026CCD0 /* hltypes.framework */; };
+		D178E5061560F5860026CCD0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5051560F5860026CCD0 /* Foundation.framework */; };
+		D178E5091560F5AF0026CCD0 /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5081560F5AF0026CCD0 /* freetype.framework */; };
+		D178E50C1560F6DF0026CCD0 /* freetype.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5081560F5AF0026CCD0 /* freetype.framework */; };
+		D178E50D1560F6DF0026CCD0 /* Foundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5051560F5860026CCD0 /* Foundation.framework */; };
+		D178E50E1560F6DF0026CCD0 /* april.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E4FD1560F56C0026CCD0 /* april.framework */; };
+		D178E50F1560F6DF0026CCD0 /* atres.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E4FE1560F56C0026CCD0 /* atres.framework */; };
+		D178E5101560F6DF0026CCD0 /* gtypes.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E4FF1560F56C0026CCD0 /* gtypes.framework */; };
+		D178E5111560F6DF0026CCD0 /* hltypes.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5001560F56C0026CCD0 /* hltypes.framework */; };
+		D178E5121560F6EF0026CCD0 /* atresttf.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* atresttf.framework */; };
+		D178E5151560F72B0026CCD0 /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5131560F7250026CCD0 /* SDL.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D178E50B1560F6C30026CCD0 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D178E50C1560F6DF0026CCD0 /* freetype.framework in Copy Frameworks */,
+				D178E50D1560F6DF0026CCD0 /* Foundation.framework in Copy Frameworks */,
+				D178E50E1560F6DF0026CCD0 /* april.framework in Copy Frameworks */,
+				D178E50F1560F6DF0026CCD0 /* atres.framework in Copy Frameworks */,
+				D178E5101560F6DF0026CCD0 /* gtypes.framework in Copy Frameworks */,
+				D178E5111560F6DF0026CCD0 /* hltypes.framework in Copy Frameworks */,
+				D178E5121560F6EF0026CCD0 /* atresttf.framework in Copy Frameworks */,
+				D178E5151560F72B0026CCD0 /* SDL.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8DC2EF5B0486A6940098B216 /* atresttf.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = atresttf.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9C0515614BB2A0D005BD333 /* atresttf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = atresttf.cpp; path = src/atresttf.cpp; sourceTree = "<group>"; };
+		C9C0515714BB2A0D005BD333 /* FontResourceTtf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FontResourceTtf.cpp; path = src/FontResourceTtf.cpp; sourceTree = "<group>"; };
+		C9C0515814BB2A0D005BD333 /* freetype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = freetype.h; path = src/freetype.h; sourceTree = "<group>"; };
+		C9C0515F14BB2A16005BD333 /* atresttf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = atresttf.h; path = include/atresttf/atresttf.h; sourceTree = "<group>"; };
+		C9C0516014BB2A16005BD333 /* atresttfExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = atresttfExport.h; path = include/atresttf/atresttfExport.h; sourceTree = "<group>"; };
+		C9C0516114BB2A16005BD333 /* FontResourceTtf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontResourceTtf.h; path = include/atresttf/FontResourceTtf.h; sourceTree = "<group>"; };
+		C9C0516814BB2A6E005BD333 /* april.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = april.framework; path = "../../../__build__/pharaoh/Build/Products/Debug-LLVM/april.framework"; sourceTree = "<group>"; };
+		C9C0516914BB2A6E005BD333 /* atres.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = atres.framework; path = "../../../__build__/pharaoh/Build/Products/Debug-LLVM/atres.framework"; sourceTree = "<group>"; };
+		C9C0516A14BB2A6E005BD333 /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = "../../../__build__/pharaoh/Build/Products/Debug-LLVM/freetype.framework"; sourceTree = "<group>"; };
+		C9C0516B14BB2A6E005BD333 /* gtypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtypes.framework; path = "../../../__build__/pharaoh/Build/Products/Debug-LLVM/gtypes.framework"; sourceTree = "<group>"; };
+		C9C0516C14BB2A6E005BD333 /* hltypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = hltypes.framework; path = "../../../__build__/pharaoh/Build/Products/Debug-LLVM/hltypes.framework"; sourceTree = "<group>"; };
+		C9FBF4AF14E10B47008359C3 /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../freetype/build/Release/freetype.framework; sourceTree = "<group>"; };
+		D1522F1C140F79500012F290 /* libatresttf.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libatresttf.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D178E4D21560F3B60026CCD0 /* ttf_fontgen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ttf_fontgen.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D178E4D41560F3B60026CCD0 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		D178E4D71560F3B60026CCD0 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		D178E4D81560F3B60026CCD0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		D178E4D91560F3B60026CCD0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D178E4F51560F3FA0026CCD0 /* ttf_fontgen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ttf_fontgen.cpp; path = ../scripts/ttf_font_generator/ttf_fontgen.cpp; sourceTree = "<group>"; };
+		D178E4FD1560F56C0026CCD0 /* april.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = april.framework; path = "../../__build__/angels/Build/Products/Debug-LLVM/april.framework"; sourceTree = "<group>"; };
+		D178E4FE1560F56C0026CCD0 /* atres.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = atres.framework; path = "../../__build__/angels/Build/Products/Debug-LLVM/atres.framework"; sourceTree = "<group>"; };
+		D178E4FF1560F56C0026CCD0 /* gtypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtypes.framework; path = "../../__build__/angels/Build/Products/Debug-LLVM/gtypes.framework"; sourceTree = "<group>"; };
+		D178E5001560F56C0026CCD0 /* hltypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = hltypes.framework; path = "../../__build__/angels/Build/Products/Debug-LLVM/hltypes.framework"; sourceTree = "<group>"; };
+		D178E5051560F5860026CCD0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		D178E5081560F5AF0026CCD0 /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = "../../__build__/angels/Build/Products/Debug-LLVM/freetype.framework"; sourceTree = "<group>"; };
+		D178E5131560F7250026CCD0 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = "../../__build__/angels/Build/Products/Debug-LLVM/SDL.framework"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8DC2EF560486A6940098B216 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9FBF4B014E10B47008359C3 /* freetype.framework in Frameworks */,
+				C9C0516D14BB2A6E005BD333 /* april.framework in Frameworks */,
+				C9C0516E14BB2A6E005BD333 /* atres.framework in Frameworks */,
+				C9C0517014BB2A6E005BD333 /* gtypes.framework in Frameworks */,
+				C9C0517114BB2A6E005BD333 /* hltypes.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1522F19140F79500012F290 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D178E4CF1560F3B60026CCD0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D178E5091560F5AF0026CCD0 /* freetype.framework in Frameworks */,
+				D178E5061560F5860026CCD0 /* Foundation.framework in Frameworks */,
+				D178E5011560F56C0026CCD0 /* april.framework in Frameworks */,
+				D178E5021560F56C0026CCD0 /* atres.framework in Frameworks */,
+				D178E5031560F56C0026CCD0 /* gtypes.framework in Frameworks */,
+				D178E5041560F56C0026CCD0 /* hltypes.framework in Frameworks */,
+				D178E4FC1560F56C0026CCD0 /* atresttf.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DC2EF5B0486A6940098B216 /* atresttf.framework */,
+				D1522F1C140F79500012F290 /* libatresttf.a */,
+				D178E4D21560F3B60026CCD0 /* ttf_fontgen.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* libatresttf */ = {
+			isa = PBXGroup;
+			children = (
+				D178E4F31560F3D70026CCD0 /* tools */,
+				8DC2EF5A0486A6940098B216 /* Info.plist */,
+				7F42F6E811EB0E0600B1C1DF /* include */,
+				7F42F6E711EB0E0200B1C1DF /* src */,
+				034768DFFF38A50411DB9C8B /* Products */,
+				C9C0517214BB2A7D005BD333 /* Frameworks */,
+			);
+			name = libatresttf;
+			sourceTree = "<group>";
+		};
+		7F42F6E711EB0E0200B1C1DF /* src */ = {
+			isa = PBXGroup;
+			children = (
+				C9C0515614BB2A0D005BD333 /* atresttf.cpp */,
+				C9C0515714BB2A0D005BD333 /* FontResourceTtf.cpp */,
+				C9C0515814BB2A0D005BD333 /* freetype.h */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		7F42F6E811EB0E0600B1C1DF /* include */ = {
+			isa = PBXGroup;
+			children = (
+				C9C0515F14BB2A16005BD333 /* atresttf.h */,
+				C9C0516014BB2A16005BD333 /* atresttfExport.h */,
+				C9C0516114BB2A16005BD333 /* FontResourceTtf.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		C9C0517214BB2A7D005BD333 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C9FBF4AF14E10B47008359C3 /* freetype.framework */,
+				C9C0516814BB2A6E005BD333 /* april.framework */,
+				C9C0516914BB2A6E005BD333 /* atres.framework */,
+				C9C0516A14BB2A6E005BD333 /* freetype.framework */,
+				C9C0516B14BB2A6E005BD333 /* gtypes.framework */,
+				C9C0516C14BB2A6E005BD333 /* hltypes.framework */,
+				D178E4D41560F3B60026CCD0 /* Cocoa.framework */,
+				D178E4D61560F3B60026CCD0 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D178E4D61560F3B60026CCD0 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D178E4D71560F3B60026CCD0 /* AppKit.framework */,
+				D178E4D81560F3B60026CCD0 /* CoreData.framework */,
+				D178E4D91560F3B60026CCD0 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		D178E4F31560F3D70026CCD0 /* tools */ = {
+			isa = PBXGroup;
+			children = (
+				D178E4F41560F3EA0026CCD0 /* ttf_fontgen */,
+			);
+			name = tools;
+			sourceTree = "<group>";
+		};
+		D178E4F41560F3EA0026CCD0 /* ttf_fontgen */ = {
+			isa = PBXGroup;
+			children = (
+				D178E4F51560F3FA0026CCD0 /* ttf_fontgen.cpp */,
+				D178E5071560F59A0026CCD0 /* Frameworks */,
+			);
+			name = ttf_fontgen;
+			sourceTree = "<group>";
+		};
+		D178E5071560F59A0026CCD0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D178E5131560F7250026CCD0 /* SDL.framework */,
+				D178E5081560F5AF0026CCD0 /* freetype.framework */,
+				D178E5051560F5860026CCD0 /* Foundation.framework */,
+				D178E4FD1560F56C0026CCD0 /* april.framework */,
+				D178E4FE1560F56C0026CCD0 /* atres.framework */,
+				D178E4FF1560F56C0026CCD0 /* gtypes.framework */,
+				D178E5001560F56C0026CCD0 /* hltypes.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		8DC2EF500486A6940098B216 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9C0516214BB2A16005BD333 /* atresttf.h in Headers */,
+				C9C0516414BB2A16005BD333 /* atresttfExport.h in Headers */,
+				C9C0516614BB2A16005BD333 /* FontResourceTtf.h in Headers */,
+				C9C0515D14BB2A0D005BD333 /* freetype.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1522F1A140F79500012F290 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9C0515E14BB2A0D005BD333 /* freetype.h in Headers */,
+				C9C0516314BB2A16005BD333 /* atresttf.h in Headers */,
+				C9C0516514BB2A16005BD333 /* atresttfExport.h in Headers */,
+				C9C0516714BB2A16005BD333 /* FontResourceTtf.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		8DC2EF4F0486A6940098B216 /* atresttf */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "atresttf" */;
+			buildPhases = (
+				8DC2EF540486A6940098B216 /* Sources */,
+				8DC2EF560486A6940098B216 /* Frameworks */,
+				8DC2EF500486A6940098B216 /* Headers */,
+				8DC2EF520486A6940098B216 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = atresttf;
+			productInstallPath = "$(HOME)/Library/Frameworks";
+			productName = libatresttf;
+			productReference = 8DC2EF5B0486A6940098B216 /* atresttf.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D1522F1B140F79500012F290 /* atresttf (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1522F2B140F79500012F290 /* Build configuration list for PBXNativeTarget "atresttf (iOS)" */;
+			buildPhases = (
+				D1522F18140F79500012F290 /* Sources */,
+				D1522F19140F79500012F290 /* Frameworks */,
+				D1522F1A140F79500012F290 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "atresttf (iOS)";
+			productName = "libatresttf-ios";
+			productReference = D1522F1C140F79500012F290 /* libatresttf.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D178E4D11560F3B60026CCD0 /* ttf_fontgen */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D178E4F11560F3B70026CCD0 /* Build configuration list for PBXNativeTarget "ttf_fontgen" */;
+			buildPhases = (
+				D178E4CE1560F3B60026CCD0 /* Sources */,
+				D178E4CF1560F3B60026CCD0 /* Frameworks */,
+				D178E50B1560F6C30026CCD0 /* Copy Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ttf_fontgen;
+			productName = ttf_fontgen;
+			productReference = D178E4D21560F3B60026CCD0 /* ttf_fontgen.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+			};
+			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "atresttf" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				en,
+			);
+			mainGroup = 0867D691FE84028FC02AAC07 /* libatresttf */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8DC2EF4F0486A6940098B216 /* atresttf */,
+				D1522F1B140F79500012F290 /* atresttf (iOS) */,
+				D178E4D11560F3B60026CCD0 /* ttf_fontgen */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8DC2EF520486A6940098B216 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DC2EF540486A6940098B216 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9C0515914BB2A0D005BD333 /* atresttf.cpp in Sources */,
+				C9C0515B14BB2A0D005BD333 /* FontResourceTtf.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1522F18140F79500012F290 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9C0515A14BB2A0D005BD333 /* atresttf.cpp in Sources */,
+				C9C0515C14BB2A0D005BD333 /* FontResourceTtf.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D178E4CE1560F3B60026CCD0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D178E4F61560F3FA0026CCD0 /* ttf_fontgen.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91AE08733DA50010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "${SRCROOT}/../../lib/mac";
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
+				INFOPLIST_FILE = Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = "i386 x86_64 ppc";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		1DEB91AF08733DA50010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "${SRCROOT}/../../lib/mac";
+				FRAMEWORK_VERSION = A;
+				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = "i386 x86_64 ppc";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		1DEB91B208733DA50010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../april/include",
+					"${SRCROOT}/../../freetype/include",
+					"${SRCROOT}/../include",
+				);
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = atresttf;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1DEB91B308733DA50010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../april/include",
+					"${SRCROOT}/../../freetype/include",
+					"${SRCROOT}/../include",
+				);
+				PRODUCT_NAME = atresttf;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		7F7A5614129D436D00E0ED12 /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = i386;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../april/include",
+					"${SRCROOT}/../../freetype/include",
+					"${SRCROOT}/../include",
+				);
+				PRODUCT_NAME = atresttf;
+				SDKROOT = macosx;
+			};
+			name = "App Store";
+		};
+		7F7A5615129D436D00E0ED12 /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "${SRCROOT}/../../lib/mac";
+				FRAMEWORK_VERSION = A;
+				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = "i386 x86_64 ppc";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = "App Store";
+		};
+		C9160585132AE60400914FFC /* Debug-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_VERSION = "";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../april/include",
+					"${SRCROOT}/../../freetype/include",
+					"${SRCROOT}/../include",
+				);
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = atresttf;
+				SDKROOT = macosx;
+			};
+			name = "Debug-LLVM";
+		};
+		C9160586132AE60400914FFC /* Debug-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "${SRCROOT}/../../lib/mac";
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
+				INFOPLIST_FILE = Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = "i386 x86_64 ppc";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = "Debug-LLVM";
+		};
+		C9160587132AE61000914FFC /* Release-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_VERSION = "";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../april/include",
+					"${SRCROOT}/../../freetype/include",
+					"${SRCROOT}/../include",
+				);
+				PRODUCT_NAME = atresttf;
+				SDKROOT = macosx;
+			};
+			name = "Release-LLVM";
+		};
+		C9160588132AE61000914FFC /* Release-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "${SRCROOT}/../../lib/mac";
+				FRAMEWORK_VERSION = A;
+				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = "i386 x86_64 ppc";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = "Release-LLVM";
+		};
+		D1522F26140F79500012F290 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/libatresttf_ios.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					_DEBUG,
+					"$(inherited)",
+				);
+				GCC_THUMB_SUPPORT = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atresttf;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		D1522F27140F79500012F290 /* Debug-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/libatresttf_ios.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					_DEBUG,
+					"$(inherited)",
+				);
+				GCC_THUMB_SUPPORT = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atresttf;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = "Debug-LLVM";
+		};
+		D1522F28140F79500012F290 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libatresttf_ios.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_THUMB_SUPPORT = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atresttf;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D1522F29140F79500012F290 /* Release-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libatresttf_ios.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_THUMB_SUPPORT = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atresttf;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-LLVM";
+		};
+		D1522F2A140F79500012F290 /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libatresttf_ios.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_THUMB_SUPPORT = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atresttf;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "App Store";
+		};
+		D178E4EC1560F3B70026CCD0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../__build__/angels/Build/Products/Debug-LLVM\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = ../scripts/ttf_font_generator/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		D178E4ED1560F3B70026CCD0 /* Debug-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../__build__/angels/Build/Products/Debug-LLVM\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = ../scripts/ttf_font_generator/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Debug-LLVM";
+		};
+		D178E4EE1560F3B70026CCD0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../__build__/angels/Build/Products/Debug-LLVM\"",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = ../scripts/ttf_font_generator/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		D178E4EF1560F3B70026CCD0 /* Release-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../__build__/angels/Build/Products/Debug-LLVM\"",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = ../scripts/ttf_font_generator/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Release-LLVM";
+		};
+		D178E4F01560F3B70026CCD0 /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../__build__/angels/Build/Products/Debug-LLVM\"",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = ../scripts/ttf_font_generator/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = "App Store";
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "atresttf" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91AE08733DA50010E9CD /* Debug */,
+				C9160586132AE60400914FFC /* Debug-LLVM */,
+				1DEB91AF08733DA50010E9CD /* Release */,
+				C9160588132AE61000914FFC /* Release-LLVM */,
+				7F7A5615129D436D00E0ED12 /* App Store */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "atresttf" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91B208733DA50010E9CD /* Debug */,
+				C9160585132AE60400914FFC /* Debug-LLVM */,
+				1DEB91B308733DA50010E9CD /* Release */,
+				C9160587132AE61000914FFC /* Release-LLVM */,
+				7F7A5614129D436D00E0ED12 /* App Store */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D1522F2B140F79500012F290 /* Build configuration list for PBXNativeTarget "atresttf (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1522F26140F79500012F290 /* Debug */,
+				D1522F27140F79500012F290 /* Debug-LLVM */,
+				D1522F28140F79500012F290 /* Release */,
+				D1522F29140F79500012F290 /* Release-LLVM */,
+				D1522F2A140F79500012F290 /* App Store */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D178E4F11560F3B70026CCD0 /* Build configuration list for PBXNativeTarget "ttf_fontgen" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D178E4EC1560F3B70026CCD0 /* Debug */,
+				D178E4ED1560F3B70026CCD0 /* Debug-LLVM */,
+				D178E4EE1560F3B70026CCD0 /* Release */,
+				D178E4EF1560F3B70026CCD0 /* Release-LLVM */,
+				D178E4F01560F3B70026CCD0 /* App Store */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}
