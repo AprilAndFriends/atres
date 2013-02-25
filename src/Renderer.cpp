@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.02
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -29,13 +29,15 @@
 #define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED)
 
 #define CHECK_UNICODE_LINE_BREAK_CHARS(code) \
-	((code) >= 128 && (((code) >= 0x3000 && (code) <= 0x3002) ||	/* ideographic chars like the Chinese fullstop */ \
-						(code) == 0x2026 ||							/* triple-fullstop char */ \
-						(code) == 0xFF01 ||							/* fullwidth exclamation mark */ \
-						(code) == 0xFF0C ||							/* fullwidth comma */ \
-						(code) == 0xFF1F ||							/* fullwidth question mark */ \
-						(code) == 0x4E00 ||							/* fullwidth '-' char */ \
-						(code) == 0x30FC							/* Japanese '-' char */ \
+	((code) >= 128 && ( (code) == 0x2026 ||	/* triple-fullstop char */ \
+						(code) == 0x3000 ||	/* ideographic space */ \
+						(code) == 0x3001 ||	/* ideographic comma */ \
+						(code) == 0x3002 ||	/* ideographic full stop/period */ \
+						(code) == 0x30FC ||	/* Japanese dash char */ \
+						(code) == 0x4E00 ||	/* fullwidth dash char */ \
+						(code) == 0xFF01 ||	/* fullwidth exclamation mark */ \
+						(code) == 0xFF0C ||	/* fullwidth comma */ \
+						(code) == 0xFF1F	/* fullwidth question mark */ \
 	))
 
 #define EFFECT_MODE_NORMAL 0
@@ -69,6 +71,7 @@ namespace atres
 		this->borderOffset = 1.0f;
 		this->borderColor = april::Color::Black;
 		this->globalOffsets = false;
+		this->useLegacyLineBreakParsing = false;
 		this->defaultFont = NULL;
 		// misc init
 		this->_fontResource = NULL;
@@ -555,6 +558,7 @@ namespace atres
 	void Renderer::_initializeLineProcessing(harray<RenderLine> lines)
 	{
 		this->_lines = lines;
+		this->_char = RenderChar();
 		this->_line = RenderLine();
 		this->_word = RenderWord();
 	}
@@ -789,7 +793,7 @@ namespace atres
 			{
 				this->_nextTag.start = this->_word.start + this->_word.text.size() + 1;
 			}
-			this->_texture = this->_fontResource->getTexture(this->_code);
+			this->_texture = this->_fontResource->getTexture(this->_char.code);
 			this->_checkSequenceSwitch();
 		}
 		if (this->_tags.size() == 0)
@@ -804,7 +808,7 @@ namespace atres
 			}
 		}
 		// this additional check is required in case the texture had to be changed
-		this->_texture = this->_fontResource->getTexture(this->_code);
+		this->_texture = this->_fontResource->getTexture(this->_char.code);
 		this->_checkSequenceSwitch();
 	}
 
@@ -842,9 +846,8 @@ namespace atres
 		}
 	}
 
-	harray<RenderWord> Renderer::createRenderWords(grect rect, chstr text, harray<FormatTag> tags)
+	harray<RenderChar> Renderer::createRenderChars(chstr text)
 	{
-		this->_initializeFormatTags(tags);
 		int actualSize = text.find_first_of('\0');
 		if (actualSize < 0)
 		{
@@ -854,46 +857,65 @@ namespace atres
 		{
 			hlog::warnf(atres::logTag, "Text '%s' has \\0 character before the actual end!", text.c_str());
 		}
+		harray<RenderChar> result;
+		const char* str = text.c_str();
+		int i = 0;
+		while (i < actualSize) // checking all words
+		{
+			this->_char.code = utf8_to_uint(&str[i], &this->_char.byteSize);
+			this->_char.text = text(i, this->_char.byteSize);
+			result += this->_char;
+			i += this->_char.byteSize;
+		}
+		return result;
+	}
+
+	harray<RenderWord> Renderer::createRenderWords(grect rect, chstr text, harray<FormatTag> tags)
+	{
+		this->_initializeFormatTags(tags);
+		harray<RenderChar> chars = this->createRenderChars(text);
 		harray<RenderWord> result;
 		RenderWord word;
 		const char* str = text.c_str();
-		unsigned int code = 0;
 		float ax = 0.0f;
 		float aw = 0.0f;
 		float wordX = 0.0f;
 		float wordW = 0.0f;
 		float addW = 0.0f;
-		int start = 0;
+		int iStart = 0;
 		int i = 0;
-		int byteLength = 0;
+		int jStart = 0;
+		int j = 0;
 		bool checkingSpaces = true;
 		bool tooLong = false;
 		word.rect.x = rect.x;
 		word.rect.y = rect.y;
 		word.rect.h = this->_height;
 		
-		while (i < actualSize) // checking all words
+		while (j < chars.size()) // checking all words
 		{
-			start = i;
+			iStart = i;
+			jStart = j;
 			wordX = 0.0f;
 			wordW = 0.0f;
-			while (i < actualSize) // checking a whole word
+			while (j < chars.size()) // checking a whole word
 			{
-				code = utf8_to_uint(&str[i], &byteLength);
-				if (code == '\n')
+				this->_char = chars[j];
+				if (this->_char.code == '\n')
 				{
-					if (i == start)
+					if (i == iStart)
 					{
-						i += byteLength;
+						i += this->_char.byteSize;
+						j++;
 					}
 					break;
 				}
-				if ((code == 0x20) != checkingSpaces)
+				if ((this->_char.code == 0x20) != checkingSpaces)
 				{
 					break;
 				}
 				this->_checkFormatTags(text, i);
-				this->_character = &this->_characters[code];
+				this->_character = &this->_characters[this->_char.code];
 				this->_scale = this->_fontScale * this->_textScale;
 				if (wordX < -this->_character->bx * this->_scale)
 				{
@@ -916,18 +938,38 @@ namespace atres
 				}
 				wordW = wordX + addW;
 				wordX += ax;
-				i += byteLength;
-				if (!checkingSpaces && CHECK_UNICODE_LINE_BREAK_CHARS(code))
+				i += this->_char.byteSize;
+				j++;
+				if (!checkingSpaces)
 				{
-					break;
+					if (!this->useLegacyLineBreakParsing)
+					{
+						if (j - jStart >= 2 && CHECK_UNICODE_LINE_BREAK_CHARS(this->_char.code))
+						{
+							break;
+						}
+						if (j < chars.size() - 1)
+						{
+							RenderChar nextChar = chars[j + 1];
+							if (CHECK_UNICODE_LINE_BREAK_CHARS(nextChar.code))
+							{
+								break;
+							}
+						}
+					}
+					else if (CHECK_UNICODE_LINE_BREAK_CHARS(this->_char.code))
+					{
+						break;
+					}
 				}
 			}
-			if (i > start)
+			if (i > iStart)
 			{
-				word.text = text(start, i - start);
+				word.text = text(iStart, i - iStart);
+				word.chars = chars(jStart, j - jStart);
 				word.rect.w = wordX;
-				word.start = start;
-				word.spaces = (checkingSpaces ? i - start : 0);
+				word.start = iStart;
+				word.spaces = (checkingSpaces ? i - iStart : 0);
 				word.fullWidth = wordW;
 				result += word;
 			}
@@ -1045,11 +1087,11 @@ namespace atres
 		this->_initializeFormatTags(tags);
 		this->_initializeRenderSequences();
 		this->_initializeLineProcessing(lines);
-		int byteLength = 0;
 		float width = 0.0f;
 		grect destination;
 		grect area;
 		grect drawRect;
+		int i = 0;
 		
 		while (this->_lines.size() > 0)
 		{
@@ -1058,17 +1100,18 @@ namespace atres
 			foreach (RenderWord, it, this->_line.words)
 			{
 				this->_word = (*it);
-				for_iter_step (i, 0, this->_word.text.size(), byteLength)
+				i = 0;
+				for_iter (j, 0, this->_word.chars.size())
 				{
-					this->_code = utf8_to_uint(&this->_word.text[i], &byteLength);
+					this->_char = this->_word.chars[j];
 					// checking first formatting tag changes
 					this->_processFormatTags(this->_word.text, i);
 					// if character exists in current font
-					if (this->_characters.has_key(this->_code))
+					if (this->_characters.has_key(this->_char.code))
 					{
 						// checking the particular character
 						this->_scale = this->_fontScale * this->_textScale;
-						this->_character = &this->_characters[this->_code];
+						this->_character = &this->_characters[this->_char.code];
 						area = this->_word.rect;
 						area.x += hmax(0.0f, width + this->_character->bx * this->_scale);
 						area.y += (this->_lineHeight - this->_height) * 0.5f;
@@ -1077,7 +1120,7 @@ namespace atres
 						area.y += area.h * (1.0f - this->_textScale) * 0.5f;
 						drawRect = rect;
 						drawRect.h += this->_character->by * this->_scale;
-						this->_renderRect = this->_fontResource->makeRenderRectangle(drawRect, area, this->_code);
+						this->_renderRect = this->_fontResource->makeRenderRectangle(drawRect, area, this->_char.code);
 						this->_renderRect.dest.y -= this->_character->by * this->_scale;
 						this->_textSequence.addRenderRectangle(this->_renderRect);
 						destination = this->_renderRect.dest;
@@ -1108,6 +1151,7 @@ namespace atres
 						}
 						width += (width < -this->_character->bx * this->_scale ? (this->_character->aw - this->_character->bx) : this->_character->aw) * this->_scale;
 					}
+					i += this->_char.byteSize;
 				}
 			}
 		}
@@ -1479,6 +1523,7 @@ namespace atres
 	{
 		this->analyzeText(text);
 		this->_initializeFormatTags(tags);
+		harray<RenderChar> chars = this->createRenderChars(text);
 		int actualSize = text.find_first_of('\0');
 		if (actualSize < 0)
 		{
@@ -1490,26 +1535,24 @@ namespace atres
 		}
 		const char* str = text.c_str();
 
-		unsigned int code = 0;
 		float ax = 0.0f;
 		float aw = 0.0f;
 		float lineX = 0.0f;
 		float lineW = 0.0f;
 		float addW = 0.0f;
 		int i = 0;
-		int byteLength = 0;
 		RenderLine result;
 		result.rect.h = this->_height;
 		
 		while (i < actualSize) // checking all characters
 		{
-			code = utf8_to_uint(&str[i], &byteLength);
-			if (code == '\n')
+			this->_char = chars.first();
+			if (this->_char.code == '\n')
 			{
 				break;
 			}
 			this->_checkFormatTags(text, i);
-			this->_character = &this->_characters[code];
+			this->_character = &this->_characters[this->_char.code];
 			this->_scale = this->_fontScale * this->_textScale;
 			if (lineX < -this->_character->bx * this->_scale)
 			{
@@ -1528,7 +1571,8 @@ namespace atres
 			}
 			lineW = lineX + addW;
 			lineX += ax;
-			i += byteLength;
+			i += this->_char.byteSize;
+			chars.pop_first();
 		}
 		result.text = text(0, i);
 		result.rect.w = lineW;
