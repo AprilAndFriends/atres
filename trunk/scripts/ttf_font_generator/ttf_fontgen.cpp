@@ -1,16 +1,12 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#include <hltypes/hfile.h>
-#include <hltypes/hdir.h>
-#include <hltypes/hlog.h>
-#include <hltypes/hltypesUtil.h>
 #include <april/main.h>
 #include <april/april.h>
 #include <april/Window.h>
@@ -18,6 +14,10 @@
 #include <atres/atres.h>
 #include <atresttf/atresttf.h>
 #include <atresttf/FontResourceTtf.h>
+#include <hltypes/hfile.h>
+#include <hltypes/hdir.h>
+#include <hltypes/hlog.h>
+#include <hltypes/hltypesUtil.h>
 
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
@@ -50,7 +50,7 @@ void generate(chstr cfgname)
 	hlog::write(LOG_TAG, "- reading configuration file");
 	if (!hfile::exists(cfgname))
 	{
-		hlog::write(LOG_TAG, "ERROR! Configuration file not found!");
+		hlog::error(LOG_TAG, "Configuration file not found!");
 		return;
 	}
 	harray<hstr> lines = hfile::hread(cfgname).split('\n');
@@ -219,7 +219,7 @@ void generate(chstr cfgname)
 		texture = textures[i];
 		if (!texture->copyPixelData(&buffer))
 		{
-			hlog::write(LOG_TAG, "ERROR! Could not fetch pixel data!");
+			hlog::error(LOG_TAG, "Could not fetch pixel data!");
 			continue;
 		}
 		header.width = texture->getWidth();
@@ -239,7 +239,7 @@ void april_init(const harray<hstr>& argv)
 	// check args
 	if (argv.size() != 1 && argv.size() != 2)
 	{
-		hlog::write(LOG_TAG, "Wrong number of arguments supplied: [CONFIG_FILENAME]");
+		hlog::error(LOG_TAG, "Wrong number of arguments supplied: [CONFIG_FILENAME]");
 		return;
 	}
 #endif
