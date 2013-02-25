@@ -1532,7 +1532,6 @@ namespace atres
 		{
 			hlog::warnf(atres::logTag, "Text '%s' has \\0 character before the actual end!", text.c_str());
 		}
-		const char* str = text.c_str();
 
 		float ax = 0.0f;
 		float aw = 0.0f;
