@@ -29,7 +29,7 @@
 #define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED)
 
 #define CHECK_UNICODE_LINE_BREAK_CHARS(code) \
-	((code) >= 128 && ( (code) == 0x2026 ||	/* triple-fullstop char */ \
+	((code) >= 128 && ( (code) == 0x2026 ||	/* ellipsis char */ \
 						(code) == 0x3000 ||	/* ideographic space */ \
 						(code) == 0x3001 ||	/* ideographic comma */ \
 						(code) == 0x3002 ||	/* ideographic full stop/period */ \
