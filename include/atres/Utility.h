@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.0
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -96,6 +96,15 @@ namespace atres
 		harray<RenderSequence> borderSequences;
 	};
 	
+	struct RenderChar
+	{
+		hstr text;
+		int byteSize;
+		unsigned int code;
+
+		RenderChar();
+	};
+	
 	struct RenderWord
 	{
 		hstr text;
@@ -103,6 +112,7 @@ namespace atres
 		int start;
 		int spaces;
 		float fullWidth;
+		harray<RenderChar> chars;
 
 		RenderWord();
 	};
@@ -156,7 +166,7 @@ namespace atres
 		bool operator==(const CacheEntryLine& other) const;
 		unsigned int hash() const;
 	};
-	
+
 	struct atresExport TextureContainer
 	{
 		april::Texture* texture;
