@@ -876,7 +876,6 @@ namespace atres
 		harray<RenderChar> chars = this->createRenderChars(text);
 		harray<RenderWord> result;
 		RenderWord word;
-		const char* str = text.c_str();
 		float ax = 0.0f;
 		float aw = 0.0f;
 		float wordX = 0.0f;
