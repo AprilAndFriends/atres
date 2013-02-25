@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.04
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -19,6 +19,8 @@
 #else
 #define RESOURCE_PATH "./"
 #endif
+
+#define LOG_TAG "demo_simple"
 
 //#define _ATRESTTF
 
@@ -37,7 +39,9 @@
 #include <atresttf/atresttf.h>
 #include <atresttf/FontResourceTtf.h>
 #include <gtypes/Rectangle.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hstring.h>
 
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
@@ -192,11 +196,7 @@ void april_init(const harray<hstr>& args)
 		atres::renderer->registerFontResource(new atres::FontResourceBitmap(RESOURCE_PATH "arial.font"));
 #else
 		atresttf::init();
-		harray<hstr> fonts = atresttf::getSystemFonts();
-		foreach (hstr, it, fonts)
-		{
-			hlog::write(hsprintf("%03d", fonts.index_of(*it)), *it);
-		}
+		hlog::writef(LOG_TAG, "Found %d fonts installed on the system.", atresttf::getSystemFonts().size());
 		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("arial.ttf", "Arial", 32, 1.0f)); // invokes a provided font
 		//atres::renderer->registerFontResource(new atresttf::FontResourceTtf("", "Arial", 32, 1.0f)); // invokes the installed system font Arial
 #endif
@@ -215,7 +215,7 @@ void april_init(const harray<hstr>& args)
 	}
 	catch (hltypes::exception e)
 	{
-		printf("%s\n", e.message().c_str());
+		hlog::error(LOG_TAG, e.message());
 	}
 }
 
@@ -233,6 +233,6 @@ void april_destroy()
 	}
 	catch (hltypes::exception e)
 	{
-		printf("%s\n", e.message().c_str());
+		hlog::error(LOG_TAG, e.message());
 	}
 }
