@@ -104,36 +104,70 @@ namespace atres
 
 	void Renderer::setShadowOffset(gvec2 value)
 	{
-		this->shadowOffset = value;
-		this->clearCache();
+		if (this->shadowOffset != value)
+		{
+			this->shadowOffset = value;
+			this->clearCache();
+		}
 	}
 	
 	void Renderer::setShadowColor(april::Color value)
 	{
-		this->shadowColor = value;
-		this->clearCache();
+		if (this->shadowColor != value)
+		{
+			this->shadowColor = value;
+			this->clearCache();
+		}
 	}
 	
 	void Renderer::setBorderOffset(float value)
 	{
-		this->borderOffset = value;
-		this->clearCache();
+		if (this->borderOffset != value)
+		{
+			this->borderOffset = value;
+			this->clearCache();
+		}
 	}
 	
 	void Renderer::setBorderColor(april::Color value)
 	{
-		this->borderColor = value;
-		this->clearCache();
+		if (this->borderColor != value)
+		{
+			this->borderColor = value;
+			this->clearCache();
+		}
 	}
-	
+
+	void Renderer::setUseLegacyLineBreakParsing(bool value)
+	{
+		if (this->useLegacyLineBreakParsing != value)
+		{
+			this->useLegacyLineBreakParsing = value;
+			this->clearCache();
+		}
+	}
+
+	void Renderer::setUseIdeographWords(bool value)
+	{
+		if (this->useIdeographWords != value)
+		{
+			this->useIdeographWords = value;
+			this->clearCache();
+		}
+	}
+
 	void Renderer::setDefaultFont(chstr name)
 	{
 		if (!this->fonts.has_key(name))
 		{
 			throw resource_not_exists("Font", name, "atres");
 		}
-		this->defaultFont = this->fonts[name];
-		this->cache->clear();
+		FontResource* newFont = this->fonts[name];
+		if (this->defaultFont != newFont)
+		{
+			this->defaultFont = newFont;
+			this->clearCache();
+		}
 	}
 
 	bool Renderer::hasFont(chstr name)
