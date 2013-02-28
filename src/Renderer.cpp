@@ -28,16 +28,26 @@
 #define ALIGNMENT_IS_WRAPPED(formatting) ((formatting) == LEFT_WRAPPED || (formatting) == CENTER_WRAPPED || (formatting) == RIGHT_WRAPPED || (formatting) == JUSTIFIED)
 #define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED)
 
-#define CHECK_UNICODE_LINE_BREAK_CHARS(code) \
-	((code) >= 128 && ( (code) == 0x2026 ||	/* ellipsis char */ \
-						(code) == 0x3000 ||	/* ideographic space */ \
-						(code) == 0x3001 ||	/* ideographic comma */ \
-						(code) == 0x3002 ||	/* ideographic full stop/period */ \
-						(code) == 0x30FC ||	/* Japanese dash char */ \
-						(code) == 0x4E00 ||	/* fullwidth dash char */ \
-						(code) == 0xFF01 ||	/* fullwidth exclamation mark */ \
-						(code) == 0xFF0C ||	/* fullwidth comma */ \
-						(code) == 0xFF1F	/* fullwidth question mark */ \
+#define IS_IDEOGRAPH(code) \
+	( \
+		(code >= 0x4E00 && code <= 0x9FFF) ||	/* CJK Unified Ideographs */ \
+		(code >= 0x3400 && code <= 0x4DFF) ||	/* CJK Unified Ideographs Extension A */ \
+		(code >= 0x20000 && code <= 0x2A6DF) ||	/* CJK Unified Ideographs Extension B */ \
+		(code >= 0xF900 && code <= 0xFAFF) ||	/* CJK Compatibility Ideographs */ \
+		(code >= 0x2F800 && code <= 0x2FA1F)	/* CJK Compatibility Ideographs Supplement */ \
+	)
+
+#define IS_PUNCTUATION_CHAR(code) \
+	((code) >= 128 && ( \
+		(code) == 0x2026 ||	/* ellipsis char */ \
+		(code) == 0x3000 ||	/* ideographic space */ \
+		(code) == 0x3001 ||	/* ideographic comma */ \
+		(code) == 0x3002 ||	/* ideographic full stop/period */ \
+		(code) == 0x30FC ||	/* Japanese dash char */ \
+		(code) == 0x4E00 ||	/* fullwidth dash char */ \
+		(code) == 0xFF01 ||	/* fullwidth exclamation mark */ \
+		(code) == 0xFF0C ||	/* fullwidth comma */ \
+		(code) == 0xFF1F	/* fullwidth question mark */ \
 	))
 
 #define EFFECT_MODE_NORMAL 0
@@ -72,6 +82,7 @@ namespace atres
 		this->borderColor = april::Color::Black;
 		this->globalOffsets = false;
 		this->useLegacyLineBreakParsing = false;
+		this->useIdeographWords = false;
 		this->defaultFont = NULL;
 		// misc init
 		this->_fontResource = NULL;
@@ -943,20 +954,35 @@ namespace atres
 				{
 					if (!this->useLegacyLineBreakParsing)
 					{
-						if (j - jStart >= 2 && CHECK_UNICODE_LINE_BREAK_CHARS(this->_char.code))
+						if (!this->useIdeographWords)
 						{
-							break;
+							if (j - jStart >= 2 && IS_PUNCTUATION_CHAR(this->_char.code))
+							{
+								break;
+							}
+							if (j < chars.size() - 1)
+							{
+								RenderChar nextChar = chars[j + 1];
+								if (IS_PUNCTUATION_CHAR(nextChar.code))
+								{
+									break;
+								}
+							}
 						}
-						if (j < chars.size() - 1)
+						else if (IS_IDEOGRAPH(this->_char.code))
 						{
+							if (j >= chars.size() - 1)
+							{
+								break;
+							}
 							RenderChar nextChar = chars[j + 1];
-							if (CHECK_UNICODE_LINE_BREAK_CHARS(nextChar.code))
+							if (!IS_PUNCTUATION_CHAR(nextChar.code))
 							{
 								break;
 							}
 						}
 					}
-					else if (CHECK_UNICODE_LINE_BREAK_CHARS(this->_char.code))
+					else if (IS_PUNCTUATION_CHAR(this->_char.code))
 					{
 						break;
 					}
