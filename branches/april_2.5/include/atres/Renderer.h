@@ -47,7 +47,11 @@ namespace atres
 		HL_DEFINE_GET(april::Color, borderColor, BorderColor);
 		void setBorderColor(april::Color value);
 		HL_DEFINE_GETSET(bool, globalOffsets, GlobalOffsets);
+		/// @brief Option to use old, non-smart line-break parsing for ideographs.
 		HL_DEFINE_GETSET(bool, useLegacyLineBreakParsing, UseLegacyLineBreakParsing);
+		/// @brief When turned on, this regards ideographs as words when segmenting text into lines.
+		/// @note This is particularly useful when having Japanese or Chinese text. Korean text has actual spaces so this is not necessary.
+		HL_DEFINE_GETSET(bool, useIdeographWords, UseIdeographWords);
 		void setDefaultFont(chstr name);
 		bool hasFont(chstr name);
 		void setCacheSize(int value);
@@ -112,6 +116,7 @@ namespace atres
 		april::Color borderColor;
 		bool globalOffsets;
 		bool useLegacyLineBreakParsing;
+		bool useIdeographWords;
 		Cache<CacheEntryText>* cache;
 		Cache<CacheEntryText>* cacheUnformatted;
 		Cache<CacheEntryLine>* cacheLines;
