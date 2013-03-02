@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.1
+/// @version 3.12
 /// 
 /// @section LICENSE
 /// 
@@ -40,7 +40,7 @@ namespace atres
 		BOTTOM,
 		JUSTIFIED
 	};
-
+	
 	enum Effect
 	{
 		NONE,
@@ -69,10 +69,10 @@ namespace atres
 		float bx;
 		float by;
 		float aw;
-
+		
 		CharacterDefinition();
 	};
-
+	
 	struct RenderRectangle
 	{
 		grect src;
@@ -84,25 +84,16 @@ namespace atres
 		april::Texture* texture;
 		april::Color color;
 		harray<april::TexturedVertex> vertices;
-
+		
 		RenderSequence();
 		void addRenderRectangle(RenderRectangle rect);
 	};
-
+	
 	struct RenderText
 	{
 		harray<RenderSequence> textSequences;
 		harray<RenderSequence> shadowSequences;
 		harray<RenderSequence> borderSequences;
-	};
-	
-	struct RenderChar
-	{
-		hstr text;
-		int byteSize;
-		unsigned int code;
-
-		RenderChar();
 	};
 	
 	struct RenderWord
@@ -112,8 +103,7 @@ namespace atres
 		int start;
 		int spaces;
 		float fullWidth;
-		harray<RenderChar> chars;
-
+		
 		RenderWord();
 	};
 	
@@ -124,7 +114,7 @@ namespace atres
 		int spaces;
 		bool terminated;
 		harray<RenderWord> words;
-
+		
 		RenderLine();
 	};
 	
@@ -134,10 +124,10 @@ namespace atres
 		hstr data;
 		int start;
 		int count;
-
+		
 		FormatTag();
 	};
-
+	
 	struct CacheEntryText
 	{
 		hstr text;
@@ -148,7 +138,7 @@ namespace atres
 		april::Color color;
 		gvec2 offset;
 		RenderText value;
-
+		
 		CacheEntryText();
 		void set(hstr text, hstr fontName, grect rect, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset);
 		bool operator==(const CacheEntryText& other) const;
@@ -166,12 +156,12 @@ namespace atres
 		bool operator==(const CacheEntryLine& other) const;
 		unsigned int hash() const;
 	};
-
+	
 	struct atresExport TextureContainer
 	{
 		april::Texture* texture;
 		harray<unsigned int> characters;
-
+		
 		TextureContainer();
 	};
 
