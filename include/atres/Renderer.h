@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.11
+/// @version 3.12
 /// 
 /// @section LICENSE
 /// 
@@ -71,7 +71,6 @@ namespace atres
 		harray<RenderLine> removeOutOfBoundLines(grect rect, harray<RenderLine> lines);
 		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight, float correctedHeight);
 		harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
-		harray<RenderChar> createRenderChars(chstr text);
 		harray<RenderWord> createRenderWords(grect rect, chstr text, harray<FormatTag> tags);
 		harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset = gvec2());
 		RenderText createRenderText(grect rect, harray<RenderLine> lines, harray<FormatTag> tags);
@@ -170,11 +169,11 @@ namespace atres
 		int _alpha;
 
 		harray<RenderLine> _lines;
-		RenderChar _char;
 		RenderLine _line;
 		RenderWord _word;
 
 		april::Texture* _texture;
+		unsigned int _code;
 
 		CacheEntryText _cacheEntryText;
 		CacheEntryLine _cacheEntryLine;
