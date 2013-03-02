@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.12
 /// 
 /// @section LICENSE
 /// 
@@ -34,10 +34,6 @@ namespace atres
 		vert[4].x = rect.dest.right();	vert[4].y = rect.dest.bottom();	vert[4].u = rect.src.right();	vert[4].v = rect.src.bottom();
 		vert[5].x = rect.dest.left();	vert[5].y = rect.dest.bottom();	vert[5].u = rect.src.left();	vert[5].v = rect.src.bottom();
 		this->vertices.add(vert, 6);
-	}
-
-	RenderChar::RenderChar() : byteSize(0), code(0)
-	{
 	}
 	
 	RenderWord::RenderWord() : start(0), spaces(0), fullWidth(0.0f)
