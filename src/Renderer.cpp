@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.12
+/// @version 3.13
 /// 
 /// @section LICENSE
 /// 
@@ -30,15 +30,18 @@
 
 #define IS_IDEOGRAPH(code) \
 	( \
-		(code >= 0x4E00 && code <= 0x9FFF) ||	/* CJK Unified Ideographs */ \
-		(code >= 0x3400 && code <= 0x4DFF) ||	/* CJK Unified Ideographs Extension A */ \
-		(code >= 0x20000 && code <= 0x2A6DF) ||	/* CJK Unified Ideographs Extension B */ \
-		(code >= 0xF900 && code <= 0xFAFF) ||	/* CJK Compatibility Ideographs */ \
-		(code >= 0x2F800 && code <= 0x2FA1F)	/* CJK Compatibility Ideographs Supplement */ \
+		((code) >= 0x3040 && (code) <= 0x309F) ||	/* Hiragana */ \
+		((code) >= 0x30A0 && (code) <= 0x30FF) ||	/* Katakana */ \
+		((code) >= 0x3400 && (code) <= 0x4DFF) ||	/* CJK Unified Ideographs Extension A */ \
+		((code) >= 0x4E00 && (code) <= 0x9FFF) ||	/* CJK Unified Ideographs */ \
+		((code) >= 0xF900 && (code) <= 0xFAFF) ||	/* CJK Compatibility Ideographs */ \
+		((code) >= 0x20000 && (code) <= 0x2A6DF) ||	/* CJK Unified Ideographs Extension B */ \
+		((code) >= 0x2F800 && (code) <= 0x2FA1F)	/* CJK Compatibility Ideographs Supplement */ \
 	)
 
 #define IS_PUNCTUATION_CHAR(code) \
-	((code) >= 128 && ( \
+	( \
+		(code) == 0x2015 ||	/* long dash */ \
 		(code) == 0x2026 ||	/* ellipsis char */ \
 		(code) == 0x3000 ||	/* ideographic space */ \
 		(code) == 0x3001 ||	/* ideographic comma */ \
@@ -46,9 +49,11 @@
 		(code) == 0x30FC ||	/* Japanese dash char */ \
 		(code) == 0x4E00 ||	/* fullwidth dash char */ \
 		(code) == 0xFF01 ||	/* fullwidth exclamation mark */ \
+		(code) == 0xFF08 ||	/* fullwidth parenthesis */ \
+		(code) == 0xFF09 ||	/* fullwidth parenthesis */ \
 		(code) == 0xFF0C ||	/* fullwidth comma */ \
 		(code) == 0xFF1F	/* fullwidth question mark */ \
-	))
+	)
 
 #define EFFECT_MODE_NORMAL 0
 #define EFFECT_MODE_SHADOW 1
@@ -979,15 +984,15 @@ namespace atres
 							{
 								break;
 							}
-							unsigned char nextCode = utf8_to_uint(&str[i]);
+							unsigned int nextCode = utf8_to_uint(&str[i]);
 							if (IS_PUNCTUATION_CHAR(nextCode))
 							{
 								break;
 							}
 						}
-						else if (IS_IDEOGRAPH(code))
+						else if (IS_IDEOGRAPH(code) || IS_PUNCTUATION_CHAR(code))
 						{
-							unsigned char nextCode = utf8_to_uint(&str[i]);
+							unsigned int nextCode = utf8_to_uint(&str[i]);
 							if (!IS_PUNCTUATION_CHAR(nextCode))
 							{
 								break;
