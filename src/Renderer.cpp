@@ -985,7 +985,7 @@ namespace atres
 								break;
 							}
 							unsigned int nextCode = utf8_to_uint(&str[i]);
-							if (IS_PUNCTUATION_CHAR(nextCode))
+							if (!IS_PUNCTUATION_CHAR(nextCode))
 							{
 								break;
 							}
