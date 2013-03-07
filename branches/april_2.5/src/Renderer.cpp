@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.13
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -981,11 +981,6 @@ namespace atres
 						if (!this->useIdeographWords)
 						{
 							if (chars >= 2 && IS_PUNCTUATION_CHAR(code))
-							{
-								break;
-							}
-							unsigned int nextCode = utf8_to_uint(&str[i]);
-							if (!IS_PUNCTUATION_CHAR(nextCode))
 							{
 								break;
 							}
