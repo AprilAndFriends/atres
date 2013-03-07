@@ -56,12 +56,14 @@
 		(code) == 0x3017 ||	/* ideographic closing white weird bracket */ \
 		(code) == 0x3019 ||	/* ideographic closing white tortoise shell bracket */ \
 		(code) == 0x301B ||	/* ideographic closing double bracket */ \
+		(code) == 0x301C ||	/* ideographic wave-dash */ \
 		(code) == 0x30FB ||	/* Japanese middle dot */ \
 		(code) == 0x30FC ||	/* Japanese dash char */ \
 		(code) == 0x4E00 ||	/* fullwidth dash char */ \
 		(code) == 0xFF01 ||	/* fullwidth exclamation mark */ \
 		(code) == 0xFF09 ||	/* fullwidth closing parenthesis */ \
 		(code) == 0xFF0C ||	/* fullwidth comma */ \
+		(code) == 0xFF1A ||	/* fullwidth colon */ \
 		(code) == 0xFF1E ||	/* fullwidth greater-than sign */ \
 		(code) == 0xFF1F ||	/* fullwidth question mark */ \
 		(code) == 0xFF3D ||	/* fullwidth closing bracket */ \
