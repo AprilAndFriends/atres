@@ -338,29 +338,31 @@ namespace atres
 
 	hstr Renderer::analyzeFormatting(chstr text, harray<FormatTag>& tags)
 	{
-		const char* str = text.c_str();
+		std::basic_string<unsigned int> uText = text.u_str();
+		const unsigned int* str = uText.c_str();
 		int start = 0;
 		int end = 0;
 		harray<char> stack;
 		FormatTag tag;
 		harray<FormatTag> foundTags;
+		// parse formatting in Unicode
 		while (true)
 		{
-			start = text.find('[', start);
+			start = uText.find_first_of('[', start);
 			if (start < 0)
 			{
 				break;
 			}
-			end = text.find(']', start);
+			end = uText.find_first_of(']', start);
 			if (end < 0)
 			{
 				break;
 			}
 			end++;
 			tag.data = "";
-			tag.start = start;
-			tag.count = end - start;
-			if (tag.count == 2) // empty command
+			tag.start = unicode_to_utf8(uText.substr(0, start).c_str()).size();
+			tag.count = unicode_to_utf8(uText.substr(start, end - start).c_str()).size();
+			if (end - start == 2) // empty command
 			{
 				tag.type = TAG_TYPE_ESCAPE;
 			}
@@ -402,14 +404,15 @@ namespace atres
 					continue;
 				}
 				stack += str[start + 1];
-				if (tag.count > 4)
+				if (end - start > 4)
 				{
-					tag.data = text(start + 3, tag.count - 4);
+					tag.data = unicode_to_utf8(uText.substr(start + 3, end - start - 4).c_str());
 				}
 			}
 			foundTags += tag;
 			start = end;
 		}
+		// add closing tags where missing
 		hstr result;
 		int index = 0;
 		int count = 0;
