@@ -42,17 +42,32 @@
 #define IS_PUNCTUATION_CHAR(code) \
 	( \
 		(code) == 0x2015 ||	/* long dash */ \
+		(code) == 0x2025 ||	/* ellipsis char */ \
 		(code) == 0x2026 ||	/* ellipsis char */ \
 		(code) == 0x3000 ||	/* ideographic space */ \
 		(code) == 0x3001 ||	/* ideographic comma */ \
 		(code) == 0x3002 ||	/* ideographic full stop/period */ \
+		(code) == 0x3009 ||	/* ideographic closing angle bracket */ \
+		(code) == 0x300B ||	/* ideographic closing double angle bracket */ \
+		(code) == 0x300D ||	/* ideographic closing quotation mark */ \
+		(code) == 0x300F ||	/* ideographic closing double quotation mark */ \
+		(code) == 0x3011 ||	/* ideographic closing weird bracket */ \
+		(code) == 0x3015 ||	/* ideographic closing tortoise shell bracket */ \
+		(code) == 0x3017 ||	/* ideographic closing white weird bracket */ \
+		(code) == 0x3019 ||	/* ideographic closing white tortoise shell bracket */ \
+		(code) == 0x301B ||	/* ideographic closing double bracket */ \
+		(code) == 0x30FB ||	/* Japanese middle dot */ \
 		(code) == 0x30FC ||	/* Japanese dash char */ \
 		(code) == 0x4E00 ||	/* fullwidth dash char */ \
 		(code) == 0xFF01 ||	/* fullwidth exclamation mark */ \
-		(code) == 0xFF08 ||	/* fullwidth parenthesis */ \
-		(code) == 0xFF09 ||	/* fullwidth parenthesis */ \
+		(code) == 0xFF09 ||	/* fullwidth closing parenthesis */ \
 		(code) == 0xFF0C ||	/* fullwidth comma */ \
-		(code) == 0xFF1F	/* fullwidth question mark */ \
+		(code) == 0xFF1E ||	/* fullwidth greater-than sign */ \
+		(code) == 0xFF1F ||	/* fullwidth question mark */ \
+		(code) == 0xFF3D ||	/* fullwidth closing bracket */ \
+		(code) == 0xFF5D ||	/* fullwidth closing brace */ \
+		(code) == 0xFF60 ||	/* fullwidth double closing parenthesis */ \
+		(code) == 0xFF63	/* fullwidth closing quotation mark */ \
 	)
 
 #define EFFECT_MODE_NORMAL 0
