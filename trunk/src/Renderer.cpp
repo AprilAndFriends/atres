@@ -391,7 +391,7 @@ namespace atres
 					hlog::warnf(atres::logTag, "Closing tag that was not opened ('[/%c]' in '%s')!", str[start + 2], str);
 					continue;
 				}
-				stack.pop_last();
+				stack.remove_last();
 				tag.type = TAG_TYPE_CLOSE;
 			}
 			else // opening new tag
@@ -638,7 +638,7 @@ namespace atres
 		{
 			if (this->_nextTag.type == TAG_TYPE_CLOSE)
 			{
-				this->_currentTag = this->_stack.pop_last();
+				this->_currentTag = this->_stack.remove_last();
 				if (this->_currentTag.type == TAG_TYPE_FONT)
 				{
 					this->_fontName = this->_currentTag.data;
@@ -695,7 +695,7 @@ namespace atres
 				this->_currentTag.type = TAG_TYPE_NORMAL;
 				this->_stack += this->_currentTag;
 			}
-			this->_tags.pop_first();
+			this->_tags.remove_first();
 			if (this->_tags.size() > 0)
 			{
 				this->_nextTag = this->_tags.first();
@@ -713,7 +713,7 @@ namespace atres
 		{
 			if (this->_nextTag.type == TAG_TYPE_CLOSE)
 			{
-				this->_currentTag = this->_stack.pop_last();
+				this->_currentTag = this->_stack.remove_last();
 				switch (this->_currentTag.type)
 				{
 				case TAG_TYPE_FONT:
@@ -849,7 +849,7 @@ namespace atres
 					break;
 				}
 			}
-			this->_tags.pop_first();
+			this->_tags.remove_first();
 			if (this->_tags.size() > 0)
 			{
 				this->_nextTag = this->_tags.first();
@@ -1090,11 +1090,11 @@ namespace atres
 				{
 					while (this->_line.words.size() > 0 && this->_line.words.first().spaces > 0)
 					{
-						this->_line.words.pop_first();
+						this->_line.words.remove_first();
 					}
 					while (this->_line.words.size() > 0 && this->_line.words.last().spaces > 0)
 					{
-						this->_line.words.pop_last();
+						this->_line.words.remove_last();
 					}
 				}
 				if (this->_line.words.size() > 0)
@@ -1151,7 +1151,7 @@ namespace atres
 		
 		while (this->_lines.size() > 0)
 		{
-			this->_line = this->_lines.pop_first();
+			this->_line = this->_lines.remove_first();
 			width = 0.0f;
 			foreach (RenderWord, it, this->_line.words)
 			{
@@ -1237,7 +1237,7 @@ namespace atres
 		RenderSequence current;
 		while (sequences.size() > 0)
 		{
-			current = sequences.pop_first();
+			current = sequences.remove_first();
 			for_iter (i, 0, sequences.size())
 			{
 				if (current.texture == sequences[i].texture && current.color.hex(true) == sequences[i].color.hex(true))
