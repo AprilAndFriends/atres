@@ -28,7 +28,7 @@ namespace atres
 		atres::TextureContainer* textureContainer = NULL;
 		while (lines.size() > 0)
 		{
-			line = lines.pop_first();
+			line = lines.remove_first();
 			if (!this->_readBasicParameter(line))
 			{
 				if (line.starts_with("Texture="))
@@ -76,29 +76,29 @@ namespace atres
 			data = (*it).split(" ", -1, true);
 			if (is_between(data.size(), minAttribute, maxAttribute))
 			{
-				code = (unsigned int)data.pop_first();
+				code = (unsigned int)data.remove_first();
 				if (multiTexture)
 				{
-					textureIndex = (int)data.pop_first();
+					textureIndex = (int)data.remove_first();
 				}
-				c.x = (float)data.pop_first();
-				c.y = (float)data.pop_first();
-				c.w = (float)data.pop_first();
+				c.x = (float)data.remove_first();
+				c.y = (float)data.remove_first();
+				c.w = (float)data.remove_first();
 				c.h = this->height;
 				if (data.size() > 0)
 				{
-					c.aw = (float)data.pop_first();
+					c.aw = (float)data.remove_first();
 					if (data.size() > 0)
 					{
-						c.bx = (float)data.pop_first();
+						c.bx = (float)data.remove_first();
 						if (data.size() > 0)
 						{
 							c.h = c.aw;
 							c.aw = c.bx;
-							c.bx = (float)data.pop_first();
+							c.bx = (float)data.remove_first();
 							if (data.size() > 0)
 							{
-								c.by = (float)data.pop_first();
+								c.by = (float)data.remove_first();
 							}
 						}
 					}
