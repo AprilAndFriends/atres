@@ -343,7 +343,7 @@ namespace atres
 	void Renderer::analyzeText(chstr text)
 	{
 		// makes sure dynamically allocated characters are loaded
-		std::basic_string<unsigned int> chars = utf8_to_unicode(text);
+		std::basic_string<unsigned int> chars = text.u_str();
 		foreach_m (FontResource*, it, this->fonts)
 		{
 			for_itert (unsigned int, i, 0, chars.size())
@@ -377,8 +377,8 @@ namespace atres
 			}
 			end++;
 			tag.data = "";
-			tag.start = unicode_to_utf8(uText.substr(0, start).c_str()).size();
-			tag.count = unicode_to_utf8(uText.substr(start, end - start).c_str()).size();
+			tag.start = text.utf8_substr(0, start).size();
+			tag.count = text.utf8_substr(start, end - start).size();
 			if (end - start == 2) // empty command
 			{
 				tag.type = TAG_TYPE_ESCAPE;
@@ -423,7 +423,7 @@ namespace atres
 				stack += str[start + 1];
 				if (end - start > 4)
 				{
-					tag.data = unicode_to_utf8(uText.substr(start + 3, end - start - 4).c_str());
+					tag.data = text.utf8_substr(start + 3, end - start - 4);
 				}
 			}
 			foundTags += tag;
@@ -929,7 +929,6 @@ namespace atres
 		}
 		harray<RenderWord> result;
 		RenderWord word;
-		const char* str = text.c_str();
 		unsigned int code = 0;
 		float ax = 0.0f;
 		float aw = 0.0f;
@@ -954,7 +953,7 @@ namespace atres
 			wordW = 0.0f;
 			while (i < actualSize) // checking a whole word
 			{
-				code = utf8_to_uint(&str[i], &byteSize);
+				code = text.first_unicode_char(i, &byteSize);
 				if (code == '\n')
 				{
 					if (i == start)
@@ -1007,7 +1006,7 @@ namespace atres
 						}
 						else if (IS_IDEOGRAPH(code) || IS_PUNCTUATION_CHAR(code))
 						{
-							unsigned int nextCode = utf8_to_uint(&str[i]);
+							unsigned int nextCode = text.first_unicode_char(i);
 							if (!IS_PUNCTUATION_CHAR(nextCode))
 							{
 								break;
@@ -1031,6 +1030,7 @@ namespace atres
 			}
 			else if (tooLong) // this prevents an infinite loop if not at least one character fits in the line
 			{
+				hlog::warn(atres::logTag, "String does not fit in rect: " + text);
 				break;
 			}
 			tooLong = false;
@@ -1158,7 +1158,7 @@ namespace atres
 				this->_word = (*it);
 				for_iter_step (i, 0, this->_word.text.size(), byteSize)
 				{
-					this->_code = utf8_to_uint(&this->_word.text[i], &byteSize);
+					this->_code = this->_word.text.first_unicode_char(i, &byteSize);
 					// checking first formatting tag changes
 					this->_processFormatTags(this->_word.text, i);
 					// if character exists in current font
@@ -1586,7 +1586,6 @@ namespace atres
 		{
 			hlog::warnf(atres::logTag, "Text '%s' has \\0 character before the actual end!", text.c_str());
 		}
-		const char* str = text.c_str();
 
 		unsigned int code = 0;
 		float ax = 0.0f;
@@ -1601,7 +1600,7 @@ namespace atres
 		
 		while (i < actualSize) // checking all characters
 		{
-			code = utf8_to_uint(&str[i], &byteSize);
+			code = text.first_unicode_char(i, &byteSize);
 			if (code == '\n')
 			{
 				break;
