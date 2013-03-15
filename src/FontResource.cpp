@@ -114,20 +114,23 @@ namespace atres
 
 	float FontResource::getTextWidth(chstr text)
 	{
-		const char* str = text.c_str();
-		float textX = 0.0f;
-		float textW = 0.0f;
-		float ax = 0.0f;
-		float aw = 0.0f;
-		unsigned int code;
-		int byteLength;
-		int i = 0;
-		float scale = this->getScale();
-		CharacterDefinition* character;
-		while (i < text.size())
+		// using static definitions to avoid memory allocation for optimization
+		static float textX = 0.0f;
+		static float textW = 0.0f;
+		static float ax = 0.0f;
+		static float aw = 0.0f;
+		static float scale = 1.0f;
+		static CharacterDefinition* character;
+		static std::basic_string<unsigned int> chars;
+		textX = 0.0f;
+		textW = 0.0f;
+		ax = 0.0f;
+		aw = 0.0f;
+		scale = this->getScale();
+		chars = text.u_str();
+		for_itert (unsigned int, i, 0, chars.size())
 		{
-			code = utf8_to_uint(&str[i], &byteLength);
-			character = &this->characters[code];
+			character = &this->characters[chars[i]];
 			if (textX < -character->bx * scale)
 			{
 				ax = (character->aw - character->bx) * scale;
@@ -140,26 +143,29 @@ namespace atres
 			}
 			textW = textX + hmax(ax, aw);
 			textX += ax;
-			i += byteLength;
 		}
 		return textW;
 	}
 	
 	int FontResource::getTextCount(chstr text, float maxWidth)
 	{
-		const char* str = text.c_str();
-		unsigned int code;
-		float textX = 0.0f;
-		float textW = 0.0f;
-		float ax = 0.0f;
-		float aw = 0.0f;
-		int byteLength;
-		int i = 0;
-		CharacterDefinition* character;
-		while (i < text.size())
+		// using static definitions to avoid memory allocation for optimization
+		static float textX = 0.0f;
+		static float textW = 0.0f;
+		static float ax = 0.0f;
+		static float aw = 0.0f;
+		static float scale = 1.0f;
+		static CharacterDefinition* character;
+		static std::basic_string<unsigned int> chars;
+		textX = 0.0f;
+		textW = 0.0f;
+		ax = 0.0f;
+		aw = 0.0f;
+		scale = this->getScale();
+		chars = text.u_str();
+		for_itert (unsigned int, i, 0, chars.size())
 		{
-			code = utf8_to_uint(&str[i], &byteLength);
-			character = &this->characters[code];
+			character = &this->characters[chars[i]];
 			if (textX < -character->bx * scale)
 			{
 				ax = (character->aw - character->bx) * scale;
@@ -174,11 +180,10 @@ namespace atres
 			textX += ax;
 			if (textW > maxWidth)
 			{
-				break;
+				return text.utf8_substr(0, i).size();
 			}
-			i += byteLength;
 		}
-		return i;
+		return text.size();
 	}
 	
 	RenderRectangle FontResource::makeRenderRectangle(const grect& rect, grect area, unsigned int code)
