@@ -162,7 +162,7 @@ namespace atresttf
 						hr = familyNames->GetString(index, name, length + 1);
 						if (!FAILED(hr))
 						{
-							fonts += unicode_to_utf8(name);
+							fonts += hstr::from_unicode(name);
 						}
 						delete [] name;
 					}
