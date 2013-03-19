@@ -114,7 +114,6 @@ namespace atres
 
 	float FontResource::getTextWidth(chstr text)
 	{
-		const char* str = text.c_str();
 		float textX = 0.0f;
 		float textW = 0.0f;
 		float ax = 0.0f;
@@ -126,7 +125,7 @@ namespace atres
 		CharacterDefinition* character;
 		while (i < text.size())
 		{
-			code = utf8_to_uint(&str[i], &byteLength);
+			code = text.first_unicode_char(i, &byteLength);
 			character = &this->characters[code];
 			if (textX < -character->bx * scale)
 			{
@@ -147,7 +146,6 @@ namespace atres
 	
 	int FontResource::getTextCount(chstr text, float maxWidth)
 	{
-		const char* str = text.c_str();
 		unsigned int code;
 		float textX = 0.0f;
 		float textW = 0.0f;
@@ -158,7 +156,7 @@ namespace atres
 		CharacterDefinition* character;
 		while (i < text.size())
 		{
-			code = utf8_to_uint(&str[i], &byteLength);
+			code = text.first_unicode_char(i, &byteLength);
 			character = &this->characters[code];
 			if (textX < -character->bx * scale)
 			{

@@ -326,7 +326,7 @@ namespace atres
 	void Renderer::analyzeText(chstr text)
 	{
 		// makes sure dynamically allocated characters are loaded
-		std::basic_string<unsigned int> chars = utf8_to_unicode(text);
+		std::basic_string<unsigned int> chars = text.u_str();
 		foreach_m (FontResource*, it, this->fonts)
 		{
 			for_itert (unsigned int, i, 0, chars.size())
@@ -909,7 +909,6 @@ namespace atres
 		}
 		harray<RenderWord> result;
 		RenderWord word;
-		const char* str = text.c_str();
 		unsigned int code = 0;
 		float ax = 0.0f;
 		float aw = 0.0f;
@@ -934,7 +933,7 @@ namespace atres
 			wordW = 0.0f;
 			while (i < actualSize) // checking a whole word
 			{
-				code = utf8_to_uint(&str[i], &byteSize);
+				code = text.first_unicode_char(i, &byteSize);
 				if (code == '\n')
 				{
 					if (i == start)
@@ -987,7 +986,7 @@ namespace atres
 						}
 						else if (IS_IDEOGRAPH(code) || IS_PUNCTUATION_CHAR(code))
 						{
-							unsigned int nextCode = utf8_to_uint(&str[i]);
+							unsigned int nextCode = text.first_unicode_char(i);
 							if (!IS_PUNCTUATION_CHAR(nextCode))
 							{
 								break;
@@ -1138,7 +1137,7 @@ namespace atres
 				this->_word = (*it);
 				for_iter_step (i, 0, this->_word.text.size(), byteSize)
 				{
-					this->_code = utf8_to_uint(&this->_word.text[i], &byteSize);
+					this->_code = this->_word.text.first_unicode_char(i, &byteSize);
 					// checking first formatting tag changes
 					this->_processFormatTags(this->_word.text, i);
 					// if character exists in current font
@@ -1566,7 +1565,6 @@ namespace atres
 		{
 			hlog::warnf(atres::logTag, "Text '%s' has \\0 character before the actual end!", text.c_str());
 		}
-		const char* str = text.c_str();
 
 		unsigned int code = 0;
 		float ax = 0.0f;
@@ -1581,7 +1579,7 @@ namespace atres
 		
 		while (i < actualSize) // checking all characters
 		{
-			code = utf8_to_uint(&str[i], &byteSize);
+			code = text.first_unicode_char(i, &byteSize);
 			if (code == '\n')
 			{
 				break;
