@@ -18,7 +18,7 @@
 	/// @brief Macro for DLL exports/imports.
 	/// @def atresFnExport
 	/// @brief Macro for function DLL exports/imports.
-	#ifdef _STATICLIB
+	#ifdef _LIB
 		#define atresExport
 		#define atresFnExport
 	#else
