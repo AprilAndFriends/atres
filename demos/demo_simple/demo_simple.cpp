@@ -102,7 +102,7 @@ class MouseDelegate : public april::MouseDelegate
 public:
 	gvec2 offset;
 
-	MouseDelegate::MouseDelegate() : clicked(false)
+	MouseDelegate::MouseDelegate() : april::MouseDelegate(), clicked(false)
 	{
 	}
 
@@ -141,9 +141,10 @@ static MouseDelegate mouseDelegate;
 class UpdateDelegate : public april::UpdateDelegate
 {
 public:
-	UpdateDelegate::UpdateDelegate() : time(0.0f)
+	april::Color color;
+
+	UpdateDelegate::UpdateDelegate() : april::UpdateDelegate(), time(0.0f)
 	{
-		this->color = april::Color::White;
 	}
 
 	bool UpdateDelegate::onUpdate(float timeSinceLastFrame)
@@ -173,7 +174,6 @@ public:
 
 protected:
 	float time;
-	april::Color color;
 
 };
 
@@ -224,6 +224,7 @@ void april_init(const harray<hstr>& args)
 		CFRelease(url);
 	}
 #endif
+	updateDelegate.color = april::Color::White;
 	try
 	{
 #if defined(_ANDROID) || defined(_IOS)
