@@ -33,9 +33,6 @@
 #include <april/RenderSystem.h>
 #include <april/UpdateDelegate.h>
 #include <april/Window.h>
-#include <aprilui/aprilui.h>
-#include <aprilui/Dataset.h>
-#include <aprilui/Objects.h>
 #include <atres/atres.h>
 #include <atres/FontResourceBitmap.h>
 #include <atres/Renderer.h>
@@ -50,19 +47,32 @@
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
+#define TEXT_0 "This is blasphemy."
+#define TEXT_1 "This is madness."
+#define TEXT_2 "No. This is Sparta!"
+#define TEXT_3 "This []]is] a [b=7F00FF][0]test [n]that[/n] [f:test]is[/f] [x=0.5]supp[/x]osed[/b] " \
+	"[b][c=fake]to[/c][/b]   [c=FFFFFF7F]show[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s]X_horz_formatting " \
+	"[c=00FF00]wrapped[/c][/s] [b]w[c=purple]ork[/c]s[/b] [f Arial:1.3]right[/f] or not."
+#define TEXT_4 "Another [b][0]test [n]that[/n] [f:test]is[/f] [x=0.5]supp[/x]osed[/b] [b][c=fake]to[/c][/b] " \
+	"[c=FFFFFF7F]show[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s=00FF00]X_horz_formatting [c=00FF00]justified[/c][/s] " \
+	"[b]w[c=purple]ork[/c]s[/b] [f Arial:1.3]right[/f] or not."
+#define TEXT_5 "[b]This is a vertical test.\nIt really is. Really."
+
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 grect viewport(0.0f, 0.0f, 1024.0f, 768.0f);
-grect textArea(700.0f, 600.0f, 240.0f, 76.0f);
-aprilui::Dataset* dataset;
-aprilui::Object* root;
-aprilui::Label* specialText;
+grect textArea0(60.0f, 24.0f, 640.0f, 64.0f);
+grect textArea1(70.0f, 144.0f, 864.0f, 32.0f);
+grect textArea2(180.0f, 400.0f, 512.0f, 128.0f);
+grect textArea3(80.0f, 550.0f, 360.0f, 184.0f);
+grect textArea4(768.0f, 200.0f, 160.0f, 384.0f);
+grect textArea5(700.0f, 600.0f, 240.0f, 76.0f);
+april::Color backgroundColor = april::Color(0, 0, 0, 128);
 
 class KeyboardDelegate : public april::KeyboardDelegate
 {
 public:
 	void onKeyDown(april::Key keyCode)
 	{
-		aprilui::onKeyDown(keyCode);
 	}
 
 	void onKeyUp(april::Key keyCode)
@@ -78,12 +88,10 @@ public:
 		default:
 			break;
 		}
-		aprilui::onKeyUp(keyCode);
 	}
 
 	void onChar(unsigned int charCode)
 	{
-		aprilui::onChar(charCode);
 	}
 
 };
@@ -99,32 +107,25 @@ public:
 
 	void onMouseDown(april::Key button)
 	{
-		aprilui::updateCursorPosition();
-		aprilui::onMouseDown(button);
-		this->position = aprilui::getCursorPosition() + this->offset;
+		this->position = april::window->getCursorPosition() + this->offset;
 		this->clicked = true;
 	}
 
 	void onMouseUp(april::Key button)
 	{
-		aprilui::updateCursorPosition();
-		aprilui::onMouseUp(button);
 		this->clicked = false;
 	}
 
 	void onMouseMove()
 	{
-		aprilui::updateCursorPosition();
-		aprilui::onMouseMove();
 		if (this->clicked)
 		{
-			this->offset = (this->position - aprilui::getCursorPosition());
+			this->offset = (this->position - april::window->getCursorPosition());
 		}
 	}
 
 	void onMouseScroll(float x, float y)
 	{
-		aprilui::onMouseScroll(x, y);
 	}
 
 protected:
@@ -148,17 +149,24 @@ public:
 	{
 		this->time += timeSinceLastFrame;
 		this->color.a = 191 + (unsigned char)(64 * dsin(this->time * 360.0f));
-		specialText->setTextColor(this->color);
 		// rendering
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(viewport);
-		aprilui::updateCursorPosition();
 		april::rendersys->drawFilledRect(viewport, april::Color(128, 128, 0));
-		root->update(timeSinceLastFrame);
-		root->draw();
-		april::rendersys->drawFilledRect(textArea, april::Color(0, 0, 0, 128));
-		atres::renderer->drawText(textArea, "[b]This is a vertical test.\nIt really is. Really.",
-			atres::CENTER, atres::CENTER, april::Color::White, mouseDelegate->offset);
+		// backgrounds
+		april::rendersys->drawFilledRect(textArea5, backgroundColor);
+		april::rendersys->drawFilledRect(textArea1, backgroundColor);
+		april::rendersys->drawFilledRect(textArea2, backgroundColor);
+		april::rendersys->drawFilledRect(textArea3, backgroundColor);
+		april::rendersys->drawFilledRect(textArea4, backgroundColor);
+		april::rendersys->drawFilledRect(textArea5, backgroundColor);
+		// texts
+		atres::renderer->drawText(textArea0, TEXT_0, atres::CENTER, atres::TOP);
+		atres::renderer->drawText("Arial:0.8", textArea1, TEXT_1, atres::LEFT_WRAPPED);
+		atres::renderer->drawText("Arial:2.0", textArea2, TEXT_2, atres::RIGHT_WRAPPED, atres::BOTTOM);
+		atres::renderer->drawText(textArea3, TEXT_3, atres::CENTER_WRAPPED, atres::CENTER);
+		atres::renderer->drawText("Arial:0.8", textArea4, TEXT_4, atres::JUSTIFIED, atres::CENTER, this->color);
+		atres::renderer->drawText(textArea5, TEXT_5, atres::CENTER, atres::CENTER, april::Color::White, mouseDelegate->offset);
 		return true;
 	}
 
@@ -240,16 +248,6 @@ void april_init(const harray<hstr>& args)
 #endif
 		atres::renderer->setShadowColor(april::Color::Red);
 		atres::renderer->setBorderColor(april::Color::Aqua);
-		aprilui::init();
-#ifdef _DEBUG
-		aprilui::setDebugEnabled(true);
-#endif
-		dataset = new aprilui::Dataset(RESOURCE_PATH "demo_simple.dts");
-		dataset->load();
-		aprilui::Label* label = dataset->getObject<aprilui::Label*>("test_4");
-		label->setText("This is a vertical test.\nIt really is. Really.");
-		root = dataset->getObject("root");
-		specialText = dataset->getObject<aprilui::Label*>("test_5");
 	}
 	catch (hltypes::exception e)
 	{
@@ -261,8 +259,6 @@ void april_destroy()
 {
 	try
 	{
-		delete dataset;
-		aprilui::destroy();
 #ifdef _ATRESTTF
 		atresttf::destroy();
 #endif
