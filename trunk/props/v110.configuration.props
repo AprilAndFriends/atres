@@ -4,16 +4,10 @@
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libapril.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <Lib>
-      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libapril.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='Android'">
     <Link>
       <AdditionalDependencies>-lhltypes;-lgtypes;-lapril;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <Lib>
-      <AdditionalDependencies>-lhltypes;-lgtypes;-lapril;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
 </Project>
