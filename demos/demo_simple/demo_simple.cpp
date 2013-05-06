@@ -20,9 +20,10 @@
 #define RESOURCE_PATH "./"
 #endif
 
-#define LOG_TAG "demo_simple"
+//#define _ATRESTTF // uncomment for testing if needed
+//#define _ATRESTTF_LOCAL_FONT // uncomment for testing if needed
 
-//#define _ATRESTTF
+#define LOG_TAG "demo_simple"
 
 #include <april/april.h>
 #include <april/KeyboardDelegate.h>
@@ -134,8 +135,8 @@ protected:
 
 };
 
-static KeyboardDelegate* keyboardDelegate = NULL;
-static MouseDelegate* mouseDelegate = NULL;
+static KeyboardDelegate keyboardDelegate;
+static MouseDelegate mouseDelegate;
 
 class UpdateDelegate : public april::UpdateDelegate
 {
@@ -154,7 +155,7 @@ public:
 		april::rendersys->setOrthoProjection(viewport);
 		april::rendersys->drawFilledRect(viewport, april::Color(128, 128, 0));
 		// backgrounds
-		april::rendersys->drawFilledRect(textArea5, backgroundColor);
+		april::rendersys->drawFilledRect(textArea0, backgroundColor);
 		april::rendersys->drawFilledRect(textArea1, backgroundColor);
 		april::rendersys->drawFilledRect(textArea2, backgroundColor);
 		april::rendersys->drawFilledRect(textArea3, backgroundColor);
@@ -166,7 +167,7 @@ public:
 		atres::renderer->drawText("Arial:2.0", textArea2, TEXT_2, atres::RIGHT_WRAPPED, atres::BOTTOM);
 		atres::renderer->drawText(textArea3, TEXT_3, atres::CENTER_WRAPPED, atres::CENTER);
 		atres::renderer->drawText("Arial:0.8", textArea4, TEXT_4, atres::JUSTIFIED, atres::CENTER, this->color);
-		atres::renderer->drawText(textArea5, TEXT_5, atres::CENTER, atres::CENTER, april::Color::White, mouseDelegate->offset);
+		atres::renderer->drawText(textArea5, TEXT_5, atres::CENTER, atres::CENTER, april::Color::White, mouseDelegate.offset);
 		return true;
 	}
 
@@ -176,7 +177,7 @@ protected:
 
 };
 
-static UpdateDelegate* updateDelegate = NULL;
+static UpdateDelegate updateDelegate;
 
 void april_init(const harray<hstr>& args)
 {
@@ -223,9 +224,6 @@ void april_init(const harray<hstr>& args)
 		CFRelease(url);
 	}
 #endif
-	updateDelegate = new UpdateDelegate();
-	keyboardDelegate = new KeyboardDelegate();
-	mouseDelegate = new MouseDelegate();
 	try
 	{
 #if defined(_ANDROID) || defined(_IOS)
@@ -234,17 +232,20 @@ void april_init(const harray<hstr>& args)
 		april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 		april::createRenderSystem();
 		april::createWindow((int)drawRect.w, (int)drawRect.h, false, "demo_simple");
-		april::window->setUpdateDelegate(updateDelegate);
-		april::window->setKeyboardDelegate(keyboardDelegate);
-		april::window->setMouseDelegate(mouseDelegate);
+		april::window->setUpdateDelegate(&updateDelegate);
+		april::window->setKeyboardDelegate(&keyboardDelegate);
+		april::window->setMouseDelegate(&mouseDelegate);
 		atres::init();
 #ifndef _ATRESTTF
 		atres::renderer->registerFontResource(new atres::FontResourceBitmap(RESOURCE_PATH "arial.font"));
 #else
 		atresttf::init();
 		hlog::writef(LOG_TAG, "Found %d fonts installed on the system.", atresttf::getSystemFonts().size());
+#ifdef _ATRESTTF_LOCAL_FONT
 		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("arial.ttf", "Arial", 32, 1.0f)); // invokes a provided font
-		//atres::renderer->registerFontResource(new atresttf::FontResourceTtf("", "Arial", 32, 1.0f)); // invokes the installed system font Arial
+#else
+		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("", "Arial", 32, 1.0f)); // invokes the installed system font Arial
+#endif
 #endif
 		atres::renderer->setShadowColor(april::Color::Red);
 		atres::renderer->setBorderColor(april::Color::Aqua);
@@ -269,10 +270,4 @@ void april_destroy()
 	{
 		hlog::error(LOG_TAG, e.message());
 	}
-	delete updateDelegate;
-	updateDelegate = NULL;
-	delete keyboardDelegate;
-	keyboardDelegate = NULL;
-	delete mouseDelegate;
-	mouseDelegate = NULL;
 }
