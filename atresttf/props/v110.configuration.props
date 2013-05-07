@@ -7,7 +7,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='Android'">
     <Link>
-      <AdditionalDependencies>-lhltypes;-lgtypes;-lapril;-latres;-lfreetype;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lfreetype;-latres;-lapril;-lhltypes;-lgtypes;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
 </Project>
