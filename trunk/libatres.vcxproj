@@ -36,7 +36,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}</ProjectGuid>
-    <RootNamespace>libatres</RootNamespace>
+    <RootNamespace>atres</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="props\v110.default.props" />
