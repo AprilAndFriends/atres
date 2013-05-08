@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemDefinitionGroup>
     <ClCompile>
-      <PreprocessorDefinitions Condition="'$(ConfigurationType)'=='DynamicLibrary'">ATRESTTF_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ATRESTTF_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 	  <AdditionalIncludeDirectories>../../include;../../include/freetype;../include;src;include/atresttf;../../hltypes/include;../../gtypes/include;../../april/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
