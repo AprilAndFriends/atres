@@ -1,6 +1,7 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.01
+/// @author  Kresimir Spes
+/// @version 3.03
 /// 
 /// @section LICENSE
 /// 
@@ -33,6 +34,7 @@ namespace atresttf
 		hstr path = get_basedir(filename) + "/";
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
 		hstr line;
+		this->fontDataSize = 0;
 		while (lines.size() > 0)
 		{
 			line = lines.remove_first();
@@ -57,6 +59,23 @@ namespace atresttf
 		this->height = height;
 		this->lineHeight = lineHeight;
 		this->correctedHeight = correctedHeight;
+		this->fontDataSize = 0;
+		this->_initializeFont();
+	}
+	
+	FontResourceTtf::FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale,
+		float lineHeight, float correctedHeight) : atres::FontResource(name), fontFile(NULL)
+	{
+		this->fontFilename = "";
+		this->name = name;
+		this->baseScale = scale;
+		this->scale = scale;
+		this->height = height;
+		this->lineHeight = lineHeight;
+		this->correctedHeight = correctedHeight;
+		this->fontFile = new unsigned char[dataSize];
+		this->fontDataSize = dataSize;
+		memcpy(this->fontFile, data, dataSize);
 		this->_initializeFont();
 	}
 
@@ -106,18 +125,22 @@ namespace atresttf
 	
 	void FontResourceTtf::_initializeFont()
 	{
-		if (this->fontFilename == "")
+		int size = this->fontDataSize;
+		if (this->fontDataSize == 0)
 		{
-			this->fontFilename = atresttf::findSystemFontFilename(this->name);
-		}
-		if (this->fontFilename == "") // no font file
-		{
-			return;
-		}
-		if (!hresource::exists(this->fontFilename)) // font file does not exist
-		{
-			hlog::error(atresttf::logTag, "Could not find: " + this->fontFilename);
-			return;
+			if (this->fontFilename == "")
+			{
+				this->fontFilename = atresttf::findSystemFontFilename(this->name);
+			}
+			if (this->fontFilename == "") // no font file
+			{
+				return;
+			}
+			if (!hresource::exists(this->fontFilename)) // font file does not exist
+			{
+				hlog::error(atresttf::logTag, "Could not find: " + this->fontFilename);
+				return;
+			}
 		}
 		if (this->lineHeight == 0.0f)
 		{
@@ -130,15 +153,18 @@ namespace atresttf
 		// libfreetype stuff
 		FT_Library library = atresttf::getLibrary();
 		FT_Face face = NULL;
-		hresource file(this->fontFilename);
-		if (this->fontFile != NULL) // making sure there are no memory leaks whatsoever
+		if (this->fontDataSize == 0)
 		{
-			delete [] this->fontFile;
+			hresource file(this->fontFilename);
+			if (this->fontFile != NULL) // making sure there are no memory leaks whatsoever
+			{
+				delete [] this->fontFile;
+			}
+			size = file.size();
+			this->fontFile = new unsigned char[size];
+			file.read_raw(this->fontFile, size);
+			file.close();
 		}
-		int size = file.size();
-		this->fontFile = new unsigned char[size];
-		file.read_raw(this->fontFile, size);
-		file.close();
 		FT_Error error = FT_New_Memory_Face(library, this->fontFile, size, 0, &face);
 		if (error == FT_Err_Unknown_File_Format)
 		{
