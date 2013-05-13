@@ -1,6 +1,7 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @author  Kresimir Spes
+/// @version 3.03
 /// 
 /// @section LICENSE
 /// 
@@ -33,6 +34,8 @@ namespace atresttf
 	public:
 		FontResourceTtf(chstr filename);
 		FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight = 0.0f, float correctedHeight = 0.0f);
+		FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight = 0.0f, float correctedHeight = 0.0f);
+		
 		~FontResourceTtf();
 
 		HL_DEFINE_GET(hstr, fontFilename, FontFilename);
@@ -43,6 +46,7 @@ namespace atresttf
 		int penX;
 		int penY;
 		int rowHeight;
+		int fontDataSize;
 		hstr fontFilename;
 		unsigned char* fontFile;
 
