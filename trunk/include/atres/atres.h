@@ -27,9 +27,6 @@ namespace atres
 	atresFnExport void init();
 	atresFnExport void destroy();
 	
-	DEPRECATED_ATTRIBUTE atresFnExport void setLogFunction(void (*fnptr)(chstr));
-	DEPRECATED_ATTRIBUTE atresFnExport void log(chstr message, chstr prefix = "[atres] ");
-
 }
 
 #endif

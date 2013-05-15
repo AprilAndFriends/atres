@@ -21,15 +21,6 @@ namespace atres
 {
 	hstr logTag = "atres";
 
-	void log(chstr message, chstr prefix)
-	{
-		hlog::write(atres::logTag, message);
-	}
-	
-	void setLogFunction(void (*fnptr)(chstr))
-	{
-	}
-	
 	void init()
 	{
 		hlog::write(atres::logTag, "Initializing Atres.");
