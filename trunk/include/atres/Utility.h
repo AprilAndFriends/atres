@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.12
+/// @version 3.15
 /// 
 /// @section LICENSE
 /// 
@@ -57,6 +57,7 @@ namespace atres
 		TAG_TYPE_NORMAL,
 		TAG_TYPE_SHADOW,
 		TAG_TYPE_BORDER,
+		TAG_TYPE_IGNORE_FORMATTING,
 		TAG_TYPE_CLOSE
 	};
 	

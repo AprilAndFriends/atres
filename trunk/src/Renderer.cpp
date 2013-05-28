@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.14
+/// @version 3.15
 /// 
 /// @section LICENSE
 /// 
@@ -359,6 +359,7 @@ namespace atres
 		const unsigned int* str = uText.c_str();
 		int start = 0;
 		int end = 0;
+		bool ignoreFormatting = false;
 		harray<char> stack;
 		FormatTag tag;
 		harray<FormatTag> foundTags;
@@ -379,7 +380,18 @@ namespace atres
 			tag.data = "";
 			tag.start = text.utf8_substr(0, start).size();
 			tag.count = text.utf8_substr(start, end - start).size();
-			if (end - start == 2) // empty command
+			if (ignoreFormatting)
+			{
+				if (str[start + 1] != '/' || str[start + 2] != '-')
+				{
+					start = end;
+					continue;
+				}
+				ignoreFormatting = false;
+				stack.remove_last();
+				tag.type = TAG_TYPE_CLOSE;
+			}
+			else if (end - start == 2) // empty command
 			{
 				tag.type = TAG_TYPE_ESCAPE;
 			}
@@ -415,6 +427,11 @@ namespace atres
 					break;
 				case 'b':
 					tag.type = TAG_TYPE_BORDER;
+					break;
+				case '-': // ignore formattting from here on
+					tag.type = TAG_TYPE_IGNORE_FORMATTING;
+					ignoreFormatting = true;
+					//start = end;
 					break;
 				default: // command not supported, regard as normal text
 					start = end;
