@@ -7,11 +7,12 @@ The command and the parameter can be separated with any character.
 
 Following formatting commands are supported:
 
-n - normal (no shadow / border)
-s - shadow; parameter (optional): string with hex value for color in RGB or RGBA
-b - border; parameter (optional): string with hex value for color in RGB or RGBA
-c - color change; parameter: string with hex value for color in RGB
-f - font change; parameter: string of the font name definition including optional scale factor
+n	- normal (no shadow / border)
+s	- shadow; parameter (optional): string with hex value for color in RGB or RGBA
+b	- border; parameter (optional): string with hex value for color in RGB or RGBA
+c	- color change; parameter: string with hex value for color in RGB
+f	- font change; parameter: string of the font name definition including optional scale factor
+-	- disable [] formatting until this command tag is closed
 
 Examples:
 
