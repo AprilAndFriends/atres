@@ -40,6 +40,12 @@
 		D178E5111560F6DF0026CCD0 /* hltypes.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5001560F56C0026CCD0 /* hltypes.framework */; };
 		D178E5121560F6EF0026CCD0 /* atresttf.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* atresttf.framework */; };
 		D178E5151560F72B0026CCD0 /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5131560F7250026CCD0 /* SDL.framework */; };
+		D1F27B18177A2F7700E5C131 /* atresttf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C0515614BB2A0D005BD333 /* atresttf.cpp */; };
+		D1F27B19177A2F7700E5C131 /* FontResourceTtf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C0515714BB2A0D005BD333 /* FontResourceTtf.cpp */; };
+		D1F27B1C177A2F7700E5C131 /* freetype.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0515814BB2A0D005BD333 /* freetype.h */; };
+		D1F27B1D177A2F7700E5C131 /* atresttf.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0515F14BB2A16005BD333 /* atresttf.h */; };
+		D1F27B1E177A2F7700E5C131 /* atresttfExport.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0516014BB2A16005BD333 /* atresttfExport.h */; };
+		D1F27B1F177A2F7700E5C131 /* FontResourceTtf.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0516114BB2A16005BD333 /* FontResourceTtf.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -92,6 +98,7 @@
 		D178E5051560F5860026CCD0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		D178E5081560F5AF0026CCD0 /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = "../../__build__/angels/Build/Products/Debug-LLVM/freetype.framework"; sourceTree = "<group>"; };
 		D178E5131560F7250026CCD0 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = "../../__build__/angels/Build/Products/Debug-LLVM/SDL.framework"; sourceTree = "<group>"; };
+		D1F27B26177A2F7700E5C131 /* libatresttf.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libatresttf.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +135,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D1F27B1A177A2F7700E5C131 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -137,6 +151,7 @@
 				8DC2EF5B0486A6940098B216 /* atresttf.framework */,
 				D1522F1C140F79500012F290 /* libatresttf.a */,
 				D178E4D21560F3B60026CCD0 /* ttf_fontgen.app */,
+				D1F27B26177A2F7700E5C131 /* libatresttf.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -255,6 +270,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D1F27B1B177A2F7700E5C131 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1F27B1C177A2F7700E5C131 /* freetype.h in Headers */,
+				D1F27B1D177A2F7700E5C131 /* atresttf.h in Headers */,
+				D1F27B1E177A2F7700E5C131 /* atresttfExport.h in Headers */,
+				D1F27B1F177A2F7700E5C131 /* FontResourceTtf.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -311,6 +337,23 @@
 			productReference = D178E4D21560F3B60026CCD0 /* ttf_fontgen.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D1F27B16177A2F7700E5C131 /* atresttf (Mac) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1F27B20177A2F7700E5C131 /* Build configuration list for PBXNativeTarget "atresttf (Mac)" */;
+			buildPhases = (
+				D1F27B17177A2F7700E5C131 /* Sources */,
+				D1F27B1A177A2F7700E5C131 /* Frameworks */,
+				D1F27B1B177A2F7700E5C131 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "atresttf (Mac)";
+			productName = "libatresttf-ios";
+			productReference = D1F27B26177A2F7700E5C131 /* libatresttf.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -336,6 +379,7 @@
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* atresttf */,
+				D1F27B16177A2F7700E5C131 /* atresttf (Mac) */,
 				D1522F1B140F79500012F290 /* atresttf (iOS) */,
 				D178E4D11560F3B60026CCD0 /* ttf_fontgen */,
 			);
@@ -379,6 +423,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D1F27B17177A2F7700E5C131 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1F27B18177A2F7700E5C131 /* atresttf.cpp in Sources */,
+				D1F27B19177A2F7700E5C131 /* FontResourceTtf.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -396,7 +449,10 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
@@ -419,6 +475,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
@@ -439,6 +499,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -515,6 +576,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
@@ -534,6 +599,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -565,7 +631,10 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
@@ -611,6 +680,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
@@ -636,8 +709,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					_DEBUG,
+					_IOS,
 					"$(inherited)",
 				);
 				GCC_THUMB_SUPPORT = NO;
@@ -665,8 +737,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					_DEBUG,
+					_IOS,
 					"$(inherited)",
 				);
 				GCC_THUMB_SUPPORT = NO;
@@ -692,6 +763,10 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_IOS,
+					"$(inherited)",
+				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
@@ -716,6 +791,10 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_IOS,
+					"$(inherited)",
+				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
@@ -740,6 +819,10 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_IOS,
+					"$(inherited)",
+				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
@@ -883,6 +966,116 @@
 			};
 			name = "App Store";
 		};
+		D1F27B21177A2F7700E5C131 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/libatresttf_ios.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atresttf;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		D1F27B22177A2F7700E5C131 /* Debug-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/libatresttf_ios.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atresttf;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = "Debug-LLVM";
+		};
+		D1F27B23177A2F7700E5C131 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libatresttf_ios.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atresttf;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D1F27B24177A2F7700E5C131 /* Release-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libatresttf_ios.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atresttf;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-LLVM";
+		};
+		D1F27B25177A2F7700E5C131 /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libatresttf_ios.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atresttf;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "App Store";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -930,6 +1123,18 @@
 				D178E4EE1560F3B70026CCD0 /* Release */,
 				D178E4EF1560F3B70026CCD0 /* Release-LLVM */,
 				D178E4F01560F3B70026CCD0 /* App Store */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D1F27B20177A2F7700E5C131 /* Build configuration list for PBXNativeTarget "atresttf (Mac)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1F27B21177A2F7700E5C131 /* Debug */,
+				D1F27B22177A2F7700E5C131 /* Debug-LLVM */,
+				D1F27B23177A2F7700E5C131 /* Release */,
+				D1F27B24177A2F7700E5C131 /* Release-LLVM */,
+				D1F27B25177A2F7700E5C131 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

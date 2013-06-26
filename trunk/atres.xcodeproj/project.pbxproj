@@ -27,6 +27,11 @@
 		D1981D30140F90BC0057C3AF /* FontResourceBitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93A13CD9F94002A143C /* FontResourceBitmap.cpp */; };
 		D1981D31140F90BC0057C3AF /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93B13CD9F94002A143C /* Renderer.cpp */; };
 		D1981D32140F90BC0057C3AF /* atres.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9AE31E4135D6FD4006B491A /* atres.cpp */; };
+		D1F27B09177A2F1A00E5C131 /* FontResource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93913CD9F94002A143C /* FontResource.cpp */; };
+		D1F27B0A177A2F1A00E5C131 /* FontResourceBitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93A13CD9F94002A143C /* FontResourceBitmap.cpp */; };
+		D1F27B0B177A2F1A00E5C131 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93B13CD9F94002A143C /* Renderer.cpp */; };
+		D1F27B0C177A2F1A00E5C131 /* atres.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9AE31E4135D6FD4006B491A /* atres.cpp */; };
+		D1F27B0D177A2F1A00E5C131 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9FBF4D014E15B27008359C3 /* Utility.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +54,7 @@
 		D10753981486EF0A00980E43 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utility.h; path = include/atres/Utility.h; sourceTree = "<group>"; };
 		D1981D20140F90670057C3AF /* libatres.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libatres.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1981D21140F90670057C3AF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D1F27B15177A2F1A00E5C131 /* libatres.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libatres.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +75,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D1F27B0E177A2F1A00E5C131 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -77,6 +90,7 @@
 			children = (
 				8DC2EF5B0486A6940098B216 /* atres.framework */,
 				D1981D20140F90670057C3AF /* libatres.a */,
+				D1F27B15177A2F1A00E5C131 /* libatres.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -193,6 +207,22 @@
 			productReference = D1981D20140F90670057C3AF /* libatres.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		D1F27B07177A2F1A00E5C131 /* atres (Mac) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1F27B0F177A2F1A00E5C131 /* Build configuration list for PBXNativeTarget "atres (Mac)" */;
+			buildPhases = (
+				D1F27B08177A2F1A00E5C131 /* Sources */,
+				D1F27B0E177A2F1A00E5C131 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "atres (Mac)";
+			productName = "libatres-ios";
+			productReference = D1F27B15177A2F1A00E5C131 /* libatres.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -217,6 +247,7 @@
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* atres */,
+				D1F27B07177A2F1A00E5C131 /* atres (Mac) */,
 				D1981D1F140F90670057C3AF /* atres (iOS) */,
 			);
 		};
@@ -257,6 +288,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D1F27B08177A2F1A00E5C131 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1F27B09177A2F1A00E5C131 /* FontResource.cpp in Sources */,
+				D1F27B0A177A2F1A00E5C131 /* FontResourceBitmap.cpp in Sources */,
+				D1F27B0B177A2F1A00E5C131 /* Renderer.cpp in Sources */,
+				D1F27B0C177A2F1A00E5C131 /* atres.cpp in Sources */,
+				D1F27B0D177A2F1A00E5C131 /* Utility.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -274,6 +317,10 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
@@ -296,6 +343,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
@@ -316,6 +367,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -392,6 +444,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
@@ -412,6 +468,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -443,6 +500,10 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
@@ -489,6 +550,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
@@ -509,7 +574,7 @@
 				DSTROOT = /tmp/libatres_ios.dst;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
+					_IOS,
 					"$(inherited)",
 				);
 				GCC_THUMB_SUPPORT = NO;
@@ -532,7 +597,7 @@
 				DSTROOT = /tmp/libatres_ios.dst;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
+					_IOS,
 					"$(inherited)",
 				);
 				GCC_THUMB_SUPPORT = NO;
@@ -553,6 +618,10 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/libatres_ios.dst;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_IOS,
+					"$(inherited)",
+				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_MISSING_PARENTHESES = NO;
@@ -572,6 +641,10 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/libatres_ios.dst;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_IOS,
+					"$(inherited)",
+				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_MISSING_PARENTHESES = NO;
@@ -591,6 +664,10 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/libatres_ios.dst;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_IOS,
+					"$(inherited)",
+				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_MISSING_PARENTHESES = NO;
@@ -598,6 +675,111 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atres;
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "App Store";
+		};
+		D1F27B10177A2F1A00E5C131 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/libatres_ios.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_MISSING_PARENTHESES = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atres;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		D1F27B11177A2F1A00E5C131 /* Debug-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/libatres_ios.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_MISSING_PARENTHESES = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atres;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = "Debug-LLVM";
+		};
+		D1F27B12177A2F1A00E5C131 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libatres_ios.dst;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_MISSING_PARENTHESES = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atres;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D1F27B13177A2F1A00E5C131 /* Release-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libatres_ios.dst;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_MISSING_PARENTHESES = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atres;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-LLVM";
+		};
+		D1F27B14177A2F1A00E5C131 /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libatres_ios.dst;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
+					"$(inherited)",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_MISSING_PARENTHESES = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = atres;
+				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -638,6 +820,18 @@
 				D1981D2C140F90670057C3AF /* Release */,
 				D1981D2D140F90670057C3AF /* Release-LLVM */,
 				D1981D2E140F90670057C3AF /* App Store */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D1F27B0F177A2F1A00E5C131 /* Build configuration list for PBXNativeTarget "atres (Mac)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1F27B10177A2F1A00E5C131 /* Debug */,
+				D1F27B11177A2F1A00E5C131 /* Debug-LLVM */,
+				D1F27B12177A2F1A00E5C131 /* Release */,
+				D1F27B13177A2F1A00E5C131 /* Release-LLVM */,
+				D1F27B14177A2F1A00E5C131 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
