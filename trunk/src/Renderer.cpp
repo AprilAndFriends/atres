@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.15
+/// @version 3.16
 /// 
 /// @section LICENSE
 /// 
@@ -206,7 +206,7 @@ namespace atres
 	
 /******* FONT **********************************************************/
 
-	void Renderer::registerFontResource(FontResource* fontResource)
+	void Renderer::registerFontResource(FontResource* fontResource, bool allowDefault)
 	{
 		hstr name = fontResource->getName();
 		hlog::write(atres::logTag, "Registering font resource: " + name);
@@ -215,7 +215,7 @@ namespace atres
 			throw resource_already_exists("font resource", name, "atres");
 		}
 		this->fonts[name] = fontResource;
-		if (this->defaultFont == NULL)
+		if (this->defaultFont == NULL && allowDefault)
 		{
 			this->defaultFont = fontResource;
 		}
