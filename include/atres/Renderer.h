@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.12
+/// @version 3.16
 /// 
 /// @section LICENSE
 /// 
@@ -58,7 +58,8 @@ namespace atres
 		bool hasFont(chstr name);
 		void setCacheSize(int value);
 
-		void registerFontResource(FontResource* fontResource);
+		/// @param[in] allowDefault Allows font to be set as default if necessary
+		void registerFontResource(FontResource* fontResource, bool allowDefault = true);
 		void destroyAllFontResources();
 		void destroyFontResource(FontResource* fontResource);
 		void unregisterFontResource(FontResource* fontResource);
