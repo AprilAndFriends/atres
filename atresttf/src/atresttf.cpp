@@ -81,8 +81,8 @@ namespace atresttf
 #if defined(_WIN32) && !_HL_WINRT
 	int CALLBACK _fontEnumCallback(ENUMLOGFONTEX* lpelfe, NEWTEXTMETRICEX* lpntme, DWORD FontType, LPARAM lParam)
 	{
-		hstr fontName = unicode_to_utf8(lpelfe->elfLogFont.lfFaceName);
-		hstr styleName = unicode_to_utf8(lpelfe->elfStyle);
+		hstr fontName = hstr::from_unicode(lpelfe->elfLogFont.lfFaceName);
+		hstr styleName = hstr::from_unicode(lpelfe->elfStyle);
 		if (styleName != "" && styleName != "Regular")
 		{
 			fontName += " " + styleName;
