@@ -5,9 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="DLLs">
-      <UniqueIdentifier>{b2723e8d-96b8-47f3-b82d-232fef21f0e5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Win8xap">
       <UniqueIdentifier>{0ea29358-fbd2-4807-a2f0-94fd734f3a6f}</UniqueIdentifier>
     </Filter>
@@ -24,12 +21,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\lib\WinRT\libpng.dll">
-      <Filter>DLLs</Filter>
-    </None>
-    <None Include="..\..\..\lib\WinRT\zlib1.dll">
-      <Filter>DLLs</Filter>
-    </None>
     <None Include="demo_simple_TemporaryKey.pfx">
       <Filter>Win8xap</Filter>
     </None>

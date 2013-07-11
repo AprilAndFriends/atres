@@ -27,9 +27,8 @@
 #include "atresttf.h"
 #include "freetype.h"
 
-#if _HL_WINRT
+#if _HL_WINRT && !defined(_NO_SYSTEM_FONTS)
 #include <dwrite.h>
-//using namespace FontEnumeration;
 using namespace Microsoft::WRL;
 #endif
 
@@ -41,6 +40,7 @@ namespace atresttf
 	hmap<atres::FontResource*, FT_Face> faces;
 	harray<hstr> fonts;
 	harray<hstr> fontFiles;
+	bool fontsChecked = false;
 	int textureSize = 1024;
 
 	void init()
@@ -78,7 +78,7 @@ namespace atresttf
 		textureSize = value;
 	}
 
-#if defined(_WIN32) && !_HL_WINRT
+#if defined(_WIN32) && !_HL_WINRT && !defined(_NO_SYSTEM_FONTS)
 	int CALLBACK _fontEnumCallback(ENUMLOGFONTEX* lpelfe, NEWTEXTMETRICEX* lpntme, DWORD FontType, LPARAM lParam)
 	{
 		hstr fontName = hstr::from_unicode(lpelfe->elfLogFont.lfFaceName);
@@ -94,7 +94,8 @@ namespace atresttf
 
 	harray<hstr> getSystemFonts()
 	{
-		if (fonts.size() > 0)
+#ifndef _NO_SYSTEM_FONTS
+		if (fontsChecked)
 		{
 			return fonts;
 		}
@@ -162,7 +163,7 @@ namespace atresttf
 						hr = familyNames->GetString(index, name, length + 1);
 						if (!FAILED(hr))
 						{
-							fonts += unicode_to_utf8(name);
+							fonts += hstr::from_unicode(name);
 						}
 						delete [] name;
 					}
@@ -180,6 +181,10 @@ namespace atresttf
 #endif
 		fonts.remove_duplicates();
 		fonts.sort();
+#else
+		hlog::warn(atresttf::logTag, "AtresTTF compiled without system font support.");
+#endif
+		fontsChecked = true;
 		return fonts;
 	}
 
