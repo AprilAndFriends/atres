@@ -243,7 +243,7 @@ void april_init(const harray<hstr>& args)
 		atresttf::init();
 		hlog::writef(LOG_TAG, "Found %d fonts installed on the system.", atresttf::getSystemFonts().size());
 #ifdef _ATRESTTF_LOCAL_FONT
-		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("arial.ttf", "Arial", 32, 1.0f)); // invokes a provided font
+		atres::renderer->registerFontResource(new atresttf::FontResourceTtf(RESOURCE_PATH "arial.ttf", "Arial", 32, 1.0f)); // invokes a provided font
 #else
 		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("", "Arial", 32, 1.0f)); // invokes the installed system font Arial
 #endif
