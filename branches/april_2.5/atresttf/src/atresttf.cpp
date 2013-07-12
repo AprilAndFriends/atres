@@ -27,7 +27,7 @@
 #include "atresttf.h"
 #include "freetype.h"
 
-#if _HL_WINRT && !defined(_NO_SYSTEM_FONTS)
+#if defined(_WINRT) && !defined(_NO_SYSTEM_FONTS)
 #include <dwrite.h>
 using namespace Microsoft::WRL;
 #endif
@@ -78,7 +78,7 @@ namespace atresttf
 		textureSize = value;
 	}
 
-#if defined(_WIN32) && !_HL_WINRT && !defined(_NO_SYSTEM_FONTS)
+#if defined(_WIN32) && !defined(_WINRT) && !defined(_NO_SYSTEM_FONTS)
 	int CALLBACK _fontEnumCallback(ENUMLOGFONTEX* lpelfe, NEWTEXTMETRICEX* lpntme, DWORD FontType, LPARAM lParam)
 	{
 		hstr fontName = hstr::from_unicode(lpelfe->elfLogFont.lfFaceName);
@@ -100,7 +100,7 @@ namespace atresttf
 			return fonts;
 		}
 #ifdef _WIN32
-#if !_HL_WINRT
+#ifndef _WINRT
 		LOGFONT logFont;
 		logFont.lfFaceName[0] = NULL;
 		logFont.lfCharSet = DEFAULT_CHARSET;
@@ -223,7 +223,7 @@ namespace atresttf
 	hstr getSystemFontsPath()
 	{
 #ifdef _WIN32
-#if !_HL_WINRT
+#ifndef _WINRT
 		return (normalize_path(get_environment_variable("WinDir")) + "/Fonts/");
 #else
 		return "";
