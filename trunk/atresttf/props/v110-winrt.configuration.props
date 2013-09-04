@@ -6,9 +6,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_NoSystemFonts' or
-                                  '$(Configuration)'=='DebugS_NoSystemFonts' or
+                                  '$(Configuration)'=='DebugP8_NoSystemFonts' or
                                   '$(Configuration)'=='Release_NoSystemFonts' or
-                                  '$(Configuration)'=='ReleaseS_NoSystemFonts'">
+                                  '$(Configuration)'=='ReleaseP8_NoSystemFonts'">
     <ClCompile>
       <PreprocessorDefinitions>_NO_SYSTEM_FONTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
