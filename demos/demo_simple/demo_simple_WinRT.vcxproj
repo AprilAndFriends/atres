@@ -101,19 +101,6 @@
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="media\arial.font">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="media\arial.ttfdef">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="TemporaryKey.pfx" />
-    <Image Include="media\arial.png" />
-    <Image Include="media\assets\icon.png" />
-    <Image Include="media\assets\tile-medium.png" />
-    <Image Include="media\assets\tile-small.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\april\libapril_WinRT.vcxproj">
       <Project>{2d053cda-686b-4b36-80eb-1da5f0cef8f9}</Project>
       <CopyLocal>false</CopyLocal>
@@ -191,23 +178,30 @@
     <ClCompile Include="demo_simple.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
-      <SubType>Designer</SubType>
-    </AppxManifest>
-  </ItemGroup>
-  <ItemGroup>
+    <Image Include="media\assets\icon.png" />
+    <Image Include="media\assets\tile-medium.png" />
+    <Image Include="media\assets\tile-small.png" />
     <Image Include="media\assets\logo_icon.png" />
     <Image Include="media\assets\small_icon.png" />
     <Image Include="media\assets\splash.png" />
     <Image Include="media\assets\store_icon.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <Image Include="media\arial.png" />
+    <None Include="media\arial.font">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\arial.ttfdef">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="TemporaryKey.pfx" />
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
     <Xml Include="WMAppManifest.xml">
       <SubType>Designer</SubType>
     </Xml>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsPhone\v$(TargetPlatformVersion)\Microsoft.Cpp.WindowsPhone.$(TargetPlatformVersion).targets" />
+  <Import Condition="'$(PlatformToolset)'=='v110_wp80'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsPhone\v$(TargetPlatformVersion)\Microsoft.Cpp.WindowsPhone.$(TargetPlatformVersion).targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>

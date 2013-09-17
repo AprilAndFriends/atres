@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Windows Phone
+# Visual Studio Express 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libatres", "libatres_WinRT.vcxproj", "{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA} = {9C043B29-DB40-48D5-97D8-1BC44128E3BA}
