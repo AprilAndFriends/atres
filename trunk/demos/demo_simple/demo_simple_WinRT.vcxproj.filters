@@ -5,14 +5,14 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Win8xap">
-      <UniqueIdentifier>{0ea29358-fbd2-4807-a2f0-94fd734f3a6f}</UniqueIdentifier>
+    <Filter Include="winrt">
+      <UniqueIdentifier>{f0ae1058-a500-44e2-8f2a-326b57b71662}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Win8xap\media">
-      <UniqueIdentifier>{54efa6e1-3382-4ddd-9816-22a5b9847916}</UniqueIdentifier>
+    <Filter Include="winrt\media">
+      <UniqueIdentifier>{df25b4c6-d8ac-462d-b490-c614f00bcfbf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Win8xap\media\assets">
-      <UniqueIdentifier>{2b355d7e-3803-4399-95a9-ddf7211d6321}</UniqueIdentifier>
+    <Filter Include="winrt\media\assets">
+      <UniqueIdentifier>{88ab3f03-5374-4194-8762-3355cfa6d25a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -21,36 +21,50 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="demo_simple_TemporaryKey.pfx">
-      <Filter>Win8xap</Filter>
-    </None>
-    <None Include="media\arial.font">
-      <Filter>Win8xap\media</Filter>
-    </None>
-    <None Include="media\arial.ttfdef">
-      <Filter>Win8xap\media</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
-      <Filter>Win8xap</Filter>
+      <Filter>winrt</Filter>
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
     <Image Include="media\assets\logo_icon.png">
-      <Filter>Win8xap\media\assets</Filter>
+      <Filter>winrt\media\assets</Filter>
     </Image>
     <Image Include="media\assets\small_icon.png">
-      <Filter>Win8xap\media\assets</Filter>
+      <Filter>winrt\media\assets</Filter>
     </Image>
     <Image Include="media\assets\splash.png">
-      <Filter>Win8xap\media\assets</Filter>
+      <Filter>winrt\media\assets</Filter>
     </Image>
     <Image Include="media\assets\store_icon.png">
-      <Filter>Win8xap\media\assets</Filter>
+      <Filter>winrt\media\assets</Filter>
+    </Image>
+    <Image Include="media\assets\icon.png">
+      <Filter>winrt\media\assets</Filter>
+    </Image>
+    <Image Include="media\assets\tile-medium.png">
+      <Filter>winrt\media\assets</Filter>
+    </Image>
+    <Image Include="media\assets\tile-small.png">
+      <Filter>winrt\media\assets</Filter>
     </Image>
     <Image Include="media\arial.png">
-      <Filter>Win8xap\media</Filter>
+      <Filter>winrt\media</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="WMAppManifest.xml">
+      <Filter>winrt</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TemporaryKey.pfx">
+      <Filter>winrt</Filter>
+    </None>
+    <None Include="media\arial.font">
+      <Filter>winrt\media</Filter>
+    </None>
+    <None Include="media\arial.ttfdef">
+      <Filter>winrt\media</Filter>
+    </None>
   </ItemGroup>
 </Project>

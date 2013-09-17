@@ -105,13 +105,13 @@ public:
 	{
 	}
 
-	void onMouseDown(april::Key button)
+	void onMouseDown(april::Key key)
 	{
 		this->position = april::window->getCursorPosition() + this->offset;
 		this->clicked = true;
 	}
 
-	void onMouseUp(april::Key button)
+	void onMouseUp(april::Key key)
 	{
 		this->clicked = false;
 	}
@@ -125,6 +125,10 @@ public:
 	}
 
 	void onMouseScroll(float x, float y)
+	{
+	}
+
+	void onMouseCancel(april::Key key)
 	{
 	}
 
