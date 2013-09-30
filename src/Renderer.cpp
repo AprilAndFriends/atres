@@ -297,6 +297,7 @@ namespace atres
 		int position = name.find(":");
 		if (position < 0)
 		{
+			hlog::error("SHIT", "SHIT");
 			throw resource_not_exists("font resource", name, "atres");
 		}
 		fontResource = this->getFontResource(name(0, position));
@@ -675,22 +676,29 @@ namespace atres
 				this->_stack += this->_currentTag;
 				try
 				{
+					hlog::warn(atres::logTag, "CHECK FONT " + this->_nextTag.data);
 					if (this->_fontResource == NULL) // if there is no previous font, the height values have to be obtained as well
 					{
+						hlog::warn(atres::logTag, "F 1");
 						this->_fontResource = this->getFontResource(this->_nextTag.data);
+						hlog::warnf(atres::logTag, "F 2 %p", this->_fontResource);
 						this->_height = this->_fontResource->getHeight();
+						hlog::warn(atres::logTag, "F 3");
 						this->_lineHeight = this->_fontResource->getLineHeight();
+						hlog::warn(atres::logTag, "F 4");
 						this->_correctedHeight = this->_fontResource->getCorrectedHeight();
 					}
 					else
 					{
 						this->_fontResource = this->getFontResource(this->_nextTag.data);
+						hlog::warnf(atres::logTag, "F X %p", this->_fontResource);
 					}
+					hlog::warn(atres::logTag, "F XOK");
 					this->_fontName = this->_nextTag.data;
 					this->_characters = this->_fontResource->getCharacters();
 					this->_fontScale = this->_fontResource->getScale();
 				}
-				catch (hltypes::_resource_not_exists e)
+				catch (hltypes::_resource_not_exists& e)
 				{
 					hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.c_str());
 				}
@@ -795,7 +803,7 @@ namespace atres
 						this->_characters = this->_fontResource->getCharacters();
 						this->_fontScale = this->_fontResource->getScale();
 					}
-					catch (hltypes::_resource_not_exists e)
+					catch (hltypes::_resource_not_exists& e)
 					{
 						hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.c_str());
 					}

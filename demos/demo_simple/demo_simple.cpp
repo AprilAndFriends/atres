@@ -96,12 +96,14 @@ public:
 
 };
 
+static KeyboardDelegate* keyboardDelegate = NULL;
+
 class MouseDelegate : public april::MouseDelegate
 {
 public:
 	gvec2 offset;
 
-	MouseDelegate::MouseDelegate() : april::MouseDelegate(), clicked(false)
+	MouseDelegate() : april::MouseDelegate(), clicked(false)
 	{
 	}
 
@@ -138,19 +140,18 @@ protected:
 
 };
 
-static KeyboardDelegate keyboardDelegate;
-static MouseDelegate mouseDelegate;
+static MouseDelegate* mouseDelegate = NULL;
 
 class UpdateDelegate : public april::UpdateDelegate
 {
 public:
 	april::Color color;
 
-	UpdateDelegate::UpdateDelegate() : april::UpdateDelegate(), time(0.0f)
+	UpdateDelegate() : april::UpdateDelegate(), time(0.0f)
 	{
 	}
 
-	bool UpdateDelegate::onUpdate(float timeSinceLastFrame)
+	bool onUpdate(float timeSinceLastFrame)
 	{
 		this->time += timeSinceLastFrame;
 		this->color.a = 191 + (unsigned char)(64 * dsin(this->time * 360.0f));
@@ -169,9 +170,11 @@ public:
 		atres::renderer->drawText(textArea0, TEXT_0, atres::CENTER, atres::TOP);
 		atres::renderer->drawText("Arial:0.8", textArea1, TEXT_1, atres::LEFT_WRAPPED);
 		atres::renderer->drawText("Arial:2.0", textArea2, TEXT_2, atres::RIGHT_WRAPPED, atres::BOTTOM);
+		hlog::write(LOG_TAG, "4");
 		atres::renderer->drawText(textArea3, TEXT_3, atres::CENTER_WRAPPED, atres::CENTER);
+		hlog::write(LOG_TAG, "5");
 		atres::renderer->drawText("Arial:0.8", textArea4, TEXT_4, atres::JUSTIFIED, atres::CENTER, this->color);
-		atres::renderer->drawText(textArea5, TEXT_5, atres::CENTER, atres::CENTER, april::Color::White, mouseDelegate.offset);
+		atres::renderer->drawText(textArea5, TEXT_5, atres::CENTER, atres::CENTER, april::Color::White, mouseDelegate->offset);
 		return true;
 	}
 
@@ -180,7 +183,7 @@ protected:
 
 };
 
-static UpdateDelegate updateDelegate;
+UpdateDelegate* updateDelegate = NULL;
 
 void april_init(const harray<hstr>& args)
 {
@@ -227,18 +230,29 @@ void april_init(const harray<hstr>& args)
 		CFRelease(url);
 	}
 #endif
-	updateDelegate.color = april::Color::White;
+	keyboardDelegate = new KeyboardDelegate();
+	mouseDelegate = new MouseDelegate();
+	updateDelegate = new UpdateDelegate();
+	updateDelegate->color = april::Color::White;
 	try
 	{
 #if defined(_ANDROID) || defined(_IOS)
 		drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
+		try
+		{
+			throw "OMG";
+		}
+		catch (const char* e)
+		{
+			hlog::error("OH NOEZ", e);
+		}
 		april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 		april::createRenderSystem();
 		april::createWindow((int)drawRect.w, (int)drawRect.h, false, "demo_simple");
-		april::window->setUpdateDelegate(&updateDelegate);
-		april::window->setKeyboardDelegate(&keyboardDelegate);
-		april::window->setMouseDelegate(&mouseDelegate);
+		april::window->setUpdateDelegate(updateDelegate);
+		april::window->setKeyboardDelegate(keyboardDelegate);
+		april::window->setMouseDelegate(mouseDelegate);
 		atres::init();
 #ifndef _ATRESTTF
 		atres::renderer->registerFontResource(new atres::FontResourceBitmap(RESOURCE_PATH "arial.font"));
@@ -254,7 +268,7 @@ void april_init(const harray<hstr>& args)
 		atres::renderer->setShadowColor(april::Color::Red);
 		atres::renderer->setBorderColor(april::Color::Aqua);
 	}
-	catch (hltypes::exception e)
+	catch (hltypes::exception& e)
 	{
 		hlog::error(LOG_TAG, e.message());
 	}
@@ -269,8 +283,14 @@ void april_destroy()
 #endif
 		atres::destroy();
 		april::destroy();
+		delete keyboardDelegate;
+		keyboardDelegate = NULL;
+		delete mouseDelegate;
+		mouseDelegate = NULL;
+		delete updateDelegate;
+		updateDelegate = NULL;
 	}
-	catch (hltypes::exception e)
+	catch (hltypes::exception& e)
 	{
 		hlog::error(LOG_TAG, e.message());
 	}
