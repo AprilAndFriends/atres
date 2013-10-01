@@ -170,9 +170,7 @@ public:
 		atres::renderer->drawText(textArea0, TEXT_0, atres::CENTER, atres::TOP);
 		atres::renderer->drawText("Arial:0.8", textArea1, TEXT_1, atres::LEFT_WRAPPED);
 		atres::renderer->drawText("Arial:2.0", textArea2, TEXT_2, atres::RIGHT_WRAPPED, atres::BOTTOM);
-		hlog::write(LOG_TAG, "4");
 		atres::renderer->drawText(textArea3, TEXT_3, atres::CENTER_WRAPPED, atres::CENTER);
-		hlog::write(LOG_TAG, "5");
 		atres::renderer->drawText("Arial:0.8", textArea4, TEXT_4, atres::JUSTIFIED, atres::CENTER, this->color);
 		atres::renderer->drawText(textArea5, TEXT_5, atres::CENTER, atres::CENTER, april::Color::White, mouseDelegate->offset);
 		return true;
@@ -239,14 +237,6 @@ void april_init(const harray<hstr>& args)
 #if defined(_ANDROID) || defined(_IOS)
 		drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
-		try
-		{
-			throw "OMG";
-		}
-		catch (const char* e)
-		{
-			hlog::error("OH NOEZ", e);
-		}
 		april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 		april::createRenderSystem();
 		april::createWindow((int)drawRect.w, (int)drawRect.h, false, "demo_simple");
