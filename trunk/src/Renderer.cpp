@@ -690,7 +690,7 @@ namespace atres
 					this->_characters = this->_fontResource->getCharacters();
 					this->_fontScale = this->_fontResource->getScale();
 				}
-				catch (hltypes::_resource_not_exists& e)
+				catch (hltypes::_resource_not_exists&)
 				{
 					hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.c_str());
 				}
@@ -795,7 +795,7 @@ namespace atres
 						this->_characters = this->_fontResource->getCharacters();
 						this->_fontScale = this->_fontResource->getScale();
 					}
-					catch (hltypes::_resource_not_exists& e)
+					catch (hltypes::_resource_not_exists&)
 					{
 						hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.c_str());
 					}
