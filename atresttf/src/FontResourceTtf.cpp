@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.03
+/// @version 3.04
 /// 
 /// @section LICENSE
 /// 
@@ -13,6 +13,7 @@
 
 #include <april/RenderSystem.h>
 #include <april/Texture.h>
+#include <hltypes/hfile.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
@@ -136,7 +137,7 @@ namespace atresttf
 			{
 				return;
 			}
-			if (!hresource::exists(this->fontFilename)) // font file does not exist
+			if (!hresource::exists(this->fontFilename) && !hfile::exists(this->fontFilename)) // font file does not exist
 			{
 				hlog::error(atresttf::logTag, "Could not find: " + this->fontFilename);
 				return;
@@ -155,15 +156,26 @@ namespace atresttf
 		FT_Face face = NULL;
 		if (this->fontDataSize == 0)
 		{
-			hresource file(this->fontFilename);
 			if (this->fontFile != NULL) // making sure there are no memory leaks whatsoever
 			{
 				delete [] this->fontFile;
 			}
-			size = file.size();
-			this->fontFile = new unsigned char[size];
-			file.read_raw(this->fontFile, size);
-			file.close();
+			if (hresource::exists(this->fontFilename)) // prefer local fonts
+			{
+				hresource file(this->fontFilename);
+				size = file.size();
+				this->fontFile = new unsigned char[size];
+				file.read_raw(this->fontFile, size);
+				file.close();
+			}
+			else
+			{
+				hfile file(this->fontFilename);
+				size = file.size();
+				this->fontFile = new unsigned char[size];
+				file.read_raw(this->fontFile, size);
+				file.close();
+			}
 		}
 		FT_Error error = FT_New_Memory_Face(library, this->fontFile, size, 0, &face);
 		if (error == FT_Err_Unknown_File_Format)
