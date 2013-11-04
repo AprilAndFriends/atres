@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.01
+/// @version 3.04
 /// 
 /// @section LICENSE
 /// 
@@ -27,7 +27,7 @@
 #include "atresttf.h"
 #include "freetype.h"
 
-#if defined(_WINRT) && !defined(_NO_SYSTEM_FONTS)
+#if !defined(_NO_SYSTEM_FONTS) && defined(_WINRT)
 #include <dwrite.h>
 using namespace Microsoft::WRL;
 #endif
@@ -177,6 +177,28 @@ namespace atresttf
 #endif
 #elif defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 #elif defined(__APPLE__) && !TARGET_OS_MAC && TARGET_OS_IPHONE
+#elif defined(_ANDROID)
+		fontFiles = hdir::files(atresttf::getSystemFontsPath(), true).sorted();
+		FT_Library library = atresttf::getLibrary();
+		FT_Face face;
+		FT_Error error;
+		hstr fontName;
+		hstr styleName;
+		foreach (hstr, it, fontFiles)
+		{
+			error = FT_New_Face(library, (*it).c_str(), 0, &face);
+			if (error == 0)
+			{
+				fontName = hstr((char*)face->family_name);
+				styleName = hstr((char*)face->style_name);
+				FT_Done_Face(face);
+				if (styleName != "" && styleName != "Regular")
+				{
+					fontName += " " + styleName;
+				}
+				fonts += fontName;
+			}
+		}
 #elif defined(__UNIX__)
 #endif
 		fonts.remove_duplicates();
@@ -192,7 +214,7 @@ namespace atresttf
 	{
 		if (fontFiles.size() == 0)
 		{
-			fontFiles = hdir::files(atresttf::getSystemFontsPath(), true);
+			fontFiles = hdir::files(atresttf::getSystemFontsPath(), true).sorted();
 		}
 		FT_Library library = atresttf::getLibrary();
 		FT_Face face;
@@ -230,6 +252,8 @@ namespace atresttf
 #endif
 #elif defined(__APPLE__)
 		return "/Library/Fonts/";
+#elif defined(_ANDROID)
+		return "/system/fonts";
 #elif defined(_UNIX)
 		return "/usr/share/fonts/";
 #else
