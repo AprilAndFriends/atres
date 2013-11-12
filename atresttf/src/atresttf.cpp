@@ -27,7 +27,7 @@
 #include "atresttf.h"
 #include "freetype.h"
 
-#if !defined(_NO_SYSTEM_FONTS) && defined(_WINRT)
+#if (defined(_SYSTEM_FONTS) || !defined(_NO_SYSTEM_FONTS)) && defined(_WINRT)
 #include <dwrite.h>
 using namespace Microsoft::WRL;
 #endif
@@ -78,7 +78,7 @@ namespace atresttf
 		textureSize = value;
 	}
 
-#if defined(_WIN32) && !defined(_WINRT) && !defined(_NO_SYSTEM_FONTS)
+#if defined(_WIN32) && !defined(_WINRT) && (defined(_SYSTEM_FONTS) || !defined(_NO_SYSTEM_FONTS))
 	int CALLBACK _fontEnumCallback(ENUMLOGFONTEX* lpelfe, NEWTEXTMETRICEX* lpntme, DWORD FontType, LPARAM lParam)
 	{
 		hstr fontName = hstr::from_unicode(lpelfe->elfLogFont.lfFaceName);
@@ -94,7 +94,7 @@ namespace atresttf
 
 	harray<hstr> getSystemFonts()
 	{
-#ifndef _NO_SYSTEM_FONTS
+#if (defined(_SYSTEM_FONTS) || !defined(_NO_SYSTEM_FONTS))
 		if (fontsChecked)
 		{
 			return fonts;
@@ -251,9 +251,13 @@ namespace atresttf
 		return "";
 #endif
 #elif defined(__APPLE__)
+#ifdef _IOS
+		return "/System/Library/Fonts/";
+#else
 		return "/Library/Fonts/";
+#endif
 #elif defined(_ANDROID)
-		return "/system/fonts";
+		return "/system/fonts/";
 #elif defined(_UNIX)
 		return "/usr/share/fonts/";
 #else
