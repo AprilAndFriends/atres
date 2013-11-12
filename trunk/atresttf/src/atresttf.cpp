@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.04
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -27,22 +27,16 @@
 #include "atresttf.h"
 #include "freetype.h"
 
-#if (defined(_SYSTEM_FONTS) || !defined(_NO_SYSTEM_FONTS)) && defined(_WINRT)
-#include <dwrite.h>
-using namespace Microsoft::WRL;
-#endif
-
 namespace atresttf
 {
 	hstr logTag = "atresttf";
 
 	FT_Library library = NULL;
 	hmap<atres::FontResource*, FT_Face> faces;
-	harray<hstr> fonts;
-	harray<hstr> fontFiles;
-	bool fontsChecked = false;
+	hmap<hstr, hstr> fonts;
+	bool fontNamesChecked = false;
 	int textureSize = 1024;
-
+	
 	void init()
 	{
 		hlog::write(atresttf::logTag, "Initializing AtresTTF");
@@ -78,168 +72,43 @@ namespace atresttf
 		textureSize = value;
 	}
 
-#if defined(_WIN32) && !defined(_WINRT) && (defined(_SYSTEM_FONTS) || !defined(_NO_SYSTEM_FONTS))
-	int CALLBACK _fontEnumCallback(ENUMLOGFONTEX* lpelfe, NEWTEXTMETRICEX* lpntme, DWORD FontType, LPARAM lParam)
-	{
-		hstr fontName = hstr::from_unicode(lpelfe->elfLogFont.lfFaceName);
-		hstr styleName = hstr::from_unicode(lpelfe->elfStyle);
-		if (styleName != "" && styleName != "Regular")
-		{
-			fontName += " " + styleName;
-		}
-		fonts += fontName;
-		return 1;
-	}
-#endif
-
 	harray<hstr> getSystemFonts()
 	{
-#if (defined(_SYSTEM_FONTS) || !defined(_NO_SYSTEM_FONTS))
-		if (fontsChecked)
+		if (!fontNamesChecked)
 		{
-			return fonts;
-		}
-#ifdef _WIN32
-#ifndef _WINRT
-		LOGFONT logFont;
-		logFont.lfFaceName[0] = NULL;
-		logFont.lfCharSet = DEFAULT_CHARSET;
-		HWND hWnd = (HWND)april::window->getBackendId();
-		HDC hDC = GetDC(hWnd);
-		EnumFontFamiliesEx(hDC, &logFont, (FONTENUMPROC)&_fontEnumCallback, 0, 0);
-		ReleaseDC(hWnd, hDC);
-#else
-		IDWriteFactory* dWriteFactory = NULL;
-		HRESULT hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(&dWriteFactory));
-		if (FAILED(hr))
-		{
-			return fonts;
-		}
-		IDWriteFontCollection* fontCollection = NULL;
-		hr = dWriteFactory->GetSystemFontCollection(&fontCollection);
-		if (FAILED(hr))
-		{
-			_HL_TRY_RELEASE(dWriteFactory);
-			return fonts;
-		}
-		unsigned int familyCount = fontCollection->GetFontFamilyCount();
-		unsigned int index = 0;
-		BOOL exists = false;
-		wchar_t localeName[LOCALE_NAME_MAX_LENGTH] = {0};
-		int defaultLocaleSuccess = GetUserDefaultLocaleName(localeName, LOCALE_NAME_MAX_LENGTH);
-		for_itert (unsigned int, i, 0, familyCount)
-		{
-			IDWriteFontFamily* fontFamily = NULL;
-			hr = fontCollection->GetFontFamily(i, &fontFamily);
-			if (!FAILED(hr))
+			harray<hstr> fontFiles = hdir::files(atresttf::getSystemFontsPath(), true);
+			FT_Library library = atresttf::getLibrary();
+			FT_Face face;
+			FT_Error error;
+			hstr fontName;
+			hstr styleName;
+			foreach (hstr, it, fontFiles)
 			{
-				IDWriteLocalizedStrings* familyNames = NULL;
-				hr = fontFamily->GetFamilyNames(&familyNames);
-				if (!FAILED(hr))
+				error = FT_New_Face(library, (*it).c_str(), 0, &face);
+				if (error == 0)
 				{
-					if (defaultLocaleSuccess > 0)
+					fontName = hstr((char*)face->family_name);
+					styleName = hstr((char*)face->style_name);
+					FT_Done_Face(face);
+					if (styleName != "" && styleName != "Regular")
 					{
-						hr = familyNames->FindLocaleName(localeName, &index, &exists);
+						fontName += " " + styleName;
 					}
-					if (!FAILED(hr) && !exists)
-					{
-						hr = familyNames->FindLocaleName(L"en-us", &index, &exists);
-						if (FAILED(hr))
-						{
-							_HL_TRY_RELEASE(familyNames);
-							_HL_TRY_RELEASE(fontFamily);
-							continue;
-						}
-					}
-					if (!exists)
-					{
-						index = 0;
-					}
-					unsigned int length = 0;
-					hr = familyNames->GetStringLength(index, &length);
-					if (!FAILED(hr))
-					{
-						wchar_t* name = new wchar_t[length + 1];
-						hr = familyNames->GetString(index, name, length + 1);
-						if (!FAILED(hr))
-						{
-							fonts += hstr::from_unicode(name);
-						}
-						delete [] name;
-					}
-					_HL_TRY_RELEASE(familyNames);
+					fonts[fontName] = (*it);
 				}
-				_HL_TRY_RELEASE(fontFamily);
 			}
+			fontNamesChecked = true;
 		}
-		_HL_TRY_RELEASE(fontCollection);
-		_HL_TRY_RELEASE(dWriteFactory);
-#endif
-#elif defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-#elif defined(__APPLE__) && !TARGET_OS_MAC && TARGET_OS_IPHONE
-#elif defined(_ANDROID)
-		fontFiles = hdir::files(atresttf::getSystemFontsPath(), true).sorted();
-		FT_Library library = atresttf::getLibrary();
-		FT_Face face;
-		FT_Error error;
-		hstr fontName;
-		hstr styleName;
-		foreach (hstr, it, fontFiles)
-		{
-			error = FT_New_Face(library, (*it).c_str(), 0, &face);
-			if (error == 0)
-			{
-				fontName = hstr((char*)face->family_name);
-				styleName = hstr((char*)face->style_name);
-				FT_Done_Face(face);
-				if (styleName != "" && styleName != "Regular")
-				{
-					fontName += " " + styleName;
-				}
-				fonts += fontName;
-			}
-		}
-#elif defined(__UNIX__)
-#endif
-		fonts.remove_duplicates();
-		fonts.sort();
-#else
-		hlog::warn(atresttf::logTag, "AtresTTF compiled without system font support.");
-#endif
-		fontsChecked = true;
-		return fonts;
+		return fonts.keys().sorted();
 	}
 
 	hstr findSystemFontFilename(chstr name)
 	{
-		if (fontFiles.size() == 0)
+		if (!fontNamesChecked)
 		{
-			fontFiles = hdir::files(atresttf::getSystemFontsPath(), true).sorted();
+			getSystemFonts();
 		}
-		FT_Library library = atresttf::getLibrary();
-		FT_Face face;
-		FT_Error error;
-		hstr fontName;
-		hstr styleName;
-		foreach (hstr, it, fontFiles)
-		{
-			error = FT_New_Face(library, (*it).c_str(), 0, &face);
-			if (error == 0)
-			{
-				fontName = hstr((char*)face->family_name);
-				styleName = hstr((char*)face->style_name);
-				FT_Done_Face(face);
-				if (styleName != "" && styleName != "Regular")
-				{
-					fontName += " " + styleName;
-				}
-				if (name == fontName)
-				{
-					return (*it);
-				}
-			}
-		}
-		return "";
+		return fonts.try_get_by_key(name, "");
 	}
 
 	hstr getSystemFontsPath()
