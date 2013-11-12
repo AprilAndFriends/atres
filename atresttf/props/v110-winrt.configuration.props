@@ -5,12 +5,4 @@
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libapril.lib;libatres.lib;libfreetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_NoSystemFonts' or
-                                  '$(Configuration)'=='DebugP8_NoSystemFonts' or
-                                  '$(Configuration)'=='Release_NoSystemFonts' or
-                                  '$(Configuration)'=='ReleaseP8_NoSystemFonts'">
-    <ClCompile>
-      <PreprocessorDefinitions>_NO_SYSTEM_FONTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-  </ItemDefinitionGroup>
 </Project>
