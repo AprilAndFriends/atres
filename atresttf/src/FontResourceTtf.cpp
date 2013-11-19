@@ -13,10 +13,10 @@
 
 #include <april/RenderSystem.h>
 #include <april/Texture.h>
-#include <hltypes/hdir.h>
 #include <hltypes/hfile.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hrdir.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
@@ -33,7 +33,7 @@ namespace atresttf
 {
 	FontResourceTtf::FontResourceTtf(chstr filename) : atres::FontResource(filename), fontFile(NULL)
 	{
-		hstr path = hdir::basedir(filename) + "/";
+		hstr path = hrdir::basedir(filename) + "/";
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
 		hstr line;
 		this->fontDataSize = 0;
