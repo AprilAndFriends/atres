@@ -11,7 +11,7 @@
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
-#include <hltypes/hltypesUtil.h>
+#include <hltypes/hdir.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
@@ -21,7 +21,7 @@ namespace atres
 {
 	FontResourceBitmap::FontResourceBitmap(chstr filename) : FontResource(filename)
 	{
-		hstr path = get_basedir(filename) + "/";
+		hstr path = hdir::basedir(filename) + "/";
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
 		hstr line;
 		bool multiTexture = false;
