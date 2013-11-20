@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.16
 /// 
 /// @section LICENSE
 /// 
@@ -44,9 +44,12 @@ namespace atres
 		virtual april::Texture* getTexture(unsigned int charCode);
 		virtual bool hasChar(unsigned int charCode);
 		
+		/// @note Not thread-safe!
 		float getTextWidth(chstr text);
+		/// @note Not thread-safe!
 		int getTextCount(chstr text, float maxWidth);
 		
+		/// @note Not thread-safe!
 		RenderRectangle makeRenderRectangle(const grect& rect, grect area, unsigned int code);
 		
 	protected:

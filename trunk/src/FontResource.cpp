@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.16
 /// 
 /// @section LICENSE
 /// 
@@ -188,7 +188,8 @@ namespace atres
 	
 	RenderRectangle FontResource::makeRenderRectangle(const grect& rect, grect area, unsigned int code)
 	{
-		RenderRectangle result;
+		static RenderRectangle result;
+		result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
 		result.dest = area;
 		// if destination rectangle not entirely inside drawing area
 		if (rect.intersects(result.dest))
