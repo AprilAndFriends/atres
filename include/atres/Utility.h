@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.15
+/// @version 3.16
 /// 
 /// @section LICENSE
 /// 
@@ -87,6 +87,7 @@ namespace atres
 		harray<april::TexturedVertex> vertices;
 		
 		RenderSequence();
+		/// @note Not thread-safe!
 		void addRenderRectangle(RenderRectangle rect);
 	};
 	
