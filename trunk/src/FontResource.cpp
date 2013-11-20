@@ -120,7 +120,7 @@ namespace atres
 		static float ax = 0.0f;
 		static float aw = 0.0f;
 		static float scale = 1.0f;
-		static CharacterDefinition* character;
+		static CharacterDefinition* character = NULL;
 		static std::basic_string<unsigned int> chars;
 		textX = 0.0f;
 		textW = 0.0f;
@@ -155,7 +155,7 @@ namespace atres
 		static float ax = 0.0f;
 		static float aw = 0.0f;
 		static float scale = 1.0f;
-		static CharacterDefinition* character;
+		static CharacterDefinition* character = NULL;
 		static std::basic_string<unsigned int> chars;
 		textX = 0.0f;
 		textW = 0.0f;
@@ -200,7 +200,7 @@ namespace atres
 			static gvec2 textureInvertedSize;
 			static CharacterDefinition* chr = NULL;
 			static grect charRect;
-			static april::Texture* texture;
+			static april::Texture* texture = NULL;
 			texture = this->getTexture(code);
 			textureInvertedSize.set(1.0f / texture->getWidth(), 1.0f / texture->getHeight());
 			chr = &this->characters[code];
