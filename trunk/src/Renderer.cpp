@@ -1527,9 +1527,10 @@ namespace atres
 			harray<FormatTag> tags = this->prepareTags(fontName);
 			float w = 0.0f;
 			harray<hstr> lines = text.split('\n', -1, true);
+			grect rect(0.0f, 0.0f, 100000.0f, 1.0f);
 			foreach (hstr, it, lines)
 			{
-				w = hmax(w, this->getFittingLine(fontName, grect(0.0f, 0.0f, 100000.0f, 1.0f), (*it), tags).rect.w);
+				w = hmax(w, this->getFittingLine(fontName, rect, (*it), tags).rect.w);
 			}
 			return w;
 		}
