@@ -565,7 +565,7 @@ namespace atres
 			harray<RenderWord> words;
 			for_iter (i, 0, lines.size())
 			{
-				if (!lines[i].terminated) // if line was not actually terminated with a \n
+				if (!lines[i].terminated || i < lines.size() - 1) // if line was not actually terminated with a \n
 				{
 					if (lines[i].spaces > 0)
 					{
@@ -1150,7 +1150,6 @@ namespace atres
 		if (this->_lines.size() > 0)
 		{
 			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight, this->_correctedHeight);
-			this->_lines.last().terminated = true; // last line is regarded as terminated with \n after real parsing
 			this->_lines = this->removeOutOfBoundLines(rect, this->_lines);
 			if (this->_lines.size() > 0)
 			{
