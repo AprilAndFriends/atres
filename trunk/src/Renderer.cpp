@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.16
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -491,14 +491,19 @@ namespace atres
 	harray<RenderLine> Renderer::verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight, float correctedHeight)
 	{
 		harray<RenderLine> result;
+		int lineCount = lines.size() - 1;
+		if (lines.last().terminated)
+		{
+			lineCount++;
+		}
 		// vertical correction
 		switch (vertical)
 		{
 		case CENTER:
-			y += ((lines.size() - 1) * lineHeight + correctedHeight - rect.h) * 0.5f;
+			y += (lineCount * lineHeight + correctedHeight - rect.h) * 0.5f;
 			break;
 		case BOTTOM:
-			y += (lines.size() - 1) * lineHeight + correctedHeight - rect.h;
+			y += lineCount * lineHeight + correctedHeight - rect.h;
 			break;
 		}
 		// remove lines that cannot be seen anyway
@@ -1144,8 +1149,8 @@ namespace atres
 		maxWidth = hmin(maxWidth, rect.w);
 		if (this->_lines.size() > 0)
 		{
-			this->_lines.last().terminated = true; // last line is regarded as terminated with \n
 			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight, this->_correctedHeight);
+			this->_lines.last().terminated = true; // last line is regarded as terminated with \n after real parsing
 			this->_lines = this->removeOutOfBoundLines(rect, this->_lines);
 			if (this->_lines.size() > 0)
 			{
