@@ -97,14 +97,16 @@ namespace atres
 		harray<RenderSequence> shadowSequences;
 		harray<RenderSequence> borderSequences;
 	};
-	
+
 	struct RenderWord
 	{
 		hstr text;
 		grect rect;
 		int start;
+		int count;
 		int spaces;
 		float fullWidth;
+		harray<float> charWidths;
 		
 		RenderWord();
 	};
@@ -113,6 +115,8 @@ namespace atres
 	{
 		hstr text;
 		grect rect;
+		int start;
+		int count;
 		int spaces;
 		bool terminated;
 		harray<RenderWord> words;

@@ -963,6 +963,7 @@ namespace atres
 		int byteSize = 0;
 		bool checkingSpaces = true;
 		bool tooLong = false;
+		harray<float> charWidths;
 		word.rect.x = rect.x;
 		word.rect.y = rect.y;
 		word.rect.h = this->_height;
@@ -1013,6 +1014,7 @@ namespace atres
 				}
 				wordW = wordX + addW;
 				wordX += ax;
+				charWidths += ax;
 				i += byteSize;
 				chars++;
 				if (!checkingSpaces && i < actualSize)
@@ -1046,9 +1048,12 @@ namespace atres
 				word.text = text(start, i - start);
 				word.rect.w = wordX;
 				word.start = start;
+				word.count = i - start;
 				word.spaces = (checkingSpaces ? i - start : 0);
 				word.fullWidth = wordW;
+				word.charWidths = charWidths;
 				result += word;
+				charWidths.clear();
 			}
 			else if (tooLong) // this prevents an infinite loop if not at least one character fits in the line
 			{
@@ -1072,6 +1077,7 @@ namespace atres
 		bool left = ALIGNMENT_IS_LEFT(horizontal);
 		float maxWidth = 0.0f;
 		float lineWidth = 0.0f;
+		float x = 0.0f;
 		bool nextLine = false;
 		bool forcedNextLine = false;
 		bool addWord = false;
@@ -1099,11 +1105,16 @@ namespace atres
 				// else the whole word is the only one in the line and doesn't fit, so just chop it off
 				nextLine = true;
 			}
+			if (this->_line.words.size() == 0) // if no words yet, this word's start becomes the line start
+			{
+				this->_line.start = words[i].start;
+			}
 			if (addWord)
 			{
 				words[i].rect.y += this->_lines.size() * this->_lineHeight;
 				lineWidth += words[i].rect.w;
 				this->_line.words += words[i];
+				this->_line.count += words[i].count;
 			}
 			if (nextLine)
 			{
@@ -1122,11 +1133,14 @@ namespace atres
 				if (this->_line.words.size() > 0)
 				{
 					this->_line.words.last().rect.w = hmax(this->_line.words.last().rect.w, this->_line.words.last().fullWidth);
+					x = this->_line.words.first().rect.x;
 					foreach (RenderWord, it, this->_line.words)
 					{
 						this->_line.text += (*it).text;
 						this->_line.spaces += (*it).spaces;
 						this->_line.rect.w += (*it).rect.w;
+						(*it).rect.x = x;
+						x += (*it).rect.w;
 					}
 				}
 				maxWidth = hmax(maxWidth, this->_line.rect.w);
@@ -1140,6 +1154,8 @@ namespace atres
 				}
 				this->_lines += this->_line;
 				this->_line.text = "";
+				this->_line.start = 0;
+				this->_line.count = 0;
 				this->_line.spaces = 0;
 				this->_line.rect.w = 0.0f;
 				this->_line.words.clear();
@@ -1173,9 +1189,9 @@ namespace atres
 		while (this->_lines.size() > 0)
 		{
 			this->_line = this->_lines.remove_first();
-			width = 0.0f;
 			foreach (RenderWord, it, this->_line.words)
 			{
+				width = 0.0f;
 				this->_word = (*it);
 				for_iter_step (i, 0, this->_word.text.size(), byteSize)
 				{

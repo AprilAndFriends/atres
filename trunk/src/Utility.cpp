@@ -36,11 +36,11 @@ namespace atres
 		this->vertices.add(vert, 6);
 	}
 	
-	RenderWord::RenderWord() : start(0), spaces(0), fullWidth(0.0f)
+	RenderWord::RenderWord() : start(0), count(0), spaces(0), fullWidth(0.0f)
 	{
 	}
 	
-	RenderLine::RenderLine() : spaces(0), terminated(false)
+	RenderLine::RenderLine() : start(0), count(0), spaces(0), terminated(false)
 	{
 	}
 	
