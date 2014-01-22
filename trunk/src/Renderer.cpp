@@ -1067,7 +1067,7 @@ namespace atres
 	}
 
 	harray<RenderLine> Renderer::createRenderLines(grect rect, chstr text, harray<FormatTag> tags,
-		Alignment horizontal, Alignment vertical, gvec2 offset)
+		Alignment horizontal, Alignment vertical, gvec2 offset, bool keepWrappedSpaces)
 	{
 		this->analyzeText(text);
 		harray<RenderWord> words = this->createRenderWords(rect, text, tags);
@@ -1119,7 +1119,7 @@ namespace atres
 			if (nextLine)
 			{
 				// remove spaces at beginning and end in wrapped formatting styles
-				if (wrapped)
+				if (wrapped && !keepWrappedSpaces)
 				{
 					while (this->_line.words.size() > 0 && this->_line.words.first().spaces > 0)
 					{
