@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.16
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -55,7 +55,7 @@
 	"[c=00FF00]wrapped[/c][/s] [b]w[c=purple]ork[/c]s[/b] [f Arial:1.3]right[/f] [-][b]or[/b][/i] not."
 #define TEXT_4 "Another [b][0]test [n]that[/n] [f:test]is[/f] [x=0.5]supp[/x]osed[/b] [b][c=fake]to[/c][/b] " \
 	"[c=FFFFFF7F]show[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s=00FF00]X_horz_formatting [c=00FF00]justified[/c][/s] " \
-	"[b]w[c=purple]ork[/c]s[/b] [f Arial:1.3]right[/f] [-][b]or[/b][/i] not."
+	"[b]w[c=purple]ork[/c]s[/b] [f Arial:1.3]right[/f] or\nnot."
 #define TEXT_5 "[b]This is a vertical test.\nIt really is. Really."
 
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);

@@ -589,7 +589,7 @@ namespace atres
 							}
 							else
 							{
-								width += (*it).spaces * widthPerSpace;
+								width += (*it).spaces * (widthPerSpace - (*it).rect.w);
 							}
 						}
 						lines[i].words = words;
