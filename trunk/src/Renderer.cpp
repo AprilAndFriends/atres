@@ -1146,13 +1146,8 @@ namespace atres
 				maxWidth = hmax(maxWidth, this->_line.rect.w);
 				this->_line.rect.y = rect.y + this->_lines.size() * this->_lineHeight;
 				this->_line.terminated = forcedNextLine;
-				if (left && !wrapped && this->_line.rect.w > rect.w)
-				{
-					this->_line.rect.w = rect.w;
-					this->_lines += this->_line;
-					break;
-				}
 				this->_lines += this->_line;
+				// reset
 				this->_line.text = "";
 				this->_line.start = 0;
 				this->_line.count = 0;
