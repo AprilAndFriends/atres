@@ -30,14 +30,14 @@ namespace atres
 {
 	enum Alignment
 	{
+		TOP, // top
+		CENTER, // mid
+		BOTTOM, // bot
 		LEFT,
 		RIGHT,
-		CENTER,
 		LEFT_WRAPPED,
 		RIGHT_WRAPPED,
 		CENTER_WRAPPED,
-		TOP,
-		BOTTOM,
 		JUSTIFIED
 	};
 	
