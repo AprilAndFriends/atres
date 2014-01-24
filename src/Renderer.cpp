@@ -563,9 +563,9 @@ namespace atres
 			float width;
 			float widthPerSpace;
 			harray<RenderWord> words;
-			for_iter (i, 0, lines.size())
+			for_iter (i, 0, lines.size() - 1)
 			{
-				if (!lines[i].terminated || i < lines.size() - 1) // if line was not actually terminated with a \n
+				if (!lines[i].terminated) // if line was not actually terminated with a \n
 				{
 					if (lines[i].spaces > 0)
 					{
@@ -1152,6 +1152,7 @@ namespace atres
 				this->_line.start = 0;
 				this->_line.count = 0;
 				this->_line.spaces = 0;
+				this->_line.terminated = false;
 				this->_line.rect.w = 0.0f;
 				this->_line.words.clear();
 				lineWidth = 0.0f;
