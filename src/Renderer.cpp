@@ -977,6 +977,7 @@ namespace atres
 			while (i < actualSize) // checking a whole word
 			{
 				code = text.first_unicode_char(i, &byteSize);
+				this->_checkFormatTags(text, i);
 				if (code == '\n')
 				{
 					if (i == start)
@@ -990,7 +991,6 @@ namespace atres
 				{
 					break;
 				}
-				this->_checkFormatTags(text, i);
 				this->_character = &this->_characters[code];
 				this->_scale = this->_fontScale * this->_textScale;
 				if (wordX < -this->_character->bx * this->_scale)
