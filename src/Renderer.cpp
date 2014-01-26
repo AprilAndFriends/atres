@@ -1074,7 +1074,6 @@ namespace atres
 		this->_initializeLineProcessing();
 
 		bool wrapped = ALIGNMENT_IS_WRAPPED(horizontal);
-		bool left = ALIGNMENT_IS_LEFT(horizontal);
 		float maxWidth = 0.0f;
 		float lineWidth = 0.0f;
 		float x = 0.0f;
