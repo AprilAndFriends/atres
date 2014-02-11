@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.04
+/// @version 3.11
 /// 
 /// @section LICENSE
 /// 
@@ -214,11 +214,19 @@ namespace atresttf
 	april::Texture* FontResourceTtf::_createTexture()
 	{
 		int textureSize = atresttf::getTextureSize();
-		april::Texture* texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ALPHA);
-		if (!texture->isLoaded())
+		april::Texture* texture = NULL;
+		if (atresttf::isAllowAlphaTextures())
 		{
-			delete texture;
-			hlog::warn(atresttf::logTag, "Trying april::Texture::FORMAT_ARGB format.");
+			texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ALPHA);
+			if (!texture->isLoaded())
+			{
+				delete texture;
+				texture = NULL;
+				hlog::warn(atresttf::logTag, "Trying april::Texture::FORMAT_ARGB format.");
+			}
+		}
+		if (texture == NULL)
+		{
 			texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ARGB);
 		}
 		return texture;

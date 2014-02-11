@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.11
 /// 
 /// @section LICENSE
 /// 
@@ -36,6 +36,7 @@ namespace atresttf
 	hmap<hstr, hstr> fonts;
 	bool fontNamesChecked = false;
 	int textureSize = 1024;
+	bool allowAlphaTextures = true;
 	
 	void init()
 	{
@@ -70,6 +71,16 @@ namespace atresttf
 	void setTextureSize(int value)
 	{
 		textureSize = value;
+	}
+
+	bool isAllowAlphaTextures()
+	{
+		return allowAlphaTextures;
+	}
+
+	void setAllowAlphaTextures(bool value)
+	{
+		allowAlphaTextures = value;
 	}
 
 	harray<hstr> getSystemFonts()

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.11
 /// 
 /// @section LICENSE
 /// 
@@ -27,6 +27,8 @@ namespace atresttf
 	atresttfFnExport void destroy();
 	atresttfFnExport int getTextureSize();
 	atresttfFnExport void setTextureSize(int value);
+	atresttfFnExport bool isAllowAlphaTextures();
+	atresttfFnExport void setAllowAlphaTextures(bool value);
 	atresttfFnExport harray<hstr> getSystemFonts();
 	atresttfFnExport hstr findSystemFontFilename(chstr name);
 	atresttfFnExport hstr getSystemFontsPath();
