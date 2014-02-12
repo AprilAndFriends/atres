@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -32,9 +32,9 @@ namespace atresttf
 	class atresttfExport FontResourceTtf : public atres::FontResource
 	{
 	public:
-		FontResourceTtf(chstr filename);
-		FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight = 0.0f, float correctedHeight = 0.0f);
-		FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight = 0.0f, float correctedHeight = 0.0f);
+		FontResourceTtf(chstr filename, bool loadBasicAscii = true);
+		FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight = 0.0f, float correctedHeight = 0.0f, bool loadBasicAscii = true);
+		FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight = 0.0f, float correctedHeight = 0.0f, bool loadBasicAscii = true);
 		
 		~FontResourceTtf();
 
@@ -48,6 +48,7 @@ namespace atresttf
 		int rowHeight;
 		int fontDataSize;
 		hstr fontFilename;
+		bool loadBasicAscii;
 		unsigned char* fontFile;
 
 		void _initializeFont();

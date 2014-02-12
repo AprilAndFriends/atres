@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.11
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -31,12 +31,13 @@
 
 namespace atresttf
 {
-	FontResourceTtf::FontResourceTtf(chstr filename) : atres::FontResource(filename), fontFile(NULL)
+	FontResourceTtf::FontResourceTtf(chstr filename, bool loadBasicAscii) : atres::FontResource(filename), fontFile(NULL)
 	{
 		hstr path = hrdir::basedir(filename) + "/";
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
 		hstr line;
 		this->fontDataSize = 0;
+		this->loadBasicAscii = loadBasicAscii;
 		while (lines.size() > 0)
 		{
 			line = lines.remove_first();
@@ -52,7 +53,7 @@ namespace atresttf
 	}
 
 	FontResourceTtf::FontResourceTtf(chstr fontFilename, chstr name, float height, float scale,
-		float lineHeight, float correctedHeight) : atres::FontResource(name), fontFile(NULL)
+		float lineHeight, float correctedHeight, bool loadBasicAscii) : atres::FontResource(name), fontFile(NULL)
 	{
 		this->fontFilename = fontFilename;
 		this->name = name;
@@ -62,11 +63,12 @@ namespace atresttf
 		this->lineHeight = lineHeight;
 		this->correctedHeight = correctedHeight;
 		this->fontDataSize = 0;
+		this->loadBasicAscii = loadBasicAscii;
 		this->_initializeFont();
 	}
 	
 	FontResourceTtf::FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale,
-		float lineHeight, float correctedHeight) : atres::FontResource(name), fontFile(NULL)
+		float lineHeight, float correctedHeight, bool loadBasicAscii) : atres::FontResource(name), fontFile(NULL)
 	{
 		this->fontFilename = "";
 		this->name = name;
@@ -78,6 +80,7 @@ namespace atresttf
 		this->fontFile = new unsigned char[dataSize];
 		this->fontDataSize = dataSize;
 		memcpy(this->fontFile, data, dataSize);
+		this->loadBasicAscii = loadBasicAscii;
 		this->_initializeFont();
 	}
 
@@ -242,9 +245,12 @@ namespace atresttf
 		this->penY = 0;
 		this->rowHeight = 0;
 		// adding all base ASCII characters right away
-		for_itert (unsigned int, code, 32, 128)
+		if (this->loadBasicAscii)
 		{
-			this->_addCharacterBitmap(code, true);
+			for_itert (unsigned int, code, 32, 128)
+			{
+				this->_addCharacterBitmap(code, true);
+			}
 		}
 	}
 
