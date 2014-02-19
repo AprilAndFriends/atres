@@ -218,19 +218,20 @@ namespace atresttf
 	{
 		int textureSize = atresttf::getTextureSize();
 		april::Texture* texture = NULL;
-		if (atresttf::isAllowAlphaTextures())
+		if (false && atresttf::isAllowAlphaTextures())
 		{
-			texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ALPHA);
+			texture = april::rendersys->createTexture(textureSize, textureSize, april::Image::FORMAT_ALPHA);
 			if (!texture->isLoaded())
 			{
 				delete texture;
 				texture = NULL;
-				hlog::warn(atresttf::logTag, "Trying april::Texture::FORMAT_ARGB format.");
+				hlog::warn(atresttf::logTag, "Trying april::Texture::FORMAT_RGBA format.");
 			}
 		}
 		if (texture == NULL)
 		{
-			texture = april::rendersys->createTexture(textureSize, textureSize, april::Texture::FORMAT_ARGB);
+			// TODO - use native format
+			texture = april::rendersys->createTexture(textureSize, textureSize, april::Image::FORMAT_RGBA);
 		}
 		return texture;
 	}
@@ -328,13 +329,15 @@ namespace atresttf
 		int renderY = this->penY + offsetY + SAFE_SPACE;
 		if (glyph->bitmap.buffer != NULL)
 		{
-			if (textureContainer->texture->getFormat() == april::Texture::FORMAT_ALPHA)
+			if (textureContainer->texture->getFormat() == april::Image::FORMAT_ALPHA)
 			{
-				textureContainer->texture->blit(renderX, renderY, glyph->bitmap.buffer, glyph->bitmap.width,
-					glyph->bitmap.rows, 1, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
+				textureContainer->texture->blit(0, 0, glyph->bitmap.width, glyph->bitmap.rows,
+					renderX, renderY, glyph->bitmap.buffer, glyph->bitmap.width,
+					glyph->bitmap.rows, april::Image::FORMAT_ALPHA);
 			}
 			else
 			{
+				// TODO - use insertAlphaMap
 				int size = glyph->bitmap.width * glyph->bitmap.rows * 4;
 				unsigned char* glyphData = new unsigned char[size];
 				memset(glyphData, 255, size);
@@ -347,8 +350,9 @@ namespace atresttf
 						glyphData[offset * 4 + 3] = glyph->bitmap.buffer[offset];
 					}
 				}
-				textureContainer->texture->blit(renderX, renderY, glyphData, glyph->bitmap.width,
-					glyph->bitmap.rows, 4, 0, 0, glyph->bitmap.width, glyph->bitmap.rows);
+				textureContainer->texture->blit(0, 0, glyph->bitmap.width, glyph->bitmap.rows,
+					renderX, renderY, glyphData, glyph->bitmap.width,
+					glyph->bitmap.rows, april::Image::FORMAT_RGBA);
 				delete glyphData;
 			}
 		}

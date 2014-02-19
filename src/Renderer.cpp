@@ -1309,23 +1309,23 @@ namespace atres
 			return;
 		}
 		april::rendersys->setTexture(sequence.texture);
-		if (sequence.texture->getFormat() == april::Texture::FORMAT_ALPHA)
+		if (sequence.texture->getFormat() == april::Image::FORMAT_ALPHA)
 		{
-			april::rendersys->setTextureColorMode(april::ALPHA_MAP);
+			april::rendersys->setTextureColorMode(april::CM_ALPHA_MAP);
 		}
 		else
 		{
-			april::rendersys->setTextureColorMode(april::NORMAL);
+			april::rendersys->setTextureColorMode(april::CM_DEFAULT);
 		}
 		if (color == april::Color::White)
 		{
-			april::rendersys->render(april::TriangleList, &sequence.vertices[0], sequence.vertices.size());
+			april::rendersys->render(april::RO_TRIANGLE_LIST, &sequence.vertices[0], sequence.vertices.size());
 		}
 		else
 		{
-			april::rendersys->render(april::TriangleList, &sequence.vertices[0], sequence.vertices.size(), color);
+			april::rendersys->render(april::RO_TRIANGLE_LIST, &sequence.vertices[0], sequence.vertices.size(), color);
 		}
-		april::rendersys->setTextureColorMode(april::NORMAL);
+		april::rendersys->setTextureColorMode(april::CM_DEFAULT);
 	}
 
 	bool Renderer::_checkTextures()

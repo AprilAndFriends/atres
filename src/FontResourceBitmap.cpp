@@ -34,7 +34,7 @@ namespace atres
 				if (line.starts_with("Texture="))
 				{
 					textureContainer = new atres::TextureContainer();
-					textureContainer->texture = april::rendersys->createTexture(path + line.replace("Texture=", ""));
+					textureContainer->texture = april::rendersys->createTextureFromResource(path + line.replace("Texture=", ""));
 					this->textureContainers += textureContainer;
 				}
 				else if (line.starts_with("MultiTexture="))
@@ -43,7 +43,7 @@ namespace atres
 					foreach (hstr, it, textureNames)
 					{
 						textureContainer = new atres::TextureContainer();
-						textureContainer->texture = april::rendersys->createTexture(path + (*it));
+						textureContainer->texture = april::rendersys->createTextureFromResource(path + (*it));
 						this->textureContainers += textureContainer;
 					}
 					multiTexture = true;
