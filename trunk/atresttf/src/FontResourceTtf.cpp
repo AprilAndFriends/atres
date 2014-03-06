@@ -33,7 +33,7 @@ namespace atresttf
 {
 	FontResourceTtf::FontResourceTtf(chstr filename, bool loadBasicAscii) : atres::FontResource(filename), fontFile(NULL)
 	{
-		hstr path = hrdir::basedir(filename) + "/";
+		hstr path = hrdir::basedir(filename);
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
 		hstr line;
 		this->fontDataSize = 0;
@@ -45,7 +45,7 @@ namespace atresttf
 			{
 				if (line.starts_with("File="))
 				{
-					this->fontFilename = path + line.replace("File=", "");
+					this->fontFilename = hrdir::join_path(path, line.replace("File=", ""), false);
 				}
 			}
 		}
