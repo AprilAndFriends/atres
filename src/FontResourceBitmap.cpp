@@ -21,7 +21,7 @@ namespace atres
 {
 	FontResourceBitmap::FontResourceBitmap(chstr filename) : FontResource(filename)
 	{
-		hstr path = hrdir::basedir(filename) + "/";
+		hstr path = hrdir::basedir(filename);
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
 		hstr line;
 		bool multiTexture = false;
@@ -34,7 +34,7 @@ namespace atres
 				if (line.starts_with("Texture="))
 				{
 					textureContainer = new atres::TextureContainer();
-					textureContainer->texture = april::rendersys->createTextureFromResource(path + line.replace("Texture=", ""));
+					textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::join_path(path, line.replace("Texture=", ""), false));
 					this->textureContainers += textureContainer;
 				}
 				else if (line.starts_with("MultiTexture="))
@@ -43,7 +43,7 @@ namespace atres
 					foreach (hstr, it, textureNames)
 					{
 						textureContainer = new atres::TextureContainer();
-						textureContainer->texture = april::rendersys->createTextureFromResource(path + (*it));
+						textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::join_path(path, (*it), false));
 						this->textureContainers += textureContainer;
 					}
 					multiTexture = true;
