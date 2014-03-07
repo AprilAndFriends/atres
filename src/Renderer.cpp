@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.2
+/// @version 3.21
 /// 
 /// @section LICENSE
 /// 
@@ -1204,7 +1204,7 @@ namespace atres
 						area.y += (this->_lineHeight - this->_height) * 0.5f;
 						area.w = this->_character->w * this->_scale;
 						area.h = this->_character->h * this->_scale;
-						area.y += area.h * (1.0f - this->_textScale) * 0.5f;
+						area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 						drawRect = rect;
 						drawRect.h += this->_character->by * this->_scale;
 						this->_renderRect = this->_fontResource->makeRenderRectangle(drawRect, area, this->_code);
