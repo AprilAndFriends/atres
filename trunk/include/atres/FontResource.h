@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -36,7 +36,7 @@ namespace atres
 		HL_DEFINE_SET(float, scale, Scale);
 		HL_DEFINE_GETSET(float, baseScale, BaseScale);
 		float getLineHeight();
-		float getCorrectedHeight();
+		float getDescender();
 		HL_DEFINE_IS(loaded, Loaded);
 		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
 		harray<april::Texture*> getTextures();
@@ -58,7 +58,8 @@ namespace atres
 		float scale;
 		float baseScale;
 		float lineHeight;
-		float correctedHeight;
+		float descender;
+		bool customDescender;
 		bool loaded;
 		hmap<unsigned int, CharacterDefinition> characters;
 		harray<TextureContainer*> textureContainers;

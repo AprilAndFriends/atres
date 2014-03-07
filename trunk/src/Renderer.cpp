@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.21
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -488,10 +488,10 @@ namespace atres
 		return result;
 	}
 	
-	harray<RenderLine> Renderer::verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight, float correctedHeight)
+	harray<RenderLine> Renderer::verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight, float descender)
 	{
 		harray<RenderLine> result;
-		int lineCount = lines.size() - 1;
+		int lineCount = lines.size();
 		if (lines.last().terminated)
 		{
 			lineCount++;
@@ -500,10 +500,10 @@ namespace atres
 		switch (vertical)
 		{
 		case CENTER:
-			y += (lineCount * lineHeight + correctedHeight - rect.h) * 0.5f;
+			y += (lineCount * lineHeight - rect.h + descender) * 0.5f;
 			break;
 		case BOTTOM:
-			y += lineCount * lineHeight + correctedHeight - rect.h;
+			y += lineCount * lineHeight - rect.h + descender;
 			break;
 		}
 		// remove lines that cannot be seen anyway
@@ -621,7 +621,7 @@ namespace atres
 		this->_characters.clear();
 		this->_height = 0.0f;
 		this->_lineHeight = 0.0f;
-		this->_correctedHeight = 0.0f;
+		this->_descender = 0.0f;
 		this->_fontScale = 1.0f;
 		this->_textScale = 1.0f;
 		this->_scale = 1.0f;
@@ -685,7 +685,7 @@ namespace atres
 						this->_fontResource = this->getFontResource(this->_nextTag.data);
 						this->_height = this->_fontResource->getHeight();
 						this->_lineHeight = this->_fontResource->getLineHeight();
-						this->_correctedHeight = this->_fontResource->getCorrectedHeight();
+						this->_descender = this->_fontResource->getDescender();
 					}
 					else
 					{
@@ -790,7 +790,7 @@ namespace atres
 							this->_fontResource = this->getFontResource(this->_nextTag.data);
 							this->_height = this->_fontResource->getHeight();
 							this->_lineHeight = this->_fontResource->getLineHeight();
-							this->_correctedHeight = this->_fontResource->getCorrectedHeight();
+							this->_descender = this->_fontResource->getDescender();
 						}
 						else
 						{
@@ -1160,7 +1160,7 @@ namespace atres
 		maxWidth = hmin(maxWidth, rect.w);
 		if (this->_lines.size() > 0)
 		{
-			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight, this->_correctedHeight);
+			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight, this->_descender);
 			this->_lines = this->removeOutOfBoundLines(rect, this->_lines);
 			if (this->_lines.size() > 0)
 			{
@@ -1475,12 +1475,12 @@ namespace atres
 	
 /******* MISC **********************************************************/
 	
-	float Renderer::getFontHeight(chstr fontName)
+	float Renderer::getFontHeight(chstr fontName) // DEPRECATED
 	{
 		return this->getFontResource(fontName)->getHeight();
 	}
 	
-	float Renderer::getFontLineHeight(chstr fontName)
+	float Renderer::getFontLineHeight(chstr fontName) // DEPRECATED
 	{
 		return this->getFontResource(fontName)->getLineHeight();
 	}
@@ -1515,7 +1515,7 @@ namespace atres
 			{
 				harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, 100000.0f), unformattedText, tags, LEFT_WRAPPED, TOP);
 				FontResource* font = this->getFontResource(fontName);
-				return ((lines.size() - 1) * font->getLineHeight() + font->getCorrectedHeight());
+				return (lines.size() * font->getLineHeight() + font->getDescender());
 			}
 		}
 		return 0.0f;
@@ -1559,7 +1559,7 @@ namespace atres
 			harray<FormatTag> tags = this->prepareTags(fontName);
 			harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, 100000.0f), text, tags, LEFT_WRAPPED, TOP);
 			FontResource* font = this->getFontResource(fontName);
-			return ((lines.size() - 1) * font->getLineHeight() + font->getCorrectedHeight());
+			return (lines.size() * font->getLineHeight() + font->getDescender());
 		}
 		return 0.0f;
 	}

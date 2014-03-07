@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -70,7 +70,7 @@ namespace atres
 		void analyzeText(chstr text);
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
 		harray<RenderLine> removeOutOfBoundLines(grect rect, harray<RenderLine> lines);
-		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight, float correctedHeight);
+		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight, float offsetY);
 		harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
 		harray<RenderWord> createRenderWords(grect rect, chstr text, harray<FormatTag> tags);
 		harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset = gvec2(), bool keepWrappedSpaces = false);
@@ -95,8 +95,6 @@ namespace atres
 		DEPRECATED_ATTRIBUTE void drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, gvec2 offset = gvec2());
 		DEPRECATED_ATTRIBUTE void drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, gvec2 offset = gvec2());
 	
-		float getFontHeight(chstr fontName);
-		float getFontLineHeight(chstr fontName);
 		float getTextWidth(chstr fontName, chstr text);
 		float getTextHeight(chstr fontName, chstr text, float maxWidth);
 		int getTextCount(chstr fontName, chstr text, float maxWidth);
@@ -107,6 +105,9 @@ namespace atres
 		harray<FormatTag> prepareTags(chstr fontName);
 		RenderLine getFittingLine(chstr fontName, grect rect, chstr text, harray<FormatTag> tags);
 		void clearCache();
+
+		DEPRECATED_ATTRIBUTE float getFontHeight(chstr fontName);
+		DEPRECATED_ATTRIBUTE float getFontLineHeight(chstr fontName);
 
 	protected:
 		hmap<hstr, FontResource*> fonts;
@@ -149,7 +150,7 @@ namespace atres
 		CharacterDefinition* _character;
 		float _height;
 		float _lineHeight;
-		float _correctedHeight;
+		float _descender;
 		float _fontScale;
 		float _textScale;
 		float _scale;

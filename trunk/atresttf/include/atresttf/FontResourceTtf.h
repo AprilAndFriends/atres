@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -33,8 +33,10 @@ namespace atresttf
 	{
 	public:
 		FontResourceTtf(chstr filename, bool loadBasicAscii = true);
-		FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight = 0.0f, float correctedHeight = 0.0f, bool loadBasicAscii = true);
-		FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight = 0.0f, float correctedHeight = 0.0f, bool loadBasicAscii = true);
+		FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight = 0.0f, bool loadBasicAscii = true);
+		FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii);
+		FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight = 0.0f, bool loadBasicAscii = true);
+		FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii);
 		
 		~FontResourceTtf();
 
@@ -50,6 +52,8 @@ namespace atresttf
 		hstr fontFilename;
 		bool loadBasicAscii;
 		unsigned char* fontFile;
+
+		void _setInternalValues(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii);
 
 		void _initializeFont();
 		april::Texture* _createTexture();
