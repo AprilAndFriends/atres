@@ -48,7 +48,7 @@ namespace atres
 					}
 					multiTexture = true;
 				}
-				else if (line.starts_with("-"))
+				else if (line.starts_with("#") && this->textureContainers.size() > 0)
 				{
 					break;
 				}
@@ -58,11 +58,23 @@ namespace atres
 		{
 			this->lineHeight = this->height;
 		}
+		while (true)
+		{
+			if (lines.size() == 0)
+			{
+				break;
+			}
+			if (!lines.first().starts_with("#"))
+			{
+				break;
+			}
+			lines.remove_first();
+		}
 		CharacterDefinition c;
 		unsigned int code;
 		harray<hstr> data;
 		int minAttribute = (multiTexture ? 5 : 4);
-		int maxAttribute = (multiTexture ? 8 : 7);
+		int maxAttribute = (multiTexture ? 9 : 8);
 		int textureIndex = 0;
 		foreach (hstr, it, lines)
 		{
