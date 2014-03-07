@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -57,10 +57,6 @@ namespace atres
 		if (this->lineHeight == 0.0f)
 		{
 			this->lineHeight = this->height;
-		}
-		if (this->correctedHeight == 0.0f)
-		{
-			this->correctedHeight = this->height;
 		}
 		CharacterDefinition c;
 		unsigned int code;

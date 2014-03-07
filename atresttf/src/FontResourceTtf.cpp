@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -31,13 +31,14 @@
 
 namespace atresttf
 {
-	FontResourceTtf::FontResourceTtf(chstr filename, bool loadBasicAscii) : atres::FontResource(filename), fontFile(NULL)
+	FontResourceTtf::FontResourceTtf(chstr filename, bool loadBasicAscii) : atres::FontResource(filename)
 	{
+		this->fontFile = NULL;
+		this->fontDataSize = 0;
+		this->loadBasicAscii = loadBasicAscii;
 		hstr path = hrdir::basedir(filename);
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
 		hstr line;
-		this->fontDataSize = 0;
-		this->loadBasicAscii = loadBasicAscii;
 		while (lines.size() > 0)
 		{
 			line = lines.remove_first();
@@ -53,35 +54,56 @@ namespace atresttf
 	}
 
 	FontResourceTtf::FontResourceTtf(chstr fontFilename, chstr name, float height, float scale,
-		float lineHeight, float correctedHeight, bool loadBasicAscii) : atres::FontResource(name), fontFile(NULL)
+		float lineHeight, bool loadBasicAscii) : atres::FontResource(name)
 	{
-		this->fontFilename = fontFilename;
-		this->name = name;
-		this->baseScale = scale;
-		this->scale = scale;
-		this->height = height;
-		this->lineHeight = lineHeight;
-		this->correctedHeight = correctedHeight;
+		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii);
+		this->fontFile = NULL;
 		this->fontDataSize = 0;
-		this->loadBasicAscii = loadBasicAscii;
+		this->_initializeFont();
+	}
+	
+	FontResourceTtf::FontResourceTtf(chstr fontFilename, chstr name, float height, float scale,
+		float lineHeight, float descender, bool loadBasicAscii) : atres::FontResource(name)
+	{
+		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii);
+		this->descender = descender;
+		this->customDescender = true;
+		this->fontFile = NULL;
+		this->fontDataSize = 0;
 		this->_initializeFont();
 	}
 	
 	FontResourceTtf::FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale,
-		float lineHeight, float correctedHeight, bool loadBasicAscii) : atres::FontResource(name), fontFile(NULL)
+		float lineHeight, bool loadBasicAscii) : atres::FontResource(name)
 	{
-		this->fontFilename = "";
+		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
+		this->fontFile = new unsigned char[dataSize];
+		memcpy(this->fontFile, data, dataSize);
+		this->fontDataSize = dataSize;
+		this->_initializeFont();
+	}
+
+	FontResourceTtf::FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale,
+		float lineHeight, float descender, bool loadBasicAscii) : atres::FontResource(name)
+	{
+		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
+		this->descender = descender;
+		this->customDescender = true;
+		this->fontFile = new unsigned char[dataSize];
+		memcpy(this->fontFile, data, dataSize);
+		this->fontDataSize = dataSize;
+		this->_initializeFont();
+	}
+
+	void FontResourceTtf::_setInternalValues(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii)
+	{
+		this->fontFilename = fontFilename;
 		this->name = name;
+		this->height = height;
 		this->baseScale = scale;
 		this->scale = scale;
-		this->height = height;
 		this->lineHeight = lineHeight;
-		this->correctedHeight = correctedHeight;
-		this->fontFile = new unsigned char[dataSize];
-		this->fontDataSize = dataSize;
-		memcpy(this->fontFile, data, dataSize);
 		this->loadBasicAscii = loadBasicAscii;
-		this->_initializeFont();
 	}
 
 	FontResourceTtf::~FontResourceTtf()
@@ -151,10 +173,6 @@ namespace atresttf
 		{
 			this->lineHeight = this->height;
 		}
-		if (this->correctedHeight == 0.0f)
-		{
-			this->correctedHeight = this->height;
-		}
 		// libfreetype stuff
 		FT_Library library = atresttf::getLibrary();
 		FT_Face face = NULL;
@@ -163,6 +181,7 @@ namespace atresttf
 			if (this->fontFile != NULL) // making sure there are no memory leaks whatsoever
 			{
 				delete [] this->fontFile;
+				this->fontFile = NULL;
 			}
 			if (hresource::exists(this->fontFilename)) // prefer local fonts
 			{
@@ -208,6 +227,10 @@ namespace atresttf
 			this->fontFile = NULL;
 			FT_Done_Face(face);
 			return;
+		}
+		if (!this->customDescender)
+		{
+			this->descender = -(float)PTSIZE2INT(face->size->metrics.descender);
 		}
 		atresttf::addFace(this, face);
 		this->_loadBasicCharacters();
@@ -294,7 +317,6 @@ namespace atresttf
 		atres::TextureContainer* textureContainer = this->textureContainers.last();
 		this->penX += hmax(glyph->bitmap_left, 0);
 		// calculate some standard parameters
-		int textureSize = atresttf::getTextureSize();
 		int ascender = -PTSIZE2INT(face->size->metrics.ascender);
 		int descender = -PTSIZE2INT(face->size->metrics.descender);
 		// this makes sure that there is no vertical overlap between characters
@@ -304,7 +326,7 @@ namespace atresttf
 		int charHeight = glyph->bitmap.rows + SAFE_SPACE * 2 + offsetY;
 		int charWidth = glyph->bitmap.width + SAFE_SPACE * 2;
 		// if character bitmap width exceeds space, go into next line
-		if (this->penX + charWidth + CHARACTER_SPACE > textureSize)
+		if (this->penX + charWidth + CHARACTER_SPACE > textureContainer->texture->getWidth())
 		{
 			this->penX = 0;
 			this->penY += this->rowHeight + CHARACTER_SPACE * 2;
@@ -314,7 +336,7 @@ namespace atresttf
 		{
 			this->rowHeight = hmax(this->rowHeight, charHeight);
 		}
-		if (this->penY + this->rowHeight + CHARACTER_SPACE > textureSize)
+		if (this->penY + this->rowHeight + CHARACTER_SPACE > textureContainer->texture->getHeight())
 		{
 			hlog::debugf(atresttf::logTag, "Font '%s': character 0x%X does not fit, creating new texture.", this->name.c_str(), charCode);
 			textureContainer = new atres::TextureContainer();

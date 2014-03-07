@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -19,7 +19,7 @@
 namespace atres
 {
 	FontResource::FontResource(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f),
-		lineHeight(0.0f), correctedHeight(0.0f), loaded(false)
+		lineHeight(0.0f), descender(0.0f), customDescender(false), loaded(false)
 	{
 		this->name = name;
 	}
@@ -57,9 +57,10 @@ namespace atres
 			this->lineHeight = (float)line.replace("LineHeight=", "");
 			return true;
 		}
-		if (line.starts_with("CorrectedHeight="))
+		if (line.starts_with("Descender="))
 		{
-			this->correctedHeight = (float)line.replace("CorrectedHeight=", "");
+			this->descender = (float)line.replace("Descender=", "");
+			this->customDescender = true;
 			return true;
 		}
 		return false;
@@ -85,9 +86,9 @@ namespace atres
 		return (this->lineHeight * this->scale * this->baseScale);
 	}
 
-	float FontResource::getCorrectedHeight()
+	float FontResource::getDescender()
 	{
-		return (this->correctedHeight * this->scale * this->baseScale);
+		return (this->descender * this->scale * this->baseScale);
 	}
 	
 	harray<april::Texture*> FontResource::getTextures()
