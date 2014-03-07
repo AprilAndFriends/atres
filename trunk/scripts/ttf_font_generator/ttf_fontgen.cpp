@@ -41,7 +41,8 @@ void generate(chstr cfgname)
 	float height = 32.0f;
 	float scale = 1.0f;
 	float lineHeight = 0.0f;
-	float correctedHeight = 0.0f;
+	float descender = 0.0f;
+	bool customDescender = false;
 	int textureSize = 1024;
 	harray<unsigned int> rangeStarts;
 	harray<unsigned int> rangeEnds;
@@ -81,10 +82,11 @@ void generate(chstr cfgname)
 			hlog::write(LOG_TAG, "    - found: " + (*it));
 			lineHeight = (float)(*it)(11, (*it).size() - 11);
 		}
-		else if ((*it).lower().starts_with("correctedheight:"))
+		else if ((*it).lower().starts_with("descender:"))
 		{
 			hlog::write(LOG_TAG, "    - found: " + (*it));
-			correctedHeight = (float)(*it)(16, (*it).size() - 16);
+			descender = (float)(*it)(10, (*it).size() - 10);
+			customDescender = true;
 		}
 		else if ((*it).lower().starts_with("texturesize:"))
 		{
@@ -118,7 +120,15 @@ void generate(chstr cfgname)
 	atresttf::setTextureSize(textureSize);
 	// create font
 	hlog::write(LOG_TAG, "- creating font");
-	atres::FontResource* font = new atresttf::FontResourceTtf(fontFilename, fontName, height, 1.0f, lineHeight, correctedHeight);
+	atres::FontResource* font;
+	if (!customDescender)
+	{
+		font = new atresttf::FontResourceTtf(fontFilename, fontName, height, 1.0f, lineHeight, false);
+	}
+	else
+	{
+		font = new atresttf::FontResourceTtf(fontFilename, fontName, height, 1.0f, lineHeight, descender, false);
+	}
 	if (!font->isLoaded())
 	{
 		delete font;
@@ -164,10 +174,7 @@ void generate(chstr cfgname)
 	{
 		definition.write_line("LineHeight=" + hsprintf("%g", lineHeight));
 	}
-	if (correctedHeight != 0)
-	{
-		definition.write_line("CorrectedHeight=" + hsprintf("%g", correctedHeight));
-	}
+	definition.write_line("Descender=" + hsprintf("%g", font->getDescender()));
 	definition.write_line("# -------------------------------------------------------------------------");
 	definition.write_line("# Code|X|Y|Width");
 	definition.write_line("# Code|X|Y|Width|Advance Width");
@@ -194,7 +201,7 @@ void generate(chstr cfgname)
 	}
 	else
 	{
-		int index;
+		int index = 0;
 		foreach (unsigned int, it, codes)
 		{
 			c = characters[*it];
@@ -247,7 +254,7 @@ void april_init(const harray<hstr>& argv)
 	if (argv.size() >= 2)
 	{
 		cfgname = hstr(argv[1]);
-		hdir::chdir(get_basedir(cfgname));
+		hdir::chdir(hdir::basedir(cfgname));
 	}
 	// init systems
 	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
