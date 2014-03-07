@@ -213,7 +213,7 @@ void generate(chstr cfgname)
 	// export texture
 	hlog::write(LOG_TAG, "- exporting textures");
 	unsigned char preHeader[12] = {0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	unsigned char* buffer;
+	unsigned char* buffer = NULL;
 	hfile tga;
 	april::Texture* texture = NULL;
 	TgaHeader header;
@@ -224,7 +224,7 @@ void generate(chstr cfgname)
 	for_iter (i, 0, textures.size())
 	{
 		texture = textures[i];
-		if (!texture->copyPixelData(&buffer))
+		if (!texture->copyPixelData(&buffer, april::Image::FORMAT_RGBA))
 		{
 			hlog::error(LOG_TAG, "Could not fetch pixel data!");
 			continue;
@@ -238,6 +238,7 @@ void generate(chstr cfgname)
 		tga.close();
 		delete [] buffer;
 	}
+	hlog::write(LOG_TAG, "- finished");
 }
 
 void april_init(const harray<hstr>& argv)
