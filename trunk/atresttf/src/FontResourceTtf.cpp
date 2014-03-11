@@ -244,7 +244,7 @@ namespace atresttf
 		if (atresttf::isAllowAlphaTextures())
 		{
 			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Clear, april::Image::FORMAT_ALPHA, april::Texture::TYPE_MANAGED);
-			if (!texture->isLoaded())
+			if (texture != NULL && !texture->isLoaded())
 			{
 				delete texture;
 				texture = NULL;
