@@ -52,6 +52,8 @@
 		C9FBF4CF14E15B27008359C3 /* Cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cache.h; path = src/Cache.h; sourceTree = "<group>"; };
 		C9FBF4D014E15B27008359C3 /* Utility.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utility.cpp; path = src/Utility.cpp; sourceTree = "<group>"; };
 		D10753981486EF0A00980E43 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utility.h; path = include/atres/Utility.h; sourceTree = "<group>"; };
+		D1681BA818D7684A0088FC68 /* iOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = iOS.xcconfig; path = xcconfig/iOS.xcconfig; sourceTree = "<group>"; };
+		D1681BA918D7684A0088FC68 /* Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Mac.xcconfig; path = xcconfig/Mac.xcconfig; sourceTree = "<group>"; };
 		D1981D20140F90670057C3AF /* libatres.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libatres.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1981D21140F90670057C3AF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D1F27B15177A2F1A00E5C131 /* libatres.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libatres.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,7 +100,7 @@
 		0867D691FE84028FC02AAC07 /* libatres */ = {
 			isa = PBXGroup;
 			children = (
-				8DC2EF5A0486A6940098B216 /* Info.plist */,
+				D1681B9618D767440088FC68 /* config */,
 				7FC8037C11EC6AD400851062 /* include */,
 				7FC8037D11EC6AD900851062 /* src */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
@@ -150,6 +152,16 @@
 				C9AE31E4135D6FD4006B491A /* atres.cpp */,
 			);
 			name = src;
+			sourceTree = "<group>";
+		};
+		D1681B9618D767440088FC68 /* config */ = {
+			isa = PBXGroup;
+			children = (
+				D1681BA818D7684A0088FC68 /* iOS.xcconfig */,
+				D1681BA918D7684A0088FC68 /* Mac.xcconfig */,
+				8DC2EF5A0486A6940098B216 /* Info.plist */,
+			);
+			name = config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -330,6 +342,7 @@
 		};
 		7FC8A8BB1296C77C003D3931 /* App Store */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -383,6 +396,7 @@
 		};
 		C981CCCE132AEF8C0072B5A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -436,6 +450,7 @@
 		};
 		C981CCD0132AEF920072B5A9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -461,6 +476,7 @@
 		};
 		D1981D2B140F90670057C3AF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA818D7684A0088FC68 /* iOS.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -474,7 +490,6 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_MISSING_PARENTHESES = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atres;
 				SDKROOT = iphoneos;
@@ -484,6 +499,7 @@
 		};
 		D1981D2D140F90670057C3AF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA818D7684A0088FC68 /* iOS.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -496,7 +512,6 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_MISSING_PARENTHESES = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atres;
 				SDKROOT = iphoneos;
@@ -507,6 +522,7 @@
 		};
 		D1981D2E140F90670057C3AF /* App Store */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA818D7684A0088FC68 /* iOS.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -519,7 +535,6 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_MISSING_PARENTHESES = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atres;
 				SDKROOT = iphoneos;
@@ -530,6 +545,7 @@
 		};
 		D1F27B11177A2F1A00E5C131 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -551,6 +567,7 @@
 		};
 		D1F27B13177A2F1A00E5C131 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -572,6 +589,7 @@
 		};
 		D1F27B14177A2F1A00E5C131 /* App Store */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
