@@ -300,7 +300,7 @@ namespace atres
 			throw resource_not_exists("font resource", name, "atres");
 		}
 		fontResource = this->getFontResource(name(0, position));
-		position++;
+		++position;
 		fontResource->setScale((float)(name(position, name.size() - position)));
 		return fontResource;
 	}
@@ -376,7 +376,7 @@ namespace atres
 			{
 				break;
 			}
-			end++;
+			++end;
 			tag.data = "";
 			tag.start = text.utf8_substr(0, start).size();
 			tag.count = text.utf8_substr(start, end - start).size();
@@ -461,7 +461,7 @@ namespace atres
 			}
 			else
 			{
-				count--;
+				--count;
 				result += '[';
 			}
 			count += (*it).count;
@@ -494,7 +494,7 @@ namespace atres
 		int lineCount = lines.size();
 		if (lines.last().terminated)
 		{
-			lineCount++;
+			++lineCount;
 		}
 		// vertical correction
 		switch (vertical)
@@ -983,7 +983,7 @@ namespace atres
 					if (i == start)
 					{
 						i += byteSize;
-						chars++;
+						++chars;
 					}
 					break;
 				}
@@ -1016,7 +1016,7 @@ namespace atres
 				wordX += ax;
 				charWidths += ax;
 				i += byteSize;
-				chars++;
+				++chars;
 				if (!checkingSpaces && i < actualSize)
 				{
 					if (!this->useLegacyLineBreakParsing)
@@ -1099,7 +1099,7 @@ namespace atres
 				if (this->_line.words.size() > 0)
 				{
 					addWord = false;
-					i--;
+					--i;
 				}
 				// else the whole word is the only one in the line and doesn't fit, so just chop it off
 				nextLine = true;
@@ -1276,7 +1276,7 @@ namespace atres
 				{
 					current.vertices += sequences[i].vertices;
 					sequences.remove_at(i);
-					i--;
+					--i;
 				}
 			}
 			result += current;
