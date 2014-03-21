@@ -64,7 +64,7 @@ namespace atres
 			if (this->data.has_key(hash))
 			{
 				harray<T>& array = this->data[hash];
-				for (iterator_t it = array.begin(); it != array.end(); it++)
+				for (iterator_t it = array.begin(); it != array.end(); ++it)
 				{
 					if (entry == (*it))
 					{
@@ -112,7 +112,7 @@ namespace atres
 				if (overSize > 0)
 				{
 					hlist<T> removed = this->entries(0, overSize);
-					for (list_iterator_t it = removed.begin(); it != removed.end(); it++)
+					for (list_iterator_t it = removed.begin(); it != removed.end(); ++it)
 					{
 						this->removeEntry(*it);
 					}
