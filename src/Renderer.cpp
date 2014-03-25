@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.3
+/// @version 3.31
 /// 
 /// @section LICENSE
 /// 
@@ -82,6 +82,9 @@ namespace atres
 
 	Renderer::Renderer()
 	{
+		this->colors["white"] = april::Color::White.hex();
+		this->colors["black"] = april::Color::Black.hex();
+		this->colors["grey"] = april::Color::Grey.hex();
 		this->colors["red"] = april::Color::Red.hex();
 		this->colors["green"] = april::Color::Green.hex();
 		this->colors["blue"] = april::Color::Blue.hex();
@@ -94,9 +97,19 @@ namespace atres
 		this->colors["neon"] = april::Color::Neon.hex();
 		this->colors["purple"] = april::Color::Purple.hex();
 		this->colors["aqua"] = april::Color::Aqua.hex();
-		this->colors["white"] = april::Color::White.hex();
-		this->colors["grey"] = april::Color::Grey.hex();
-		this->colors["black"] = april::Color::Black.hex();
+		this->colors["dark_grey"] = april::Color::DarkGrey.hex();
+		this->colors["dark_red"] = april::Color::DarkRed.hex();
+		this->colors["dark_green"] = april::Color::DarkGreen.hex();
+		this->colors["dark_blue"] = april::Color::DarkBlue.hex();
+		this->colors["dark_yellow"] = april::Color::DarkYellow.hex();
+		this->colors["dark_magenta"] = april::Color::DarkMagenta.hex();
+		this->colors["dark_cyan"] = april::Color::DarkCyan.hex();
+		this->colors["dark_orange"] = april::Color::DarkOrange.hex();
+		this->colors["dark_pink"] = april::Color::DarkPink.hex();
+		this->colors["dark_teal"] = april::Color::DarkTeal.hex();
+		this->colors["dark_neon"] = april::Color::DarkNeon.hex();
+		this->colors["dark_purple"] = april::Color::DarkPurple.hex();
+		this->colors["dark_aqua"] = april::Color::DarkAqua.hex();
 		// init
 		this->shadowOffset.set(1.0f, 1.0f);
 		this->shadowColor = april::Color::Black;
