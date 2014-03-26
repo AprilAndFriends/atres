@@ -318,13 +318,9 @@
 		7FC8A8BA1296C77C003D3931 /* App Store */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = i386;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_MISSING_PARENTHESES = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -334,9 +330,7 @@
 					"${SRCROOT}/../april/include",
 					"${SRCROOT}/include/atres",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = atres;
-				SDKROOT = macosx;
 			};
 			name = "App Store";
 		};
@@ -345,13 +339,6 @@
 			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
-				DSTROOT = /;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
 					"$(inherited)",
@@ -359,9 +346,7 @@
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
-				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "i386 x86_64 ppc";
 				WRAPPER_EXTENSION = framework;
 			};
 			name = "App Store";
@@ -369,15 +354,11 @@
 		C981CCCD132AEF8C0072B5A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_MISSING_PARENTHESES = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -387,10 +368,8 @@
 					"${SRCROOT}/../april/include",
 					"${SRCROOT}/include/atres",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = atres;
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -399,15 +378,8 @@
 			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				DSTROOT = /;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
@@ -416,9 +388,7 @@
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
-				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "i386 x86_64 ppc";
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -426,13 +396,9 @@
 		C981CCCF132AEF920072B5A9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_MISSING_PARENTHESES = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -442,9 +408,7 @@
 					"${SRCROOT}/../april/include",
 					"${SRCROOT}/include/atres",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = atres;
-				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -453,13 +417,6 @@
 			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
-				DSTROOT = /;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
 					"$(inherited)",
@@ -467,9 +424,7 @@
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
-				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "i386 x86_64 ppc";
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -479,20 +434,16 @@
 			baseConfigurationReference = D1681BA818D7684A0088FC68 /* iOS.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/libatres_ios.dst;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_IOS,
 					"$(inherited)",
 				);
-				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_MISSING_PARENTHESES = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atres;
-				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -502,21 +453,16 @@
 			baseConfigurationReference = D1681BA818D7684A0088FC68 /* iOS.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libatres_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_IOS,
 					"$(inherited)",
 				);
-				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_MISSING_PARENTHESES = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atres;
-				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -525,21 +471,16 @@
 			baseConfigurationReference = D1681BA818D7684A0088FC68 /* iOS.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libatres_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_IOS,
 					"$(inherited)",
 				);
-				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_MISSING_PARENTHESES = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atres;
-				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				VALIDATE_PRODUCT = YES;
 			};
 			name = "App Store";
 		};
@@ -548,9 +489,7 @@
 			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/libatres_ios.dst;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
@@ -560,7 +499,6 @@
 				GCC_WARN_MISSING_PARENTHESES = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atres;
-				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -570,9 +508,7 @@
 			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libatres_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
 					"$(inherited)",
@@ -581,9 +517,7 @@
 				GCC_WARN_MISSING_PARENTHESES = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atres;
-				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -592,9 +526,7 @@
 			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libatres_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
 					"$(inherited)",
@@ -603,9 +535,7 @@
 				GCC_WARN_MISSING_PARENTHESES = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atres;
-				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				VALIDATE_PRODUCT = YES;
 			};
 			name = "App Store";
 		};
