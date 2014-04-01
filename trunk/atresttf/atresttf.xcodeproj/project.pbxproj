@@ -573,7 +573,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atresttf;
 				SKIP_INSTALL = YES;
 			};
@@ -594,7 +593,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atresttf;
 				SKIP_INSTALL = YES;
 			};
@@ -615,7 +613,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atresttf;
 				SKIP_INSTALL = YES;
 			};
@@ -692,7 +689,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atresttf;
 				SKIP_INSTALL = YES;
 			};
@@ -708,7 +704,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atresttf;
 				SKIP_INSTALL = YES;
 			};
@@ -724,7 +719,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = atresttf;
 				SKIP_INSTALL = YES;
 			};
