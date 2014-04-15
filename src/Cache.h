@@ -32,22 +32,22 @@ namespace atres
 		typedef typename std::vector<T>::iterator iterator_t;
 		typedef typename std::list<T>::iterator list_iterator_t;
 	public:
-		Cache()
+		inline Cache()
 		{
 			this->maxSize = 1000;
 		}
 		
-		~Cache()
+		inline ~Cache()
 		{
 		}
 		
-		void setMaxSize(int value)
+		inline void setMaxSize(int value)
 		{
 			this->maxSize = value;
 			this->update();
 		}
 		
-		void add(T& entry)
+		inline void add(T& entry)
 		{
 			unsigned int hash = entry.hash();
 			if (!this->data.has_key(hash))
@@ -58,7 +58,7 @@ namespace atres
 			this->entries += this->data[hash].last();
 		}
 		
-		bool get(T& entry)
+		inline bool get(T& entry)
 		{
 			unsigned int hash = entry.hash();
 			if (this->data.has_key(hash))
@@ -76,7 +76,7 @@ namespace atres
 			return false;
 		}
 		
-		void removeEntry(const T& entry)
+		inline void removeEntry(const T& entry)
 		{
 			unsigned int hash = entry.hash();
 			if (this->data.has_key(hash))
@@ -93,18 +93,18 @@ namespace atres
 			}
 		}
 		
-		void clear()
+		inline void clear()
 		{
 			this->data.clear();
 			this->entries.clear();
 		}
 		
-		int size()
+		inline int size()
 		{
 			return this->data.size();
 		}
 		
-		void update()
+		inline void update()
 		{
 			if (this->maxSize >= 0)
 			{

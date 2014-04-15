@@ -38,7 +38,7 @@ namespace atres
 		float getLineHeight();
 		float getDescender();
 		HL_DEFINE_IS(loaded, Loaded);
-		hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
+		inline hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
 		harray<april::Texture*> getTextures();
 		
 		virtual april::Texture* getTexture(unsigned int charCode);
