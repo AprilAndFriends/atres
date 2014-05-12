@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.4
 /// 
 /// @section LICENSE
 /// 
@@ -15,11 +15,11 @@
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
-#include "FontResourceBitmap.h"
+#include "FontBitmap.h"
 
 namespace atres
 {
-	FontResourceBitmap::FontResourceBitmap(chstr filename) : FontResource(filename)
+	FontBitmap::FontBitmap(chstr filename) : Font(filename)
 	{
 		hstr path = hrdir::basedir(filename);
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
@@ -122,7 +122,7 @@ namespace atres
 		this->loaded = false;
 	}
 
-	FontResourceBitmap::~FontResourceBitmap()
+	FontBitmap::~FontBitmap()
 	{
 	}
 

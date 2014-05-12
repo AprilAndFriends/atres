@@ -35,7 +35,7 @@
     <ClCompile Include="src\atresttf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\FontResourceTtf.cpp">
+    <ClCompile Include="src\FontTtf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -46,7 +46,7 @@
     <ClInclude Include="include\atresttf\atresttfExport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\atresttf\FontResourceTtf.h">
+    <ClInclude Include="include\atresttf\FontTtf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\freetype.h">

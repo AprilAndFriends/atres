@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.4
 /// 
 /// @section LICENSE
 /// 
@@ -14,17 +14,17 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
-#include "FontResource.h"
+#include "Font.h"
 
 namespace atres
 {
-	FontResource::FontResource(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f),
+	Font::Font(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f),
 		lineHeight(0.0f), descender(0.0f), customDescender(false), loaded(false)
 	{
 		this->name = name;
 	}
 
-	FontResource::~FontResource()
+	Font::~Font()
 	{
 		this->characters.clear();
 		foreach (TextureContainer*, it, this->textureContainers)
@@ -35,7 +35,7 @@ namespace atres
 		this->textureContainers.clear();
 	}
 
-	bool FontResource::_readBasicParameter(chstr line)
+	bool Font::_readBasicParameter(chstr line)
 	{
 		if (line.starts_with("Name="))
 		{
@@ -66,32 +66,32 @@ namespace atres
 		return false;
 	}
 	
-	bool FontResource::hasChar(unsigned int charCode)
+	bool Font::hasChar(unsigned int charCode)
 	{
 		return this->characters.has_key(charCode);
 	}
 	
-	float FontResource::getHeight()
+	float Font::getHeight()
 	{
 		return (this->height * this->scale * this->baseScale);
 	}
 	
-	float FontResource::getScale()
+	float Font::getScale()
 	{
 		return (this->scale * this->baseScale);
 	}
 	
-	float FontResource::getLineHeight()
+	float Font::getLineHeight()
 	{
 		return (this->lineHeight * this->scale * this->baseScale);
 	}
 
-	float FontResource::getDescender()
+	float Font::getDescender()
 	{
 		return (this->descender * this->scale * this->baseScale);
 	}
 	
-	harray<april::Texture*> FontResource::getTextures()
+	harray<april::Texture*> Font::getTextures()
 	{
 		harray<april::Texture*> result;
 		foreach (TextureContainer*, it, this->textureContainers)
@@ -101,7 +101,7 @@ namespace atres
 		return result;
 	}
 	
-	april::Texture* FontResource::getTexture(unsigned int charCode)
+	april::Texture* Font::getTexture(unsigned int charCode)
 	{
 		foreach (TextureContainer*, it, this->textureContainers)
 		{
@@ -113,7 +113,7 @@ namespace atres
 		return NULL;
 	}
 
-	float FontResource::getTextWidth(chstr text)
+	float Font::getTextWidth(chstr text)
 	{
 		// using static definitions to avoid memory allocation for optimization
 		static float textX = 0.0f;
@@ -148,7 +148,7 @@ namespace atres
 		return textW;
 	}
 	
-	int FontResource::getTextCount(chstr text, float maxWidth)
+	int Font::getTextCount(chstr text, float maxWidth)
 	{
 		// using static definitions to avoid memory allocation for optimization
 		static float textX = 0.0f;
@@ -187,7 +187,7 @@ namespace atres
 		return text.size();
 	}
 	
-	RenderRectangle FontResource::makeRenderRectangle(const grect& rect, grect area, unsigned int code)
+	RenderRectangle Font::makeRenderRectangle(const grect& rect, grect area, unsigned int code)
 	{
 		static RenderRectangle result;
 		result.src.set(0.0f, 0.0f, 0.0f, 0.0f);

@@ -127,12 +127,12 @@
   <ItemGroup>
     <ClInclude Include="include\atresttf\atresttf.h" />
     <ClInclude Include="include\atresttf\atresttfExport.h" />
-    <ClInclude Include="include\atresttf\FontResourceTtf.h" />
+    <ClInclude Include="include\atresttf\FontTtf.h" />
     <ClInclude Include="src\freetype.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\atresttf.cpp" />
-    <ClCompile Include="src\FontResourceTtf.cpp" />
+    <ClCompile Include="src\FontTtf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="fileproperties.rc" />

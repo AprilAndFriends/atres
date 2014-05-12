@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.4
 /// 
 /// @section LICENSE
 /// 
@@ -9,10 +9,10 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a font resource interface.
+/// Defines a font object.
 
-#ifndef ATRES_FONT_RESOURCE_H
-#define ATRES_FONT_RESOURCE_H
+#ifndef ATRES_FONT_H
+#define ATRES_FONT_H
 
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
@@ -24,11 +24,11 @@
 
 namespace atres
 {
-	class atresExport FontResource
+	class atresExport Font
 	{
 	public:
-		FontResource(chstr name);
-		virtual ~FontResource();
+		Font(chstr name);
+		virtual ~Font();
 
 		HL_DEFINE_GET(hstr, name, Name);
 		float getHeight();
@@ -67,6 +67,8 @@ namespace atres
 		bool _readBasicParameter(chstr line);
 		
 	};
+
+	DEPRECATED_ATTRIBUTE typedef Font FontResource;
 
 }
 

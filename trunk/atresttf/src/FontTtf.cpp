@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.3
+/// @version 3.4
 /// 
 /// @section LICENSE
 /// 
@@ -21,7 +21,7 @@
 #include <hltypes/hstring.h>
 
 #include "atresttf.h"
-#include "FontResourceTtf.h"
+#include "FontTtf.h"
 #include "freetype.h"
 
 #define SAFE_SPACE 2
@@ -31,7 +31,7 @@
 
 namespace atresttf
 {
-	FontResourceTtf::FontResourceTtf(chstr filename, bool loadBasicAscii) : atres::FontResource(filename)
+	FontTtf::FontTtf(chstr filename, bool loadBasicAscii) : atres::Font(filename)
 	{
 		this->fontFile = NULL;
 		this->fontDataSize = 0;
@@ -53,8 +53,8 @@ namespace atresttf
 		this->_initializeFont();
 	}
 
-	FontResourceTtf::FontResourceTtf(chstr fontFilename, chstr name, float height, float scale,
-		float lineHeight, bool loadBasicAscii) : atres::FontResource(name)
+	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale,
+		float lineHeight, bool loadBasicAscii) : atres::Font(name)
 	{
 		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii);
 		this->fontFile = NULL;
@@ -62,8 +62,8 @@ namespace atresttf
 		this->_initializeFont();
 	}
 	
-	FontResourceTtf::FontResourceTtf(chstr fontFilename, chstr name, float height, float scale,
-		float lineHeight, float descender, bool loadBasicAscii) : atres::FontResource(name)
+	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale,
+		float lineHeight, float descender, bool loadBasicAscii) : atres::Font(name)
 	{
 		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii);
 		this->descender = descender;
@@ -73,8 +73,8 @@ namespace atresttf
 		this->_initializeFont();
 	}
 	
-	FontResourceTtf::FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale,
-		float lineHeight, bool loadBasicAscii) : atres::FontResource(name)
+	FontTtf::FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale,
+		float lineHeight, bool loadBasicAscii) : atres::Font(name)
 	{
 		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
 		this->fontFile = new unsigned char[dataSize];
@@ -83,8 +83,8 @@ namespace atresttf
 		this->_initializeFont();
 	}
 
-	FontResourceTtf::FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale,
-		float lineHeight, float descender, bool loadBasicAscii) : atres::FontResource(name)
+	FontTtf::FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale,
+		float lineHeight, float descender, bool loadBasicAscii) : atres::Font(name)
 	{
 		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
 		this->descender = descender;
@@ -95,7 +95,7 @@ namespace atresttf
 		this->_initializeFont();
 	}
 
-	void FontResourceTtf::_setInternalValues(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii)
+	void FontTtf::_setInternalValues(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii)
 	{
 		this->fontFilename = fontFilename;
 		this->name = name;
@@ -106,7 +106,7 @@ namespace atresttf
 		this->loadBasicAscii = loadBasicAscii;
 	}
 
-	FontResourceTtf::~FontResourceTtf()
+	FontTtf::~FontTtf()
 	{
 		if (this->fontFile != NULL)
 		{
@@ -114,7 +114,7 @@ namespace atresttf
 		}
 	}
 
-	april::Texture* FontResourceTtf::getTexture(unsigned int charCode)
+	april::Texture* FontTtf::getTexture(unsigned int charCode)
 	{
 		bool reload = false;
 		foreach (atres::TextureContainer*, it, this->textureContainers)
@@ -141,16 +141,16 @@ namespace atresttf
 		{
 			return NULL;
 		}
-		return FontResource::getTexture(charCode);
+		return Font::getTexture(charCode);
 	}
 
-	bool FontResourceTtf::hasChar(unsigned int charCode)
+	bool FontTtf::hasChar(unsigned int charCode)
 	{
 		this->_addCharacterBitmap(charCode);
-		return FontResource::hasChar(charCode);
+		return Font::hasChar(charCode);
 	}
 	
-	void FontResourceTtf::_initializeFont()
+	void FontTtf::_initializeFont()
 	{
 		int size = this->fontDataSize;
 		if (this->fontDataSize == 0)
@@ -237,7 +237,7 @@ namespace atresttf
 		this->loaded = true;
 	}
 
-	april::Texture* FontResourceTtf::_createTexture()
+	april::Texture* FontTtf::_createTexture()
 	{
 		int textureSize = atresttf::getTextureSize();
 		april::Texture* texture = NULL;
@@ -258,7 +258,7 @@ namespace atresttf
 		return texture;
 	}
 
-	void FontResourceTtf::_loadBasicCharacters()
+	void FontTtf::_loadBasicCharacters()
 	{
 		// creating an initial texture and texture container
 		atres::TextureContainer* textureContainer = new atres::TextureContainer();
@@ -277,7 +277,7 @@ namespace atresttf
 		}
 	}
 
-	bool FontResourceTtf::_addCharacterBitmap(unsigned int charCode, bool ignoreCharacterEnabled)
+	bool FontTtf::_addCharacterBitmap(unsigned int charCode, bool ignoreCharacterEnabled)
 	{
 		if (this->characters.has_key(charCode))
 		{

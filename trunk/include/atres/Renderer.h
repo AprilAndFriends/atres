@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.3
+/// @version 3.4
 /// 
 /// @section LICENSE
 /// 
@@ -28,7 +28,7 @@
 
 namespace atres
 {
-	class FontResource;
+	class Font;
 	template <class T>
 	class Cache;
 
@@ -59,12 +59,12 @@ namespace atres
 		void setCacheSize(int value);
 
 		/// @param[in] allowDefault Allows font to be set as default if necessary
-		void registerFontResource(FontResource* fontResource, bool allowDefault = true);
-		void destroyAllFontResources();
-		void destroyFontResource(FontResource* fontResource);
-		void unregisterFontResource(FontResource* fontResource);
-		void registerFontResourceAlias(chstr name, chstr alias);
-		FontResource* getFontResource(chstr name);
+		void registerFont(Font* font, bool allowDefault = true);
+		void destroyAllFonts();
+		void destroyFont(Font* font);
+		void unregisterFont(Font* font);
+		void registerFontAlias(chstr name, chstr alias);
+		Font* getFont(chstr name);
 		void addColor(chstr key, chstr value);
 
 		void analyzeText(chstr text);
@@ -108,10 +108,16 @@ namespace atres
 
 		DEPRECATED_ATTRIBUTE float getFontHeight(chstr fontName);
 		DEPRECATED_ATTRIBUTE float getFontLineHeight(chstr fontName);
+		DEPRECATED_ATTRIBUTE void registerFontResource(Font* font, bool allowDefault = true) { this->registerFont(font, allowDefault); }
+		DEPRECATED_ATTRIBUTE void destroyAllFontResources() { this->destroyAllFonts(); }
+		DEPRECATED_ATTRIBUTE void destroyFontResource(Font* font) { this->destroyFont(font); }
+		DEPRECATED_ATTRIBUTE void unregisterFontResource(Font* font) { this->unregisterFont(font); }
+		DEPRECATED_ATTRIBUTE void registerFontResourceAlias(chstr name, chstr alias) { this->registerFontAlias(name, alias); }
+		DEPRECATED_ATTRIBUTE Font* getFontResource(chstr name) { return this->getFont(name); }
 
 	protected:
-		hmap<hstr, FontResource*> fonts;
-		FontResource* defaultFont;
+		hmap<hstr, Font*> fonts;
+		Font* defaultFont;
 		hmap<hstr, hstr> colors;
 		gvec2 shadowOffset;
 		april::Color shadowColor;
@@ -145,7 +151,7 @@ namespace atres
 		FormatTag _nextTag;
 
 		hstr _fontName;
-		FontResource* _fontResource;
+		Font* _font;
 		hmap<unsigned int, CharacterDefinition> _characters;
 		CharacterDefinition* _character;
 		float _height;

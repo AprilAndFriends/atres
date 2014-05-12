@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.4
 /// 
 /// @section LICENSE
 /// 
@@ -9,26 +9,29 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a font.
+/// Defines a font that uses a bitmap as source.
 
-#ifndef ATRES_FONT_RESOURCE_BITMAP_H
-#define ATRES_FONT_RESOURCE_BITMAP_H
+#ifndef ATRES_FONT_BITMAP_H
+#define ATRES_FONT_BITMAP_H
 
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
 #include "atresExport.h"
-#include "FontResource.h"
+#include "Font.h"
 
 namespace atres
 {
-	class atresExport FontResourceBitmap : public FontResource
+	class atresExport FontBitmap : public Font
 	{
 	public:
-		FontResourceBitmap(chstr filename);
-		~FontResourceBitmap();
+		FontBitmap(chstr filename);
+		~FontBitmap();
 
 	};
+
+	DEPRECATED_ATTRIBUTE typedef FontBitmap FontResourceBitmap;
+
 }
 
 #endif
