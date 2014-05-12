@@ -182,7 +182,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\FontResourceTtf.cpp"
+				RelativePath=".\src\FontTtf.cpp"
 				>
 			</File>
 		</Filter>
@@ -200,7 +200,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\atresttf\FontResourceTtf.h"
+				RelativePath=".\include\atresttf\FontTtf.h"
 				>
 			</File>
 			<File

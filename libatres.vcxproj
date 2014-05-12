@@ -115,16 +115,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\atres.cpp" />
-    <ClCompile Include="src\FontResource.cpp" />
-    <ClCompile Include="src\FontResourceBitmap.cpp" />
+    <ClCompile Include="src\Font.cpp" />
+    <ClCompile Include="src\FontBitmap.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\atres\atres.h" />
     <ClInclude Include="include\atres\atresExport.h" />
-    <ClInclude Include="include\atres\FontResource.h" />
-    <ClInclude Include="include\atres\FontResourceBitmap.h" />
+    <ClInclude Include="include\atres\Font.h" />
+    <ClInclude Include="include\atres\FontBitmap.h" />
     <ClInclude Include="include\atres\Renderer.h" />
     <ClInclude Include="include\atres\Utility.h" />
     <ClInclude Include="src\Cache.h" />

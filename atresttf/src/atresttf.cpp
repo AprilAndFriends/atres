@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.4
 /// 
 /// @section LICENSE
 /// 
@@ -15,7 +15,7 @@
 
 #include <april/Window.h>
 #include <atres/atres.h>
-#include <atres/FontResource.h>
+#include <atres/Font.h>
 #include <hltypes/exception.h>
 #include <hltypes/harray.h>
 #include <hltypes/hdir.h>
@@ -32,7 +32,7 @@ namespace atresttf
 	hstr logTag = "atresttf";
 
 	FT_Library library = NULL;
-	hmap<atres::FontResource*, FT_Face> faces;
+	hmap<atres::Font*, FT_Face> faces;
 	hmap<hstr, hstr> fonts;
 	bool fontNamesChecked = false;
 	int textureSize = 1024;
@@ -51,7 +51,7 @@ namespace atresttf
 	void destroy()
 	{
 		hlog::write(atresttf::logTag, "Destroying AtresTTF");
-		foreach_map (atres::FontResource*, FT_Face, it, faces)
+		foreach_map (atres::Font*, FT_Face, it, faces)
 		{
 			FT_Done_Face(it->second);
 		}
@@ -154,29 +154,29 @@ namespace atresttf
 		return library;
 	}
 
-	FT_Face getFace(atres::FontResource* fontResource)
+	FT_Face getFace(atres::Font* font)
 	{
-		return faces[fontResource];
+		return faces[font];
 	}
 
-	void addFace(atres::FontResource* fontResource, FT_Face face)
+	void addFace(atres::Font* font, FT_Face face)
 	{
-		if (faces.has_key(fontResource))
+		if (faces.has_key(font))
 		{
-			hlog::error(atresttf::logTag, "Cannot add Face for Font Resource: " + fontResource->getName());
+			hlog::error(atresttf::logTag, "Cannot add Face for Font Resource: " + font->getName());
 			return;
 		}
-		faces[fontResource] = face;
+		faces[font] = face;
 	}
 
-	void removeFace(atres::FontResource* fontResource, FT_Face face)
+	void removeFace(atres::Font* font, FT_Face face)
 	{
-		if (!faces.has_key(fontResource))
+		if (!faces.has_key(font))
 		{
-			hlog::error(atresttf::logTag, "Cannot remove Face for Font Resource: " + fontResource->getName());
+			hlog::error(atresttf::logTag, "Cannot remove Face for Font: " + font->getName());
 			return;
 		}
-		faces.remove_key(fontResource);
+		faces.remove_key(font);
 	}
 
 }

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.4
 /// 
 /// @section LICENSE
 /// 
@@ -18,18 +18,18 @@
 
 namespace atres
 {
-	class FontResource;
+	class Font;
 }
 
 namespace atresttf
 {
 	FT_Library getLibrary();
-	FT_Face getFace(atres::FontResource* fontResource);
-	void addFace(atres::FontResource* fontResource, FT_Face face);
-	void removeFace(atres::FontResource* fontResource, FT_Face face);
+	FT_Face getFace(atres::Font* font);
+	void addFace(atres::Font* font, FT_Face face);
+	void removeFace(atres::Font* font, FT_Face face);
 
 	extern FT_Library library;
-	extern hmap<atres::FontResource*, FT_Face> faces;
+	extern hmap<atres::Font*, FT_Face> faces;
 
 };
 

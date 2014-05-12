@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.3
+/// @version 3.4
 /// 
 /// @section LICENSE
 /// 
@@ -12,10 +12,10 @@
 /// 
 /// Defines a TTF font.
 
-#ifndef ATRESTTF_FONT_RESOURCE_TTF_H
-#define ATRESTTF_FONT_RESOURCE_TTF_H
+#ifndef ATRESTTF_FONT_TTF_H
+#define ATRESTTF_FONT_TTF_H
 
-#include <atres/FontResource.h>
+#include <atres/Font.h>
 #include <atres/Utility.h>
 #include <hltypes/harray.h>
 #include <hltypes/hstring.h>
@@ -29,16 +29,16 @@ namespace april
 
 namespace atresttf
 {
-	class atresttfExport FontResourceTtf : public atres::FontResource
+	class atresttfExport FontTtf : public atres::Font
 	{
 	public:
-		FontResourceTtf(chstr filename, bool loadBasicAscii = true);
-		FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight = 0.0f, bool loadBasicAscii = true);
-		FontResourceTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii);
-		FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight = 0.0f, bool loadBasicAscii = true);
-		FontResourceTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii);
+		FontTtf(chstr filename, bool loadBasicAscii = true);
+		FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight = 0.0f, bool loadBasicAscii = true);
+		FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii);
+		FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight = 0.0f, bool loadBasicAscii = true);
+		FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii);
 		
-		~FontResourceTtf();
+		~FontTtf();
 
 		HL_DEFINE_GET(hstr, fontFilename, FontFilename);
 		april::Texture* getTexture(unsigned int charCode);
@@ -61,6 +61,8 @@ namespace atresttf
 		bool _addCharacterBitmap(unsigned int charCode, bool ignoreCharacterEnabled = false);
 
 	};
+
+	DEPRECATED_ATTRIBUTE typedef FontTtf FontResourceTtf;
 
 }
 

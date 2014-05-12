@@ -1,7 +1,7 @@
 /// @file
 /// @author  Boris Mikic
 /// @author  Kresimir Spes
-/// @version 3.31
+/// @version 3.4
 /// 
 /// @section LICENSE
 /// 
@@ -23,7 +23,7 @@
 
 #include "atres.h"
 #include "Cache.h"
-#include "FontResource.h"
+#include "Font.h"
 
 #define ALIGNMENT_IS_WRAPPED(formatting) ((formatting) == LEFT_WRAPPED || (formatting) == CENTER_WRAPPED || (formatting) == RIGHT_WRAPPED || (formatting) == JUSTIFIED)
 #define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED)
@@ -133,7 +133,7 @@ namespace atres
 		this->useIdeographWords = false;
 		this->defaultFont = NULL;
 		// misc init
-		this->_fontResource = NULL;
+		this->_font = NULL;
 		// cache
 		this->cache = new Cache<CacheEntryText>();
 		this->cacheUnformatted = new Cache<CacheEntryText>();
@@ -142,7 +142,7 @@ namespace atres
 
 	Renderer::~Renderer()
 	{
-		this->destroyAllFontResources();
+		this->destroyAllFonts();
 		delete this->cache;
 		delete this->cacheUnformatted;
 		delete this->cacheLines;
@@ -210,7 +210,7 @@ namespace atres
 		{
 			throw resource_not_exists("Font", name, "atres");
 		}
-		FontResource* newFont = this->fonts[name];
+		Font* newFont = this->fonts[name];
 		if (this->defaultFont != newFont)
 		{
 			this->defaultFont = newFont;
@@ -232,103 +232,101 @@ namespace atres
 	
 /******* FONT **********************************************************/
 
-	void Renderer::registerFontResource(FontResource* fontResource, bool allowDefault)
+	void Renderer::registerFont(Font* font, bool allowDefault)
 	{
-		hstr name = fontResource->getName();
-		hlog::write(atres::logTag, "Registering font resource: " + name);
+		hstr name = font->getName();
+		hlog::write(atres::logTag, "Registering font: " + name);
 		if (this->fonts.has_key(name))
 		{
-			throw resource_already_exists("font resource", name, "atres");
+			throw resource_already_exists("font", name, "atres");
 		}
-		this->fonts[name] = fontResource;
+		this->fonts[name] = font;
 		if (this->defaultFont == NULL && allowDefault)
 		{
-			this->defaultFont = fontResource;
+			this->defaultFont = font;
 		}
+		this->clearCache(); // there may be old cached definitions, they must be removed
 	}
 	
-	void Renderer::unregisterFontResource(FontResource* fontResource)
+	void Renderer::unregisterFont(Font* font)
 	{
-		if (!this->fonts.has_value(fontResource))
+		if (!this->fonts.has_value(font))
 		{
-			throw resource_not_exists("font resource", fontResource->getName(), "atres");
+			throw resource_not_exists("font", font->getName(), "atres");
 		}
 		harray<hstr> keys = this->fonts.keys();
-		foreach (hstr, it, keys)
+		foreach (hstr, it, keys) // removing aliases
 		{
-			if (this->fonts[*it] == fontResource)
+			if (this->fonts[*it] == font)
 			{
 				this->fonts.remove_key(*it);
 			}
 		}
-		if (this->defaultFont == fontResource)
+		if (this->defaultFont == font)
 		{
 			this->defaultFont = (this->fonts.size() > 0 ? this->fonts.values().first() : NULL);
 		}
-		this->cache->clear();
+		this->clearCache(); // there may be old cached definitions, they must be removed
 	}
 
-	void Renderer::registerFontResourceAlias(chstr name, chstr alias)
+	void Renderer::registerFontAlias(chstr name, chstr alias)
 	{
 		if (this->fonts.has_key(alias))
 		{
-			throw resource_already_exists("font resource", alias, "atres");
+			throw resource_already_exists("font", alias, "atres");
 		}
-		FontResource* fontResource = this->getFontResource(name);
-		hlog::writef(atres::logTag, "Registering font resource alias '%s' for '%s'.", alias.c_str(), fontResource->getName().c_str());
-		this->fonts[alias] = fontResource;
+		Font* font = this->getFont(name);
+		if (font != NULL)
+		{
+			hlog::writef(atres::logTag, "Registering font alias '%s' for '%s'.", alias.c_str(), font->getName().c_str());
+			this->fonts[alias] = font;
+		}
+		else
+		{
+			hlog::errorf(atres::logTag, "Could not register alias '%s' for font '%s'. The font does not exist.", alias.c_str(), name.c_str());
+		}
 	}
 	
-	void Renderer::destroyAllFontResources()
+	void Renderer::destroyAllFonts()
 	{
 		this->defaultFont = NULL;
 		this->clearCache();
-		FontResource* fontResource;
-		harray<hstr> keys;
-		while (this->fonts.size() > 0)
+		harray<Font*> fonts = this->fonts.values().removed_duplicates();
+		foreach (Font*, it, fonts)
 		{
-			keys = this->fonts.keys();
-			fontResource = this->fonts[keys.first()];
-			foreach (hstr, it, keys)
-			{
-				if (this->fonts[*it] == fontResource)
-				{
-					this->fonts.remove_key(*it);
-				}
-			}
-			delete fontResource;
+			delete (*it);
 		}
+		this->fonts.clear();
 	}
 	
-	void Renderer::destroyFontResource(FontResource* fontResource)
+	void Renderer::destroyFont(Font* font)
 	{
-		this->unregisterFontResource(fontResource);
-		delete fontResource;
+		this->unregisterFont(font);
+		delete font;
 	}
 
-	FontResource* Renderer::getFontResource(chstr name)
+	Font* Renderer::getFont(chstr name)
 	{
 		if (name == "" && this->defaultFont != NULL)
 		{
 			this->defaultFont->setScale(1.0f);
 			return this->defaultFont;
 		}
-		FontResource* fontResource;
+		Font* font = NULL;
 		if (this->fonts.has_key(name))
 		{
-			fontResource = this->fonts[name];
-			fontResource->setScale(1.0f);
-			return fontResource;
+			font = this->fonts[name];
+			font->setScale(1.0f);
+			return font;
 		}
 		int position = name.find(":");
-		if (position < 0)
+		if (position >= 0)
 		{
-			throw resource_not_exists("font resource", name, "atres");
+			font = this->getFont(name(0, position));
+			++position;
+			font->setScale((float)(name(position, name.size() - position)));
 		}
-		fontResource = this->getFontResource(name(0, position));
-		++position;
-		fontResource->setScale((float)(name(position, name.size() - position)));
-		return fontResource;
+		return font;
 	}
 	
 /******* MISC **********************************************************/
@@ -370,7 +368,7 @@ namespace atres
 	{
 		// makes sure dynamically allocated characters are loaded
 		std::basic_string<unsigned int> chars = text.u_str();
-		foreach_m (FontResource*, it, this->fonts)
+		foreach_m (Font*, it, this->fonts)
 		{
 			for_itert (unsigned int, i, 0, chars.size())
 			{
@@ -642,7 +640,7 @@ namespace atres
 		this->_currentTag = FormatTag();
 		this->_nextTag = this->_tags.first();
 		this->_fontName = "";
-		this->_fontResource = NULL;
+		this->_font = NULL;
 		this->_texture = NULL;
 		this->_characters.clear();
 		this->_height = 0.0f;
@@ -690,9 +688,9 @@ namespace atres
 				if (this->_currentTag.type == TAG_TYPE_FONT)
 				{
 					this->_fontName = this->_currentTag.data;
-					this->_fontResource = this->getFontResource(this->_fontName);
-					this->_characters = this->_fontResource->getCharacters();
-					this->_fontScale = this->_fontResource->getScale();
+					this->_font = this->getFont(this->_fontName);
+					this->_characters = this->_font->getCharacters();
+					this->_fontScale = this->_font->getScale();
 				}
 				else if (this->_currentTag.type == TAG_TYPE_SCALE)
 				{
@@ -704,24 +702,27 @@ namespace atres
 				this->_currentTag.type = TAG_TYPE_FONT;
 				this->_currentTag.data = this->_fontName;
 				this->_stack += this->_currentTag;
-				try
+				if (this->_font == NULL) // if there is no previous font, the height values have to be obtained as well
 				{
-					if (this->_fontResource == NULL) // if there is no previous font, the height values have to be obtained as well
+					this->_font = this->getFont(this->_nextTag.data);
+					if (this->_font != NULL)
 					{
-						this->_fontResource = this->getFontResource(this->_nextTag.data);
-						this->_height = this->_fontResource->getHeight();
-						this->_lineHeight = this->_fontResource->getLineHeight();
-						this->_descender = this->_fontResource->getDescender();
+						this->_height = this->_font->getHeight();
+						this->_lineHeight = this->_font->getLineHeight();
+						this->_descender = this->_font->getDescender();
 					}
-					else
-					{
-						this->_fontResource = this->getFontResource(this->_nextTag.data);
-					}
-					this->_fontName = this->_nextTag.data;
-					this->_characters = this->_fontResource->getCharacters();
-					this->_fontScale = this->_fontResource->getScale();
 				}
-				catch (hltypes::_resource_not_exists&)
+				else
+				{
+					this->_font = this->getFont(this->_nextTag.data);
+				}
+				if (this->_font != NULL)
+				{
+					this->_fontName = this->_nextTag.data;
+					this->_characters = this->_font->getCharacters();
+					this->_fontScale = this->_font->getScale();
+				}
+				else
 				{
 					hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.c_str());
 				}
@@ -766,9 +767,9 @@ namespace atres
 				{
 				case TAG_TYPE_FONT:
 					this->_fontName = this->_currentTag.data;
-					this->_fontResource = this->getFontResource(this->_fontName);
-					this->_characters = this->_fontResource->getCharacters();
-					this->_fontScale = this->_fontResource->getScale();
+					this->_font = this->getFont(this->_fontName);
+					this->_characters = this->_font->getCharacters();
+					this->_fontScale = this->_font->getScale();
 					break;
 				case TAG_TYPE_COLOR:
 					this->_hex = (this->colors.has_key(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
@@ -809,24 +810,27 @@ namespace atres
 					this->_currentTag.type = TAG_TYPE_FONT;
 					this->_currentTag.data = this->_fontName;
 					this->_stack += this->_currentTag;
-					try
+					if (this->_font == NULL)
 					{
-						if (this->_fontResource == NULL)
+						this->_font = this->getFont(this->_nextTag.data);
+						if (this->_font != NULL)
 						{
-							this->_fontResource = this->getFontResource(this->_nextTag.data);
-							this->_height = this->_fontResource->getHeight();
-							this->_lineHeight = this->_fontResource->getLineHeight();
-							this->_descender = this->_fontResource->getDescender();
+							this->_height = this->_font->getHeight();
+							this->_lineHeight = this->_font->getLineHeight();
+							this->_descender = this->_font->getDescender();
 						}
-						else
-						{
-							this->_fontResource = this->getFontResource(this->_nextTag.data);
-						}
-						this->_fontName = this->_nextTag.data;
-						this->_characters = this->_fontResource->getCharacters();
-						this->_fontScale = this->_fontResource->getScale();
 					}
-					catch (hltypes::_resource_not_exists&)
+					else
+					{
+						this->_font = this->getFont(this->_nextTag.data);
+					}
+					if (this->_font != NULL)
+					{
+						this->_fontName = this->_nextTag.data;
+						this->_characters = this->_font->getCharacters();
+						this->_fontScale = this->_font->getScale();
+					}
+					else
 					{
 						hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.c_str());
 					}
@@ -910,8 +914,11 @@ namespace atres
 			{
 				this->_nextTag.start = this->_word.start + this->_word.text.size() + 1;
 			}
-			this->_texture = this->_fontResource->getTexture(this->_code);
-			this->_checkSequenceSwitch();
+			if (this->_font != NULL)
+			{
+				this->_texture = this->_font->getTexture(this->_code);
+				this->_checkSequenceSwitch();
+			}
 		}
 		if (this->_tags.size() == 0)
 		{
@@ -924,9 +931,12 @@ namespace atres
 				this->_nextTag.start = this->_word.start + this->_word.text.size() + 1;
 			}
 		}
-		// this additional check is required in case the texture had to be changed
-		this->_texture = this->_fontResource->getTexture(this->_code);
-		this->_checkSequenceSwitch();
+		if (this->_font != NULL)
+		{
+			// this additional check is required in case the texture had to be changed
+			this->_texture = this->_font->getTexture(this->_code);
+			this->_checkSequenceSwitch();
+		}
 	}
 
 	void Renderer::_checkSequenceSwitch()
@@ -1233,7 +1243,7 @@ namespace atres
 						area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 						drawRect = rect;
 						drawRect.h += this->_character->by * this->_scale;
-						this->_renderRect = this->_fontResource->makeRenderRectangle(drawRect, area, this->_code);
+						this->_renderRect = this->_font->makeRenderRectangle(drawRect, area, this->_code);
 						this->_renderRect.dest.y -= this->_character->by * this->_scale;
 						this->_textSequence.addRenderRectangle(this->_renderRect);
 						destination = this->_renderRect.dest;
@@ -1503,12 +1513,12 @@ namespace atres
 	
 	float Renderer::getFontHeight(chstr fontName) // DEPRECATED
 	{
-		return this->getFontResource(fontName)->getHeight();
+		return this->getFont(fontName)->getHeight();
 	}
 	
 	float Renderer::getFontLineHeight(chstr fontName) // DEPRECATED
 	{
-		return this->getFontResource(fontName)->getLineHeight();
+		return this->getFont(fontName)->getLineHeight();
 	}
 	
 	float Renderer::getTextWidth(chstr fontName, chstr text)
@@ -1540,7 +1550,7 @@ namespace atres
 			if (unformattedText != "")
 			{
 				harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, 100000.0f), unformattedText, tags, LEFT_WRAPPED, TOP);
-				FontResource* font = this->getFontResource(fontName);
+				Font* font = this->getFont(fontName);
 				return (lines.size() * font->getLineHeight() + font->getDescender());
 			}
 		}
@@ -1584,7 +1594,7 @@ namespace atres
 		{
 			harray<FormatTag> tags = this->prepareTags(fontName);
 			harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, 100000.0f), text, tags, LEFT_WRAPPED, TOP);
-			FontResource* font = this->getFontResource(fontName);
+			Font* font = this->getFont(fontName);
 			return (lines.size() * font->getLineHeight() + font->getDescender());
 		}
 		return 0.0f;
