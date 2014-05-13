@@ -34,10 +34,10 @@
 #include <april/UpdateDelegate.h>
 #include <april/Window.h>
 #include <atres/atres.h>
-#include <atres/FontResourceBitmap.h>
+#include <atres/FontBitmap.h>
 #include <atres/Renderer.h>
 #include <atresttf/atresttf.h>
-#include <atresttf/FontResourceTtf.h>
+#include <atresttf/FontTtf.h>
 #include <gtypes/Rectangle.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
@@ -245,14 +245,14 @@ void april_init(const harray<hstr>& args)
 		april::window->setMouseDelegate(mouseDelegate);
 		atres::init();
 #ifndef _ATRESTTF
-		atres::renderer->registerFontResource(new atres::FontResourceBitmap(RESOURCE_PATH "arial.font"));
+		atres::renderer->registerFont(new atres::FontBitmap(RESOURCE_PATH "arial.font"));
 #else
 		atresttf::init();
 		hlog::writef(LOG_TAG, "Found %d fonts installed on the system.", atresttf::getSystemFonts().size());
 #ifdef _ATRESTTF_LOCAL_FONT
-		atres::renderer->registerFontResource(new atresttf::FontResourceTtf(RESOURCE_PATH "arial.ttf", "Arial", 32, 1.0f)); // invokes a provided font
+		atres::renderer->registerFont(new atresttf::FontTtf(RESOURCE_PATH "arial.ttf", "Arial", 32, 1.0f)); // invokes a provided font
 #else
-		atres::renderer->registerFontResource(new atresttf::FontResourceTtf("", "Arial", 32, 1.0f)); // invokes the installed system font Arial
+		atres::renderer->registerFont(new atresttf::FontTtf("", "Arial", 32, 1.0f)); // invokes the installed system font Arial
 #endif
 #endif
 		atres::renderer->setShadowColor(april::Color::Red);

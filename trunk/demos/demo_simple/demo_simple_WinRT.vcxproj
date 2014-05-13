@@ -94,7 +94,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <PackageCertificateThumbprint>4878A9B26A5A30A36C26CCE5A48EAE0F29160FD8</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>4DF0E423E3EAB4EA31C67FDDA5AB58A9DAB002D4</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxPackageDir>$(SolutionDir)bin\AppPackages\$(ProjectName)\</AppxPackageDir>
     <PackageCertificateKeyFile>TemporaryKey.pfx</PackageCertificateKeyFile>
@@ -186,19 +186,22 @@
     <Image Include="media\assets\splash.png" />
     <Image Include="media\assets\store_icon.png" />
     <Image Include="media\arial.png" />
+    <None Include="TemporaryKey.pfx" />
     <None Include="media\arial.font">
       <DeploymentContent>true</DeploymentContent>
     </None>
     <None Include="media\arial.ttfdef">
       <DeploymentContent>true</DeploymentContent>
     </None>
-    <None Include="TemporaryKey.pfx" />
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
     <Xml Include="WMAppManifest.xml">
       <SubType>Designer</SubType>
     </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="media\arial.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Condition="'$(PlatformToolset)'=='v110_wp80'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsPhone\v$(TargetPlatformVersion)\Microsoft.Cpp.WindowsPhone.$(TargetPlatformVersion).targets" />
