@@ -57,14 +57,19 @@
     </Xml>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TemporaryKey.pfx">
-      <Filter>winrt</Filter>
-    </None>
     <None Include="media\arial.font">
       <Filter>winrt\media</Filter>
     </None>
     <None Include="media\arial.ttfdef">
       <Filter>winrt\media</Filter>
     </None>
+    <None Include="TemporaryKey.pfx">
+      <Filter>winrt</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="media\arial.ttf">
+      <Filter>winrt\media</Filter>
+    </Font>
   </ItemGroup>
 </Project>
