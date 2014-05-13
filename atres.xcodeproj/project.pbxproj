@@ -9,11 +9,7 @@
 /* Begin PBXBuildFile section */
 		7F3518981251E67B0005B659 /* gtypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F3518971251E67B0005B659 /* gtypes.framework */; };
 		7F35189A1251E6810005B659 /* april.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F3518991251E6810005B659 /* april.framework */; };
-		7F46F93613CD9F8A002A143C /* FontResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F46F93313CD9F8A002A143C /* FontResource.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7F46F93713CD9F8A002A143C /* FontResourceBitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F46F93413CD9F8A002A143C /* FontResourceBitmap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F46F93813CD9F8A002A143C /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F46F93513CD9F8A002A143C /* Renderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7F46F93C13CD9F94002A143C /* FontResource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93913CD9F94002A143C /* FontResource.cpp */; };
-		7F46F93D13CD9F94002A143C /* FontResourceBitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93A13CD9F94002A143C /* FontResourceBitmap.cpp */; };
 		7F46F93E13CD9F94002A143C /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93B13CD9F94002A143C /* Renderer.cpp */; };
 		7FC8039911EC6C0400851062 /* hltypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FC8039811EC6C0400851062 /* hltypes.framework */; };
 		C9AE31E9135D6FD4006B491A /* atres.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9AE31E4135D6FD4006B491A /* atres.cpp */; };
@@ -23,12 +19,16 @@
 		C9FBF4D314E15B27008359C3 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9FBF4D014E15B27008359C3 /* Utility.cpp */; };
 		C9FBF4D414E15B27008359C3 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9FBF4D014E15B27008359C3 /* Utility.cpp */; };
 		D10753991486EF0A00980E43 /* Utility.h in Headers */ = {isa = PBXBuildFile; fileRef = D10753981486EF0A00980E43 /* Utility.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D1981D2F140F90BC0057C3AF /* FontResource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93913CD9F94002A143C /* FontResource.cpp */; };
-		D1981D30140F90BC0057C3AF /* FontResourceBitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93A13CD9F94002A143C /* FontResourceBitmap.cpp */; };
+		D14BDFAE192210370085027D /* Font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BDFAC192210370085027D /* Font.cpp */; };
+		D14BDFAF192210370085027D /* Font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BDFAC192210370085027D /* Font.cpp */; };
+		D14BDFB0192210370085027D /* Font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BDFAC192210370085027D /* Font.cpp */; };
+		D14BDFB1192210370085027D /* FontBitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BDFAD192210370085027D /* FontBitmap.cpp */; };
+		D14BDFB2192210370085027D /* FontBitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BDFAD192210370085027D /* FontBitmap.cpp */; };
+		D14BDFB3192210370085027D /* FontBitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BDFAD192210370085027D /* FontBitmap.cpp */; };
+		D14BDFB6192210490085027D /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = D14BDFB4192210490085027D /* Font.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D14BDFB7192210490085027D /* FontBitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = D14BDFB5192210490085027D /* FontBitmap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1981D31140F90BC0057C3AF /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93B13CD9F94002A143C /* Renderer.cpp */; };
 		D1981D32140F90BC0057C3AF /* atres.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9AE31E4135D6FD4006B491A /* atres.cpp */; };
-		D1F27B09177A2F1A00E5C131 /* FontResource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93913CD9F94002A143C /* FontResource.cpp */; };
-		D1F27B0A177A2F1A00E5C131 /* FontResourceBitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93A13CD9F94002A143C /* FontResourceBitmap.cpp */; };
 		D1F27B0B177A2F1A00E5C131 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F46F93B13CD9F94002A143C /* Renderer.cpp */; };
 		D1F27B0C177A2F1A00E5C131 /* atres.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9AE31E4135D6FD4006B491A /* atres.cpp */; };
 		D1F27B0D177A2F1A00E5C131 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9FBF4D014E15B27008359C3 /* Utility.cpp */; };
@@ -37,11 +37,7 @@
 /* Begin PBXFileReference section */
 		7F3518971251E67B0005B659 /* gtypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtypes.framework; path = Library/Frameworks/gtypes.framework; sourceTree = SDKROOT; };
 		7F3518991251E6810005B659 /* april.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = april.framework; path = Library/Frameworks/april.framework; sourceTree = SDKROOT; };
-		7F46F93313CD9F8A002A143C /* FontResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontResource.h; path = include/atres/FontResource.h; sourceTree = "<group>"; };
-		7F46F93413CD9F8A002A143C /* FontResourceBitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontResourceBitmap.h; path = include/atres/FontResourceBitmap.h; sourceTree = "<group>"; };
 		7F46F93513CD9F8A002A143C /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Renderer.h; path = include/atres/Renderer.h; sourceTree = "<group>"; };
-		7F46F93913CD9F94002A143C /* FontResource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FontResource.cpp; path = src/FontResource.cpp; sourceTree = "<group>"; };
-		7F46F93A13CD9F94002A143C /* FontResourceBitmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FontResourceBitmap.cpp; path = src/FontResourceBitmap.cpp; sourceTree = "<group>"; };
 		7F46F93B13CD9F94002A143C /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Renderer.cpp; path = src/Renderer.cpp; sourceTree = "<group>"; };
 		7FC8039811EC6C0400851062 /* hltypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = hltypes.framework; path = Library/Frameworks/hltypes.framework; sourceTree = SDKROOT; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -52,6 +48,10 @@
 		C9FBF4CF14E15B27008359C3 /* Cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cache.h; path = src/Cache.h; sourceTree = "<group>"; };
 		C9FBF4D014E15B27008359C3 /* Utility.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utility.cpp; path = src/Utility.cpp; sourceTree = "<group>"; };
 		D10753981486EF0A00980E43 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utility.h; path = include/atres/Utility.h; sourceTree = "<group>"; };
+		D14BDFAC192210370085027D /* Font.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Font.cpp; path = src/Font.cpp; sourceTree = "<group>"; };
+		D14BDFAD192210370085027D /* FontBitmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FontBitmap.cpp; path = src/FontBitmap.cpp; sourceTree = "<group>"; };
+		D14BDFB4192210490085027D /* Font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Font.h; path = include/atres/Font.h; sourceTree = "<group>"; };
+		D14BDFB5192210490085027D /* FontBitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontBitmap.h; path = include/atres/FontBitmap.h; sourceTree = "<group>"; };
 		D1681BA818D7684A0088FC68 /* iOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = iOS.xcconfig; path = xcconfig/iOS.xcconfig; sourceTree = "<group>"; };
 		D1681BA918D7684A0088FC68 /* Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Mac.xcconfig; path = xcconfig/Mac.xcconfig; sourceTree = "<group>"; };
 		D1981D20140F90670057C3AF /* libatres.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libatres.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,9 +131,9 @@
 		7FC8037C11EC6AD400851062 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				D14BDFB4192210490085027D /* Font.h */,
+				D14BDFB5192210490085027D /* FontBitmap.h */,
 				D10753981486EF0A00980E43 /* Utility.h */,
-				7F46F93313CD9F8A002A143C /* FontResource.h */,
-				7F46F93413CD9F8A002A143C /* FontResourceBitmap.h */,
 				7F46F93513CD9F8A002A143C /* Renderer.h */,
 				C9AE31EE135D7014006B491A /* atres.h */,
 				C9AE31EF135D7014006B491A /* atresExport.h */,
@@ -146,8 +146,8 @@
 			children = (
 				C9FBF4CF14E15B27008359C3 /* Cache.h */,
 				C9FBF4D014E15B27008359C3 /* Utility.cpp */,
-				7F46F93913CD9F94002A143C /* FontResource.cpp */,
-				7F46F93A13CD9F94002A143C /* FontResourceBitmap.cpp */,
+				D14BDFAC192210370085027D /* Font.cpp */,
+				D14BDFAD192210370085027D /* FontBitmap.cpp */,
 				7F46F93B13CD9F94002A143C /* Renderer.cpp */,
 				C9AE31E4135D6FD4006B491A /* atres.cpp */,
 			);
@@ -173,9 +173,9 @@
 			files = (
 				D10753991486EF0A00980E43 /* Utility.h in Headers */,
 				C9AE31F2135D7014006B491A /* atres.h in Headers */,
+				D14BDFB6192210490085027D /* Font.h in Headers */,
+				D14BDFB7192210490085027D /* FontBitmap.h in Headers */,
 				C9AE31F3135D7014006B491A /* atresExport.h in Headers */,
-				7F46F93613CD9F8A002A143C /* FontResource.h in Headers */,
-				7F46F93713CD9F8A002A143C /* FontResourceBitmap.h in Headers */,
 				7F46F93813CD9F8A002A143C /* Renderer.h in Headers */,
 				C9FBF4D114E15B27008359C3 /* Cache.h in Headers */,
 			);
@@ -280,10 +280,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D14BDFAE192210370085027D /* Font.cpp in Sources */,
 				C9AE31E9135D6FD4006B491A /* atres.cpp in Sources */,
-				7F46F93C13CD9F94002A143C /* FontResource.cpp in Sources */,
-				7F46F93D13CD9F94002A143C /* FontResourceBitmap.cpp in Sources */,
 				7F46F93E13CD9F94002A143C /* Renderer.cpp in Sources */,
+				D14BDFB1192210370085027D /* FontBitmap.cpp in Sources */,
 				C9FBF4D314E15B27008359C3 /* Utility.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -292,10 +292,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1981D2F140F90BC0057C3AF /* FontResource.cpp in Sources */,
-				D1981D30140F90BC0057C3AF /* FontResourceBitmap.cpp in Sources */,
+				D14BDFB0192210370085027D /* Font.cpp in Sources */,
 				D1981D31140F90BC0057C3AF /* Renderer.cpp in Sources */,
 				D1981D32140F90BC0057C3AF /* atres.cpp in Sources */,
+				D14BDFB3192210370085027D /* FontBitmap.cpp in Sources */,
 				C9FBF4D414E15B27008359C3 /* Utility.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -304,10 +304,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1F27B09177A2F1A00E5C131 /* FontResource.cpp in Sources */,
-				D1F27B0A177A2F1A00E5C131 /* FontResourceBitmap.cpp in Sources */,
+				D14BDFAF192210370085027D /* Font.cpp in Sources */,
 				D1F27B0B177A2F1A00E5C131 /* Renderer.cpp in Sources */,
 				D1F27B0C177A2F1A00E5C131 /* atres.cpp in Sources */,
+				D14BDFB2192210370085027D /* FontBitmap.cpp in Sources */,
 				D1F27B0D177A2F1A00E5C131 /* Utility.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
