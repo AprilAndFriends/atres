@@ -6,9 +6,6 @@
       <DisableLanguageExtensions>true</DisableLanguageExtensions>
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
-    <Lib>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-    </Lib>
     <ResourceCompile>
       <PreprocessorDefinitions Condition="'$(WholeProgramOptimization)'!='true'">_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(WholeProgramOptimization)'=='true'">NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
