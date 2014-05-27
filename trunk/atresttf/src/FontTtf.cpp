@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.41
 /// 
 /// @section LICENSE
 /// 
@@ -106,6 +106,7 @@ namespace atresttf
 
 	FontTtf::~FontTtf()
 	{
+		atresttf::destroyFace(this);
 		if (this->fontFile != NULL)
 		{
 			delete [] this->fontFile;
@@ -230,7 +231,7 @@ namespace atresttf
 		{
 			this->descender = -(float)PTSIZE2INT(face->size->metrics.descender);
 		}
-		atresttf::addFace(this, face);
+		atresttf::registerFace(this, face);
 		this->_loadBasicCharacters();
 		this->loaded = true;
 	}
