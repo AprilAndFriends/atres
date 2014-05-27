@@ -62,6 +62,21 @@
   <Import Project="..\..\..\..\hltypes\msvc\vs2013\props-generic\build-defaults.props" />
   <Import Project="props\configuration.props" />
   <ItemGroup>
+    <ClInclude Include="..\..\include\atresttf\atresttf.h" />
+    <ClInclude Include="..\..\include\atresttf\atresttfExport.h" />
+    <ClInclude Include="..\..\include\atresttf\FontTtf.h" />
+    <ClInclude Include="..\..\src\freetype.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\atresttf.cpp" />
+    <ClCompile Include="..\..\src\FontTtf.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\fileproperties.rc">
+      <ExcludedFromBuild Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86' or '$(ConfigurationType)'=='StaticLibrary'">true</ExcludedFromBuild>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\..\april\msvc\vs2013\libapril.vcxproj">
       <Project>{2d053cda-686b-4b36-80eb-1da5f0cef8f9}</Project>
       <CopyLocal>false</CopyLocal>
@@ -94,16 +109,6 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\include\atresttf\atresttf.h" />
-    <ClInclude Include="..\..\include\atresttf\atresttfExport.h" />
-    <ClInclude Include="..\..\include\atresttf\FontTtf.h" />
-    <ClInclude Include="..\..\src\freetype.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\atresttf.cpp" />
-    <ClCompile Include="..\..\src\FontTtf.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
