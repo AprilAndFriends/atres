@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.41
 /// 
 /// @section LICENSE
 /// 
@@ -158,7 +158,7 @@ namespace atresttf
 		return faces[font];
 	}
 
-	void addFace(atres::Font* font, FT_Face face)
+	void registerFace(atres::Font* font, FT_Face face)
 	{
 		if (faces.has_key(font))
 		{
@@ -168,13 +168,14 @@ namespace atresttf
 		faces[font] = face;
 	}
 
-	void removeFace(atres::Font* font, FT_Face face)
+	void destroyFace(atres::Font* font)
 	{
 		if (!faces.has_key(font))
 		{
-			hlog::error(atresttf::logTag, "Cannot remove Face for Font: " + font->getName());
+			hlog::warn(atresttf::logTag, "No Face registered for Font: " + font->getName());
 			return;
 		}
+		FT_Done_Face(faces[font]);
 		faces.remove_key(font);
 	}
 

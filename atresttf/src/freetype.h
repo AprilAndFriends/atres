@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.41
 /// 
 /// @section LICENSE
 /// 
@@ -8,7 +8,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines all functions for Atres TTF.
+/// Defines all freetype-related utility functions.
 
 #ifndef ATRESTTF_FREETYPE_H
 #define ATRESTTF_FREETYPE_H
@@ -24,8 +24,8 @@ namespace atresttf
 {
 	FT_Library getLibrary();
 	FT_Face getFace(atres::Font* font);
-	void addFace(atres::Font* font, FT_Face face);
-	void removeFace(atres::Font* font, FT_Face face);
+	void registerFace(atres::Font* font, FT_Face face);
+	void destroyFace(atres::Font* font);
 
 	extern FT_Library library;
 	extern hmap<atres::Font*, FT_Face> faces;
