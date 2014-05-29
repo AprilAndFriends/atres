@@ -456,6 +456,7 @@
 					"${SRCROOT}/../../hltypes/include",
 					"${SRCROOT}/../../april/include",
 					"${SRCROOT}/../../freetype/include",
+					"${SRCROOT}/../lib/freetype/include",
 					"${SRCROOT}/../include",
 				);
 				PRODUCT_NAME = atresttf;
@@ -493,6 +494,7 @@
 					"${SRCROOT}/../../hltypes/include",
 					"${SRCROOT}/../../april/include",
 					"${SRCROOT}/../../freetype/include",
+					"${SRCROOT}/../lib/freetype/include",
 					"${SRCROOT}/../include",
 				);
 				ONLY_ACTIVE_ARCH = YES;
@@ -531,6 +533,7 @@
 					"${SRCROOT}/../../hltypes/include",
 					"${SRCROOT}/../../april/include",
 					"${SRCROOT}/../../freetype/include",
+					"${SRCROOT}/../lib/freetype/include",
 					"${SRCROOT}/../include",
 				);
 				PRODUCT_NAME = atresttf;
