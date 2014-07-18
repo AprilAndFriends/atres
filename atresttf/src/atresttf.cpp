@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.41
+/// @version 3.42
 /// 
 /// @section LICENSE
 /// 
@@ -56,7 +56,11 @@ namespace atresttf
 		}
 		faces.clear();
 		FT_Error error = FT_Done_FreeType(library);
-		if (error != 0)
+		if (error == 0)
+		{
+			library = NULL;
+		}
+		else
 		{
 			hlog::error(atresttf::logTag, "Could not finalize FreeType library!");
 		}
