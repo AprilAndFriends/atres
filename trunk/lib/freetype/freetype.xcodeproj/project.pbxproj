@@ -928,7 +928,10 @@
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "${SRCROOT}/include";
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/include",
+					"${SRCROOT}/include/freetype",
+				);
 				PRODUCT_NAME = freetype;
 			};
 			name = "App Store";
@@ -953,7 +956,10 @@
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "${SRCROOT}/include";
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/include",
+					"${SRCROOT}/include/freetype",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = freetype;
 			};
@@ -981,7 +987,10 @@
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "${SRCROOT}/include";
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/include",
+					"${SRCROOT}/include/freetype",
+				);
 				PRODUCT_NAME = freetype;
 			};
 			name = Release;
