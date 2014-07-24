@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.41
 /// 
 /// @section LICENSE
 /// 
@@ -24,7 +24,7 @@
 #include "Font.h"
 
 #define ALIGNMENT_IS_WRAPPED(formatting) ((formatting) == LEFT_WRAPPED || (formatting) == CENTER_WRAPPED || (formatting) == RIGHT_WRAPPED || (formatting) == JUSTIFIED)
-#define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED)
+#define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED || (formatting) == JUSTIFIED && this->useIdeographWords)
 
 #define IS_IDEOGRAPH(code) \
 	( \
@@ -362,15 +362,16 @@ namespace atres
 	
 /******* ANALYZE TEXT **************************************************/
 
-	void Renderer::analyzeText(chstr text)
+	void Renderer::analyzeText(chstr fontName, chstr text)
 	{
 		// makes sure dynamically allocated characters are loaded
 		std::basic_string<unsigned int> chars = text.u_str();
-		foreach_m (Font*, it, this->fonts)
+		Font* font = this->getFont(fontName);
+		if (font != NULL)
 		{
 			for_itert (unsigned int, i, 0, chars.size())
 			{
-				it->second->hasChar(chars[i]);
+				font->hasChar(chars[i]);
 			}
 		}
 	}
@@ -557,7 +558,7 @@ namespace atres
 			return lines;
 		}
 		float ox = 0.0f;
-		if (horizontal != JUSTIFIED)
+		if (horizontal != JUSTIFIED || this->useIdeographWords) // ideograph-words does not support justified
 		{
 			// horizontal correction
 			foreach (RenderLine, it, lines)
@@ -1103,7 +1104,7 @@ namespace atres
 	harray<RenderLine> Renderer::createRenderLines(grect rect, chstr text, harray<FormatTag> tags,
 		Alignment horizontal, Alignment vertical, gvec2 offset, bool keepWrappedSpaces)
 	{
-		this->analyzeText(text);
+		this->analyzeText(tags.first().data, text); // by convention, the first tag is the font name
 		harray<RenderWord> words = this->createRenderWords(rect, text, tags);
 		this->_initializeLineProcessing();
 
@@ -1410,10 +1411,10 @@ namespace atres
 			FormatTag tag;
 			tag.type = TAG_TYPE_COLOR;
 			tag.data = color.hex();
-			tags.push_front(tag);
+			tags.push_first(tag);
 			tag.type = TAG_TYPE_FONT;
 			tag.data = fontName;
-			tags.push_front(tag);
+			tags.push_first(tag);
 			this->_lines = this->createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
 			this->_cacheEntryText.value = this->createRenderText(rect, this->_lines, tags);
 			this->cache->add(this->_cacheEntryText);
@@ -1437,10 +1438,10 @@ namespace atres
 			FormatTag tag;
 			tag.type = TAG_TYPE_COLOR;
 			tag.data = color.hex();
-			tags.push_front(tag);
+			tags.push_first(tag);
 			tag.type = TAG_TYPE_FONT;
 			tag.data = fontName;
-			tags.push_front(tag);
+			tags.push_first(tag);
 			this->_lines = this->createRenderLines(rect, text, tags, horizontal, vertical, offset);
 			this->_cacheEntryText.value = this->createRenderText(rect, this->_lines, tags);
 			this->cacheUnformatted->add(this->_cacheEntryText);
@@ -1617,7 +1618,7 @@ namespace atres
 		FormatTag tag;
 		tag.type = TAG_TYPE_FONT;
 		tag.data = fontName;
-		tags.push_front(tag);
+		tags.push_first(tag);
 		return unformattedText;
 	}
 	
@@ -1627,7 +1628,7 @@ namespace atres
 		FormatTag tag;
 		tag.type = TAG_TYPE_FONT;
 		tag.data = fontName;
-		tags.push_front(tag);
+		tags.push_first(tag);
 		return tags;
 	}
 	
@@ -1645,7 +1646,7 @@ namespace atres
 
 	RenderLine Renderer::_calculateFittingLine(grect rect, chstr text, harray<FormatTag> tags)
 	{
-		this->analyzeText(text);
+		this->analyzeText(tags.first().data, text);
 		this->_initializeFormatTags(tags);
 		int actualSize = text.find_first_of('\0');
 		if (actualSize < 0)
