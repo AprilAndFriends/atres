@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.41
 /// 
 /// @section LICENSE
 /// 
@@ -65,7 +65,7 @@ namespace atres
 		Font* getFont(chstr name);
 		void addColor(chstr key, chstr value);
 
-		void analyzeText(chstr text);
+		void analyzeText(chstr fontName, chstr text);
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
 		harray<RenderLine> removeOutOfBoundLines(grect rect, harray<RenderLine> lines);
 		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight, float offsetY);
