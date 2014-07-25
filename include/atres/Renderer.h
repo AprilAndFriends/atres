@@ -49,9 +49,12 @@ namespace atres
 		HL_DEFINE_GET(bool, useLegacyLineBreakParsing, UseLegacyLineBreakParsing);
 		void setUseLegacyLineBreakParsing(bool value);
 		/// @brief When turned on, this regards ideographs as words when segmenting text into lines.
-		/// @note This is particularly useful when having Japanese or Chinese text. Korean text has actual spaces so this is not necessary.
+		/// @note This is particularly useful when having Japanese or Chinese text. Korean text has actual spaces so this is not necessary, but still useful.
 		HL_DEFINE_GET(bool, useIdeographWords, UseIdeographWords);
 		void setUseIdeographWords(bool value);
+		/// @brief When turned off, this turns justified text into left_wrapped. This is to counter languages with problematic characters.
+		HL_DEFINE_GET(bool, justifiedEnabled, JustifiedEnabled);
+		void setJustifiedEnabled(bool value);
 		void setDefaultFont(chstr name);
 		bool hasFont(chstr name);
 		void setCacheSize(int value);
@@ -124,6 +127,7 @@ namespace atres
 		bool globalOffsets;
 		bool useLegacyLineBreakParsing;
 		bool useIdeographWords;
+		bool justifiedEnabled;
 		Cache<CacheEntryText>* cache;
 		Cache<CacheEntryText>* cacheUnformatted;
 		Cache<CacheEntryLine>* cacheLines;

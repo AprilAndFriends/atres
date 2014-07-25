@@ -24,7 +24,7 @@
 #include "Font.h"
 
 #define ALIGNMENT_IS_WRAPPED(formatting) ((formatting) == LEFT_WRAPPED || (formatting) == CENTER_WRAPPED || (formatting) == RIGHT_WRAPPED || (formatting) == JUSTIFIED)
-#define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED || (formatting) == JUSTIFIED && this->useIdeographWords)
+#define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED || (formatting) == JUSTIFIED && !this->justifiedEnabled)
 
 #define IS_IDEOGRAPH(code) \
 	( \
@@ -129,6 +129,7 @@ namespace atres
 		this->globalOffsets = false;
 		this->useLegacyLineBreakParsing = false;
 		this->useIdeographWords = false;
+		this->justifiedEnabled = true;
 		this->defaultFont = NULL;
 		// misc init
 		this->_font = NULL;
@@ -198,6 +199,15 @@ namespace atres
 		if (this->useIdeographWords != value)
 		{
 			this->useIdeographWords = value;
+			this->clearCache();
+		}
+	}
+
+	void Renderer::setJustifiedEnabled(bool value)
+	{
+		if (this->justifiedEnabled != value)
+		{
+			this->justifiedEnabled = value;
 			this->clearCache();
 		}
 	}
@@ -558,7 +568,7 @@ namespace atres
 			return lines;
 		}
 		float ox = 0.0f;
-		if (horizontal != JUSTIFIED || this->useIdeographWords) // ideograph-words does not support justified
+		if (horizontal != JUSTIFIED || !this->justifiedEnabled)
 		{
 			// horizontal correction
 			foreach (RenderLine, it, lines)
