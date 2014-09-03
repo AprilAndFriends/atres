@@ -225,6 +225,12 @@ namespace atres
 			this->clearCache();
 		}
 	}
+	
+	hstr Renderer::getDefaultFont()
+	{
+		if (this->defaultFont == NULL) return "";
+		return this->defaultFont->getName();
+	}
 
 	bool Renderer::hasFont(chstr name)
 	{

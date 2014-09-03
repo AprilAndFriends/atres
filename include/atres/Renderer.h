@@ -56,6 +56,7 @@ namespace atres
 		HL_DEFINE_GET(bool, justifiedEnabled, JustifiedEnabled);
 		void setJustifiedEnabled(bool value);
 		void setDefaultFont(chstr name);
+		hstr getDefaultFont();
 		bool hasFont(chstr name);
 		void setCacheSize(int value);
 
