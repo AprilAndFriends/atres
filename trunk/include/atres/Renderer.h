@@ -67,6 +67,8 @@ namespace atres
 		void unregisterFont(Font* font);
 		void registerFontAlias(chstr name, chstr alias);
 		Font* getFont(chstr name);
+		
+		const hmap<hstr, Font*>& getFonts() const { return this->fonts; }
 		void addColor(chstr key, chstr value);
 
 		void analyzeText(chstr fontName, chstr text);
