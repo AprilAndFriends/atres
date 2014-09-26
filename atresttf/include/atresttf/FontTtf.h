@@ -33,8 +33,8 @@ namespace atresttf
 		FontTtf(chstr filename, bool loadBasicAscii = true);
 		FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight = 0.0f, bool loadBasicAscii = true);
 		FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii);
-		FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight = 0.0f, bool loadBasicAscii = true);
-		FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii);
+		DEPRECATED_ATTRIBUTE FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight = 0.0f, bool loadBasicAscii = true);
+		DEPRECATED_ATTRIBUTE FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii);
 		
 		~FontTtf();
 
@@ -42,14 +42,28 @@ namespace atresttf
 		april::Texture* getTexture(unsigned int charCode);
 		bool hasChar(unsigned int charCode);
 
+		DEPRECATED_ATTRIBUTE FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight = 0.0f, bool loadBasicAscii = true) : atres::Font(name)
+		{
+			this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
+			this->fontStream.write_raw(data, dataSize);
+			this->_initializeFont();
+		}
+		DEPRECATED_ATTRIBUTE FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii) : atres::Font(name)
+		{
+			this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
+			this->descender = descender;
+			this->customDescender = true;
+			this->fontStream.write_raw(data, dataSize);
+			this->_initializeFont();
+		}
+
 	protected:
 		int penX;
 		int penY;
 		int rowHeight;
-		int fontDataSize;
 		hstr fontFilename;
+		hstream fontStream;
 		bool loadBasicAscii;
-		unsigned char* fontFile;
 
 		void _setInternalValues(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii);
 
