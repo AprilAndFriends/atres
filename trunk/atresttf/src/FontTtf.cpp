@@ -34,8 +34,6 @@ namespace atresttf
 		this->penX = 0;
 		this->penY = 0;
 		this->rowHeight = 0;
-		this->fontFile = NULL;
-		this->fontDataSize = 0;
 		this->loadBasicAscii = loadBasicAscii;
 		hstr path = hrdir::basedir(filename);
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
@@ -58,8 +56,6 @@ namespace atresttf
 		float lineHeight, bool loadBasicAscii) : atres::Font(name)
 	{
 		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii);
-		this->fontFile = NULL;
-		this->fontDataSize = 0;
 		this->_initializeFont();
 	}
 	
@@ -69,30 +65,24 @@ namespace atresttf
 		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii);
 		this->descender = descender;
 		this->customDescender = true;
-		this->fontFile = NULL;
-		this->fontDataSize = 0;
 		this->_initializeFont();
 	}
 	
-	FontTtf::FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale,
+	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale,
 		float lineHeight, bool loadBasicAscii) : atres::Font(name)
 	{
 		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
-		this->fontFile = new unsigned char[dataSize];
-		memcpy(this->fontFile, data, dataSize);
-		this->fontDataSize = dataSize;
+		this->fontStream.write_raw(stream);
 		this->_initializeFont();
 	}
 
-	FontTtf::FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale,
+	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale,
 		float lineHeight, float descender, bool loadBasicAscii) : atres::Font(name)
 	{
 		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
 		this->descender = descender;
 		this->customDescender = true;
-		this->fontFile = new unsigned char[dataSize];
-		memcpy(this->fontFile, data, dataSize);
-		this->fontDataSize = dataSize;
+		this->fontStream.write_raw(stream);
 		this->_initializeFont();
 	}
 
@@ -115,10 +105,6 @@ namespace atresttf
 	FontTtf::~FontTtf()
 	{
 		atresttf::destroyFace(this);
-		if (this->fontFile != NULL)
-		{
-			delete [] this->fontFile;
-		}
 	}
 
 	april::Texture* FontTtf::getTexture(unsigned int charCode)
@@ -159,8 +145,7 @@ namespace atresttf
 	
 	void FontTtf::_initializeFont()
 	{
-		int size = this->fontDataSize;
-		if (this->fontDataSize == 0)
+		if (this->fontStream.size() == 0)
 		{
 			if (this->fontFilename == "")
 			{
@@ -183,44 +168,31 @@ namespace atresttf
 		// libfreetype stuff
 		FT_Library library = atresttf::getLibrary();
 		FT_Face face = NULL;
-		if (this->fontDataSize == 0)
+		if (this->fontStream.size() == 0)
 		{
-			if (this->fontFile != NULL) // making sure there are no memory leaks whatsoever
-			{
-				delete [] this->fontFile;
-				this->fontFile = NULL;
-			}
+			this->fontStream.clear();
 			if (hresource::exists(this->fontFilename)) // prefer local fonts
 			{
 				hresource file(this->fontFilename);
-				size = file.size();
-				this->fontFile = new unsigned char[size];
-				file.read_raw(this->fontFile, size);
-				file.close();
+				this->fontStream.write_raw(file);
 			}
 			else
 			{
 				hfile file(this->fontFilename);
-				size = file.size();
-				this->fontFile = new unsigned char[size];
-				file.read_raw(this->fontFile, size);
-				file.close();
+				this->fontStream.write_raw(file);
 			}
-			this->fontDataSize = size;
 		}
-		FT_Error error = FT_New_Memory_Face(library, this->fontFile, size, 0, &face);
+		FT_Error error = FT_New_Memory_Face(library, &this->fontStream[0], this->fontStream.size(), 0, &face);
 		if (error == FT_Err_Unknown_File_Format)
 		{
 			hlog::error(atresttf::logTag, "Format not supported in: " + this->fontFilename);
-			delete [] this->fontFile;
-			this->fontFile = NULL;
+			this->fontStream.clear();
 			return;
 		}
 		if (error != 0)
 		{
 			hlog::error(atresttf::logTag, "Could not read face 0 in: " + this->fontFilename + "; Error code: " + hstr(error));
-			delete [] this->fontFile;
-			this->fontFile = NULL;
+			this->fontStream.clear();
 			return;
 		}
 		FT_Size_RequestRec request;
@@ -231,8 +203,7 @@ namespace atresttf
 		if (error != 0)
 		{
 			hlog::error(atresttf::logTag, "Could not set font size in: " + this->fontFilename);
-			delete [] this->fontFile;
-			this->fontFile = NULL;
+			this->fontStream.clear();
 			FT_Done_Face(face);
 			return;
 		}
