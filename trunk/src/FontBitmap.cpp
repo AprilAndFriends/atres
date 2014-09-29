@@ -81,7 +81,7 @@ namespace atres
 			c.by = 0.0f;
 			c.aw = 0.0f;
 			data = (*it).split(" ", -1, true);
-			if (is_between(data.size(), minAttribute, maxAttribute))
+			if (is_between_ii(data.size(), minAttribute, maxAttribute))
 			{
 				code = (unsigned int)data.remove_first();
 				if (multiTexture)
