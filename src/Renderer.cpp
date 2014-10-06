@@ -74,6 +74,8 @@
 #define EFFECT_MODE_SHADOW 1
 #define EFFECT_MODE_BORDER 2
 
+#define CHECK_RECT_SIZE 100000.0f
+
 namespace atres
 {
 	Renderer* renderer;
@@ -1551,7 +1553,7 @@ namespace atres
 				harray<hstr> lines = unformattedText.split('\n', -1, true);
 				foreach (hstr, it, lines)
 				{
-					w = hmax(w, this->getFittingLine(fontName, grect(0.0f, 0.0f, 100000.0f, 1.0f), (*it), tags).rect.w);
+					w = hmax(w, this->getFittingLine(fontName, grect(0.0f, 0.0f, CHECK_RECT_SIZE, 1.0f), (*it), tags).rect.w);
 				}
 				return w;
 			}
@@ -1567,7 +1569,7 @@ namespace atres
 			hstr unformattedText = this->prepareFormatting(fontName, text, tags);
 			if (unformattedText != "")
 			{
-				harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, 100000.0f), unformattedText, tags, LEFT_WRAPPED, TOP);
+				harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, CHECK_RECT_SIZE), unformattedText, tags, LEFT_WRAPPED, TOP);
 				Font* font = this->getFont(fontName);
 				return (lines.size() * font->getLineHeight() + font->getDescender());
 			}
@@ -1596,7 +1598,7 @@ namespace atres
 			harray<FormatTag> tags = this->prepareTags(fontName);
 			float w = 0.0f;
 			harray<hstr> lines = text.split('\n', -1, true);
-			grect rect(0.0f, 0.0f, 100000.0f, 1.0f);
+			grect rect(0.0f, 0.0f, CHECK_RECT_SIZE, 1.0f);
 			foreach (hstr, it, lines)
 			{
 				w = hmax(w, this->getFittingLine(fontName, rect, (*it), tags).rect.w);
@@ -1611,7 +1613,7 @@ namespace atres
 		if (text != "" && maxWidth > 0.0f)
 		{
 			harray<FormatTag> tags = this->prepareTags(fontName);
-			harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, 100000.0f), text, tags, LEFT_WRAPPED, TOP);
+			harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, CHECK_RECT_SIZE), text, tags, LEFT_WRAPPED, TOP);
 			Font* font = this->getFont(fontName);
 			return (lines.size() * font->getLineHeight() + font->getDescender());
 		}
