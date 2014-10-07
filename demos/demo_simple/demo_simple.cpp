@@ -147,7 +147,7 @@ public:
 	UpdateDelegate() : april::UpdateDelegate(), time(0.0f)
 	{
 	}
-
+	
 	bool onUpdate(float timeSinceLastFrame)
 	{
 		this->time += timeSinceLastFrame;
@@ -155,7 +155,7 @@ public:
 		// rendering
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(viewport);
-		april::rendersys->drawFilledRect(viewport, april::Color(128, 128, 0));
+		april::rendersys->drawFilledRect(viewport, april::Color::DarkGrey);
 		// backgrounds
 		april::rendersys->drawFilledRect(textArea0, backgroundColor);
 		april::rendersys->drawFilledRect(textArea1, backgroundColor);
