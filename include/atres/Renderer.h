@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.41
+/// @version 3.42
 /// 
 /// @section LICENSE
 /// 
@@ -89,7 +89,11 @@ namespace atres
 			Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
 		void drawTextUnformatted(grect rect, chstr text, Alignment horizontal = LEFT,
 			Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
-	
+		harray<RenderLine> makeRenderLines(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT,
+			Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
+		harray<RenderLine> makeRenderLinesUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT,
+			Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
+
 		DEPRECATED_ATTRIBUTE void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
 		DEPRECATED_ATTRIBUTE void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
 		DEPRECATED_ATTRIBUTE void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, gvec2 offset = gvec2());

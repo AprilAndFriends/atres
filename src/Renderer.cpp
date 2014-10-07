@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.41
+/// @version 3.42
 /// 
 /// @section LICENSE
 /// 
@@ -1416,6 +1416,20 @@ namespace atres
 	void Renderer::drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
 		gvec2 offset)
 	{
+		this->makeRenderLines(fontName, rect, text, horizontal, vertical, color, offset);
+		this->_drawRenderText(this->_cacheEntryText.value, color);
+	}
+
+	void Renderer::drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
+		april::Color color, gvec2 offset)
+	{
+		this->makeRenderLinesUnformatted(fontName, rect, text, horizontal, vertical, color, offset);
+		this->_drawRenderText(this->_cacheEntryText.value, color);
+	}
+
+	harray<RenderLine> Renderer::makeRenderLines(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
+		gvec2 offset)
+	{
 		this->_cacheEntryText.set(text, fontName, rect, horizontal, vertical, color, offset);
 		bool found = this->cache->get(this->_cacheEntryText);
 		if (found)
@@ -1433,15 +1447,16 @@ namespace atres
 			tag.type = TAG_TYPE_FONT;
 			tag.data = fontName;
 			tags.push_first(tag);
-			this->_lines = this->createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
+			harray<RenderLine> lines = this->_lines = this->createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
 			this->_cacheEntryText.value = this->createRenderText(rect, this->_lines, tags);
+			this->_cacheEntryText.value.lines = lines;
 			this->cache->add(this->_cacheEntryText);
 			this->cache->update();
 		}
-		this->_drawRenderText(this->_cacheEntryText.value, color);
+		return this->_cacheEntryText.value.lines;
 	}
 
-	void Renderer::drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
+	harray<RenderLine> Renderer::makeRenderLinesUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
 		april::Color color, gvec2 offset)
 	{
 		this->_cacheEntryText.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
@@ -1460,12 +1475,13 @@ namespace atres
 			tag.type = TAG_TYPE_FONT;
 			tag.data = fontName;
 			tags.push_first(tag);
-			this->_lines = this->createRenderLines(rect, text, tags, horizontal, vertical, offset);
+			harray<RenderLine> lines = this->_lines = this->createRenderLines(rect, text, tags, horizontal, vertical, offset);
 			this->_cacheEntryText.value = this->createRenderText(rect, this->_lines, tags);
+			this->_cacheEntryText.value.lines = lines;
 			this->cacheUnformatted->add(this->_cacheEntryText);
 			this->cacheUnformatted->update();
 		}
-		this->_drawRenderText(this->_cacheEntryText.value, color);
+		return this->_cacheEntryText.value.lines;
 	}
 
 /******* DRAW TEXT OVERLOADS *******************************************/

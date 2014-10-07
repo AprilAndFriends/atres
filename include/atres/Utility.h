@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.42
 /// 
 /// @section LICENSE
 /// 
@@ -89,13 +89,6 @@ namespace atres
 		void addRenderRectangle(RenderRectangle rect);
 	};
 	
-	struct RenderText
-	{
-		harray<RenderSequence> textSequences;
-		harray<RenderSequence> shadowSequences;
-		harray<RenderSequence> borderSequences;
-	};
-
 	struct RenderWord
 	{
 		hstr text;
@@ -122,6 +115,14 @@ namespace atres
 		RenderLine();
 	};
 	
+	struct RenderText
+	{
+		harray<RenderLine> lines;
+		harray<RenderSequence> textSequences;
+		harray<RenderSequence> shadowSequences;
+		harray<RenderSequence> borderSequences;
+	};
+
 	struct FormatTag
 	{
 		FormatTagType type;
