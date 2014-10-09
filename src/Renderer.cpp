@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.42
+/// @version 3.43
 /// 
 /// @section LICENSE
 /// 
@@ -136,17 +136,21 @@ namespace atres
 		// misc init
 		this->_font = NULL;
 		// cache
-		this->cache = new Cache<CacheEntryText>();
-		this->cacheUnformatted = new Cache<CacheEntryText>();
-		this->cacheLines = new Cache<CacheEntryLine>();
+		this->cacheText = new Cache<CacheEntryText>();
+		this->cacheTextUnformatted = new Cache<CacheEntryText>();
+		this->cacheLines = new Cache<CacheEntryLines>();
+		this->cacheLinesUnformatted = new Cache<CacheEntryLines>();
+		this->cacheLine = new Cache<CacheEntryLine>();
 	}
 
 	Renderer::~Renderer()
 	{
 		this->destroyAllFonts();
-		delete this->cache;
-		delete this->cacheUnformatted;
+		delete this->cacheText;
+		delete this->cacheTextUnformatted;
 		delete this->cacheLines;
+		delete this->cacheLinesUnformatted;
+		delete this->cacheLine;
 	}
 
 /******* PROPERTIES ****************************************************/
@@ -241,9 +245,11 @@ namespace atres
 	
 	void Renderer::setCacheSize(int value)
 	{
-		this->cache->setMaxSize(value);
-		this->cacheUnformatted->setMaxSize(value);
+		this->cacheText->setMaxSize(value);
+		this->cacheTextUnformatted->setMaxSize(value);
 		this->cacheLines->setMaxSize(value);
+		this->cacheLinesUnformatted->setMaxSize(value);
+		this->cacheLine->setMaxSize(value);
 	}
 	
 /******* FONT **********************************************************/
@@ -354,27 +360,39 @@ namespace atres
 	
 	void Renderer::_updateCache()
 	{
-		this->cache->update();
-		this->cacheUnformatted->update();
+		this->cacheText->update();
+		this->cacheTextUnformatted->update();
 		this->cacheLines->update();
+		this->cacheLinesUnformatted->update();
+		this->cacheLine->update();
 	}
 	
 	void Renderer::clearCache()
 	{
-		if (this->cache->size() > 0)
+		if (this->cacheText->size() > 0)
 		{
-			hlog::writef(atres::logTag, "Clearing %d text cache entries...", this->cache->size());
-			this->cache->clear();
+			hlog::writef(atres::logTag, "Clearing %d text cache entries...", this->cacheText->size());
+			this->cacheText->clear();
 		}
-		if (this->cacheUnformatted->size() > 0)
+		if (this->cacheTextUnformatted->size() > 0)
 		{
-			hlog::writef(atres::logTag, "Clearing %d unformatted text cache entries...", this->cacheUnformatted->size());
-			this->cacheUnformatted->clear();
+			hlog::writef(atres::logTag, "Clearing %d unformatted text cache entries...", this->cacheTextUnformatted->size());
+			this->cacheTextUnformatted->clear();
 		}
 		if (this->cacheLines->size() > 0)
 		{
-			hlog::writef(atres::logTag, "Clearing %d line calculation cache entries...", this->cacheLines->size());
+			hlog::writef(atres::logTag, "Clearing %d lines cache entries...", this->cacheLines->size());
 			this->cacheLines->clear();
+		}
+		if (this->cacheLinesUnformatted->size() > 0)
+		{
+			hlog::writef(atres::logTag, "Clearing %d unformatted lines cache entries...", this->cacheLinesUnformatted->size());
+			this->cacheLinesUnformatted->clear();
+		}
+		if (this->cacheLine->size() > 0)
+		{
+			hlog::writef(atres::logTag, "Clearing %d line calculation cache entries...", this->cacheLine->size());
+			this->cacheLine->clear();
 		}
 	}
 	
@@ -1390,7 +1408,7 @@ namespace atres
 		{
 			if (!(*it).texture->isLoaded())
 			{
-				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
+				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cacheText
 				return false;
 			}
 		}
@@ -1398,7 +1416,7 @@ namespace atres
 		{
 			if (!(*it).texture->isLoaded())
 			{
-				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
+				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cacheText
 				return false;
 			}
 		}
@@ -1406,7 +1424,7 @@ namespace atres
 		{
 			if (!(*it).texture->isLoaded())
 			{
-				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cache
+				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cacheText
 				return false;
 			}
 		}
@@ -1416,75 +1434,107 @@ namespace atres
 	void Renderer::drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
 		gvec2 offset)
 	{
-		this->makeRenderLines(fontName, rect, text, horizontal, vertical, color, offset);
+		this->_cacheEntryText.set(text, fontName, rect, horizontal, vertical, color, offset);
+		if (!this->cacheText->get(this->_cacheEntryText) || !this->_checkTextures())
+		{
+			hstr unformattedText = text;
+			harray<FormatTag> tags = this->_makeDefaultTags(color, fontName, unformattedText);
+			this->_cacheEntryLines.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
+			if (this->cacheLines->get(this->_cacheEntryLines))
+			{
+				this->_lines = this->_cacheEntryLines.value;
+			}
+			else
+			{
+				this->_lines = this->createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
+			}
+			this->_cacheEntryText.value = this->createRenderText(rect, this->_lines, tags);
+			this->cacheText->add(this->_cacheEntryText);
+			this->cacheText->update();
+		}
 		this->_drawRenderText(this->_cacheEntryText.value, color);
 	}
 
 	void Renderer::drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
 		april::Color color, gvec2 offset)
 	{
-		this->makeRenderLinesUnformatted(fontName, rect, text, horizontal, vertical, color, offset);
+		this->_cacheEntryText.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
+		if (!this->cacheTextUnformatted->get(this->_cacheEntryText) || !this->_checkTextures())
+		{
+			harray<FormatTag> tags = this->_makeDefaultTagsUnformatted(color, fontName);
+			this->_cacheEntryLines.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
+			if (this->cacheLinesUnformatted->get(this->_cacheEntryLines))
+			{
+				this->_lines = this->_cacheEntryLines.value;
+			}
+			else
+			{
+				this->_lines = this->createRenderLines(rect, text, tags, horizontal, vertical, offset);
+			}
+			this->_cacheEntryText.value = this->createRenderText(rect, this->_lines, tags);
+			this->cacheTextUnformatted->add(this->_cacheEntryText);
+			this->cacheTextUnformatted->update();
+		}
 		this->_drawRenderText(this->_cacheEntryText.value, color);
 	}
 
 	harray<RenderLine> Renderer::makeRenderLines(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
 		gvec2 offset)
 	{
-		this->_cacheEntryText.set(text, fontName, rect, horizontal, vertical, color, offset);
-		bool found = this->cache->get(this->_cacheEntryText);
-		if (found)
+		this->_cacheEntryLines.set(text, fontName, rect, horizontal, vertical, color, offset);
+		if (!this->cacheLines->get(this->_cacheEntryLines))
 		{
-			found = this->_checkTextures();
+			hstr unformattedText = text;
+			harray<FormatTag> tags = this->_makeDefaultTags(color, fontName, unformattedText);
+			this->_cacheEntryLines.value = this->createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
+			this->cacheLines->add(this->_cacheEntryLines);
+			this->cacheLines->update();
 		}
-		if (!found)
-		{
-			harray<FormatTag> tags;
-			hstr unformattedText = this->analyzeFormatting(text, tags);
-			FormatTag tag;
-			tag.type = TAG_TYPE_COLOR;
-			tag.data = color.hex();
-			tags.push_first(tag);
-			tag.type = TAG_TYPE_FONT;
-			tag.data = fontName;
-			tags.push_first(tag);
-			harray<RenderLine> lines = this->_lines = this->createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
-			this->_cacheEntryText.value = this->createRenderText(rect, this->_lines, tags);
-			this->_cacheEntryText.value.lines = lines;
-			this->cache->add(this->_cacheEntryText);
-			this->cache->update();
-		}
-		return this->_cacheEntryText.value.lines;
+		return this->_cacheEntryLines.value;
 	}
 
 	harray<RenderLine> Renderer::makeRenderLinesUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
 		april::Color color, gvec2 offset)
 	{
-		this->_cacheEntryText.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
-		bool found = this->cacheUnformatted->get(this->_cacheEntryText);
-		if (found)
+		this->_cacheEntryLines.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
+		if (!this->cacheLinesUnformatted->get(this->_cacheEntryLines))
 		{
-			found = this->_checkTextures();
+			harray<FormatTag> tags = this->_makeDefaultTagsUnformatted(color, fontName);
+			this->_cacheEntryLines.value = this->createRenderLines(rect, text, tags, horizontal, vertical, offset);
+			this->cacheLinesUnformatted->add(this->_cacheEntryLines);
+			this->cacheLinesUnformatted->update();
 		}
-		if (!found)
-		{
-			harray<FormatTag> tags;
-			FormatTag tag;
-			tag.type = TAG_TYPE_COLOR;
-			tag.data = color.hex();
-			tags.push_first(tag);
-			tag.type = TAG_TYPE_FONT;
-			tag.data = fontName;
-			tags.push_first(tag);
-			harray<RenderLine> lines = this->_lines = this->createRenderLines(rect, text, tags, horizontal, vertical, offset);
-			this->_cacheEntryText.value = this->createRenderText(rect, this->_lines, tags);
-			this->_cacheEntryText.value.lines = lines;
-			this->cacheUnformatted->add(this->_cacheEntryText);
-			this->cacheUnformatted->update();
-		}
-		return this->_cacheEntryText.value.lines;
+		return this->_cacheEntryLines.value;
 	}
 
-/******* DRAW TEXT OVERLOADS *******************************************/
+	harray<FormatTag> Renderer::_makeDefaultTags(april::Color color, chstr fontName, hstr& text)
+	{
+		harray<FormatTag> tags;
+		text = this->analyzeFormatting(text, tags);
+		FormatTag tag;
+		tag.type = TAG_TYPE_COLOR;
+		tag.data = color.hex();
+		tags.push_first(tag);
+		tag.type = TAG_TYPE_FONT;
+		tag.data = fontName;
+		tags.push_first(tag);
+		return tags;
+	}
+
+	harray<FormatTag> Renderer::_makeDefaultTagsUnformatted(april::Color color, chstr fontName)
+	{
+		harray<FormatTag> tags;
+		FormatTag tag;
+		tag.type = TAG_TYPE_COLOR;
+		tag.data = color.hex();
+		tags.push_first(tag);
+		tag.type = TAG_TYPE_FONT;
+		tag.data = fontName;
+		tags.push_first(tag);
+		return tags;
+	}
+
+	/******* DRAW TEXT OVERLOADS *******************************************/
 
 	void Renderer::drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
 	{
@@ -1669,11 +1719,11 @@ namespace atres
 	RenderLine Renderer::getFittingLine(chstr fontName, grect rect, chstr text, harray<FormatTag> tags)
 	{
 		this->_cacheEntryLine.set(text, fontName, rect.getSize());
-		if (!this->cacheLines->get(this->_cacheEntryLine))
+		if (!this->cacheLine->get(this->_cacheEntryLine))
 		{
 			this->_cacheEntryLine.value = this->_calculateFittingLine(rect, text, tags);
-			this->cacheLines->add(this->_cacheEntryLine);
-			this->cacheLines->update();
+			this->cacheLine->add(this->_cacheEntryLine);
+			this->cacheLine->update();
 		}
 		return this->_cacheEntryLine.value;
 	}

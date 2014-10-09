@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.42
+/// @version 3.43
 /// 
 /// @section LICENSE
 /// 
@@ -132,8 +132,8 @@ namespace atres
 		
 		FormatTag();
 	};
-	
-	struct CacheEntryText
+
+	struct CacheEntryBasicText
 	{
 		hstr text;
 		hstr fontName;
@@ -142,14 +142,27 @@ namespace atres
 		Alignment vertical;
 		april::Color color;
 		gvec2 offset;
-		RenderText value;
-		
-		CacheEntryText();
+
+		CacheEntryBasicText();
 		void set(hstr text, hstr fontName, grect rect, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset);
-		bool operator==(const CacheEntryText& other) const;
+		bool operator==(const CacheEntryBasicText& other) const;
 		unsigned int hash() const;
 	};
-	
+
+	struct CacheEntryText : CacheEntryBasicText
+	{
+		RenderText value;
+
+		CacheEntryText();
+	};
+
+	struct CacheEntryLines : CacheEntryBasicText
+	{
+		harray<RenderLine> value;
+
+		CacheEntryLines();
+	};
+
 	struct CacheEntryLine
 	{
 		hstr text;
