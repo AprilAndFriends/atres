@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.43
 /// 
 /// @section LICENSE
 /// 
@@ -47,11 +47,11 @@ namespace atres
 	{
 	}
 
-	CacheEntryText::CacheEntryText() : horizontal(CENTER_WRAPPED), vertical(CENTER)
+	CacheEntryBasicText::CacheEntryBasicText() : horizontal(CENTER_WRAPPED), vertical(CENTER)
 	{
 	}
 
-	void CacheEntryText::set(hstr text, hstr fontName, grect rect, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
+	void CacheEntryBasicText::set(hstr text, hstr fontName, grect rect, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
 	{
 		this->text = text;
 		this->fontName = fontName;
@@ -64,7 +64,7 @@ namespace atres
 		this->offset = offset;
 	}
 
-	bool CacheEntryText::operator==(const CacheEntryText& other) const
+	bool CacheEntryBasicText::operator==(const CacheEntryBasicText& other) const
 	{
 		return (this->text == other.text &&
 			this->fontName == other.fontName &&
@@ -77,14 +77,14 @@ namespace atres
 			this->offset == other.offset);
 	}
 
-	unsigned int CacheEntryText::hash() const
+	unsigned int CacheEntryBasicText::hash() const
 	{
 		unsigned int result = 0xFFFFFFFF;
-		for_iter (i, 0, this->text.size())
+		for_iter(i, 0, this->text.size())
 		{
 			result ^= this->text[i] << ((i % 4) * 8);
 		}
-		for_iter (i, 0, this->fontName.size())
+		for_iter(i, 0, this->fontName.size())
 		{
 			result ^= this->fontName[i] << ((i % 4) * 8);
 		}
@@ -101,7 +101,15 @@ namespace atres
 		result ^= *((unsigned int*)(&this->offset.y));
 		return result;
 	}
-	
+
+	CacheEntryText::CacheEntryText() : CacheEntryBasicText()
+	{
+	}
+
+	CacheEntryLines::CacheEntryLines() : CacheEntryBasicText()
+	{
+	}
+
 	void CacheEntryLine::set(hstr text, hstr fontName, gvec2 size)
 	{
 		this->text = text;

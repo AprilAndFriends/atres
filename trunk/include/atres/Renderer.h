@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.42
+/// @version 3.43
 /// 
 /// @section LICENSE
 /// 
@@ -135,9 +135,11 @@ namespace atres
 		bool useLegacyLineBreakParsing;
 		bool useIdeographWords;
 		bool justifiedEnabled;
-		Cache<CacheEntryText>* cache;
-		Cache<CacheEntryText>* cacheUnformatted;
-		Cache<CacheEntryLine>* cacheLines;
+		Cache<CacheEntryText>* cacheText;
+		Cache<CacheEntryText>* cacheTextUnformatted;
+		Cache<CacheEntryLines>* cacheLines;
+		Cache<CacheEntryLines>* cacheLinesUnformatted;
+		Cache<CacheEntryLine>* cacheLine;
 
 		void _updateCache();
 
@@ -149,6 +151,8 @@ namespace atres
 		void _checkSequenceSwitch();
 		RenderLine _calculateFittingLine(grect rect, chstr text, harray<FormatTag> tags);
 		bool _checkTextures();
+		harray<FormatTag> _makeDefaultTags(april::Color color, chstr fontName, hstr& text);
+		harray<FormatTag> _makeDefaultTagsUnformatted(april::Color color, chstr fontName);
 
 		void _drawRenderText(RenderText& renderText, april::Color);
 		void _drawRenderSequence(RenderSequence& sequence, april::Color);
@@ -193,6 +197,7 @@ namespace atres
 		unsigned int _code;
 
 		CacheEntryText _cacheEntryText;
+		CacheEntryLines _cacheEntryLines;
 		CacheEntryLine _cacheEntryLine;
 
 	};
