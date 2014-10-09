@@ -116,12 +116,12 @@ namespace atres
 
 		DEPRECATED_ATTRIBUTE float getFontHeight(chstr fontName);
 		DEPRECATED_ATTRIBUTE float getFontLineHeight(chstr fontName);
-		DEPRECATED_ATTRIBUTE void registerFontResource(Font* font, bool allowDefault = true) { this->registerFont(font, allowDefault); }
-		DEPRECATED_ATTRIBUTE void destroyAllFontResources() { this->destroyAllFonts(); }
-		DEPRECATED_ATTRIBUTE void destroyFontResource(Font* font) { this->destroyFont(font); }
-		DEPRECATED_ATTRIBUTE void unregisterFontResource(Font* font) { this->unregisterFont(font); }
-		DEPRECATED_ATTRIBUTE void registerFontResourceAlias(chstr name, chstr alias) { this->registerFontAlias(name, alias); }
-		DEPRECATED_ATTRIBUTE Font* getFontResource(chstr name) { return this->getFont(name); }
+		DEPRECATED_ATTRIBUTE inline void registerFontResource(Font* font, bool allowDefault = true) { this->registerFont(font, allowDefault); }
+		DEPRECATED_ATTRIBUTE inline void destroyAllFontResources() { this->destroyAllFonts(); }
+		DEPRECATED_ATTRIBUTE inline void destroyFontResource(Font* font) { this->destroyFont(font); }
+		DEPRECATED_ATTRIBUTE inline void unregisterFontResource(Font* font) { this->unregisterFont(font); }
+		DEPRECATED_ATTRIBUTE inline void registerFontResourceAlias(chstr name, chstr alias) { this->registerFontAlias(name, alias); }
+		DEPRECATED_ATTRIBUTE inline Font* getFontResource(chstr name) { return this->getFont(name); }
 
 	protected:
 		hmap<hstr, Font*> fonts;
