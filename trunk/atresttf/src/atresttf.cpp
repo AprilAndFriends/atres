@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.42
+/// @version 3.43
 /// 
 /// @section LICENSE
 /// 
@@ -36,7 +36,7 @@ namespace atresttf
 	bool fontNamesChecked = false;
 	int textureSize = 1024;
 	bool allowAlphaTextures = true;
-	
+
 	void init()
 	{
 		hlog::write(atresttf::logTag, "Initializing AtresTTF");
@@ -46,7 +46,7 @@ namespace atresttf
 			hlog::error(atresttf::logTag, "Could not initialize FreeType library!");
 		}
 	}
-	
+
 	void destroy()
 	{
 		hlog::write(atresttf::logTag, "Destroying AtresTTF");
@@ -90,6 +90,43 @@ namespace atresttf
 	{
 		if (!fontNamesChecked)
 		{
+#if defined(_WIN32) && !defined(_WINRT)
+			HKEY hKey = NULL;
+			if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"Software\\Microsoft\\Windows NT\\CurrentVersion\\Fonts", 0, KEY_READ, &hKey) == ERROR_SUCCESS)
+			{
+				wchar_t wName[MAX_PATH] = {0};
+				wchar_t wData[MAX_PATH] = {0};
+				DWORD wSize = sizeof(wName) - 1;
+				DWORD index = 0;
+				int slash = 0;
+				hstr name;
+				hstr data;
+				hstr systemPath = atresttf::getSystemFontsPath();
+				while (RegEnumValueW(hKey, index, wName, &wSize, NULL, NULL, (BYTE*)wData, &wSize) == ERROR_SUCCESS)
+				{
+					name = hstr::from_unicode(wName);
+					data = hstr::from_unicode(wData);
+					if (name.ends_with(")"))
+					{
+						slash = name.rfind('(');
+						if (slash >= 0)
+						{
+							name = name(0, slash).rtrim();
+						}
+					}
+					fonts[name] = hdir::join_path(systemPath, data);
+					memset(wName, 0, sizeof(wName));
+					memset(wData, 0, sizeof(wData));
+					wSize = sizeof(wName) - 1;
+					++index;
+				}
+				RegCloseKey(hKey);
+			}
+			else
+			{
+				hlog::error(atresttf::logTag, "Could not open registry!");
+			}
+#else
 			harray<hstr> fontFiles = hdir::files(atresttf::getSystemFontsPath(), true);
 			FT_Library library = atresttf::getLibrary();
 			FT_Face face;
@@ -111,6 +148,7 @@ namespace atresttf
 					fonts[fontName] = (*it);
 				}
 			}
+#endif
 			fontNamesChecked = true;
 		}
 		return fonts.keys().sorted();
