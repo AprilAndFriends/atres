@@ -26,10 +26,10 @@
 
 struct TgaHeader
 {
-    short width;
-    short height;
-    unsigned char bits;
-    unsigned char descriptor;
+	short width;
+	short height;
+	unsigned char bits;
+	unsigned char descriptor;
 };
 
 void generate(chstr cfgname)
