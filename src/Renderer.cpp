@@ -220,6 +220,12 @@ namespace atres
 
 	void Renderer::setDefaultFont(chstr name)
 	{
+		if (name == "")
+		{
+			this->defaultFont = NULL;
+			this->clearCache();
+			return;
+		}
 		if (!this->fonts.has_key(name))
 		{
 			throw resource_not_exists("Font", name, "atres");
