@@ -345,8 +345,11 @@ namespace atres
 		if (position >= 0)
 		{
 			font = this->getFont(name(0, position));
-			++position;
-			font->setScale((float)(name(position, name.size() - position)));
+			if (font != NULL)
+			{
+				++position;
+				font->setScale((float)(name(position, name.size() - position)));
+			}
 		}
 		return font;
 	}
