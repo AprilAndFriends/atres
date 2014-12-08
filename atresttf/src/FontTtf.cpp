@@ -109,6 +109,22 @@ namespace atresttf
 
 	april::Texture* FontTtf::getTexture(unsigned int charCode)
 	{
+		this->_checkTextures();
+		if (!this->_addCharacterBitmap(charCode))
+		{
+			return NULL;
+		}
+		return Font::getTexture(charCode);
+	}
+
+	bool FontTtf::hasChar(unsigned int charCode)
+	{
+		this->_addCharacterBitmap(charCode);
+		return Font::hasChar(charCode);
+	}
+
+	void FontTtf::_checkTextures()
+	{
 		bool reload = false;
 		foreach (atres::TextureContainer*, it, this->textureContainers)
 		{
@@ -130,17 +146,6 @@ namespace atresttf
 			this->textureContainers.clear();
 			this->_loadBasicCharacters();
 		}
-		if (!this->_addCharacterBitmap(charCode))
-		{
-			return NULL;
-		}
-		return Font::getTexture(charCode);
-	}
-
-	bool FontTtf::hasChar(unsigned int charCode)
-	{
-		this->_addCharacterBitmap(charCode);
-		return Font::hasChar(charCode);
 	}
 	
 	void FontTtf::_initializeFont()
@@ -258,6 +263,7 @@ namespace atresttf
 
 	bool FontTtf::_addCharacterBitmap(unsigned int charCode, bool ignoreCharacterEnabled)
 	{
+		this->_checkTextures();
 		if (this->characters.has_key(charCode))
 		{
 			return true;
