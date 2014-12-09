@@ -178,12 +178,14 @@ namespace atresttf
 			this->fontStream.clear();
 			if (hresource::exists(this->fontFilename)) // prefer local fonts
 			{
-				hresource file(this->fontFilename);
+				hresource file;
+				file.open(this->fontFilename);
 				this->fontStream.write_raw(file);
 			}
 			else
 			{
-				hfile file(this->fontFilename);
+				hfile file;
+				file.open(this->fontFilename);
 				this->fontStream.write_raw(file);
 			}
 		}
