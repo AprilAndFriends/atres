@@ -149,7 +149,8 @@ void generate(chstr cfgname)
 	bool multiTexture = (textures.size() > 1);
 	// export definition
 	hlog::write(LOG_TAG, "- exporting definition");
-	hfile definition(fontName + ".font", hfile::WRITE);
+	hfile definition;
+	definition.open(fontName + ".font", hfile::WRITE);
 	definition.write_line("# -----------------------------------");
 	definition.write_line("# ATRES Font definition file");
 	definition.write_line("# -----------------------------------");
