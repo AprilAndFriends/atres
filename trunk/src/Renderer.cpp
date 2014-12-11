@@ -329,6 +329,10 @@ namespace atres
 	
 	void Renderer::destroyFont(Font* font)
 	{
+		if (font == NULL)
+		{
+			throw hl_exception("Unable to destroy font, NULL argument passed to atres::Renderer::destroyFont()");
+		}
 		this->unregisterFont(font);
 		delete font;
 	}
