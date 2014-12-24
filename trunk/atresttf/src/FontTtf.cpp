@@ -189,7 +189,7 @@ namespace atresttf
 				this->fontStream.write_raw(file);
 			}
 		}
-		FT_Error error = FT_New_Memory_Face(library, &this->fontStream[0], this->fontStream.size(), 0, &face);
+		FT_Error error = FT_New_Memory_Face(library, &this->fontStream[0], (FT_Long)this->fontStream.size(), 0, &face);
 		if (error == FT_Err_Unknown_File_Format)
 		{
 			hlog::error(atresttf::logTag, "Format not supported in: " + this->fontFilename);
