@@ -190,7 +190,7 @@ namespace atresttf
 	{
 		if (library == NULL)
 		{
-			throw hl_exception("AtresTTF not initialized!");
+			throw Exception("AtresTTF not initialized!");
 		}
 		return library;
 	}
