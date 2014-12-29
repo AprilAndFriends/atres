@@ -228,7 +228,7 @@ namespace atres
 		}
 		if (!this->fonts.has_key(name))
 		{
-			throw resource_not_exists("Font", name, "atres");
+			throw ResourceNotExistsException("Font", name, "atres");
 		}
 		Font* newFont = this->fonts[name];
 		if (this->defaultFont != newFont)
@@ -266,7 +266,7 @@ namespace atres
 		hlog::write(atres::logTag, "Registering font: " + name);
 		if (this->fonts.has_key(name))
 		{
-			throw resource_already_exists("font", name, "atres");
+			throw ResourceAlreadyExistsException("font", name, "atres");
 		}
 		this->fonts[name] = font;
 		if (this->defaultFont == NULL && allowDefault)
@@ -280,7 +280,7 @@ namespace atres
 	{
 		if (!this->fonts.has_value(font))
 		{
-			throw resource_not_exists("font", font->getName(), "atres");
+			throw ResourceNotExistsException("font", font->getName(), "atres");
 		}
 		harray<hstr> keys = this->fonts.keys();
 		foreach (hstr, it, keys) // removing aliases
@@ -301,7 +301,7 @@ namespace atres
 	{
 		if (this->fonts.has_key(alias))
 		{
-			throw resource_already_exists("font", alias, "atres");
+			throw ResourceAlreadyExistsException("font", alias, "atres");
 		}
 		Font* font = this->getFont(name);
 		if (font != NULL)
