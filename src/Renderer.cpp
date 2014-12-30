@@ -1491,6 +1491,16 @@ namespace atres
 		this->_drawRenderText(this->_cacheEntryText.value, color);
 	}
 
+	void Renderer::drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
+	{
+		this->drawText("", rect, text, horizontal, vertical, color, offset);
+	}
+
+	void Renderer::drawTextUnformatted(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
+	{
+		this->drawTextUnformatted("", rect, text, horizontal, vertical, color, offset);
+	}
+
 	harray<RenderLine> Renderer::makeRenderLines(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
 	{
 		this->_cacheEntryLines.set(text, fontName, rect, horizontal, vertical, color, offset);
@@ -1543,16 +1553,6 @@ namespace atres
 		tag.data = fontName;
 		tags.push_first(tag);
 		return tags;
-	}
-
-	void Renderer::drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
-	{
-		this->drawText("", rect, text, horizontal, vertical, color, offset);
-	}
-
-	void Renderer::drawTextUnformatted(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
-	{
-		this->drawTextUnformatted("", rect, text, horizontal, vertical, color, offset);
 	}
 
 /******* MISC **********************************************************/
