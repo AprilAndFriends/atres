@@ -72,7 +72,7 @@ namespace atresttf
 		float lineHeight, bool loadBasicAscii) : atres::Font(name)
 	{
 		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
-		this->fontStream.write_raw(stream);
+		this->fontStream.writeRaw(stream);
 		this->_initializeFont();
 	}
 
@@ -82,7 +82,7 @@ namespace atresttf
 		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
 		this->descender = descender;
 		this->customDescender = true;
-		this->fontStream.write_raw(stream);
+		this->fontStream.writeRaw(stream);
 		this->_initializeFont();
 	}
 
@@ -180,13 +180,13 @@ namespace atresttf
 			{
 				hresource file;
 				file.open(this->fontFilename);
-				this->fontStream.write_raw(file);
+				this->fontStream.writeRaw(file);
 			}
 			else
 			{
 				hfile file;
 				file.open(this->fontFilename);
-				this->fontStream.write_raw(file);
+				this->fontStream.writeRaw(file);
 			}
 		}
 		FT_Error error = FT_New_Memory_Face(library, &this->fontStream[0], (FT_Long)this->fontStream.size(), 0, &face);

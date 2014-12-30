@@ -45,7 +45,7 @@ namespace atresttf
 		DEPRECATED_ATTRIBUTE FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight = 0.0f, bool loadBasicAscii = true) : atres::Font(name)
 		{
 			this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
-			this->fontStream.write_raw(data, dataSize);
+			this->fontStream.writeRaw(data, dataSize);
 			this->_initializeFont();
 		}
 		DEPRECATED_ATTRIBUTE FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii) : atres::Font(name)
@@ -53,7 +53,7 @@ namespace atresttf
 			this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
 			this->descender = descender;
 			this->customDescender = true;
-			this->fontStream.write_raw(data, dataSize);
+			this->fontStream.writeRaw(data, dataSize);
 			this->_initializeFont();
 		}
 
