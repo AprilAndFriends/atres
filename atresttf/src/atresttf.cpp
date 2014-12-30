@@ -114,7 +114,7 @@ namespace atresttf
 							name = name(0, slash).rtrim();
 						}
 					}
-					fonts[name] = hdir::join_path(systemPath, data);
+					fonts[name] = hdir::joinPath(systemPath, data);
 					memset(wName, 0, sizeof(wName));
 					memset(wData, 0, sizeof(wData));
 					wSize = sizeof(wName) - 1;

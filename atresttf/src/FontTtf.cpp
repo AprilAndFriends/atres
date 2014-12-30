@@ -35,7 +35,7 @@ namespace atresttf
 		this->penY = 0;
 		this->rowHeight = 0;
 		this->loadBasicAscii = loadBasicAscii;
-		hstr path = hrdir::basedir(filename);
+		hstr path = hrdir::baseDir(filename);
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
 		hstr line;
 		while (lines.size() > 0)
@@ -45,7 +45,7 @@ namespace atresttf
 			{
 				if (line.starts_with("File="))
 				{
-					this->fontFilename = hrdir::join_path(path, line.replace("File=", ""), false);
+					this->fontFilename = hrdir::joinPath(path, line.replace("File=", ""), false);
 				}
 			}
 		}
