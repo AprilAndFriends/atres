@@ -1547,78 +1547,18 @@ namespace atres
 		return tags;
 	}
 
-	/******* DRAW TEXT OVERLOADS *******************************************/
-
 	void Renderer::drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
 	{
 		this->drawText("", rect, text, horizontal, vertical, color, offset);
 	}
 
-	void Renderer::drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		april::Color color, gvec2 offset)
-	{
-		this->drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
-	}
-	
-	void Renderer::drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		april::Color color, gvec2 offset)
-	{
-		this->drawText("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
-	}
-	
-	void Renderer::drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
-	{
-		this->drawText(fontName, grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
-	}
-	
-	void Renderer::drawText(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
-	{
-		this->drawText("", grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
-	}
-	
 	void Renderer::drawTextUnformatted(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
 		gvec2 offset)
 	{
 		this->drawTextUnformatted("", rect, text, horizontal, vertical, color, offset);
 	}
 
-	void Renderer::drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal,
-		Alignment vertical, april::Color color, gvec2 offset)
-	{
-		this->drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, color, offset);
-	}
-	
-	void Renderer::drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		april::Color color, gvec2 offset)
-	{
-		this->drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, color, offset);
-	}
-	
-	void Renderer::drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal,
-		Alignment vertical, unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
-	{
-		this->drawTextUnformatted(fontName, grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
-	}
-	
-	void Renderer::drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal, Alignment vertical,
-		unsigned char r, unsigned char g, unsigned char b, unsigned char a, gvec2 offset)
-	{
-		this->drawTextUnformatted("", grect(x, y, w, h), text, horizontal, vertical, april::Color(r, g, b, a), offset);
-	}
-	
 /******* MISC **********************************************************/
-	
-	float Renderer::getFontHeight(chstr fontName) // DEPRECATED
-	{
-		return this->getFont(fontName)->getHeight();
-	}
-	
-	float Renderer::getFontLineHeight(chstr fontName) // DEPRECATED
-	{
-		return this->getFont(fontName)->getLineHeight();
-	}
 	
 	float Renderer::getTextWidth(chstr fontName, chstr text)
 	{
