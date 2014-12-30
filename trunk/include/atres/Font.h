@@ -67,8 +67,6 @@ namespace atres
 		
 	};
 
-	DEPRECATED_ATTRIBUTE typedef Font FontResource;
-
 }
 
 #endif
