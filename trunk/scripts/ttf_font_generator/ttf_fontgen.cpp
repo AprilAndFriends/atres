@@ -151,13 +151,13 @@ void generate(chstr cfgname)
 	hlog::write(LOG_TAG, "- exporting definition");
 	hfile definition;
 	definition.open(fontName + ".font", hfile::WRITE);
-	definition.write_line("# -----------------------------------");
-	definition.write_line("# ATRES Font definition file");
-	definition.write_line("# -----------------------------------");
-	definition.write_line("Name=" + fontName);
+	definition.writeLine("# -----------------------------------");
+	definition.writeLine("# ATRES Font definition file");
+	definition.writeLine("# -----------------------------------");
+	definition.writeLine("Name=" + fontName);
 	if (!multiTexture)
 	{
-		definition.write_line("Texture=" + fontName);
+		definition.writeLine("Texture=" + fontName);
 	}
 	else
 	{
@@ -166,28 +166,28 @@ void generate(chstr cfgname)
 		{
 			textureNames += fontName + "_" + hstr(i);
 		}
-		definition.write_line("MultiTexture=" + textureNames.join("\t"));
+		definition.writeLine("MultiTexture=" + textureNames.join("\t"));
 	}
-	definition.write_line("Height=" + hsprintf("%g", height));
-	definition.write_line("Scale=" + hsprintf("%g", scale));
+	definition.writeLine("Height=" + hsprintf("%g", height));
+	definition.writeLine("Scale=" + hsprintf("%g", scale));
 	if (lineHeight != 0)
 	{
-		definition.write_line("LineHeight=" + hsprintf("%g", lineHeight));
+		definition.writeLine("LineHeight=" + hsprintf("%g", lineHeight));
 	}
-	definition.write_line("Descender=" + hsprintf("%g", font->getDescender()));
-	definition.write_line("# -------------------------------------------------------------------------");
-	definition.write_line("# Code|X|Y|Width");
-	definition.write_line("# Code|X|Y|Width|Advance Width");
-	definition.write_line("# Code|X|Y|Width|Advance Width|Bearing X");
-	definition.write_line("# Code|X|Y|Width|Height|Advance Width|Bearing X");
-	definition.write_line("# Code|X|Y|Width|Height|Advance Width|Bearing X|Bearing Y");
-	definition.write_line("# -------------------------------------------------------------------------");
-	definition.write_line("# Code|MultiTextureIndex|X|Y|Width");
-	definition.write_line("# Code|MultiTextureIndex|X|Y|Width|Advance Width");
-	definition.write_line("# Code|MultiTextureIndex|X|Y|Width|Advance Width|Bearing X");
-	definition.write_line("# Code|MultiTextureIndex|X|Y|Width|Height|Advance Width|Bearing X");
-	definition.write_line("# Code|MultiTextureIndex|X|Y|Width|Height|Advance Width|Bearing X|Bearing Y");
-	definition.write_line("# -------------------------------------------------------------------------");
+	definition.writeLine("Descender=" + hsprintf("%g", font->getDescender()));
+	definition.writeLine("# -------------------------------------------------------------------------");
+	definition.writeLine("# Code|X|Y|Width");
+	definition.writeLine("# Code|X|Y|Width|Advance Width");
+	definition.writeLine("# Code|X|Y|Width|Advance Width|Bearing X");
+	definition.writeLine("# Code|X|Y|Width|Height|Advance Width|Bearing X");
+	definition.writeLine("# Code|X|Y|Width|Height|Advance Width|Bearing X|Bearing Y");
+	definition.writeLine("# -------------------------------------------------------------------------");
+	definition.writeLine("# Code|MultiTextureIndex|X|Y|Width");
+	definition.writeLine("# Code|MultiTextureIndex|X|Y|Width|Advance Width");
+	definition.writeLine("# Code|MultiTextureIndex|X|Y|Width|Advance Width|Bearing X");
+	definition.writeLine("# Code|MultiTextureIndex|X|Y|Width|Height|Advance Width|Bearing X");
+	definition.writeLine("# Code|MultiTextureIndex|X|Y|Width|Height|Advance Width|Bearing X|Bearing Y");
+	definition.writeLine("# -------------------------------------------------------------------------");
 	hmap<unsigned int, atres::CharacterDefinition> characters = font->getCharacters();
 	harray<unsigned int> codes = characters.keys().sorted();
 	atres::CharacterDefinition c;
@@ -196,7 +196,7 @@ void generate(chstr cfgname)
 		foreach (unsigned int, it, codes)
 		{
 			c = characters[*it];
-			definition.write_line(hsprintf("%d %g %g %g %g %g %g %g", (*it), c.x, c.y, c.w, c.h, c.aw, c.bx, c.by));
+			definition.writeLine(hsprintf("%d %g %g %g %g %g %g %g", (*it), c.x, c.y, c.w, c.h, c.aw, c.bx, c.by));
 		}
 	}
 	else
@@ -206,7 +206,7 @@ void generate(chstr cfgname)
 		{
 			c = characters[*it];
 			index = textures.index_of(font->getTexture(*it));
-			definition.write_line(hsprintf("%d %d %g %g %g %g %g %g %g", (*it), index, c.x, c.y, c.w, c.h, c.aw, c.bx, c.by));
+			definition.writeLine(hsprintf("%d %d %g %g %g %g %g %g %g", (*it), index, c.x, c.y, c.w, c.h, c.aw, c.bx, c.by));
 		}
 	}
 	definition.close();
@@ -232,9 +232,9 @@ void generate(chstr cfgname)
 		header.width = texture->getWidth();
 		header.height = texture->getHeight();
 		tga.open(fontName + (multiTexture ? "_" + hstr(i) : hstr("")) + ".tga", hfile::WRITE);
-		tga.write_raw(preHeader, 12);
-		tga.write_raw(&header, sizeof(header));
-		tga.write_raw(buffer, header.width * header.height);
+		tga.writeRaw(preHeader, 12);
+		tga.writeRaw(&header, sizeof(header));
+		tga.writeRaw(buffer, header.width * header.height);
 		tga.close();
 		delete [] buffer;
 	}
