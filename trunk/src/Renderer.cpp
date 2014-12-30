@@ -1491,8 +1491,7 @@ namespace atres
 		this->_drawRenderText(this->_cacheEntryText.value, color);
 	}
 
-	harray<RenderLine> Renderer::makeRenderLines(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
-		gvec2 offset)
+	harray<RenderLine> Renderer::makeRenderLines(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
 	{
 		this->_cacheEntryLines.set(text, fontName, rect, horizontal, vertical, color, offset);
 		if (!this->cacheLines->get(this->_cacheEntryLines))
@@ -1506,8 +1505,7 @@ namespace atres
 		return this->_cacheEntryLines.value;
 	}
 
-	harray<RenderLine> Renderer::makeRenderLinesUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
-		april::Color color, gvec2 offset)
+	harray<RenderLine> Renderer::makeRenderLinesUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
 	{
 		this->_cacheEntryLines.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
 		if (!this->cacheLinesUnformatted->get(this->_cacheEntryLines))
@@ -1552,8 +1550,7 @@ namespace atres
 		this->drawText("", rect, text, horizontal, vertical, color, offset);
 	}
 
-	void Renderer::drawTextUnformatted(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
-		gvec2 offset)
+	void Renderer::drawTextUnformatted(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
 	{
 		this->drawTextUnformatted("", rect, text, horizontal, vertical, color, offset);
 	}
