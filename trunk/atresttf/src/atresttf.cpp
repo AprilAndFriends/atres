@@ -15,9 +15,9 @@
 #include <april/Window.h>
 #include <atres/atres.h>
 #include <atres/Font.h>
-#include <hltypes/exception.h>
 #include <hltypes/harray.h>
 #include <hltypes/hdir.h>
+#include <hltypes/hexception.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hplatform.h>

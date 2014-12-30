@@ -12,8 +12,8 @@
 #include <april/RenderSystem.h>
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
-#include <hltypes/exception.h>
 #include <hltypes/harray.h>
+#include <hltypes/hexception.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
