@@ -266,7 +266,7 @@ namespace atresttf
 	bool FontTtf::_addCharacterBitmap(unsigned int charCode, bool ignoreCharacterEnabled)
 	{
 		this->_checkTextures();
-		if (this->characters.has_key(charCode))
+		if (this->characters.hasKey(charCode))
 		{
 			return true;
 		}
