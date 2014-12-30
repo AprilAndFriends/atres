@@ -29,8 +29,6 @@ namespace atres
 
 	};
 
-	DEPRECATED_ATTRIBUTE typedef FontBitmap FontResourceBitmap;
-
 }
 
 #endif

@@ -94,15 +94,6 @@ namespace atres
 		harray<RenderLine> makeRenderLinesUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT,
 			Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
 
-		DEPRECATED_ATTRIBUTE void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		DEPRECATED_ATTRIBUTE void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		DEPRECATED_ATTRIBUTE void drawText(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, gvec2 offset = gvec2());
-		DEPRECATED_ATTRIBUTE void drawText(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, gvec2 offset = gvec2());
-		DEPRECATED_ATTRIBUTE void drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		DEPRECATED_ATTRIBUTE void drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		DEPRECATED_ATTRIBUTE void drawTextUnformatted(chstr fontName, float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, gvec2 offset = gvec2());
-		DEPRECATED_ATTRIBUTE void drawTextUnformatted(float x, float y, float w, float h, chstr text, Alignment horizontal = LEFT, Alignment vertical = CENTER, unsigned char r = 255, unsigned char g = 255, unsigned char b = 255, unsigned char a = 255, gvec2 offset = gvec2());
-	
 		float getTextWidth(chstr fontName, chstr text);
 		float getTextHeight(chstr fontName, chstr text, float maxWidth);
 		int getTextCount(chstr fontName, chstr text, float maxWidth);
@@ -113,15 +104,6 @@ namespace atres
 		harray<FormatTag> prepareTags(chstr fontName);
 		RenderLine getFittingLine(chstr fontName, grect rect, chstr text, harray<FormatTag> tags);
 		void clearCache();
-
-		DEPRECATED_ATTRIBUTE float getFontHeight(chstr fontName);
-		DEPRECATED_ATTRIBUTE float getFontLineHeight(chstr fontName);
-		DEPRECATED_ATTRIBUTE inline void registerFontResource(Font* font, bool allowDefault = true) { this->registerFont(font, allowDefault); }
-		DEPRECATED_ATTRIBUTE inline void destroyAllFontResources() { this->destroyAllFonts(); }
-		DEPRECATED_ATTRIBUTE inline void destroyFontResource(Font* font) { this->destroyFont(font); }
-		DEPRECATED_ATTRIBUTE inline void unregisterFontResource(Font* font) { this->unregisterFont(font); }
-		DEPRECATED_ATTRIBUTE inline void registerFontResourceAlias(chstr name, chstr alias) { this->registerFontAlias(name, alias); }
-		DEPRECATED_ATTRIBUTE inline Font* getFontResource(chstr name) { return this->getFont(name); }
 
 	protected:
 		hmap<hstr, Font*> fonts;

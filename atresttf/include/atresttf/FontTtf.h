@@ -42,21 +42,6 @@ namespace atresttf
 		april::Texture* getTexture(unsigned int charCode);
 		bool hasChar(unsigned int charCode);
 
-		DEPRECATED_ATTRIBUTE FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight = 0.0f, bool loadBasicAscii = true) : atres::Font(name)
-		{
-			this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
-			this->fontStream.writeRaw(data, dataSize);
-			this->_initializeFont();
-		}
-		DEPRECATED_ATTRIBUTE FontTtf(unsigned char* data, int dataSize, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii) : atres::Font(name)
-		{
-			this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
-			this->descender = descender;
-			this->customDescender = true;
-			this->fontStream.writeRaw(data, dataSize);
-			this->_initializeFont();
-		}
-
 	protected:
 		int penX;
 		int penY;
@@ -74,8 +59,6 @@ namespace atresttf
 		bool _addCharacterBitmap(unsigned int charCode, bool ignoreCharacterEnabled = false);
 
 	};
-
-	DEPRECATED_ATTRIBUTE typedef FontTtf FontResourceTtf;
 
 }
 
