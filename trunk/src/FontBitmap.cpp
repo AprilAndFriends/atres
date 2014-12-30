@@ -20,7 +20,7 @@ namespace atres
 {
 	FontBitmap::FontBitmap(chstr filename) : Font(filename)
 	{
-		hstr path = hrdir::basedir(filename);
+		hstr path = hrdir::baseDir(filename);
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
 		hstr line;
 		bool multiTexture = false;
@@ -33,7 +33,7 @@ namespace atres
 				if (line.starts_with("Texture="))
 				{
 					textureContainer = new atres::TextureContainer();
-					textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::join_path(path, line.replace("Texture=", "")), april::Texture::TYPE_IMMUTABLE, april::Texture::LOAD_ASYNC);
+					textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::joinPath(path, line.replace("Texture=", "")), april::Texture::TYPE_IMMUTABLE, april::Texture::LOAD_ASYNC);
 					this->textureContainers += textureContainer;
 				}
 				else if (line.starts_with("MultiTexture="))
@@ -42,7 +42,7 @@ namespace atres
 					foreach (hstr, it, textureNames)
 					{
 						textureContainer = new atres::TextureContainer();
-						textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::join_path(path, (*it)), april::Texture::TYPE_IMMUTABLE, april::Texture::LOAD_ASYNC);
+						textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::joinPath(path, (*it)), april::Texture::TYPE_IMMUTABLE, april::Texture::LOAD_ASYNC);
 						this->textureContainers += textureContainer;
 					}
 					multiTexture = true;
