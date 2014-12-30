@@ -167,7 +167,7 @@ namespace atresttf
 	{
 #ifdef _WIN32
 #ifndef _WINRT
-		return (hdir::normalize(get_environment_variable("WinDir")) + "/Fonts/");
+		return (hdir::normalize(henv("WinDir")) + "/Fonts/");
 #else
 		return "";
 #endif
