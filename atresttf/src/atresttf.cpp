@@ -160,7 +160,7 @@ namespace atresttf
 		{
 			getSystemFonts();
 		}
-		return fonts.try_get_by_key(name, "");
+		return fonts.tryGet(name, "");
 	}
 
 	hstr getSystemFontsPath()
@@ -202,7 +202,7 @@ namespace atresttf
 
 	void registerFace(atres::Font* font, FT_Face face)
 	{
-		if (faces.has_key(font))
+		if (faces.hasKey(font))
 		{
 			hlog::error(atresttf::logTag, "Cannot add Face for Font Resource: " + font->getName());
 			return;
@@ -212,13 +212,13 @@ namespace atresttf
 
 	void destroyFace(atres::Font* font)
 	{
-		if (!faces.has_key(font))
+		if (!faces.hasKey(font))
 		{
 			hlog::warn(atresttf::logTag, "No Face registered for Font: " + font->getName());
 			return;
 		}
 		FT_Done_Face(faces[font]);
-		faces.remove_key(font);
+		faces.removeKey(font);
 	}
 
 }

@@ -226,7 +226,7 @@ namespace atres
 			this->clearCache();
 			return;
 		}
-		if (!this->fonts.has_key(name))
+		if (!this->fonts.hasKey(name))
 		{
 			throw ResourceNotExistsException("Font", name, "atres");
 		}
@@ -246,7 +246,7 @@ namespace atres
 
 	bool Renderer::hasFont(chstr name)
 	{
-		return (name == "" && this->defaultFont != NULL || this->fonts.has_key(name));
+		return (name == "" && this->defaultFont != NULL || this->fonts.hasKey(name));
 	}
 	
 	void Renderer::setCacheSize(int value)
@@ -264,7 +264,7 @@ namespace atres
 	{
 		hstr name = font->getName();
 		hlog::write(atres::logTag, "Registering font: " + name);
-		if (this->fonts.has_key(name))
+		if (this->fonts.hasKey(name))
 		{
 			throw ResourceAlreadyExistsException("font", name, "atres");
 		}
@@ -278,7 +278,7 @@ namespace atres
 	
 	void Renderer::unregisterFont(Font* font)
 	{
-		if (!this->fonts.has_value(font))
+		if (!this->fonts.hasValue(font))
 		{
 			throw ResourceNotExistsException("font", font->getName(), "atres");
 		}
@@ -287,7 +287,7 @@ namespace atres
 		{
 			if (this->fonts[*it] == font)
 			{
-				this->fonts.remove_key(*it);
+				this->fonts.removeKey(*it);
 			}
 		}
 		if (this->defaultFont == font)
@@ -299,7 +299,7 @@ namespace atres
 
 	void Renderer::registerFontAlias(chstr name, chstr alias)
 	{
-		if (this->fonts.has_key(alias))
+		if (this->fonts.hasKey(alias))
 		{
 			throw ResourceAlreadyExistsException("font", alias, "atres");
 		}
@@ -345,7 +345,7 @@ namespace atres
 			return this->defaultFont;
 		}
 		Font* font = NULL;
-		if (this->fonts.has_key(name))
+		if (this->fonts.hasKey(name))
 		{
 			font = this->fonts[name];
 			font->setScale(1.0f);
@@ -820,7 +820,7 @@ namespace atres
 					this->_fontScale = this->_font->getScale();
 					break;
 				case TAG_TYPE_COLOR:
-					this->_hex = (this->colors.has_key(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
+					this->_hex = (this->colors.hasKey(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
 					{
 						this->_textColor.set(this->_hex);
@@ -834,7 +834,7 @@ namespace atres
 					break;
 				case TAG_TYPE_SHADOW:
 					this->_effectMode = EFFECT_MODE_SHADOW;
-					this->_hex = (this->colors.has_key(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
+					this->_hex = (this->colors.hasKey(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
 					{
 						this->_shadowColor.set(this->_hex);
@@ -842,7 +842,7 @@ namespace atres
 					break;
 				case TAG_TYPE_BORDER:
 					this->_effectMode = EFFECT_MODE_BORDER;
-					this->_hex = (this->colors.has_key(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
+					this->_hex = (this->colors.hasKey(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
 					{
 						this->_borderColor.set(this->_hex);
@@ -887,7 +887,7 @@ namespace atres
 					this->_currentTag.type = TAG_TYPE_COLOR;
 					this->_currentTag.data = this->_textColor.hex();
 					this->_stack += this->_currentTag;
-					this->_hex = (this->colors.has_key(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
+					this->_hex = (this->colors.hasKey(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
 					{
 						this->_textColor.set(this->_hex);
@@ -917,7 +917,7 @@ namespace atres
 					this->_shadowColor = this->shadowColor;
 					if (this->_nextTag.data != "")
 					{
-						this->_hex = (this->colors.has_key(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
+						this->_hex = (this->colors.hasKey(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
 						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
 						{
 							this->_shadowColor.set(this->_hex);
@@ -936,7 +936,7 @@ namespace atres
 					this->_borderColor = this->borderColor;
 					if (this->_nextTag.data != "")
 					{
-						this->_hex = (this->colors.has_key(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
+						this->_hex = (this->colors.hasKey(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
 						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
 						{
 							this->_borderColor.set(this->_hex);
@@ -1278,7 +1278,7 @@ namespace atres
 					// checking first formatting tag changes
 					this->_processFormatTags(this->_word.text, i);
 					// if character exists in current font
-					if (this->_characters.has_key(this->_code))
+					if (this->_characters.hasKey(this->_code))
 					{
 						// checking the particular character
 						this->_scale = this->_fontScale * this->_textScale;

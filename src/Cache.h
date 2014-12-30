@@ -49,7 +49,7 @@ namespace atres
 		inline void add(T& entry)
 		{
 			unsigned int hash = entry.hash();
-			if (!this->data.has_key(hash))
+			if (!this->data.hasKey(hash))
 			{
 				this->data[hash] = harray<T>();
 			}
@@ -60,7 +60,7 @@ namespace atres
 		inline bool get(T& entry)
 		{
 			unsigned int hash = entry.hash();
-			if (this->data.has_key(hash))
+			if (this->data.hasKey(hash))
 			{
 				harray<T>& array = this->data[hash];
 				for (iterator_t it = array.begin(); it != array.end(); ++it)
@@ -78,11 +78,11 @@ namespace atres
 		inline void removeEntry(const T& entry)
 		{
 			unsigned int hash = entry.hash();
-			if (this->data.has_key(hash))
+			if (this->data.hasKey(hash))
 			{
 				if (this->data[hash].size() == 1)
 				{
-					this->data.remove_key(hash);
+					this->data.removeKey(hash);
 				}
 				else
 				{

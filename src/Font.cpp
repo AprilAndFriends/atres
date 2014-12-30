@@ -67,7 +67,7 @@ namespace atres
 	
 	bool Font::hasChar(unsigned int charCode)
 	{
-		return this->characters.has_key(charCode);
+		return this->characters.hasKey(charCode);
 	}
 	
 	float Font::getHeight()
