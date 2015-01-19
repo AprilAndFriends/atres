@@ -1022,7 +1022,6 @@
 					DARWIN_NO_CARBON,
 					_LIB,
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				PRODUCT_NAME = freetype;
 				SKIP_INSTALL = YES;
 			};
@@ -1078,7 +1077,6 @@
 					DARWIN_NO_CARBON,
 					_LIB,
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				PRODUCT_NAME = freetype;
 				SKIP_INSTALL = YES;
 			};
