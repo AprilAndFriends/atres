@@ -303,8 +303,8 @@ namespace atresttf
 		atres::TextureContainer* textureContainer = this->textureContainers.last();
 		this->penX += hmax(face->glyph->bitmap_left, 0);
 		// calculate some standard parameters
-		int ascender = -PTSIZE2INT(face->size->metrics.ascender);
-		int descender = -PTSIZE2INT(face->size->metrics.descender);
+		int ascender = (int)(-PTSIZE2INT(face->size->metrics.ascender));
+		int descender = (int)(-PTSIZE2INT(face->size->metrics.descender));
 		// this makes sure that there is no vertical overlap between characters
 		int lineOffset = (int)this->height - descender;
 		int bearingY = -hmin(lineOffset - face->glyph->bitmap_top, 0);
