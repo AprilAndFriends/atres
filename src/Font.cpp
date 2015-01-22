@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.44
 /// 
 /// @section LICENSE
 /// 
@@ -18,7 +18,7 @@
 namespace atres
 {
 	Font::Font(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f),
-		lineHeight(0.0f), descender(0.0f), customDescender(false), loaded(false)
+		lineHeight(0.0f), descender(0.0f), internalDescender(0.0f), loaded(false)
 	{
 		this->name = name;
 	}
@@ -59,7 +59,6 @@ namespace atres
 		if (line.starts_with("Descender="))
 		{
 			this->descender = (float)line.replace("Descender=", "");
-			this->customDescender = true;
 			return true;
 		}
 		return false;
@@ -89,7 +88,12 @@ namespace atres
 	{
 		return (this->descender * this->scale * this->baseScale);
 	}
-	
+
+	float Font::getInternalDescender()
+	{
+		return (this->internalDescender * this->scale * this->baseScale);
+	}
+
 	harray<april::Texture*> Font::getTextures()
 	{
 		harray<april::Texture*> result;

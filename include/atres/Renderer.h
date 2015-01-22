@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.43
+/// @version 3.44
 /// 
 /// @section LICENSE
 /// 
@@ -74,7 +74,7 @@ namespace atres
 		void analyzeText(chstr fontName, chstr text);
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
 		harray<RenderLine> removeOutOfBoundLines(grect rect, harray<RenderLine> lines);
-		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight, float offsetY);
+		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight, float descender, float internalDescender);
 		harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
 		harray<RenderWord> createRenderWords(grect rect, chstr text, harray<FormatTag> tags);
 		harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset = gvec2(), bool keepWrappedSpaces = false);
@@ -152,6 +152,7 @@ namespace atres
 		float _height;
 		float _lineHeight;
 		float _descender;
+		float _internalDescender;
 		float _fontScale;
 		float _textScale;
 		float _scale;

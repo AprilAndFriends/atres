@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.44
 /// 
 /// @section LICENSE
 /// 
@@ -43,6 +43,7 @@ namespace atresttf
 		bool hasChar(unsigned int charCode);
 
 	protected:
+		bool customDescender;
 		int penX;
 		int penY;
 		int rowHeight;
