@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.42
+/// @version 3.44
 /// 
 /// @section LICENSE
 /// 
@@ -31,6 +31,7 @@ namespace atresttf
 {
 	FontTtf::FontTtf(chstr filename, bool loadBasicAscii) : atres::Font(filename)
 	{
+		this->customDescender = false;
 		this->penX = 0;
 		this->penY = 0;
 		this->rowHeight = 0;
@@ -95,11 +96,12 @@ namespace atresttf
 		this->scale = scale;
 		this->lineHeight = lineHeight;
 		this->loadBasicAscii = loadBasicAscii;
+		this->descender = 0.0f;
+		this->internalDescender = 0.0f;
+		this->customDescender = false;
 		this->penX = 0;
 		this->penY = 0;
 		this->rowHeight = 0;
-		this->descender = false;
-		this->customDescender = false;
 	}
 
 	FontTtf::~FontTtf()
@@ -214,9 +216,10 @@ namespace atresttf
 			FT_Done_Face(face);
 			return;
 		}
+		this->internalDescender = -(float)PTSIZE2INT(face->size->metrics.descender);
 		if (!this->customDescender)
 		{
-			this->descender = -(float)PTSIZE2INT(face->size->metrics.descender);
+			this->descender = this->internalDescender;
 		}
 		atresttf::registerFace(this, face);
 		this->_loadBasicCharacters();

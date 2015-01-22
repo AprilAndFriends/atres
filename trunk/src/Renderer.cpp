@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.43
+/// @version 3.44
 /// 
 /// @section LICENSE
 /// 
@@ -560,7 +560,7 @@ namespace atres
 		return result;
 	}
 	
-	harray<RenderLine> Renderer::verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight, float descender)
+	harray<RenderLine> Renderer::verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight, float descender, float internalDescender)
 	{
 		harray<RenderLine> result;
 		int lineCount = lines.size();
@@ -575,7 +575,7 @@ namespace atres
 			y += (lineCount * lineHeight - rect.h + descender) * 0.5f;
 			break;
 		case BOTTOM:
-			y += lineCount * lineHeight - rect.h + descender;
+			y += lineCount * lineHeight - rect.h + internalDescender;
 			break;
 		}
 		// remove lines that cannot be seen anyway
@@ -694,6 +694,7 @@ namespace atres
 		this->_height = 0.0f;
 		this->_lineHeight = 0.0f;
 		this->_descender = 0.0f;
+		this->_internalDescender = 0.0f;
 		this->_fontScale = 1.0f;
 		this->_textScale = 1.0f;
 		this->_scale = 1.0f;
@@ -758,6 +759,7 @@ namespace atres
 						this->_height = this->_font->getHeight();
 						this->_lineHeight = this->_font->getLineHeight();
 						this->_descender = this->_font->getDescender();
+						this->_internalDescender = this->_font->getInternalDescender();
 					}
 				}
 				else
@@ -866,6 +868,7 @@ namespace atres
 							this->_height = this->_font->getHeight();
 							this->_lineHeight = this->_font->getLineHeight();
 							this->_descender = this->_font->getDescender();
+							this->_internalDescender = this->_font->getInternalDescender();
 						}
 					}
 					else
@@ -1244,7 +1247,7 @@ namespace atres
 		maxWidth = hmin(maxWidth, rect.w);
 		if (this->_lines.size() > 0)
 		{
-			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight, this->_descender);
+			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight, this->_descender, this->_internalDescender);
 			this->_lines = this->removeOutOfBoundLines(rect, this->_lines);
 			if (this->_lines.size() > 0)
 			{
@@ -1587,7 +1590,7 @@ namespace atres
 			{
 				harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, CHECK_RECT_SIZE), unformattedText, tags, LEFT_WRAPPED, TOP);
 				Font* font = this->getFont(fontName);
-				return (lines.size() * font->getLineHeight() + font->getDescender());
+				return (lines.size() * font->getLineHeight() + font->getInternalDescender());
 			}
 		}
 		return 0.0f;
