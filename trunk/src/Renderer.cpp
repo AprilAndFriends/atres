@@ -1232,7 +1232,10 @@ namespace atres
 				maxWidth = hmax(maxWidth, this->_line.rect.w);
 				this->_line.rect.y = rect.y + this->_lines.size() * this->_lineHeight;
 				this->_line.terminated = forcedNextLine;
-				this->_lines += this->_line;
+				if (this->_line.words.size() > 0 || this->_line.terminated) // prevents empty lines with only spaces to be used
+				{
+					this->_lines += this->_line;
+				}
 				// reset
 				this->_line.text = "";
 				this->_line.start = 0;
