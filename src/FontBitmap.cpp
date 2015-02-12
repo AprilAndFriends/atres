@@ -30,15 +30,15 @@ namespace atres
 			line = lines.remove_first();
 			if (!this->_readBasicParameter(line))
 			{
-				if (line.starts_with("Texture="))
+				if (line.startsWith("Texture="))
 				{
 					textureContainer = new atres::TextureContainer();
-					textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::joinPath(path, line.replace("Texture=", "")), april::Texture::TYPE_IMMUTABLE, april::Texture::LOAD_ASYNC);
+					textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::joinPath(path, line.replaced("Texture=", "")), april::Texture::TYPE_IMMUTABLE, april::Texture::LOAD_ASYNC);
 					this->textureContainers += textureContainer;
 				}
-				else if (line.starts_with("MultiTexture="))
+				else if (line.startsWith("MultiTexture="))
 				{
-					harray<hstr> textureNames = line.replace("MultiTexture=", "").split("\t");
+					harray<hstr> textureNames = line.replaced("MultiTexture=", "").split("\t");
 					foreach (hstr, it, textureNames)
 					{
 						textureContainer = new atres::TextureContainer();
@@ -47,7 +47,7 @@ namespace atres
 					}
 					multiTexture = true;
 				}
-				else if (line.starts_with("#") && this->textureContainers.size() > 0)
+				else if (line.startsWith("#") && this->textureContainers.size() > 0)
 				{
 					break;
 				}
@@ -63,7 +63,7 @@ namespace atres
 			{
 				break;
 			}
-			if (!lines.first().starts_with("#"))
+			if (!lines.first().startsWith("#"))
 			{
 				break;
 			}

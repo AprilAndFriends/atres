@@ -36,29 +36,29 @@ namespace atres
 
 	bool Font::_readBasicParameter(chstr line)
 	{
-		if (line.starts_with("Name="))
+		if (line.startsWith("Name="))
 		{
-			this->name = line.replace("Name=", "");
+			this->name = line.replaced("Name=", "");
 			return true;
 		}
-		if (line.starts_with("Height="))
+		if (line.startsWith("Height="))
 		{
-			this->height = (float)line.replace("Height=", "");
+			this->height = (float)line.replaced("Height=", "");
 			return true;
 		}
-		if (line.starts_with("Scale="))
+		if (line.startsWith("Scale="))
 		{
-			this->baseScale = (float)line.replace("Scale=", "");
+			this->baseScale = (float)line.replaced("Scale=", "");
 			return true;
 		}
-		if (line.starts_with("LineHeight="))
+		if (line.startsWith("LineHeight="))
 		{
-			this->lineHeight = (float)line.replace("LineHeight=", "");
+			this->lineHeight = (float)line.replaced("LineHeight=", "");
 			return true;
 		}
-		if (line.starts_with("Descender="))
+		if (line.startsWith("Descender="))
 		{
-			this->descender = (float)line.replace("Descender=", "");
+			this->descender = (float)line.replaced("Descender=", "");
 			return true;
 		}
 		return false;
@@ -131,7 +131,7 @@ namespace atres
 		ax = 0.0f;
 		aw = 0.0f;
 		scale = this->getScale();
-		chars = text.u_str();
+		chars = text.uStr();
 		for_itert (unsigned int, i, 0, chars.size())
 		{
 			character = &this->characters[chars[i]];
@@ -166,7 +166,7 @@ namespace atres
 		ax = 0.0f;
 		aw = 0.0f;
 		scale = this->getScale();
-		chars = text.u_str();
+		chars = text.uStr();
 		for_itert (unsigned int, i, 0, chars.size())
 		{
 			character = &this->characters[chars[i]];
@@ -184,7 +184,7 @@ namespace atres
 			textX += ax;
 			if (textW > maxWidth)
 			{
-				return text.utf8_substr(0, i).size();
+				return text.utf8SubString(0, i).size();
 			}
 		}
 		return text.size();
