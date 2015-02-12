@@ -306,12 +306,12 @@ namespace atres
 		Font* font = this->getFont(name);
 		if (font != NULL)
 		{
-			hlog::writef(atres::logTag, "Registering font alias '%s' for '%s'.", alias.c_str(), font->getName().c_str());
+			hlog::writef(atres::logTag, "Registering font alias '%s' for '%s'.", alias.cStr(), font->getName().cStr());
 			this->fonts[alias] = font;
 		}
 		else
 		{
-			hlog::errorf(atres::logTag, "Could not register alias '%s' for font '%s'. The font does not exist.", alias.c_str(), name.c_str());
+			hlog::errorf(atres::logTag, "Could not register alias '%s' for font '%s'. The font does not exist.", alias.cStr(), name.cStr());
 		}
 	}
 	
@@ -368,7 +368,7 @@ namespace atres
 
 	void Renderer::addColor(chstr key, chstr value)
 	{
-		this->colors[key.lower()] = value.upper();
+		this->colors[key.lowered()] = value.uppered();
 	}
 	
 	void Renderer::_updateCache()
@@ -414,7 +414,7 @@ namespace atres
 	void Renderer::analyzeText(chstr fontName, chstr text)
 	{
 		// makes sure dynamically allocated characters are loaded
-		std::basic_string<unsigned int> chars = text.u_str();
+		std::basic_string<unsigned int> chars = text.uStr();
 		Font* font = this->getFont(fontName);
 		if (font != NULL)
 		{
@@ -427,7 +427,7 @@ namespace atres
 
 	hstr Renderer::analyzeFormatting(chstr text, harray<FormatTag>& tags)
 	{
-		std::basic_string<unsigned int> uText = text.u_str();
+		std::basic_string<unsigned int> uText = text.uStr();
 		const unsigned int* str = uText.c_str();
 		int start = 0;
 		int end = 0;
@@ -450,8 +450,8 @@ namespace atres
 			}
 			++end;
 			tag.data = "";
-			tag.start = text.utf8_substr(0, start).size();
-			tag.count = text.utf8_substr(start, end - start).size();
+			tag.start = text.utf8SubString(0, start).size();
+			tag.count = text.utf8SubString(start, end - start).size();
 			if (ignoreFormatting)
 			{
 				if (str[start + 1] != '/' || str[start + 2] != '-')
@@ -512,7 +512,7 @@ namespace atres
 				stack += str[start + 1];
 				if (end - start > 4)
 				{
-					tag.data = text.utf8_substr(start + 3, end - start - 4);
+					tag.data = text.utf8SubString(start + 3, end - start - 4);
 				}
 			}
 			foundTags += tag;
@@ -774,7 +774,7 @@ namespace atres
 				}
 				else
 				{
-					hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.c_str());
+					hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.cStr());
 				}
 			}
 			else if (this->_nextTag.type == TAG_TYPE_COLOR)
@@ -823,7 +823,7 @@ namespace atres
 					break;
 				case TAG_TYPE_COLOR:
 					this->_hex = (this->colors.hasKey(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
-					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
+					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_textColor.set(this->_hex);
 					}
@@ -837,7 +837,7 @@ namespace atres
 				case TAG_TYPE_SHADOW:
 					this->_effectMode = EFFECT_MODE_SHADOW;
 					this->_hex = (this->colors.hasKey(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
-					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
+					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_shadowColor.set(this->_hex);
 					}
@@ -845,7 +845,7 @@ namespace atres
 				case TAG_TYPE_BORDER:
 					this->_effectMode = EFFECT_MODE_BORDER;
 					this->_hex = (this->colors.hasKey(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
-					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
+					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_borderColor.set(this->_hex);
 					}
@@ -883,7 +883,7 @@ namespace atres
 					}
 					else
 					{
-						hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.c_str());
+						hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.cStr());
 					}
 					break;
 				case TAG_TYPE_COLOR:
@@ -891,14 +891,14 @@ namespace atres
 					this->_currentTag.data = this->_textColor.hex();
 					this->_stack += this->_currentTag;
 					this->_hex = (this->colors.hasKey(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
-					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
+					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_textColor.set(this->_hex);
 						this->_alpha == -1 ? this->_alpha = this->_textColor.a : this->_textColor.a = (unsigned char)(this->_alpha * this->_textColor.a_f());
 					}
 					else
 					{
-						hlog::warnf(atres::logTag, "Color '%s' does not exist!", this->_hex.c_str());
+						hlog::warnf(atres::logTag, "Color '%s' does not exist!", this->_hex.cStr());
 					}
 					break;
 				case TAG_TYPE_SCALE:
@@ -921,13 +921,13 @@ namespace atres
 					if (this->_nextTag.data != "")
 					{
 						this->_hex = (this->colors.hasKey(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
-						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
+						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 						{
 							this->_shadowColor.set(this->_hex);
 						}
 						else
 						{
-							hlog::warnf(atres::logTag, "Color '%s' does not exist!", this->_hex.c_str());
+							hlog::warnf(atres::logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
 					}
 					break;
@@ -940,13 +940,13 @@ namespace atres
 					if (this->_nextTag.data != "")
 					{
 						this->_hex = (this->colors.hasKey(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
-						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.is_hex())
+						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 						{
 							this->_borderColor.set(this->_hex);
 						}
 						else
 						{
-							hlog::warnf(atres::logTag, "Color '%s' does not exist!", this->_hex.c_str());
+							hlog::warnf(atres::logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
 					}
 					break;
@@ -1034,7 +1034,7 @@ namespace atres
 		}
 		else if (actualSize < text.size())
 		{
-			hlog::warnf(atres::logTag, "Text '%s' has \\0 character before the actual end!", text.c_str());
+			hlog::warnf(atres::logTag, "Text '%s' has \\0 character before the actual end!", text.cStr());
 		}
 		harray<RenderWord> result;
 		RenderWord word;
@@ -1063,7 +1063,7 @@ namespace atres
 			wordW = 0.0f;
 			while (i < actualSize) // checking a whole word
 			{
-				code = text.first_unicode_char(i, &byteSize);
+				code = text.firstUnicodeChar(i, &byteSize);
 				this->_checkFormatTags(text, i);
 				if (code == '\n')
 				{
@@ -1117,7 +1117,7 @@ namespace atres
 						}
 						else if (IS_IDEOGRAPH(code) || IS_PUNCTUATION_CHAR(code))
 						{
-							unsigned int nextCode = text.first_unicode_char(i);
+							unsigned int nextCode = text.firstUnicodeChar(i);
 							if (!IS_PUNCTUATION_CHAR(nextCode))
 							{
 								break;
@@ -1280,7 +1280,7 @@ namespace atres
 				this->_word = (*it);
 				for_iter_step (i, 0, this->_word.text.size(), byteSize)
 				{
-					this->_code = this->_word.text.first_unicode_char(i, &byteSize);
+					this->_code = this->_word.text.firstUnicodeChar(i, &byteSize);
 					// checking first formatting tag changes
 					this->_processFormatTags(this->_word.text, i);
 					// if character exists in current font
@@ -1695,7 +1695,7 @@ namespace atres
 		}
 		else if (actualSize < text.size())
 		{
-			hlog::warnf(atres::logTag, "Text '%s' has \\0 character before the actual end!", text.c_str());
+			hlog::warnf(atres::logTag, "Text '%s' has \\0 character before the actual end!", text.cStr());
 		}
 
 		unsigned int code = 0;
@@ -1711,7 +1711,7 @@ namespace atres
 		
 		while (i < actualSize) // checking all characters
 		{
-			code = text.first_unicode_char(i, &byteSize);
+			code = text.firstUnicodeChar(i, &byteSize);
 			if (code == '\n')
 			{
 				break;

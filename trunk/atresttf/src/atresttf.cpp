@@ -104,14 +104,14 @@ namespace atresttf
 				hstr systemPath = atresttf::getSystemFontsPath();
 				while (RegEnumValueW(hKey, index, wName, &wSize, NULL, NULL, (BYTE*)wData, &wSize) == ERROR_SUCCESS)
 				{
-					name = hstr::from_unicode(wName);
-					data = hstr::from_unicode(wData);
-					if (name.ends_with(")"))
+					name = hstr::fromUnicode(wName);
+					data = hstr::fromUnicode(wData);
+					if (name.endsWith(")"))
 					{
 						slash = name.rfind('(');
 						if (slash >= 0)
 						{
-							name = name(0, slash).rtrim();
+							name = name(0, slash).trimmedRight();
 						}
 					}
 					fonts[name] = hdir::joinPath(systemPath, data);
@@ -135,7 +135,7 @@ namespace atresttf
 			hstr styleName;
 			foreach (hstr, it, fontFiles)
 			{
-				error = FT_New_Face(library, (*it).c_str(), 0, &face);
+				error = FT_New_Face(library, (*it).cStr(), 0, &face);
 				if (error == 0)
 				{
 					fontName = hstr((char*)face->family_name);

@@ -44,9 +44,9 @@ namespace atresttf
 			line = lines.remove_first();
 			if (!this->_readBasicParameter(line))
 			{
-				if (line.starts_with("File="))
+				if (line.startsWith("File="))
 				{
-					this->fontFilename = hrdir::joinPath(path, line.replace("File=", ""), false);
+					this->fontFilename = hrdir::joinPath(path, line.replaced("File=", ""), false);
 				}
 			}
 		}
@@ -284,7 +284,7 @@ namespace atresttf
 		{
 			if (!ignoreCharacterEnabled && charCode >= 0x20)
 			{
-				hlog::debugf(atresttf::logTag, "Character '0x%X' does not exist in: %s", charCode, this->fontFilename.c_str());
+				hlog::debugf(atresttf::logTag, "Character '0x%X' does not exist in: %s", charCode, this->fontFilename.cStr());
 			}
 			return false;
 		}
@@ -327,7 +327,7 @@ namespace atresttf
 		}
 		if (this->penY + this->rowHeight + CHARACTER_SPACE > textureContainer->texture->getHeight())
 		{
-			hlog::debugf(atresttf::logTag, "Font '%s': character 0x%X does not fit, creating new texture.", this->name.c_str(), charCode);
+			hlog::debugf(atresttf::logTag, "Font '%s': character 0x%X does not fit, creating new texture.", this->name.cStr(), charCode);
 			textureContainer = new atres::TextureContainer();
 			textureContainer->texture = this->_createTexture();
 			this->textureContainers += textureContainer;
