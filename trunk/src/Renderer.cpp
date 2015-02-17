@@ -351,7 +351,7 @@ namespace atres
 			font->setScale(1.0f);
 			return font;
 		}
-		int position = (int)name.find(":");
+		int position = (int)name.indexOf(":");
 		if (position >= 0)
 		{
 			font = this->getFont(name(0, position));
@@ -1027,7 +1027,7 @@ namespace atres
 	harray<RenderWord> Renderer::createRenderWords(grect rect, chstr text, harray<FormatTag> tags)
 	{
 		this->_initializeFormatTags(tags);
-		int actualSize = (int)text.find_first_of('\0');
+		int actualSize = text.indexOf('\0');
 		if (actualSize < 0)
 		{
 			actualSize = text.size();
@@ -1688,7 +1688,7 @@ namespace atres
 	{
 		this->analyzeText(tags.first().data, text);
 		this->_initializeFormatTags(tags);
-		int actualSize = (int)text.find_first_of('\0');
+		int actualSize = text.indexOf('\0');
 		if (actualSize < 0)
 		{
 			actualSize = text.size();

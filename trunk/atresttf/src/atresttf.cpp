@@ -108,7 +108,7 @@ namespace atresttf
 					data = hstr::fromUnicode(wData);
 					if (name.endsWith(")"))
 					{
-						slash = name.rfind('(');
+						slash = name.rindexOf('(');
 						if (slash >= 0)
 						{
 							name = name(0, slash).trimmedRight();
