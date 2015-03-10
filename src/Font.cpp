@@ -108,7 +108,7 @@ namespace atres
 	{
 		foreach (TextureContainer*, it, this->textureContainers)
 		{
-			if ((*it)->characters.contains(charCode))
+			if ((*it)->characters.has(charCode))
 			{
 				return (*it)->texture;
 			}
