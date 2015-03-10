@@ -41,7 +41,7 @@ namespace atresttf
 		hstr line;
 		while (lines.size() > 0)
 		{
-			line = lines.remove_first();
+			line = lines.removeFirst();
 			if (!this->_readBasicParameter(line))
 			{
 				if (line.startsWith("File="))
