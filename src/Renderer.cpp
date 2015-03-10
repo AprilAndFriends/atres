@@ -319,7 +319,7 @@ namespace atres
 	{
 		this->defaultFont = NULL;
 		this->clearCache();
-		harray<Font*> fonts = this->fonts.values().removed_duplicates();
+		harray<Font*> fonts = this->fonts.values().removedDuplicates();
 		foreach (Font*, it, fonts)
 		{
 			delete (*it);
@@ -460,7 +460,7 @@ namespace atres
 					continue;
 				}
 				ignoreFormatting = false;
-				stack.remove_last();
+				stack.removeLast();
 				tag.type = TAG_TYPE_CLOSE;
 			}
 			else if (end - start == 2) // empty command
@@ -475,7 +475,7 @@ namespace atres
 					hlog::warnf(atres::logTag, "Closing tag that was not opened ('[/%c]' in '%s')!", str[start + 2], str);
 					continue;
 				}
-				stack.remove_last();
+				stack.removeLast();
 				tag.type = TAG_TYPE_CLOSE;
 			}
 			else // opening new tag
@@ -733,7 +733,7 @@ namespace atres
 		{
 			if (this->_nextTag.type == TAG_TYPE_CLOSE)
 			{
-				this->_currentTag = this->_stack.remove_last();
+				this->_currentTag = this->_stack.removeLast();
 				if (this->_currentTag.type == TAG_TYPE_FONT)
 				{
 					this->_fontName = this->_currentTag.data;
@@ -794,7 +794,7 @@ namespace atres
 				this->_currentTag.type = TAG_TYPE_NORMAL;
 				this->_stack += this->_currentTag;
 			}
-			this->_tags.remove_first();
+			this->_tags.removeFirst();
 			if (this->_tags.size() > 0)
 			{
 				this->_nextTag = this->_tags.first();
@@ -812,7 +812,7 @@ namespace atres
 		{
 			if (this->_nextTag.type == TAG_TYPE_CLOSE)
 			{
-				this->_currentTag = this->_stack.remove_last();
+				this->_currentTag = this->_stack.removeLast();
 				switch (this->_currentTag.type)
 				{
 				case TAG_TYPE_FONT:
@@ -952,7 +952,7 @@ namespace atres
 					break;
 				}
 			}
-			this->_tags.remove_first();
+			this->_tags.removeFirst();
 			if (this->_tags.size() > 0)
 			{
 				this->_nextTag = this->_tags.first();
@@ -1209,11 +1209,11 @@ namespace atres
 				{
 					while (this->_line.words.size() > 0 && this->_line.words.first().spaces > 0)
 					{
-						this->_line.words.remove_first();
+						this->_line.words.removeFirst();
 					}
 					while (this->_line.words.size() > 0 && this->_line.words.last().spaces > 0)
 					{
-						this->_line.words.remove_last();
+						this->_line.words.removeLast();
 					}
 				}
 				if (this->_line.words.size() > 0)
@@ -1273,7 +1273,7 @@ namespace atres
 		
 		while (this->_lines.size() > 0)
 		{
-			this->_line = this->_lines.remove_first();
+			this->_line = this->_lines.removeFirst();
 			foreach (RenderWord, it, this->_line.words)
 			{
 				width = 0.0f;
@@ -1362,13 +1362,13 @@ namespace atres
 		RenderSequence current;
 		while (sequences.size() > 0)
 		{
-			current = sequences.remove_first();
+			current = sequences.removeFirst();
 			for_iter (i, 0, sequences.size())
 			{
 				if (current.texture == sequences[i].texture && current.color.hex(true) == sequences[i].color.hex(true))
 				{
 					current.vertices += sequences[i].vertices;
-					sequences.remove_at(i);
+					sequences.removeAt(i);
 					--i;
 				}
 			}
@@ -1541,10 +1541,10 @@ namespace atres
 		FormatTag tag;
 		tag.type = TAG_TYPE_COLOR;
 		tag.data = color.hex();
-		tags.push_first(tag);
+		tags.addFirst(tag);
 		tag.type = TAG_TYPE_FONT;
 		tag.data = fontName;
-		tags.push_first(tag);
+		tags.addFirst(tag);
 		return tags;
 	}
 
@@ -1554,10 +1554,10 @@ namespace atres
 		FormatTag tag;
 		tag.type = TAG_TYPE_COLOR;
 		tag.data = color.hex();
-		tags.push_first(tag);
+		tags.addFirst(tag);
 		tag.type = TAG_TYPE_FONT;
 		tag.data = fontName;
-		tags.push_first(tag);
+		tags.addFirst(tag);
 		return tags;
 	}
 
@@ -1658,7 +1658,7 @@ namespace atres
 		FormatTag tag;
 		tag.type = TAG_TYPE_FONT;
 		tag.data = fontName;
-		tags.push_first(tag);
+		tags.addFirst(tag);
 		return unformattedText;
 	}
 	
@@ -1668,7 +1668,7 @@ namespace atres
 		FormatTag tag;
 		tag.type = TAG_TYPE_FONT;
 		tag.data = fontName;
-		tags.push_first(tag);
+		tags.addFirst(tag);
 		return tags;
 	}
 	
