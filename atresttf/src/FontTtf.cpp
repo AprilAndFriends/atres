@@ -19,8 +19,8 @@
 #include <hltypes/hstring.h>
 
 #include "atresttf.h"
+#include "atresttfUtil.h"
 #include "FontTtf.h"
-#include "freetype.h"
 
 #define SAFE_SPACE 2
 #define CHARACTER_SPACE 0
@@ -33,8 +33,7 @@ namespace atresttf
 	{
 		this->customDescender = false;
 		this->penX = 0;
-		this->penY = 0;
-		this->rowHeight = 0;
+		this->penY = 0;this->rowHeight = 0;
 		this->loadBasicAscii = loadBasicAscii;
 		hstr path = hrdir::baseDir(filename);
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
@@ -241,8 +240,8 @@ namespace atresttf
 		}
 		if (texture == NULL)
 		{
-			hlog::warn(atresttf::logTag, "Trying a RGBA format.");
-			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color(april::Color::White, 0), april::rendersys->getNativeTextureFormat(april::Image::FORMAT_RGBA), april::Texture::TYPE_MANAGED);
+			hlog::warn(atresttf::logTag, "Could not create alpha texture for font, trying an RGBA format.");
+			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Blank, april::rendersys->getNativeTextureFormat(april::Image::FORMAT_RGBA), april::Texture::TYPE_MANAGED);
 		}
 		return texture;
 	}
