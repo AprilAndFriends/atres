@@ -65,7 +65,7 @@
     <ClInclude Include="..\..\include\atresttf\atresttf.h" />
     <ClInclude Include="..\..\include\atresttf\atresttfExport.h" />
     <ClInclude Include="..\..\include\atresttf\FontTtf.h" />
-    <ClInclude Include="..\..\src\freetype.h" />
+    <ClInclude Include="..\..\src\atresttfUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\atresttf.cpp" />

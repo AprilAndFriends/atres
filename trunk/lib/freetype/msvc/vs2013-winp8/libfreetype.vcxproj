@@ -93,7 +93,7 @@
     <ClCompile Include="..\..\src\base\ftbase.c" />
     <ClCompile Include="..\..\src\base\ftbitmap.c" />
     <ClCompile Include="..\..\src\cache\ftcache.c" />
-    <ClCompile Include="..\..\builds\win32\ftdebug.c">
+    <ClCompile Include="..\..\builds\windows\ftdebug.c">
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
     </ClCompile>
     <ClCompile Include="..\..\src\base\ftfstype.c" />
@@ -131,11 +131,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\ft2build.h" />
-    <ClInclude Include="..\..\include\freetype\config\ftconfig.h" />
-    <ClInclude Include="..\..\include\freetype\config\ftheader.h" />
-    <ClInclude Include="..\..\include\freetype\config\ftmodule.h" />
-    <ClInclude Include="..\..\include\freetype\config\ftoption.h" />
-    <ClInclude Include="..\..\include\freetype\config\ftstdlib.h" />
+    <ClInclude Include="..\..\include\config\ftconfig.h" />
+    <ClInclude Include="..\..\include\config\ftheader.h" />
+    <ClInclude Include="..\..\include\config\ftmodule.h" />
+    <ClInclude Include="..\..\include\config\ftoption.h" />
+    <ClInclude Include="..\..\include\config\ftstdlib.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

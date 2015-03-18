@@ -24,7 +24,7 @@
 #include <hltypes/hstring.h>
 
 #include "atresttf.h"
-#include "freetype.h"
+#include "atresttfUtil.h"
 
 namespace atresttf
 {
