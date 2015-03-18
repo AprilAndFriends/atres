@@ -1412,11 +1412,11 @@ namespace atres
 		}
 		if (color == april::Color::White)
 		{
-			april::rendersys->render(april::RO_TRIANGLE_LIST, &sequence.vertices[0], sequence.vertices.size());
+			april::rendersys->render(april::RO_TRIANGLE_LIST, (april::TexturedVertex*)sequence.vertices, sequence.vertices.size());
 		}
 		else
 		{
-			april::rendersys->render(april::RO_TRIANGLE_LIST, &sequence.vertices[0], sequence.vertices.size(), color);
+			april::rendersys->render(april::RO_TRIANGLE_LIST, (april::TexturedVertex*)sequence.vertices, sequence.vertices.size(), color);
 		}
 		april::rendersys->setTextureColorMode(april::CM_DEFAULT);
 	}
