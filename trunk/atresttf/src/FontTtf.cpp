@@ -229,7 +229,7 @@ namespace atresttf
 	{
 		int textureSize = atresttf::getTextureSize();
 		april::Texture* texture = NULL;
-		if (atresttf::isAllowAlphaTextures())
+		if (atresttf::isAllowAlphaTextures() && april::rendersys->getCaps().textureFormats.has(april::Image::FORMAT_ALPHA))
 		{
 			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Clear, april::Image::FORMAT_ALPHA, april::Texture::TYPE_MANAGED);
 			if (texture != NULL && !texture->isLoaded())
