@@ -759,7 +759,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0620;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "freetype" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -928,9 +928,7 @@
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/include",
-				);
+				HEADER_SEARCH_PATHS = "${SRCROOT}/include";
 				PRODUCT_NAME = freetype;
 			};
 			name = "App Store";
@@ -955,9 +953,7 @@
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/include",
-				);
+				HEADER_SEARCH_PATHS = "${SRCROOT}/include";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = freetype;
 			};
@@ -985,9 +981,7 @@
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/include",
-				);
+				HEADER_SEARCH_PATHS = "${SRCROOT}/include";
 				PRODUCT_NAME = freetype;
 			};
 			name = Release;
