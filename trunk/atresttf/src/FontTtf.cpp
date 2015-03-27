@@ -236,11 +236,11 @@ namespace atresttf
 			{
 				delete texture;
 				texture = NULL;
+				hlog::warn(atresttf::logTag, "Could not create alpha texture for font, trying an RGBA format.");
 			}
 		}
 		if (texture == NULL)
 		{
-			hlog::warn(atresttf::logTag, "Could not create alpha texture for font, trying an RGBA format.");
 			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Blank, april::rendersys->getNativeTextureFormat(april::Image::FORMAT_RGBA), april::Texture::TYPE_MANAGED);
 		}
 		return texture;
