@@ -105,6 +105,12 @@ namespace atresttf
 
 	FontTtf::~FontTtf()
 	{
+		foreach (atres::TextureContainer*, it, this->textureContainers)
+		{
+			delete (*it)->texture;
+			delete (*it);
+		}
+		this->textureContainers.clear();
 		atresttf::destroyFace(this);
 	}
 
@@ -126,6 +132,8 @@ namespace atresttf
 
 	void FontTtf::_checkTextures()
 	{
+		/* kspes@20150416 - commenting this out, not needed with new april managed textures, plus it caused a memory issue by deleting the texture
+		   if this code is going to be restored, make sure you adjust all texture pointers in the cache to point to the new textures (or clear cache simply).
 		bool reload = false;
 		foreach (atres::TextureContainer*, it, this->textureContainers)
 		{
@@ -147,6 +155,7 @@ namespace atresttf
 			this->textureContainers.clear();
 			this->_loadBasicCharacters();
 		}
+		 */
 	}
 	
 	void FontTtf::_initializeFont()

@@ -268,20 +268,22 @@ namespace atres
 		{
 			throw ResourceAlreadyExistsException("font", name, "atres");
 		}
+		this->clearCache(); // there may be old cached definitions, they must be removed
 		this->fonts[name] = font;
 		if (this->defaultFont == NULL && allowDefault)
 		{
 			this->defaultFont = font;
 		}
-		this->clearCache(); // there may be old cached definitions, they must be removed
 	}
 	
 	void Renderer::unregisterFont(Font* font)
 	{
+		hlog::write(atres::logTag, "Unregistering font: " + font->getName());
 		if (!this->fonts.hasValue(font))
 		{
 			throw ResourceNotExistsException("font", font->getName(), "atres");
 		}
+		this->clearCache(); // there may be old cached definitions, they must be removed
 		harray<hstr> keys = this->fonts.keys();
 		foreach (hstr, it, keys) // removing aliases
 		{
@@ -294,7 +296,6 @@ namespace atres
 		{
 			this->defaultFont = (this->fonts.size() > 0 ? this->fonts.values().first() : NULL);
 		}
-		this->clearCache(); // there may be old cached definitions, they must be removed
 	}
 
 	void Renderer::registerFontAlias(chstr name, chstr alias)
