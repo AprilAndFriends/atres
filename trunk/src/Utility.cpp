@@ -80,11 +80,11 @@ namespace atres
 	unsigned int CacheEntryBasicText::hash() const
 	{
 		unsigned int result = 0xFFFFFFFF;
-		for_iter(i, 0, this->text.size())
+		for_iter (i, 0, this->text.size())
 		{
 			result ^= this->text[i] << ((i % 4) * 8);
 		}
-		for_iter(i, 0, this->fontName.size())
+		for_iter (i, 0, this->fontName.size())
 		{
 			result ^= this->fontName[i] << ((i % 4) * 8);
 		}
