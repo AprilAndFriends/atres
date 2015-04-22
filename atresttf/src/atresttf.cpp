@@ -167,20 +167,20 @@ namespace atresttf
 	{
 #ifdef _WIN32
 #ifndef _WINRT
-		return (hdir::normalize(henv("WinDir")) + "/Fonts/");
+		return (hdir::joinPath(hdir::normalize(henv("WinDir")), "Fonts"));
 #else
 		return "";
 #endif
 #elif defined(__APPLE__)
 #ifdef _IOS
-		return "/System/Library/Fonts/";
+		return "/System/Library/Fonts";
 #else
-		return "/Library/Fonts/";
+		return "/Library/Fonts";
 #endif
 #elif defined(_ANDROID)
-		return "/system/fonts/";
+		return "/system/fonts";
 #elif defined(_UNIX)
-		return "/usr/share/fonts/";
+		return "/usr/share/fonts";
 #else
 		return "";
 #endif
