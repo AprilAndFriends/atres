@@ -20,7 +20,23 @@ namespace atres
 	{
 	}
 
+	CharacterDefinition::~CharacterDefinition()
+	{
+	}
+
+	RenderRectangle::RenderRectangle()
+	{
+	}
+
+	RenderRectangle::~RenderRectangle()
+	{
+	}
+
 	RenderSequence::RenderSequence() : texture(NULL)
+	{
+	}
+
+	RenderSequence::~RenderSequence()
 	{
 	}
 
@@ -38,16 +54,40 @@ namespace atres
 	RenderWord::RenderWord() : start(0), count(0), spaces(0), fullWidth(0.0f)
 	{
 	}
-	
+
+	RenderWord::~RenderWord()
+	{
+	}
+
 	RenderLine::RenderLine() : start(0), count(0), spaces(0), terminated(false)
 	{
 	}
 	
+	RenderLine::~RenderLine()
+	{
+	}
+
+	RenderText::RenderText()
+	{
+	}
+
+	RenderText::~RenderText()
+	{
+	}
+
 	FormatTag::FormatTag() : type(TAG_TYPE_ESCAPE), start(0), count(0)
 	{
 	}
 
+	FormatTag::~FormatTag()
+	{
+	}
+
 	CacheEntryBasicText::CacheEntryBasicText() : horizontal(CENTER_WRAPPED), vertical(CENTER)
+	{
+	}
+
+	CacheEntryBasicText::~CacheEntryBasicText()
 	{
 	}
 
@@ -75,6 +115,11 @@ namespace atres
 			this->color.g == other.color.g &&
 			this->color.b == other.color.b &&
 			this->offset == other.offset);
+	}
+
+	bool CacheEntryBasicText::operator!=(const CacheEntryBasicText& other) const
+	{
+		return !(*this == other);
 	}
 
 	unsigned int CacheEntryBasicText::hash() const
@@ -106,7 +151,43 @@ namespace atres
 	{
 	}
 
+	CacheEntryText::~CacheEntryText()
+	{
+	}
+
+	bool CacheEntryText::operator==(const CacheEntryText& other) const
+	{
+		return CacheEntryBasicText::operator==(other);
+	}
+
+	bool CacheEntryText::operator!=(const CacheEntryText& other) const
+	{
+		return CacheEntryBasicText::operator!=(other);
+	}
+
 	CacheEntryLines::CacheEntryLines() : CacheEntryBasicText()
+	{
+	}
+
+	CacheEntryLines::~CacheEntryLines()
+	{
+	}
+
+	bool CacheEntryLines::operator==(const CacheEntryLines& other) const
+	{
+		return CacheEntryBasicText::operator==(other);
+	}
+
+	bool CacheEntryLines::operator!=(const CacheEntryLines& other) const
+	{
+		return CacheEntryBasicText::operator!=(other);
+	}
+
+	CacheEntryLine::CacheEntryLine()
+	{
+	}
+
+	CacheEntryLine::~CacheEntryLine()
 	{
 	}
 
@@ -123,7 +204,12 @@ namespace atres
 			this->fontName == other.fontName &&
 			this->size == other.size);
 	}
-	
+
+	bool CacheEntryLine::operator!=(const CacheEntryLine& other) const
+	{
+		return !(*this == other);
+	}
+
 	unsigned int CacheEntryLine::hash() const
 	{
 		unsigned int result = 0xFFFFFFFF;
@@ -141,6 +227,10 @@ namespace atres
 	}
 	
 	TextureContainer::TextureContainer() : texture(NULL)
+	{
+	}
+
+	TextureContainer::~TextureContainer()
 	{
 	}
 
