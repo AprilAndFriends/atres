@@ -75,7 +75,7 @@ namespace atres
 
 	};
 	
-	class RenderRectangle
+	class atresExport RenderRectangle
 	{
 	public:
 		grect src;
@@ -86,7 +86,7 @@ namespace atres
 
 	};
 	
-	class RenderSequence
+	class atresExport RenderSequence
 	{
 	public:
 		april::Texture* texture;
@@ -101,7 +101,7 @@ namespace atres
 
 	};
 	
-	class RenderWord
+	class atresExport RenderWord
 	{
 	public:
 		hstr text;
@@ -117,7 +117,7 @@ namespace atres
 
 	};
 	
-	class RenderLine
+	class atresExport RenderLine
 	{
 	public:
 		hstr text;
@@ -133,7 +133,7 @@ namespace atres
 
 	};
 	
-	class RenderText
+	class atresExport RenderText
 	{
 	public:
 		harray<RenderLine> lines;
@@ -146,7 +146,7 @@ namespace atres
 
 	};
 
-	class FormatTag
+	class atresExport FormatTag
 	{
 	public:
 		FormatTagType type;
@@ -156,6 +156,17 @@ namespace atres
 		
 		FormatTag();
 		~FormatTag();
+
+	};
+
+	class atresExport TextureContainer
+	{
+	public:
+		april::Texture* texture;
+		harray<unsigned int> characters;
+		
+		TextureContainer();
+		~TextureContainer();
 
 	};
 
@@ -213,7 +224,7 @@ namespace atres
 		hstr fontName;
 		gvec2 size;
 		RenderLine value;
-		
+
 		CacheEntryLine();
 		~CacheEntryLine();
 
@@ -221,17 +232,6 @@ namespace atres
 		bool operator==(const CacheEntryLine& other) const;
 		bool operator!=(const CacheEntryLine& other) const;
 		unsigned int hash() const;
-
-	};
-	
-	class atresExport TextureContainer
-	{
-	public:
-		april::Texture* texture;
-		harray<unsigned int> characters;
-		
-		TextureContainer();
-		~TextureContainer();
 
 	};
 
