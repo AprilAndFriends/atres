@@ -59,8 +59,9 @@ namespace atres
 		TAG_TYPE_CLOSE
 	};
 	
-	struct atresExport CharacterDefinition
+	class atresExport CharacterDefinition
 	{
+	public:
 		float x;
 		float y;
 		float w;
@@ -70,27 +71,39 @@ namespace atres
 		float aw;
 		
 		CharacterDefinition();
+		~CharacterDefinition();
+
 	};
 	
-	struct RenderRectangle
+	class RenderRectangle
 	{
+	public:
 		grect src;
 		grect dest;
+
+		RenderRectangle();
+		~RenderRectangle();
+
 	};
 	
-	struct RenderSequence
+	class RenderSequence
 	{
+	public:
 		april::Texture* texture;
 		april::Color color;
 		harray<april::TexturedVertex> vertices;
 		
 		RenderSequence();
+		~RenderSequence();
+
 		/// @note Not thread-safe!
 		void addRenderRectangle(RenderRectangle rect);
+
 	};
 	
-	struct RenderWord
+	class RenderWord
 	{
+	public:
 		hstr text;
 		grect rect;
 		int start;
@@ -100,10 +113,13 @@ namespace atres
 		harray<float> charWidths;
 		
 		RenderWord();
+		~RenderWord();
+
 	};
 	
-	struct RenderLine
+	class RenderLine
 	{
+	public:
 		hstr text;
 		grect rect;
 		int start;
@@ -113,28 +129,39 @@ namespace atres
 		harray<RenderWord> words;
 		
 		RenderLine();
+		~RenderLine();
+
 	};
 	
-	struct RenderText
+	class RenderText
 	{
+	public:
 		harray<RenderLine> lines;
 		harray<RenderSequence> textSequences;
 		harray<RenderSequence> shadowSequences;
 		harray<RenderSequence> borderSequences;
+
+		RenderText();
+		~RenderText();
+
 	};
 
-	struct FormatTag
+	class FormatTag
 	{
+	public:
 		FormatTagType type;
 		hstr data;
 		int start;
 		int count;
 		
 		FormatTag();
+		~FormatTag();
+
 	};
 
-	struct CacheEntryBasicText
+	class CacheEntryBasicText
 	{
+	public:
 		hstr text;
 		hstr fontName;
 		grect rect;
@@ -144,43 +171,68 @@ namespace atres
 		gvec2 offset;
 
 		CacheEntryBasicText();
+		virtual ~CacheEntryBasicText();
+
 		void set(hstr text, hstr fontName, grect rect, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset);
 		bool operator==(const CacheEntryBasicText& other) const;
+		bool operator!=(const CacheEntryBasicText& other) const;
 		unsigned int hash() const;
+
 	};
 
-	struct CacheEntryText : CacheEntryBasicText
+	class CacheEntryText : public CacheEntryBasicText
 	{
+	public:
 		RenderText value;
 
 		CacheEntryText();
+		~CacheEntryText();
+
+		bool operator==(const CacheEntryText& other) const;
+		bool operator!=(const CacheEntryText& other) const;
+
 	};
 
-	struct CacheEntryLines : CacheEntryBasicText
+	class CacheEntryLines : public CacheEntryBasicText
 	{
+	public:
 		harray<RenderLine> value;
 
 		CacheEntryLines();
+		~CacheEntryLines();
+
+		bool operator==(const CacheEntryLines& other) const;
+		bool operator!=(const CacheEntryLines& other) const;
+
 	};
 
-	struct CacheEntryLine
+	class CacheEntryLine
 	{
+	public:
 		hstr text;
 		hstr fontName;
 		gvec2 size;
 		RenderLine value;
 		
+		CacheEntryLine();
+		~CacheEntryLine();
+
 		void set(hstr text, hstr fontName, gvec2 size);
 		bool operator==(const CacheEntryLine& other) const;
+		bool operator!=(const CacheEntryLine& other) const;
 		unsigned int hash() const;
+
 	};
 	
-	struct atresExport TextureContainer
+	class atresExport TextureContainer
 	{
+	public:
 		april::Texture* texture;
 		harray<unsigned int> characters;
 		
 		TextureContainer();
+		~TextureContainer();
+
 	};
 
 };
