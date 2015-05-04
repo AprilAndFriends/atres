@@ -83,6 +83,14 @@ namespace atres
 	{
 	}
 
+	TextureContainer::TextureContainer() : texture(NULL)
+	{
+	}
+
+	TextureContainer::~TextureContainer()
+	{
+	}
+
 	CacheEntryBasicText::CacheEntryBasicText() : horizontal(CENTER_WRAPPED), vertical(CENTER)
 	{
 	}
@@ -226,12 +234,4 @@ namespace atres
 		return result;
 	}
 	
-	TextureContainer::TextureContainer() : texture(NULL)
-	{
-	}
-
-	TextureContainer::~TextureContainer()
-	{
-	}
-
 }
