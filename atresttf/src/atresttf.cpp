@@ -39,17 +39,17 @@ namespace atresttf
 
 	void init()
 	{
-		hlog::write(atresttf::logTag, "Initializing AtresTTF");
+		hlog::write(logTag, "Initializing AtresTTF");
 		FT_Error error = FT_Init_FreeType(&library);
 		if (error != 0)
 		{
-			hlog::error(atresttf::logTag, "Could not initialize FreeType library!");
+			hlog::error(logTag, "Could not initialize FreeType library!");
 		}
 	}
 
 	void destroy()
 	{
-		hlog::write(atresttf::logTag, "Destroying AtresTTF");
+		hlog::write(logTag, "Destroying AtresTTF");
 		foreach_map (atres::Font*, FT_Face, it, faces)
 		{
 			FT_Done_Face(it->second);
@@ -62,7 +62,7 @@ namespace atresttf
 		}
 		else
 		{
-			hlog::error(atresttf::logTag, "Could not finalize FreeType library!");
+			hlog::error(logTag, "Could not finalize FreeType library!");
 		}
 	}
 
@@ -124,7 +124,7 @@ namespace atresttf
 			}
 			else
 			{
-				hlog::error(atresttf::logTag, "Could not open registry!");
+				hlog::error(logTag, "Could not open registry!");
 			}
 #else
 			harray<hstr> fontFiles = hdir::files(atresttf::getSystemFontsPath(), true);
@@ -204,7 +204,7 @@ namespace atresttf
 	{
 		if (faces.hasKey(font))
 		{
-			hlog::error(atresttf::logTag, "Cannot add Face for Font Resource: " + font->getName());
+			hlog::error(logTag, "Cannot add Face for Font Resource: " + font->getName());
 			return;
 		}
 		faces[font] = face;
@@ -214,7 +214,7 @@ namespace atresttf
 	{
 		if (!faces.hasKey(font))
 		{
-			hlog::warn(atresttf::logTag, "No Face registered for Font: " + font->getName());
+			hlog::warn(logTag, "No Face registered for Font: " + font->getName());
 			return;
 		}
 		FT_Done_Face(faces[font]);

@@ -263,7 +263,7 @@ namespace atres
 	void Renderer::registerFont(Font* font, bool allowDefault)
 	{
 		hstr name = font->getName();
-		hlog::write(atres::logTag, "Registering font: " + name);
+		hlog::write(logTag, "Registering font: " + name);
 		if (this->fonts.hasKey(name))
 		{
 			throw ResourceAlreadyExistsException("font", name, "atres");
@@ -278,7 +278,7 @@ namespace atres
 	
 	void Renderer::unregisterFont(Font* font)
 	{
-		hlog::write(atres::logTag, "Unregistering font: " + font->getName());
+		hlog::write(logTag, "Unregistering font: " + font->getName());
 		if (!this->fonts.hasValue(font))
 		{
 			throw ResourceNotExistsException("font", font->getName(), "atres");
@@ -307,12 +307,12 @@ namespace atres
 		Font* font = this->getFont(name);
 		if (font != NULL)
 		{
-			hlog::writef(atres::logTag, "Registering font alias '%s' for '%s'.", alias.cStr(), font->getName().cStr());
+			hlog::writef(logTag, "Registering font alias '%s' for '%s'.", alias.cStr(), font->getName().cStr());
 			this->fonts[alias] = font;
 		}
 		else
 		{
-			hlog::errorf(atres::logTag, "Could not register alias '%s' for font '%s'. The font does not exist.", alias.cStr(), name.cStr());
+			hlog::errorf(logTag, "Could not register alias '%s' for font '%s'. The font does not exist.", alias.cStr(), name.cStr());
 		}
 	}
 	
@@ -385,27 +385,27 @@ namespace atres
 	{
 		if (this->cacheText->size() > 0)
 		{
-			hlog::writef(atres::logTag, "Clearing %d text cache entries...", this->cacheText->size());
+			hlog::writef(logTag, "Clearing %d text cache entries...", this->cacheText->size());
 			this->cacheText->clear();
 		}
 		if (this->cacheTextUnformatted->size() > 0)
 		{
-			hlog::writef(atres::logTag, "Clearing %d unformatted text cache entries...", this->cacheTextUnformatted->size());
+			hlog::writef(logTag, "Clearing %d unformatted text cache entries...", this->cacheTextUnformatted->size());
 			this->cacheTextUnformatted->clear();
 		}
 		if (this->cacheLines->size() > 0)
 		{
-			hlog::writef(atres::logTag, "Clearing %d lines cache entries...", this->cacheLines->size());
+			hlog::writef(logTag, "Clearing %d lines cache entries...", this->cacheLines->size());
 			this->cacheLines->clear();
 		}
 		if (this->cacheLinesUnformatted->size() > 0)
 		{
-			hlog::writef(atres::logTag, "Clearing %d unformatted lines cache entries...", this->cacheLinesUnformatted->size());
+			hlog::writef(logTag, "Clearing %d unformatted lines cache entries...", this->cacheLinesUnformatted->size());
 			this->cacheLinesUnformatted->clear();
 		}
 		if (this->cacheLine->size() > 0)
 		{
-			hlog::writef(atres::logTag, "Clearing %d line calculation cache entries...", this->cacheLine->size());
+			hlog::writef(logTag, "Clearing %d line calculation cache entries...", this->cacheLine->size());
 			this->cacheLine->clear();
 		}
 	}
@@ -473,7 +473,7 @@ namespace atres
 				if (stack.size() == 0 || stack.last() != str[start + 2]) // interleaving, ignore the tag
 				{
 					start = end;
-					hlog::warnf(atres::logTag, "Closing tag that was not opened ('[/%c]' in '%s')!", str[start + 2], str);
+					hlog::warnf(logTag, "Closing tag that was not opened ('[/%c]' in '%s')!", str[start + 2], str);
 					continue;
 				}
 				stack.removeLast();
@@ -775,7 +775,7 @@ namespace atres
 				}
 				else
 				{
-					hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.cStr());
+					hlog::warnf(logTag, "Font '%s' does not exist!", this->_nextTag.data.cStr());
 				}
 			}
 			else if (this->_nextTag.type == TAG_TYPE_COLOR)
@@ -884,7 +884,7 @@ namespace atres
 					}
 					else
 					{
-						hlog::warnf(atres::logTag, "Font '%s' does not exist!", this->_nextTag.data.cStr());
+						hlog::warnf(logTag, "Font '%s' does not exist!", this->_nextTag.data.cStr());
 					}
 					break;
 				case TAG_TYPE_COLOR:
@@ -899,7 +899,7 @@ namespace atres
 					}
 					else
 					{
-						hlog::warnf(atres::logTag, "Color '%s' does not exist!", this->_hex.cStr());
+						hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 					}
 					break;
 				case TAG_TYPE_SCALE:
@@ -928,7 +928,7 @@ namespace atres
 						}
 						else
 						{
-							hlog::warnf(atres::logTag, "Color '%s' does not exist!", this->_hex.cStr());
+							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
 					}
 					break;
@@ -947,7 +947,7 @@ namespace atres
 						}
 						else
 						{
-							hlog::warnf(atres::logTag, "Color '%s' does not exist!", this->_hex.cStr());
+							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
 					}
 					break;
@@ -1035,7 +1035,7 @@ namespace atres
 		}
 		else if (actualSize < text.size())
 		{
-			hlog::warnf(atres::logTag, "Text '%s' has \\0 character before the actual end!", text.cStr());
+			hlog::warnf(logTag, "Text '%s' has \\0 character before the actual end!", text.cStr());
 		}
 		harray<RenderWord> result;
 		RenderWord word;
@@ -1145,7 +1145,7 @@ namespace atres
 			}
 			else if (tooLong) // this prevents an infinite loop if not at least one character fits in the line
 			{
-				hlog::warn(atres::logTag, "String does not fit in rect: " + text);
+				hlog::warn(logTag, "String does not fit in rect: " + text);
 				break;
 			}
 			tooLong = false;
@@ -1696,7 +1696,7 @@ namespace atres
 		}
 		else if (actualSize < text.size())
 		{
-			hlog::warnf(atres::logTag, "Text '%s' has \\0 character before the actual end!", text.cStr());
+			hlog::warnf(logTag, "Text '%s' has \\0 character before the actual end!", text.cStr());
 		}
 
 		unsigned int code = 0;
