@@ -172,7 +172,7 @@ namespace atresttf
 			}
 			if (!hresource::exists(this->fontFilename) && !hfile::exists(this->fontFilename)) // font file does not exist
 			{
-				hlog::error(atresttf::logTag, "Could not find: " + this->fontFilename);
+				hlog::error(logTag, "Could not find: " + this->fontFilename);
 				return;
 			}
 		}
@@ -202,13 +202,13 @@ namespace atresttf
 		FT_Error error = FT_New_Memory_Face(library, (unsigned char*)this->fontStream, (FT_Long)this->fontStream.size(), 0, &face);
 		if (error == FT_Err_Unknown_File_Format)
 		{
-			hlog::error(atresttf::logTag, "Format not supported in: " + this->fontFilename);
+			hlog::error(logTag, "Format not supported in: " + this->fontFilename);
 			this->fontStream.clear();
 			return;
 		}
 		if (error != 0)
 		{
-			hlog::error(atresttf::logTag, "Could not read face 0 in: " + this->fontFilename + "; Error code: " + hstr(error));
+			hlog::error(logTag, "Could not read face 0 in: " + this->fontFilename + "; Error code: " + hstr(error));
 			this->fontStream.clear();
 			return;
 		}
@@ -219,7 +219,7 @@ namespace atresttf
 		error = FT_Request_Size(face, &request);
 		if (error != 0)
 		{
-			hlog::error(atresttf::logTag, "Could not set font size in: " + this->fontFilename);
+			hlog::error(logTag, "Could not set font size in: " + this->fontFilename);
 			this->fontStream.clear();
 			FT_Done_Face(face);
 			return;
@@ -245,7 +245,7 @@ namespace atresttf
 			{
 				delete texture;
 				texture = NULL;
-				hlog::warn(atresttf::logTag, "Could not create alpha texture for font, trying an RGBA format.");
+				hlog::warn(logTag, "Could not create alpha texture for font, trying an RGBA format.");
 			}
 		}
 		if (texture == NULL)
@@ -292,14 +292,14 @@ namespace atresttf
 		{
 			if (!ignoreCharacterEnabled && charCode >= 0x20)
 			{
-				hlog::debugf(atresttf::logTag, "Character '0x%X' does not exist in: %s", charCode, this->fontFilename.cStr());
+				hlog::debugf(logTag, "Character '0x%X' does not exist in: %s", charCode, this->fontFilename.cStr());
 			}
 			return false;
 		}
 		FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT);
 		if (error != 0)
 		{
-			hlog::error(atresttf::logTag, "Could not load glyph from: " + this->fontFilename);
+			hlog::error(logTag, "Could not load glyph from: " + this->fontFilename);
 			return false;
 		}
 		if (face->glyph->format != FT_GLYPH_FORMAT_BITMAP)
@@ -307,7 +307,7 @@ namespace atresttf
 			error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
 			if (error != 0)
 			{
-				hlog::error(atresttf::logTag, "Could not render glyph from: " + this->fontFilename);
+				hlog::error(logTag, "Could not render glyph from: " + this->fontFilename);
 				return false;
 			}
 		}
@@ -335,7 +335,7 @@ namespace atresttf
 		}
 		if (this->penY + this->rowHeight + CHARACTER_SPACE > textureContainer->texture->getHeight())
 		{
-			hlog::debugf(atresttf::logTag, "Font '%s': character 0x%X does not fit, creating new texture.", this->name.cStr(), charCode);
+			hlog::debugf(logTag, "Font '%s': character 0x%X does not fit, creating new texture.", this->name.cStr(), charCode);
 			textureContainer = new atres::TextureContainer();
 			textureContainer->texture = this->_createTexture();
 			this->textureContainers += textureContainer;

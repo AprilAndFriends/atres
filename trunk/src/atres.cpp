@@ -20,7 +20,7 @@ namespace atres
 
 	void init()
 	{
-		hlog::write(atres::logTag, "Initializing Atres.");
+		hlog::write(logTag, "Initializing Atres.");
 		atres::renderer = new Renderer();
 	}
 	
@@ -28,7 +28,7 @@ namespace atres
 	{
 		if (atres::renderer != NULL)
 		{
-			hlog::write(atres::logTag, "Destroying Atres.");
+			hlog::write(logTag, "Destroying Atres.");
 			delete atres::renderer;
 			atres::renderer = NULL;
 		}
