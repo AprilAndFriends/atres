@@ -55,9 +55,8 @@ namespace atresttf
 
 		void _initializeFont();
 		april::Texture* _createTexture();
-		void _checkTextures();
 		void _loadBasicCharacters();
-		bool _addCharacterBitmap(unsigned int charCode, bool ignoreCharacterEnabled = false);
+		bool _addCharacterBitmap(unsigned int charCode, bool initial = false);
 
 	};
 
