@@ -116,7 +116,6 @@ namespace atresttf
 
 	april::Texture* FontTtf::getTexture(unsigned int charCode)
 	{
-		this->_checkTextures();
 		if (!this->_addCharacterBitmap(charCode))
 		{
 			return NULL;
@@ -130,34 +129,6 @@ namespace atresttf
 		return Font::hasChar(charCode);
 	}
 
-	void FontTtf::_checkTextures()
-	{
-		/* kspes@20150416 - commenting this out, not needed with new april managed textures, plus it caused a memory issue by deleting the texture
-		   if this code is going to be restored, make sure you adjust all texture pointers in the cache to point to the new textures (or clear cache simply).
-		bool reload = false;
-		foreach (atres::TextureContainer*, it, this->textureContainers)
-		{
-			if (!(*it)->texture->isLoaded())
-			{
-				reload = true;
-				break;
-			}
-		}
-		if (reload)
-		{
-			// font textures were deleted somewhere for some reason (e.g. Android's onPause), initiate reloading
-			this->characters.clear();
-			foreach (atres::TextureContainer*, it, this->textureContainers)
-			{
-				delete (*it)->texture;
-				delete (*it);
-			}
-			this->textureContainers.clear();
-			this->_loadBasicCharacters();
-		}
-		 */
-	}
-	
 	void FontTtf::_initializeFont()
 	{
 		if (this->fontStream.size() == 0)
@@ -260,6 +231,7 @@ namespace atresttf
 		// creating an initial texture and texture container
 		atres::TextureContainer* textureContainer = new atres::TextureContainer();
 		textureContainer->texture = this->_createTexture();
+		textureContainer->texture->lock();
 		this->textureContainers += textureContainer;
 		this->penX = 0;
 		this->penY = 0;
@@ -271,12 +243,12 @@ namespace atresttf
 			{
 				this->_addCharacterBitmap(code, true);
 			}
+			this->textureContainers.last()->texture->unlock();
 		}
 	}
 
-	bool FontTtf::_addCharacterBitmap(unsigned int charCode, bool ignoreCharacterEnabled)
+	bool FontTtf::_addCharacterBitmap(unsigned int charCode, bool initial)
 	{
-		this->_checkTextures();
 		if (this->characters.hasKey(charCode))
 		{
 			return true;
@@ -290,7 +262,7 @@ namespace atresttf
 		unsigned int glyphIndex = FT_Get_Char_Index(face, charIndex);
 		if (glyphIndex == 0)
 		{
-			if (!ignoreCharacterEnabled && charCode >= 0x20)
+			if (!initial && charCode >= 0x20)
 			{
 				hlog::debugf(logTag, "Character '0x%X' does not exist in: %s", charCode, this->fontFilename.cStr());
 			}
@@ -336,8 +308,16 @@ namespace atresttf
 		if (this->penY + this->rowHeight + CHARACTER_SPACE > textureContainer->texture->getHeight())
 		{
 			hlog::debugf(logTag, "Font '%s': character 0x%X does not fit, creating new texture.", this->name.cStr(), charCode);
+			if (initial)
+			{
+				textureContainer->texture->unlock();
+			}
 			textureContainer = new atres::TextureContainer();
 			textureContainer->texture = this->_createTexture();
+			if (initial)
+			{
+				textureContainer->texture->lock();
+			}
 			this->textureContainers += textureContainer;
 			this->penX = 0;
 			this->penY = 0;
