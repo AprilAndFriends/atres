@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.44
+/// @version 3.45
 /// 
 /// @section LICENSE
 /// 
@@ -78,7 +78,7 @@ namespace atres
 		harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
 		harray<RenderWord> createRenderWords(grect rect, chstr text, harray<FormatTag> tags);
 		harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset = gvec2(), bool keepWrappedSpaces = false);
-		RenderText createRenderText(grect rect, harray<RenderLine> lines, harray<FormatTag> tags);
+		RenderText createRenderText(grect rect, chstr text, harray<RenderLine> lines, harray<FormatTag> tags);
 		harray<RenderSequence> optimizeSequences(harray<RenderSequence>& sequences);
 	
 		void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT,
@@ -147,7 +147,8 @@ namespace atres
 
 		hstr _fontName;
 		Font* _font;
-		hmap<unsigned int, CharacterDefinition> _characters;
+		hmap<unsigned int, CharacterDefinition>& _characters;
+		hmap<unsigned int, CharacterDefinition> _dummyCharacters; // required for some compilers
 		CharacterDefinition* _character;
 		float _height;
 		float _lineHeight;

@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.44
+/// @version 3.45
 /// 
 /// @section LICENSE
 /// 
@@ -78,9 +78,9 @@
 
 namespace atres
 {
-	Renderer* renderer;
+	Renderer* renderer = NULL;
 
-	Renderer::Renderer()
+	Renderer::Renderer() : _dummyCharacters(hmap<unsigned int, CharacterDefinition>()), _characters(_dummyCharacters)
 	{
 		this->colors["white"] = april::Color::White.hex();
 		this->colors["black"] = april::Color::Black.hex();
@@ -135,6 +135,16 @@ namespace atres
 		this->defaultFont = NULL;
 		// misc init
 		this->_font = NULL;
+		this->_texture = NULL;
+		this->_height = 0.0f;
+		this->_lineHeight = 0.0f;
+		this->_descender = 0.0f;
+		this->_internalDescender = 0.0f;
+		this->_fontScale = 1.0f;
+		this->_textScale = 1.0f;
+		this->_scale = 1.0f;
+		this->_effectMode = 0;
+		this->_alpha = -1;
 		// cache
 		this->cacheText = new Cache<CacheEntryText>();
 		this->cacheTextUnformatted = new Cache<CacheEntryText>();
@@ -691,7 +701,7 @@ namespace atres
 		this->_fontName = "";
 		this->_font = NULL;
 		this->_texture = NULL;
-		this->_characters.clear();
+		this->_characters = this->_dummyCharacters;
 		this->_height = 0.0f;
 		this->_lineHeight = 0.0f;
 		this->_descender = 0.0f;
@@ -1079,19 +1089,26 @@ namespace atres
 				{
 					break;
 				}
-				this->_character = &this->_characters[code];
-				this->_scale = this->_fontScale * this->_textScale;
-				if (wordX < -this->_character->bx * this->_scale)
+				if (this->_characters.hasKey(code))
 				{
-					ax = (this->_character->aw - this->_character->bx) * this->_scale;
-					aw = this->_character->w * this->_scale;
+					this->_character = &this->_characters[code];
+					this->_scale = this->_fontScale * this->_textScale;
+					if (wordX < -this->_character->bx * this->_scale)
+					{
+						ax = (this->_character->aw - this->_character->bx) * this->_scale;
+						aw = this->_character->w * this->_scale;
+					}
+					else
+					{
+						ax = this->_character->aw * this->_scale;
+						aw = (this->_character->w + this->_character->bx) * this->_scale;
+					}
+					addW = hmax(ax, aw);
 				}
 				else
 				{
-					ax = this->_character->aw * this->_scale;
-					aw = (this->_character->w + this->_character->bx) * this->_scale;
+					addW = this->_font->getHeight() * 0.5f;
 				}
-				addW = hmax(ax, aw);
 				if (wordW + addW > rect.w) // word too long for line
 				{
 					if (!checkingSpaces)
@@ -1261,8 +1278,9 @@ namespace atres
 		return this->_lines;
 	}
 	
-	RenderText Renderer::createRenderText(grect rect, harray<RenderLine> lines, harray<FormatTag> tags)
+	RenderText Renderer::createRenderText(grect rect, chstr text, harray<RenderLine> lines, harray<FormatTag> tags)
 	{
+		this->analyzeText(tags.first().data, text); // by convention, the first tag is the font name
 		this->_initializeFormatTags(tags);
 		this->_initializeRenderSequences();
 		this->_initializeLineProcessing(lines);
@@ -1468,7 +1486,7 @@ namespace atres
 			{
 				this->_lines = this->createRenderLines(rect, unformattedText, tags, horizontal, vertical, offset);
 			}
-			this->_cacheEntryText.value = this->createRenderText(rect, this->_lines, tags);
+			this->_cacheEntryText.value = this->createRenderText(rect, text, this->_lines, tags);
 			this->cacheText->add(this->_cacheEntryText);
 			this->cacheText->update();
 		}
@@ -1491,7 +1509,7 @@ namespace atres
 			{
 				this->_lines = this->createRenderLines(rect, text, tags, horizontal, vertical, offset);
 			}
-			this->_cacheEntryText.value = this->createRenderText(rect, this->_lines, tags);
+			this->_cacheEntryText.value = this->createRenderText(rect, text, this->_lines, tags);
 			this->cacheTextUnformatted->add(this->_cacheEntryText);
 			this->cacheTextUnformatted->update();
 		}
@@ -1718,19 +1736,26 @@ namespace atres
 				break;
 			}
 			this->_checkFormatTags(text, i);
-			this->_character = &this->_characters[code];
-			this->_scale = this->_fontScale * this->_textScale;
-			if (lineX < -this->_character->bx * this->_scale)
+			if (this->_characters.hasKey(code))
 			{
-				ax = (this->_character->aw - this->_character->bx) * this->_scale;
-				aw = this->_character->w * this->_scale;
+				this->_character = &this->_characters[code];
+				this->_scale = this->_fontScale * this->_textScale;
+				if (lineX < -this->_character->bx * this->_scale)
+				{
+					ax = (this->_character->aw - this->_character->bx) * this->_scale;
+					aw = this->_character->w * this->_scale;
+				}
+				else
+				{
+					ax = this->_character->aw * this->_scale;
+					aw = (this->_character->w + this->_character->bx) * this->_scale;
+				}
+				addW = hmax(ax, aw);
 			}
 			else
 			{
-				ax = this->_character->aw * this->_scale;
-				aw = (this->_character->w + this->_character->bx) * this->_scale;
+				addW = this->_font->getHeight() * 0.5f;
 			}
-			addW = hmax(ax, aw);
 			if (lineX + addW > rect.w) // doesn't fit any more in this line
 			{
 				break;
