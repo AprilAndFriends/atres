@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.44
+/// @version 3.45
 /// 
 /// @section LICENSE
 /// 
@@ -231,7 +231,6 @@ namespace atresttf
 		// creating an initial texture and texture container
 		atres::TextureContainer* textureContainer = new atres::TextureContainer();
 		textureContainer->texture = this->_createTexture();
-		textureContainer->texture->lock();
 		this->textureContainers += textureContainer;
 		this->penX = 0;
 		this->penY = 0;
@@ -239,6 +238,7 @@ namespace atresttf
 		// adding all base ASCII characters right away
 		if (this->loadBasicAscii)
 		{
+			textureContainer->texture->lock();
 			for_itert (unsigned int, code, 32, 128)
 			{
 				this->_addCharacterBitmap(code, true);
@@ -284,6 +284,14 @@ namespace atresttf
 			}
 		}
 		atres::TextureContainer* textureContainer = this->textureContainers.last();
+		if (!textureContainer->texture->isLoaded()) // in case texture was unloaded, reload it here
+		{
+			textureContainer->texture->load();
+			if (initial) // and lock it if necessary
+			{
+				textureContainer->texture->lock();
+			}
+		}
 		this->penX += hmax(face->glyph->bitmap_left, 0);
 		// calculate some standard parameters
 		int ascender = (int)(-PTSIZE2INT(face->size->metrics.ascender));
@@ -321,7 +329,7 @@ namespace atresttf
 			this->textureContainers += textureContainer;
 			this->penX = 0;
 			this->penY = 0;
-			// if the character's height is higher than the texture, this will obviously not work too well
+			// if the character's height is higher than the texture's height, this will obviously not work too well
 		}
 		if (face->glyph->bitmap.buffer != NULL)
 		{
