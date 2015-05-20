@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.45
+/// @version 3.46
 /// 
 /// @section LICENSE
 /// 
@@ -52,9 +52,9 @@ namespace atres
 		/// @note This is particularly useful when having Japanese or Chinese text. Korean text has actual spaces so this is not necessary, but still useful.
 		HL_DEFINE_GET(bool, useIdeographWords, UseIdeographWords);
 		void setUseIdeographWords(bool value);
-		/// @brief When turned off, this turns justified text into left_wrapped. This is to counter languages with problematic characters.
-		HL_DEFINE_GET(bool, justifiedEnabled, JustifiedEnabled);
-		void setJustifiedEnabled(bool value);
+		/// @brief Allows to turn justified text into another formatting. This is to counter languages with problematic characters.
+		HL_DEFINE_GET(Alignment, justifiedDefault, JustifiedDefault);
+		void setJustifiedDefault(Alignment value);
 		void setDefaultFont(chstr name);
 		hstr getDefaultFont();
 		bool hasFont(chstr name);
@@ -105,6 +105,10 @@ namespace atres
 		RenderLine getFittingLine(chstr fontName, grect rect, chstr text, harray<FormatTag> tags);
 		void clearCache();
 
+		/// @brief When turned off, this turns justified text into left_wrapped. This is to counter languages with problematic characters.
+		DEPRECATED_ATTRIBUTE bool isJustifiedEnabled() { return (this->justifiedDefault == JUSTIFIED); }
+		DEPRECATED_ATTRIBUTE void setJustifiedEnabled(bool value) { this->setJustifiedDefault(value ? JUSTIFIED : LEFT_WRAPPED); }
+
 	protected:
 		hmap<hstr, Font*> fonts;
 		Font* defaultFont;
@@ -116,7 +120,7 @@ namespace atres
 		bool globalOffsets;
 		bool useLegacyLineBreakParsing;
 		bool useIdeographWords;
-		bool justifiedEnabled;
+		Alignment justifiedDefault;
 		Cache<CacheEntryText>* cacheText;
 		Cache<CacheEntryText>* cacheTextUnformatted;
 		Cache<CacheEntryLines>* cacheLines;
