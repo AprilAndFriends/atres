@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.45
+/// @version 3.46
 /// 
 /// @section LICENSE
 /// 
@@ -24,7 +24,7 @@
 #include "Font.h"
 
 #define ALIGNMENT_IS_WRAPPED(formatting) ((formatting) == LEFT_WRAPPED || (formatting) == CENTER_WRAPPED || (formatting) == RIGHT_WRAPPED || (formatting) == JUSTIFIED)
-#define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED || (formatting) == JUSTIFIED && !this->justifiedEnabled)
+#define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED || (formatting) == JUSTIFIED && this->justifiedDefault != JUSTIFIED)
 
 #define IS_IDEOGRAPH(code) \
 	( \
@@ -131,7 +131,7 @@ namespace atres
 		this->globalOffsets = false;
 		this->useLegacyLineBreakParsing = false;
 		this->useIdeographWords = false;
-		this->justifiedEnabled = true;
+		this->justifiedDefault = JUSTIFIED;
 		this->defaultFont = NULL;
 		// misc init
 		this->_font = NULL;
@@ -219,11 +219,11 @@ namespace atres
 		}
 	}
 
-	void Renderer::setJustifiedEnabled(bool value)
+	void Renderer::setJustifiedDefault(Alignment value)
 	{
-		if (this->justifiedEnabled != value)
+		if (this->justifiedDefault != value)
 		{
-			this->justifiedEnabled = value;
+			this->justifiedDefault = value;
 			this->clearCache();
 		}
 	}
@@ -618,8 +618,12 @@ namespace atres
 			return lines;
 		}
 		float ox = 0.0f;
-		if (horizontal != JUSTIFIED || !this->justifiedEnabled)
+		if (horizontal != JUSTIFIED || this->justifiedDefault != JUSTIFIED)
 		{
+			if (horizontal == JUSTIFIED)
+			{
+				horizontal = this->justifiedDefault;
+			}
 			// horizontal correction
 			foreach (RenderLine, it, lines)
 			{
