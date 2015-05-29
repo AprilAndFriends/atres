@@ -16,7 +16,7 @@ namespace atres
 {
 	static april::TexturedVertex vert[6];
 
-	CharacterDefinition::CharacterDefinition() : x(0.0f), y(0.0f), w(0.0f), h(0.0f), bx(0.0f), aw(0.0f)
+	CharacterDefinition::CharacterDefinition() : x(0.0f), y(0.0f), w(0.0f), h(0.0f), bx(0.0f), by(0.0f), aw(0.0f)
 	{
 	}
 
