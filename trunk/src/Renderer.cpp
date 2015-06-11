@@ -80,7 +80,7 @@ namespace atres
 {
 	Renderer* renderer = NULL;
 
-	Renderer::Renderer() : _dummyCharacters(hmap<unsigned int, CharacterDefinition>()), _characters(_dummyCharacters)
+	Renderer::Renderer() : _characters(_dummyCharacters), _dummyCharacters(hmap<unsigned int, CharacterDefinition>())
 	{
 		this->colors["white"] = april::Color::White.hex();
 		this->colors["black"] = april::Color::Black.hex();
@@ -588,6 +588,8 @@ namespace atres
 		case BOTTOM:
 			y += lineCount * lineHeight - rect.h + internalDescender;
 			break;
+		default:
+			break;
 		}
 		// remove lines that cannot be seen anyway
 		foreach (RenderLine, it, lines)
@@ -636,6 +638,8 @@ namespace atres
 				case RIGHT:
 				case RIGHT_WRAPPED:
 					ox = -x + rect.w - (*it).rect.w;
+					break;
+				default:
 					break;
 				}
 				(*it).rect.x += ox;
@@ -865,6 +869,8 @@ namespace atres
 						this->_borderColor.set(this->_hex);
 					}
 					break;
+				default:
+					break;
 				}
 			}
 			else
@@ -964,6 +970,8 @@ namespace atres
 							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
 					}
+					break;
+				default:
 					break;
 				}
 			}
