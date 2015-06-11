@@ -141,17 +141,19 @@ namespace atres
 		{
 			result ^= this->fontName[i] << ((i % 4) * 8);
 		}
-		result ^= *((unsigned int*)(&this->rect.x));
-		result ^= *((unsigned int*)(&this->rect.y));
-		result ^= *((unsigned int*)(&this->rect.w));
-		result ^= *((unsigned int*)(&this->rect.h));
+		// this code with fvar is used to avoid strict aliasing violations
+		const float* fvar = NULL;
+		fvar = &this->rect.x;	result ^= *((unsigned int*)fvar);
+		fvar = &this->rect.y;	result ^= *((unsigned int*)fvar);
+		fvar = &this->rect.w;	result ^= *((unsigned int*)fvar);
+		fvar = &this->rect.h;	result ^= *((unsigned int*)fvar);
 		result ^= (((unsigned int)(this->vertical)) & 0xFFFF);
 		result ^= (((unsigned int)(this->horizontal) << 16) & 0xFFFF);
 		result ^= (this->color.r << 8);
 		result ^= (this->color.g << 16);
 		result ^= (this->color.b << 24);
-		result ^= *((unsigned int*)(&this->offset.x));
-		result ^= *((unsigned int*)(&this->offset.y));
+		fvar = &this->offset.x;	result ^= *((unsigned int*)fvar);
+		fvar = &this->offset.y;	result ^= *((unsigned int*)fvar);
 		return result;
 	}
 
@@ -229,8 +231,10 @@ namespace atres
 		{
 			result ^= this->fontName[i] << ((i % 4) * 8);
 		}
-		result ^= *((unsigned int*)(&this->size.x));
-		result ^= *((unsigned int*)(&this->size.y));
+		// this code with fvar is used to avoid strict aliasing violations
+		const float* fvar = NULL;
+		fvar = &this->size.x;	result ^= *((unsigned int*)fvar);
+		fvar = &this->size.y;	result ^= *((unsigned int*)fvar);
 		return result;
 	}
 	

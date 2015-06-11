@@ -574,7 +574,7 @@
   {
     CF2_Int   gid;
     FT_Byte*  charstring;
-    FT_ULong  len;
+    FT_ULong  len = 0;
     FT_Error  error;
 
 
