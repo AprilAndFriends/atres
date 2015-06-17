@@ -480,7 +480,7 @@ namespace atres
 			}
 			else if (str[start + 1] == '/') // closing command
 			{
-				if (stack.size() == 0 || stack.last() != str[start + 2]) // interleaving, ignore the tag
+				if (stack.size() == 0 || (unsigned int)stack.last() != str[start + 2]) // interleaving, ignore the tag
 				{
 					start = end;
 					hlog::warnf(logTag, "Closing tag that was not opened ('[/%c]' in '%s')!", str[start + 2], str);
