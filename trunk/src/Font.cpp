@@ -17,6 +17,11 @@
 
 namespace atres
 {
+	static april::Texture* _map_texture(TextureContainer* container)
+	{
+		return container->texture;
+	}
+
 	Font::Font(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f),
 		lineHeight(0.0f), descender(0.0f), internalDescender(0.0f), loaded(false)
 	{
@@ -96,12 +101,7 @@ namespace atres
 
 	harray<april::Texture*> Font::getTextures()
 	{
-		harray<april::Texture*> result;
-		foreach (TextureContainer*, it, this->textureContainers)
-		{
-			result += (*it)->texture;
-		}
-		return result;
+		return this->textureContainers.mapped(&_map_texture);
 	}
 	
 	april::Texture* Font::getTexture(unsigned int charCode)
