@@ -257,9 +257,9 @@ void april_init(const harray<hstr>& args)
 		atres::renderer->setShadowColor(april::Color::Red);
 		atres::renderer->setBorderColor(april::Color::Aqua);
 	}
-	catch (hltypes::exception& e)
+	catch (hexception& e)
 	{
-		hlog::error(LOG_TAG, e.message());
+		hlog::error(LOG_TAG, e.getMessage());
 	}
 }
 
@@ -279,8 +279,8 @@ void april_destroy()
 		delete updateDelegate;
 		updateDelegate = NULL;
 	}
-	catch (hltypes::exception& e)
+	catch (hexception& e)
 	{
-		hlog::error(LOG_TAG, e.message());
+		hlog::error(LOG_TAG, e.getMessage());
 	}
 }
