@@ -368,7 +368,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0640;
+				LastUpgradeCheck = 0700;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "atresttf" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -472,6 +472,7 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.googlecode.${PRODUCT_NAME:rfc1034Identifier}";
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -511,6 +512,7 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.googlecode.${PRODUCT_NAME:rfc1034Identifier}";
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -545,6 +547,7 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.googlecode.${PRODUCT_NAME:rfc1034Identifier}";
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -629,6 +632,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = ../scripts/ttf_font_generator/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.googlecode.atres.fontgen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -647,6 +651,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = ../scripts/ttf_font_generator/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.googlecode.atres.fontgen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -665,6 +670,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = ../scripts/ttf_font_generator/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.googlecode.atres.fontgen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
