@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.45
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -22,18 +22,13 @@
 #include "atresttfUtil.h"
 #include "FontTtf.h"
 
-#define SAFE_SPACE 2
-#define CHARACTER_SPACE 0
-
 #define PTSIZE2INT(value) (((value) + 63) >> 6)
 
 namespace atresttf
 {
-	FontTtf::FontTtf(chstr filename, bool loadBasicAscii) : atres::Font(filename)
+	FontTtf::FontTtf(chstr filename, bool loadBasicAscii) : atres::FontDynamic(filename)
 	{
 		this->customDescender = false;
-		this->penX = 0;
-		this->penY = 0;this->rowHeight = 0;
 		this->loadBasicAscii = loadBasicAscii;
 		hstr path = hrdir::baseDir(filename);
 		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
@@ -49,41 +44,32 @@ namespace atresttf
 				}
 			}
 		}
-		this->_initializeFont();
 	}
 
-	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale,
-		float lineHeight, bool loadBasicAscii) : atres::Font(name)
+	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii) : atres::FontDynamic(name)
 	{
 		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii);
-		this->_initializeFont();
 	}
 	
-	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale,
-		float lineHeight, float descender, bool loadBasicAscii) : atres::Font(name)
+	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii) : atres::FontDynamic(name)
 	{
 		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii);
 		this->descender = descender;
 		this->customDescender = true;
-		this->_initializeFont();
 	}
 	
-	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale,
-		float lineHeight, bool loadBasicAscii) : atres::Font(name)
+	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii) : atres::FontDynamic(name)
 	{
 		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
 		this->fontStream.writeRaw(stream);
-		this->_initializeFont();
 	}
 
-	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale,
-		float lineHeight, float descender, bool loadBasicAscii) : atres::Font(name)
+	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii) : atres::FontDynamic(name)
 	{
 		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
 		this->descender = descender;
 		this->customDescender = true;
 		this->fontStream.writeRaw(stream);
-		this->_initializeFont();
 	}
 
 	void FontTtf::_setInternalValues(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii)
@@ -98,38 +84,17 @@ namespace atresttf
 		this->descender = 0.0f;
 		this->internalDescender = 0.0f;
 		this->customDescender = false;
-		this->penX = 0;
-		this->penY = 0;
-		this->rowHeight = 0;
 	}
 
 	FontTtf::~FontTtf()
 	{
-		foreach (atres::TextureContainer*, it, this->textureContainers)
+		if (this->loaded)
 		{
-			delete (*it)->texture;
-			delete (*it);
+			atresttf::destroyFace(this);
 		}
-		this->textureContainers.clear();
-		atresttf::destroyFace(this);
 	}
 
-	april::Texture* FontTtf::getTexture(unsigned int charCode)
-	{
-		if (!this->_addCharacterBitmap(charCode))
-		{
-			return NULL;
-		}
-		return Font::getTexture(charCode);
-	}
-
-	bool FontTtf::hasChar(unsigned int charCode)
-	{
-		this->_addCharacterBitmap(charCode);
-		return Font::hasChar(charCode);
-	}
-
-	void FontTtf::_initializeFont()
+	bool FontTtf::_load()
 	{
 		if (this->fontStream.size() == 0)
 		{
@@ -139,12 +104,12 @@ namespace atresttf
 			}
 			if (this->fontFilename == "") // no font file
 			{
-				return;
+				return false;
 			}
 			if (!hresource::exists(this->fontFilename) && !hfile::exists(this->fontFilename)) // font file does not exist
 			{
 				hlog::error(logTag, "Could not find: " + this->fontFilename);
-				return;
+				return false;
 			}
 		}
 		if (this->lineHeight == 0.0f)
@@ -175,13 +140,13 @@ namespace atresttf
 		{
 			hlog::error(logTag, "Format not supported in: " + this->fontFilename);
 			this->fontStream.clear();
-			return;
+			return false;
 		}
 		if (error != 0)
 		{
 			hlog::error(logTag, "Could not read face 0 in: " + this->fontFilename + "; Error code: " + hstr(error));
 			this->fontStream.clear();
-			return;
+			return false;
 		}
 		FT_Size_RequestRec request;
 		memset(&request, 0, sizeof(FT_Size_RequestRec));
@@ -193,7 +158,14 @@ namespace atresttf
 			hlog::error(logTag, "Could not set font size in: " + this->fontFilename);
 			this->fontStream.clear();
 			FT_Done_Face(face);
-			return;
+			return false;
+		}
+		if (!atres::FontDynamic::_load())
+		{
+			hlog::error(logTag, "Could not load base class in: " + this->fontFilename);
+			this->fontStream.clear();
+			FT_Done_Face(face);
+			return false;
 		}
 		this->internalDescender = -(float)PTSIZE2INT(face->size->metrics.descender);
 		if (!this->customDescender)
@@ -201,58 +173,21 @@ namespace atresttf
 			this->descender = this->internalDescender;
 		}
 		atresttf::registerFace(this, face);
-		this->_loadBasicCharacters();
-		this->loaded = true;
-	}
-
-	april::Texture* FontTtf::_createTexture()
-	{
-		int textureSize = atresttf::getTextureSize();
-		april::Texture* texture = NULL;
-		if (atresttf::isAllowAlphaTextures() && april::rendersys->getCaps().textureFormats.has(april::Image::FORMAT_ALPHA))
-		{
-			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Clear, april::Image::FORMAT_ALPHA, april::Texture::TYPE_MANAGED);
-			if (texture != NULL && !texture->isLoaded())
-			{
-				delete texture;
-				texture = NULL;
-				hlog::warn(logTag, "Could not create alpha texture for font, trying an RGBA format.");
-			}
-		}
-		if (texture == NULL)
-		{
-			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Blank, april::rendersys->getNativeTextureFormat(april::Image::FORMAT_RGBA), april::Texture::TYPE_MANAGED);
-		}
-		return texture;
-	}
-
-	void FontTtf::_loadBasicCharacters()
-	{
-		// creating an initial texture and texture container
-		atres::TextureContainer* textureContainer = new atres::TextureContainer();
-		textureContainer->texture = this->_createTexture();
-		this->textureContainers += textureContainer;
-		this->penX = 0;
-		this->penY = 0;
-		this->rowHeight = 0;
 		// adding all base ASCII characters right away
 		if (this->loadBasicAscii)
 		{
-			textureContainer->texture->lock();
+			this->textureContainers.last()->texture->lock();
 			for_itert (unsigned int, code, 32, 128)
 			{
 				this->_addCharacterBitmap(code, true);
 			}
 			this->textureContainers.last()->texture->unlock();
 		}
+		return true;
 	}
 
-	bool FontTtf::_addCharacterBitmap(unsigned int charCode, bool initial)
+	april::Image* FontTtf::_loadCharacterImage(unsigned int charCode, bool initial, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX, int& advance)
 	{
-		if (this->characters.hasKey(charCode))
-		{
-			return true;
-		}
 		FT_Face face = atresttf::getFace(this);
 		unsigned long charIndex = charCode;
 		if (charIndex == 0xA0) // non-breaking space character should be treated just like a normal space when retrieving the glyph from the font
@@ -266,13 +201,13 @@ namespace atresttf
 			{
 				hlog::debugf(logTag, "Character '0x%X' does not exist in: %s", charCode, this->fontFilename.cStr());
 			}
-			return false;
+			return NULL;
 		}
 		FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT);
 		if (error != 0)
 		{
 			hlog::error(logTag, "Could not load glyph from: " + this->fontFilename);
-			return false;
+			return NULL;
 		}
 		if (face->glyph->format != FT_GLYPH_FORMAT_BITMAP)
 		{
@@ -280,75 +215,16 @@ namespace atresttf
 			if (error != 0)
 			{
 				hlog::error(logTag, "Could not render glyph from: " + this->fontFilename);
-				return false;
+				return NULL;
 			}
 		}
-		atres::TextureContainer* textureContainer = this->textureContainers.last();
-		if (!textureContainer->texture->isLoaded()) // in case texture was unloaded, reload it here
-		{
-			textureContainer->texture->load();
-			if (initial) // and lock it if necessary
-			{
-				textureContainer->texture->lock();
-			}
-		}
-		this->penX += hmax(face->glyph->bitmap_left, 0);
-		// calculate some standard parameters
-		int ascender = (int)(-PTSIZE2INT(face->size->metrics.ascender));
-		int descender = (int)(-PTSIZE2INT(face->size->metrics.descender));
-		// this makes sure that there is no vertical overlap between characters
-		int lineOffset = (int)this->height - descender;
-		int bearingY = -hmin(lineOffset - face->glyph->bitmap_top, 0);
-		int offsetY = hmax(lineOffset - face->glyph->bitmap_top, 0);
-		int charHeight = face->glyph->bitmap.rows + SAFE_SPACE * 2 + offsetY;
-		int charWidth = face->glyph->bitmap.width + SAFE_SPACE * 2;
-		// if character bitmap width exceeds space, go into next line
-		if (this->penX + charWidth + CHARACTER_SPACE > textureContainer->texture->getWidth())
-		{
-			this->penX = 0;
-			this->penY += this->rowHeight + CHARACTER_SPACE * 2;
-			this->rowHeight = charHeight;
-		}
-		else
-		{
-			this->rowHeight = hmax(this->rowHeight, charHeight);
-		}
-		if (this->penY + this->rowHeight + CHARACTER_SPACE > textureContainer->texture->getHeight())
-		{
-			hlog::debugf(logTag, "Font '%s': character 0x%X does not fit, creating new texture.", this->name.cStr(), charCode);
-			if (initial)
-			{
-				textureContainer->texture->unlock();
-			}
-			textureContainer = new atres::TextureContainer();
-			textureContainer->texture = this->_createTexture();
-			if (initial)
-			{
-				textureContainer->texture->lock();
-			}
-			this->textureContainers += textureContainer;
-			this->penX = 0;
-			this->penY = 0;
-			// if the character's height is higher than the texture's height, this will obviously not work too well
-		}
-		if (face->glyph->bitmap.buffer != NULL)
-		{
-			textureContainer->texture->write(0, 0, face->glyph->bitmap.width, face->glyph->bitmap.rows,
-				this->penX + SAFE_SPACE, this->penY + offsetY + SAFE_SPACE, face->glyph->bitmap.buffer, face->glyph->bitmap.width,
-				face->glyph->bitmap.rows, april::Image::FORMAT_ALPHA);
-		}
-		atres::CharacterDefinition c;
-		c.x = (float)this->penX;
-		c.y = (float)this->penY;
-		c.w = (float)charWidth;
-		c.h = (float)charHeight;
-		c.bx = (float)PTSIZE2INT(face->glyph->metrics.horiBearingX);
-		c.by = (float)(lineOffset + ascender + bearingY);
-		c.aw = (float)PTSIZE2INT(face->glyph->advance.x);
-		this->characters[charCode] = c;
-		this->penX += charWidth + CHARACTER_SPACE * 2;
-		textureContainer->characters += charCode;
-		return true;
+		leftOffset = face->glyph->bitmap_left;
+		topOffset = face->glyph->bitmap_top;
+		ascender = (int)(-PTSIZE2INT(face->size->metrics.ascender));
+		descender = (int)(-PTSIZE2INT(face->size->metrics.descender));
+		bearingX =  PTSIZE2INT(face->glyph->metrics.horiBearingX);
+		advance = PTSIZE2INT(face->glyph->advance.x);
+		return april::Image::create(face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer, april::Image::FORMAT_ALPHA);
 	}
-	
+
 }

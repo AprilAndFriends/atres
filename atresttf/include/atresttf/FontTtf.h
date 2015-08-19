@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.44
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -13,7 +13,7 @@
 #ifndef ATRESTTF_FONT_TTF_H
 #define ATRESTTF_FONT_TTF_H
 
-#include <atres/Font.h>
+#include <atres/FontDynamic.h>
 #include <atres/Utility.h>
 #include <hltypes/harray.h>
 #include <hltypes/hstring.h>
@@ -27,7 +27,7 @@ namespace april
 
 namespace atresttf
 {
-	class atresttfExport FontTtf : public atres::Font
+	class atresttfExport FontTtf : public atres::FontDynamic
 	{
 	public:
 		FontTtf(chstr filename, bool loadBasicAscii = true);
@@ -35,28 +35,21 @@ namespace atresttf
 		FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii);
 		FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight = 0.0f, bool loadBasicAscii = true);
 		FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, bool loadBasicAscii);
-		
 		~FontTtf();
 
 		HL_DEFINE_GET(hstr, fontFilename, FontFilename);
-		april::Texture* getTexture(unsigned int charCode);
-		bool hasChar(unsigned int charCode);
 
 	protected:
 		bool customDescender;
-		int penX;
-		int penY;
-		int rowHeight;
 		hstr fontFilename;
 		hstream fontStream;
 		bool loadBasicAscii;
 
 		void _setInternalValues(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii);
 
-		void _initializeFont();
-		april::Texture* _createTexture();
-		void _loadBasicCharacters();
-		bool _addCharacterBitmap(unsigned int charCode, bool initial = false);
+		bool _load();
+		
+		april::Image* _loadCharacterImage(unsigned int charCode, bool initial, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX, int& advance);
 
 	};
 

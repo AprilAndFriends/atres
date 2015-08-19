@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -20,8 +20,25 @@ namespace atres
 {
 	FontBitmap::FontBitmap(chstr filename) : Font(filename)
 	{
-		hstr path = hrdir::baseDir(filename);
-		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
+		this->fontFilename = filename;
+	}
+
+	FontBitmap::~FontBitmap()
+	{
+	}
+
+	bool FontBitmap::_load()
+	{
+		if (!Font::_load())
+		{
+			return false;
+		}
+		if (!hresource::exists(this->fontFilename))
+		{
+			return false;
+		}
+		hstr path = hrdir::baseDir(this->fontFilename);
+		harray<hstr> lines = hresource::hread(this->fontFilename).split("\n", -1, true);
 		hstr line;
 		bool multiTexture = false;
 		atres::TextureContainer* textureContainer = NULL;
@@ -70,16 +87,16 @@ namespace atres
 			lines.removeFirst();
 		}
 		CharacterDefinition c;
-		unsigned int code;
+		unsigned int code = 0;
 		harray<hstr> data;
 		int minAttribute = (multiTexture ? 5 : 4);
 		int maxAttribute = (multiTexture ? 9 : 8);
 		int textureIndex = 0;
 		foreach (hstr, it, lines)
 		{
-			c.bx = 0.0f;
-			c.by = 0.0f;
-			c.aw = 0.0f;
+			c.bearing.x = 0.0f;
+			c.bearing.y = 0.0f;
+			c.advance = 0.0f;
 			data = (*it).split(" ", -1, true);
 			if (hbetweenII(data.size(), minAttribute, maxAttribute))
 			{
@@ -88,41 +105,37 @@ namespace atres
 				{
 					textureIndex = (int)data.removeFirst();
 				}
-				c.x = (float)data.removeFirst();
-				c.y = (float)data.removeFirst();
-				c.w = (float)data.removeFirst();
-				c.h = this->height;
+				c.rect.x = (float)data.removeFirst();
+				c.rect.y = (float)data.removeFirst();
+				c.rect.w = (float)data.removeFirst();
+				c.rect.h = this->height;
 				if (data.size() > 0)
 				{
-					c.aw = (float)data.removeFirst();
+					c.advance = (float)data.removeFirst();
 					if (data.size() > 0)
 					{
-						c.bx = (float)data.removeFirst();
+						c.bearing.x = (float)data.removeFirst();
 						if (data.size() > 0)
 						{
-							c.h = c.aw;
-							c.aw = c.bx;
-							c.bx = (float)data.removeFirst();
+							c.rect.h = c.advance;
+							c.advance = c.bearing.x;
+							c.bearing.x = (float)data.removeFirst();
 							if (data.size() > 0)
 							{
-								c.by = (float)data.removeFirst();
+								c.bearing.y = (float)data.removeFirst();
 							}
 						}
 					}
 				}
-				if (c.aw == 0.0f)
+				if (c.advance == 0.0f)
 				{
-					c.aw = c.w;
+					c.advance = c.rect.w;
 				}
 				this->characters[code] = c;
 				this->textureContainers[textureIndex]->characters += code;
 			}
 		}
-		this->loaded = false;
-	}
-
-	FontBitmap::~FontBitmap()
-	{
+		return true;
 	}
 
 }

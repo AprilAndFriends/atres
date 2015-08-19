@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.43
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -30,12 +30,10 @@ namespace atresttf
 {
 	hstr logTag = "atresttf";
 
-	FT_Library library = NULL;
-	hmap<atres::Font*, FT_Face> faces;
-	hmap<hstr, hstr> fonts;
-	bool fontNamesChecked = false;
-	int textureSize = 1024;
-	bool allowAlphaTextures = true;
+	static FT_Library library = NULL;
+	static hmap<atres::Font*, FT_Face> faces;
+	static hmap<hstr, hstr> fonts;
+	static bool fontNamesChecked = false;
 
 	void init()
 	{
@@ -64,26 +62,6 @@ namespace atresttf
 		{
 			hlog::error(logTag, "Could not finalize FreeType library!");
 		}
-	}
-
-	int getTextureSize()
-	{
-		return textureSize;
-	}
-
-	void setTextureSize(int value)
-	{
-		textureSize = value;
-	}
-
-	bool isAllowAlphaTextures()
-	{
-		return allowAlphaTextures;
-	}
-
-	void setAllowAlphaTextures(bool value)
-	{
-		allowAlphaTextures = value;
 	}
 
 	harray<hstr> getSystemFonts()

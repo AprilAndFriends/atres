@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -17,6 +17,8 @@
 namespace atres
 {
 	hstr logTag = "atres";
+	static int textureSize = 1024;
+	static bool allowAlphaTextures = true;
 
 	void init()
 	{
@@ -26,12 +28,32 @@ namespace atres
 	
 	void destroy()
 	{
+		hlog::write(logTag, "Destroying Atres.");
 		if (atres::renderer != NULL)
 		{
-			hlog::write(logTag, "Destroying Atres.");
 			delete atres::renderer;
 			atres::renderer = NULL;
 		}
+	}
+
+	int getTextureSize()
+	{
+		return textureSize;
+	}
+
+	void setTextureSize(int value)
+	{
+		textureSize = value;
+	}
+
+	bool isAllowAlphaTextures()
+	{
+		return allowAlphaTextures;
+	}
+
+	void setAllowAlphaTextures(bool value)
+	{
+		allowAlphaTextures = value;
 	}
 
 }

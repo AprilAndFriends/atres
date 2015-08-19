@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -26,6 +26,11 @@ namespace atres
 	public:
 		FontBitmap(chstr filename);
 		~FontBitmap();
+
+	protected:
+		hstr fontFilename;
+
+		bool _load();
 
 	};
 

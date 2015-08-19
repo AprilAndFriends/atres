@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -24,7 +24,11 @@ namespace atres
 
 	atresFnExport void init();
 	atresFnExport void destroy();
-	
+	atresFnExport int getTextureSize();
+	atresFnExport void setTextureSize(int value);
+	atresFnExport bool isAllowAlphaTextures();
+	atresFnExport void setAllowAlphaTextures(bool value);
+
 }
 
 #endif

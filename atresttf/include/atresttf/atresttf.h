@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -24,10 +24,6 @@ namespace atresttf
 
 	atresttfFnExport void init();
 	atresttfFnExport void destroy();
-	atresttfFnExport int getTextureSize();
-	atresttfFnExport void setTextureSize(int value);
-	atresttfFnExport bool isAllowAlphaTextures();
-	atresttfFnExport void setAllowAlphaTextures(bool value);
 	atresttfFnExport harray<hstr> getSystemFonts();
 	atresttfFnExport hstr findSystemFontFilename(chstr name);
 	atresttfFnExport hstr getSystemFontsPath();

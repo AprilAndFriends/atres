@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.43
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -16,11 +16,19 @@ namespace atres
 {
 	static april::TexturedVertex vert[6];
 
-	CharacterDefinition::CharacterDefinition() : x(0.0f), y(0.0f), w(0.0f), h(0.0f), bx(0.0f), by(0.0f), aw(0.0f)
+	CharacterDefinition::CharacterDefinition() : advance(0.0f)
 	{
 	}
 
 	CharacterDefinition::~CharacterDefinition()
+	{
+	}
+
+	IconDefinition::IconDefinition()
+	{
+	}
+
+	IconDefinition::~IconDefinition()
 	{
 	}
 
@@ -89,6 +97,10 @@ namespace atres
 
 	TextureContainer::~TextureContainer()
 	{
+		if (this->texture != NULL)
+		{
+			delete this->texture;
+		}
 	}
 
 	CacheEntryBasicText::CacheEntryBasicText() : horizontal(CENTER_WRAPPED), vertical(CENTER)

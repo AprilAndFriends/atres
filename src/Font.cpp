@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.44
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -7,9 +7,11 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #include <april/RenderSystem.h>
+#include <april/Texture.h>
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
@@ -22,8 +24,7 @@ namespace atres
 		return container->texture;
 	}
 
-	Font::Font(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f),
-		lineHeight(0.0f), descender(0.0f), internalDescender(0.0f), loaded(false)
+	Font::Font(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f), lineHeight(0.0f), descender(0.0f), internalDescender(0.0f), loaded(false)
 	{
 		this->name = name;
 	}
@@ -31,12 +32,31 @@ namespace atres
 	Font::~Font()
 	{
 		this->characters.clear();
+		this->icons.clear();
 		foreach (TextureContainer*, it, this->textureContainers)
 		{
-			delete (*it)->texture;
 			delete (*it);
 		}
 		this->textureContainers.clear();
+	}
+
+	bool Font::load()
+	{
+		if (this->loaded)
+		{
+			return false;
+		}
+		this->loaded = this->_load();
+		if (!this->loaded)
+		{
+			hlog::errorf(logTag, "Font '%s' could not be loaded!", this->name.cStr());
+		}
+		return this->loaded;
+	}
+
+	bool Font::_load()
+	{
+		return true;
 	}
 
 	bool Font::_readBasicParameter(chstr line)
@@ -67,11 +87,6 @@ namespace atres
 			return true;
 		}
 		return false;
-	}
-	
-	bool Font::hasChar(unsigned int charCode)
-	{
-		return this->characters.hasKey(charCode);
 	}
 	
 	float Font::getHeight()
@@ -116,73 +131,89 @@ namespace atres
 		return NULL;
 	}
 
+	april::Texture* Font::getTexture(chstr iconName)
+	{
+		foreach (TextureContainer*, it, this->textureContainers)
+		{
+			if ((*it)->icons.has(iconName))
+			{
+				return (*it)->texture;
+			}
+		}
+		return NULL;
+	}
+
+	bool Font::hasCharacter(unsigned int charCode)
+	{
+		return this->characters.hasKey(charCode);
+	}
+
+	bool Font::hasIcon(chstr iconName)
+	{
+		return this->icons.hasKey(iconName);
+	}
+
+	// using static definitions to avoid memory allocation for optimization
+	static float _textX = 0.0f;
+	static float _textW = 0.0f;
+	static float _ax = 0.0f;
+	static float _aw = 0.0f;
+	static float _scale = 1.0f;
+	static CharacterDefinition* _character = NULL;
+	static std::basic_string<unsigned int> _chars;
+
 	float Font::getTextWidth(chstr text)
 	{
 		// using static definitions to avoid memory allocation for optimization
-		static float textX = 0.0f;
-		static float textW = 0.0f;
-		static float ax = 0.0f;
-		static float aw = 0.0f;
-		static float scale = 1.0f;
-		static CharacterDefinition* character = NULL;
-		static std::basic_string<unsigned int> chars;
-		textX = 0.0f;
-		textW = 0.0f;
-		ax = 0.0f;
-		aw = 0.0f;
-		scale = this->getScale();
-		chars = text.uStr();
-		for_itert (unsigned int, i, 0, chars.size())
+		_textX = 0.0f;
+		_textW = 0.0f;
+		_ax = 0.0f;
+		_aw = 0.0f;
+		_scale = this->getScale();
+		_chars = text.uStr();
+		for_itert (unsigned int, i, 0, _chars.size())
 		{
-			character = &this->characters[chars[i]];
-			if (textX < -character->bx * scale)
+			_character = &this->characters[_chars[i]];
+			if (_textX < -_character->bearing.x * _scale)
 			{
-				ax = (character->aw - character->bx) * scale;
-				aw = character->w * scale;
+				_ax = (_character->advance - _character->bearing.x) * _scale;
+				_aw = _character->rect.w * _scale;
 			}
 			else
 			{
-				ax = character->aw * scale;
-				aw = (character->w + character->bx) * scale;
+				_ax = _character->advance * _scale;
+				_aw = (_character->rect.w + _character->bearing.x) * _scale;
 			}
-			textW = textX + hmax(ax, aw);
-			textX += ax;
+			_textW = _textX + hmax(_ax, _aw);
+			_textX += _ax;
 		}
-		return textW;
+		return _textW;
 	}
 	
 	int Font::getTextCount(chstr text, float maxWidth)
 	{
-		// using static definitions to avoid memory allocation for optimization
-		static float textX = 0.0f;
-		static float textW = 0.0f;
-		static float ax = 0.0f;
-		static float aw = 0.0f;
-		static float scale = 1.0f;
-		static CharacterDefinition* character = NULL;
-		static std::basic_string<unsigned int> chars;
-		textX = 0.0f;
-		textW = 0.0f;
-		ax = 0.0f;
-		aw = 0.0f;
-		scale = this->getScale();
-		chars = text.uStr();
-		for_itert (unsigned int, i, 0, chars.size())
+		_textX = 0.0f;
+		_textW = 0.0f;
+		_ax = 0.0f;
+		_aw = 0.0f;
+		_scale = this->getScale();
+		_chars = text.uStr();
+		for_itert (unsigned int, i, 0, _chars.size())
 		{
-			character = &this->characters[chars[i]];
-			if (textX < -character->bx * scale)
+			_character = &this->characters[_chars[i]];
+			if (_textX < -_character->bearing.x * _scale)
 			{
-				ax = (character->aw - character->bx) * scale;
-				aw = character->w * scale;
+				_ax = (_character->advance - _character->bearing.x) * _scale;
+				_aw = _character->rect.w * _scale;
 			}
 			else
 			{
-				ax = character->aw * scale;
-				aw = (character->w + character->bx) * scale;
+				_ax = _character->advance * _scale;
+				_aw = (_character->rect.w + _character->bearing.x) * _scale;
 			}
-			textW = textX + hmax(ax, aw);
-			textX += ax;
-			if (textW > maxWidth)
+			_textW = _textX + hmax(_ax, _aw);
+			_textX += _ax;
+			if (_textW > maxWidth)
 			{
 				return text.utf8SubString(0, i).size();
 			}
@@ -190,38 +221,55 @@ namespace atres
 		return text.size();
 	}
 	
-	RenderRectangle Font::makeRenderRectangle(const grect& rect, grect area, unsigned int code)
+	// using static definitions to avoid memory allocation for optimization
+	static RenderRectangle _result;
+	static gvec2 _fullSize(1.0f, 1.0f);
+	static gvec2 _leftTop;
+	static gvec2 _rightBottom;
+	static gvec2 _textureInvertedSize;
+	static april::Texture* _texture = NULL;
+
+	void Font::_applyCutoff(const grect& rect, const grect& area, const grect& symbolRect)
 	{
-		static RenderRectangle result;
-		result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
-		result.dest = area;
-		// if destination rectangle not entirely inside drawing area
-		if (rect.intersects(result.dest))
-		{
-			static gvec2 fullSize(1.0f, 1.0f);
-			static gvec2 leftTop;
-			static gvec2 rightBottom;
-			static gvec2 textureInvertedSize;
-			static CharacterDefinition* chr = NULL;
-			static grect charRect;
-			static april::Texture* texture = NULL;
-			texture = this->getTexture(code);
-			textureInvertedSize.set(1.0f / texture->getWidth(), 1.0f / texture->getHeight());
-			chr = &this->characters[code];
-			charRect.set(chr->x, chr->y, chr->w, chr->h);
-			// vertical/horizontal cutoff of destination rectangle (using left/right/top/bottom semantics for consistency)
-			leftTop.x = (area.left() < rect.left() ? (area.right() - rect.left()) / area.w : fullSize.x);
-			leftTop.y = (area.top() < rect.top() ? (area.bottom() - rect.top()) / area.h : fullSize.y);
-			rightBottom.x = (rect.right() < area.right() ? (rect.right() - area.left()) / area.w : fullSize.x);
-			rightBottom.y = (rect.bottom() < area.bottom() ? (rect.bottom() - area.top()) / area.h : fullSize.y);
-			// apply cutoff on destination
-			result.dest.setPosition(area.getPosition() + area.getSize() * (fullSize - leftTop));
-			result.dest.setSize(area.getSize() * (leftTop + rightBottom - fullSize));
-			// apply cutoff on source
-			result.src.setPosition((charRect.getPosition() + charRect.getSize() * (fullSize - leftTop)) * textureInvertedSize);
-			result.src.setSize((charRect.getSize() * (leftTop + rightBottom - fullSize)) * textureInvertedSize);
-		}
-		return result;
+		// vertical/horizontal cutoff of destination rectangle (using left/right/top/bottom semantics for consistency)
+		_leftTop.x = (area.left() < rect.left() ? (area.right() - rect.left()) / area.w : _fullSize.x);
+		_leftTop.y = (area.top() < rect.top() ? (area.bottom() - rect.top()) / area.h : _fullSize.y);
+		_rightBottom.x = (rect.right() < area.right() ? (rect.right() - area.left()) / area.w : _fullSize.x);
+		_rightBottom.y = (rect.bottom() < area.bottom() ? (rect.bottom() - area.top()) / area.h : _fullSize.y);
+		// apply cutoff on destination
+		_result.dest.setPosition(area.getPosition() + area.getSize() * (_fullSize - _leftTop));
+		_result.dest.setSize(area.getSize() * (_leftTop + _rightBottom - _fullSize));
+		// apply cutoff on source
+		_result.src.setPosition((symbolRect.getPosition() + symbolRect.getSize() * (_fullSize - _leftTop)) * _textureInvertedSize);
+		_result.src.setSize((symbolRect.getSize() * (_leftTop + _rightBottom - _fullSize)) * _textureInvertedSize);
 	}
-	
+
+	RenderRectangle Font::makeRenderRectangle(const grect& rect, grect area, unsigned int charCode)
+	{
+		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
+		_result.dest = area;
+		// if destination rectangle not entirely inside drawing area
+		if (rect.intersects(_result.dest))
+		{
+			_texture = this->getTexture(charCode);
+			_textureInvertedSize.set(1.0f / _texture->getWidth(), 1.0f / _texture->getHeight());
+			this->_applyCutoff(rect, area, this->characters[charCode].rect);
+		}
+		return _result;
+	}
+
+	RenderRectangle Font::makeRenderRectangle(const grect& rect, grect area, chstr iconName)
+	{
+		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
+		_result.dest = area;
+		// if destination rectangle not entirely inside drawing area
+		if (rect.intersects(_result.dest))
+		{
+			_texture = this->getTexture(iconName);
+			_textureInvertedSize.set(1.0f / _texture->getWidth(), 1.0f / _texture->getHeight());
+			this->_applyCutoff(rect, area, this->icons[iconName].rect);
+		}
+		return _result;
+	}
+
 }

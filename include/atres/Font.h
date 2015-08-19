@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.44
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -29,6 +29,8 @@ namespace atres
 		Font(chstr name);
 		virtual ~Font();
 
+		bool load();
+
 		HL_DEFINE_GET(hstr, name, Name);
 		float getHeight();
 		float getScale();
@@ -39,18 +41,24 @@ namespace atres
 		float getInternalDescender();
 		HL_DEFINE_IS(loaded, Loaded);
 		inline hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
+		inline hmap<hstr, IconDefinition>& getIcons() { return this->icons; }
 		harray<april::Texture*> getTextures();
 		
 		virtual april::Texture* getTexture(unsigned int charCode);
-		virtual bool hasChar(unsigned int charCode);
-		
+		virtual april::Texture* getTexture(chstr iconName);
+		virtual bool hasCharacter(unsigned int charCode);
+		virtual bool hasIcon(chstr iconName);
+
 		/// @note Not thread-safe!
 		float getTextWidth(chstr text);
 		/// @note Not thread-safe!
 		int getTextCount(chstr text, float maxWidth);
 		
 		/// @note Not thread-safe!
-		RenderRectangle makeRenderRectangle(const grect& rect, grect area, unsigned int code);
+		RenderRectangle makeRenderRectangle(const grect& rect, grect area, unsigned int charCode);
+		RenderRectangle makeRenderRectangle(const grect& rect, grect area, chstr iconName);
+
+		DEPRECATED_ATTRIBUTE bool hasChar(unsigned int charCode) { return this->hasCharacter(charCode); }
 		
 	protected:
 		hstr name;
@@ -62,9 +70,14 @@ namespace atres
 		float internalDescender;
 		bool loaded;
 		hmap<unsigned int, CharacterDefinition> characters;
+		hmap<hstr, IconDefinition> icons;
 		harray<TextureContainer*> textureContainers;
+
+		virtual bool _load();
 		
 		bool _readBasicParameter(chstr line);
+
+		void _applyCutoff(const grect& rect, const grect& area, const grect& symbolRect);
 		
 	};
 

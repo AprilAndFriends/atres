@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.43
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -8,7 +8,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines utility structs and enums used by the font renderer.
+/// Defines utility classes and enums used by the font renderer.
 
 #ifndef ATRES_UTILITY_H
 #define ATRES_UTILITY_H
@@ -62,19 +62,25 @@ namespace atres
 	class atresExport CharacterDefinition
 	{
 	public:
-		float x;
-		float y;
-		float w;
-		float h;
-		float bx;
-		float by;
-		float aw;
+		grect rect;
+		gvec2 bearing;
+		float advance;
 		
 		CharacterDefinition();
 		~CharacterDefinition();
 
 	};
 	
+	class atresExport IconDefinition
+	{
+	public:
+		grect rect;
+
+		IconDefinition();
+		~IconDefinition();
+
+	};
+
 	class atresExport RenderRectangle
 	{
 	public:
@@ -164,7 +170,8 @@ namespace atres
 	public:
 		april::Texture* texture;
 		harray<unsigned int> characters;
-		
+		harray<hstr> icons;
+
 		TextureContainer();
 		~TextureContainer();
 

@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.46
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -272,6 +272,7 @@ namespace atres
 
 	void Renderer::registerFont(Font* font, bool allowDefault)
 	{
+		font->load();
 		hstr name = font->getName();
 		hlog::write(logTag, "Registering font: " + name);
 		if (this->fonts.hasKey(name))
@@ -431,7 +432,7 @@ namespace atres
 		{
 			for_itert (unsigned int, i, 0, chars.size())
 			{
-				font->hasChar(chars[i]);
+				font->hasCharacter(chars[i]);
 			}
 		}
 	}
@@ -1105,15 +1106,15 @@ namespace atres
 				{
 					this->_character = &this->_characters[code];
 					this->_scale = this->_fontScale * this->_textScale;
-					if (wordX < -this->_character->bx * this->_scale)
+					if (wordX < -this->_character->bearing.x * this->_scale)
 					{
-						ax = (this->_character->aw - this->_character->bx) * this->_scale;
-						aw = this->_character->w * this->_scale;
+						ax = (this->_character->advance - this->_character->bearing.x) * this->_scale;
+						aw = this->_character->rect.w * this->_scale;
 					}
 					else
 					{
-						ax = this->_character->aw * this->_scale;
-						aw = (this->_character->w + this->_character->bx) * this->_scale;
+						ax = this->_character->advance * this->_scale;
+						aw = (this->_character->rect.w + this->_character->bearing.x) * this->_scale;
 					}
 					addW = hmax(ax, aw);
 				}
@@ -1321,17 +1322,17 @@ namespace atres
 						this->_scale = this->_fontScale * this->_textScale;
 						this->_character = &this->_characters[this->_code];
 						area = this->_word.rect;
-						area.x += hmax(0.0f, width + this->_character->bx * this->_scale);
+						area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale);
 						area.y += (this->_lineHeight - this->_height) * 0.5f;
-						area.w = this->_character->w * this->_scale;
-						area.h = this->_character->h * this->_scale;
+						area.w = this->_character->rect.w * this->_scale;
+						area.h = this->_character->rect.h * this->_scale;
 						area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 						drawRect = rect;
-						drawRect.h += this->_character->by * this->_scale;
+						drawRect.h += this->_character->bearing.y * this->_scale;
 						if (this->_font != NULL)
 						{
 							this->_renderRect = this->_font->makeRenderRectangle(drawRect, area, this->_code);
-							this->_renderRect.dest.y -= this->_character->by * this->_scale;
+							this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
 							this->_textSequence.addRenderRectangle(this->_renderRect);
 							destination = this->_renderRect.dest;
 							switch (this->_effectMode)
@@ -1360,7 +1361,7 @@ namespace atres
 								break;
 							}
 						}
-						width += (width < -this->_character->bx * this->_scale ? (this->_character->aw - this->_character->bx) : this->_character->aw) * this->_scale;
+						width += (width < -this->_character->bearing.x * this->_scale ? (this->_character->advance - this->_character->bearing.x) : this->_character->advance) * this->_scale;
 					}
 				}
 			}
@@ -1752,15 +1753,15 @@ namespace atres
 			{
 				this->_character = &this->_characters[code];
 				this->_scale = this->_fontScale * this->_textScale;
-				if (lineX < -this->_character->bx * this->_scale)
+				if (lineX < -this->_character->bearing.x * this->_scale)
 				{
-					ax = (this->_character->aw - this->_character->bx) * this->_scale;
-					aw = this->_character->w * this->_scale;
+					ax = (this->_character->advance - this->_character->bearing.x) * this->_scale;
+					aw = this->_character->rect.w * this->_scale;
 				}
 				else
 				{
-					ax = this->_character->aw * this->_scale;
-					aw = (this->_character->w + this->_character->bx) * this->_scale;
+					ax = this->_character->advance * this->_scale;
+					aw = (this->_character->rect.w + this->_character->bearing.x) * this->_scale;
 				}
 				addW = hmax(ax, aw);
 			}
