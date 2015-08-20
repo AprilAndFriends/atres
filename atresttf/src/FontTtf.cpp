@@ -22,7 +22,7 @@
 #include "atresttfUtil.h"
 #include "FontTtf.h"
 
-#define PTSIZE2INT(value) (((value) + 63) >> 6)
+#define PTSIZE2INT(value) (int)(((value) + 63) >> 6)
 
 namespace atresttf
 {
