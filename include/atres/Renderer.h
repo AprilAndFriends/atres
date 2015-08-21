@@ -27,6 +27,7 @@
 namespace atres
 {
 	class Font;
+	class FontIconMap;
 	template <class T>
 	class Cache;
 
@@ -151,14 +152,20 @@ namespace atres
 
 		hstr _fontName;
 		Font* _font;
+		FontIconMap* _iconFont;
+		hstr _fontIconName;
 		hmap<unsigned int, CharacterDefinition>& _characters;
 		hmap<unsigned int, CharacterDefinition> _dummyCharacters; // required for some compilers
+		hmap<hstr, IconDefinition>& _icons;
+		hmap<hstr, IconDefinition> _dummyIcons; // required for some compilers
 		CharacterDefinition* _character;
+		IconDefinition* _icon;
 		float _height;
 		float _lineHeight;
 		float _descender;
 		float _internalDescender;
 		float _fontScale;
+		float _iconFontScale;
 		float _textScale;
 		float _scale;
 
@@ -183,6 +190,7 @@ namespace atres
 
 		april::Texture* _texture;
 		unsigned int _code;
+		hstr _iconName;
 
 		CacheEntryText _cacheEntryText;
 		CacheEntryLines _cacheEntryLines;

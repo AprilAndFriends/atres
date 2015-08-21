@@ -16,7 +16,7 @@ namespace atres
 {
 	static april::TexturedVertex vert[6];
 
-	CharacterDefinition::CharacterDefinition() : advance(0.0f)
+	CharacterDefinition::CharacterDefinition() : advance(0.0f), offsetY(0.0f)
 	{
 	}
 
@@ -59,7 +59,7 @@ namespace atres
 		this->vertices.add(vert, 6);
 	}
 	
-	RenderWord::RenderWord() : start(0), count(0), spaces(0), fullWidth(0.0f)
+	RenderWord::RenderWord() : start(0), count(0), spaces(0), icon(false), fullWidth(0.0f)
 	{
 	}
 

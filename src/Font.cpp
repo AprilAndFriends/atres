@@ -229,7 +229,7 @@ namespace atres
 	static gvec2 _textureInvertedSize;
 	static april::Texture* _texture = NULL;
 
-	void Font::_applyCutoff(const grect& rect, const grect& area, const grect& symbolRect)
+	void Font::_applyCutoff(const grect& rect, const grect& area, const grect& symbolRect, float offsetY)
 	{
 		// vertical/horizontal cutoff of destination rectangle (using left/right/top/bottom semantics for consistency)
 		_leftTop.x = (area.left() < rect.left() ? (area.right() - rect.left()) / area.w : _fullSize.x);
@@ -241,6 +241,7 @@ namespace atres
 		_result.dest.setSize(area.getSize() * (_leftTop + _rightBottom - _fullSize));
 		// apply cutoff on source
 		_result.src.setPosition((symbolRect.getPosition() + symbolRect.getSize() * (_fullSize - _leftTop)) * _textureInvertedSize);
+		_result.src.y += offsetY;
 		_result.src.setSize((symbolRect.getSize() * (_leftTop + _rightBottom - _fullSize)) * _textureInvertedSize);
 	}
 
@@ -253,7 +254,7 @@ namespace atres
 		{
 			_texture = this->getTexture(charCode);
 			_textureInvertedSize.set(1.0f / _texture->getWidth(), 1.0f / _texture->getHeight());
-			this->_applyCutoff(rect, area, this->characters[charCode].rect);
+			this->_applyCutoff(rect, area, this->characters[charCode].rect, this->characters[charCode].offsetY * _textureInvertedSize.y);
 		}
 		return _result;
 	}

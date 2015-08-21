@@ -34,6 +34,7 @@
 #include <april/Window.h>
 #include <atres/atres.h>
 #include <atres/FontBitmap.h>
+#include <atres/FontIconMap.h>
 #include <atres/Renderer.h>
 #include <atresttf/atresttf.h>
 #include <atresttf/FontTtf.h>
@@ -46,14 +47,14 @@
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
-#define TEXT_0 "This is blasphemy."
-#define TEXT_1 "This is madness."
+#define TEXT_0 "This is blasphemy.[i:icon_font]red[/i]"
+#define TEXT_1 "This is [i:icon_font]xmen[/i]madness."
 #define TEXT_2 "No. This is Sparta!"
 #define TEXT_3 "This []]is] a [b=7F00FF][0]test [n]that[/n] [f:test]is[/f] [x=0.5]supp[/x]osed[/b] " \
 	"[b][c=fake]to[/c][/b]   [c=FFFFFF7F]show[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s]X_horz_formatting " \
-	"[c=00FF00]wrapped[/c][/s] [b]w[c=purple]ork[/c]s[/b] [f Arial:1.3]right[/f] [-][b]or[/b][/i] not."
+	"[c=00FF00]wrapped[/c][/s] [b]w[c=purple][i:icon_font]neon[/i]rk[/c]s[/b] [f Arial:1.3]right[/f] [-][b]or[/b][/k] not."
 #define TEXT_4 "Another [b][0]test [n]that[/n] [f:test]is[/f] [x=0.5]supp[/x]osed[/b] [b][c=fake]to[/c][/b] " \
-	"[c=FFFFFF7F]show[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s=00FF00]X_horz_formatting [c=00FF00]justified[/c][/s] " \
+	"[c=FFFFFF7F]sh[i:icon_font]blue[/i][i:icon_font]orange[/i]w[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s=00FF00]X_horz_formatting [c=00FF00]justified[/c][/s] " \
 	"[b]w[c=purple]ork[/c]s[/b] [f Arial:1.3]right[/f] or\nnot."
 #define TEXT_5 "[b]This is a vertical test.\nIt really is. Really."
 
@@ -254,6 +255,7 @@ void april_init(const harray<hstr>& args)
 		atres::renderer->registerFont(new atresttf::FontTtf("", "Arial", 32, 1.0f)); // invokes the installed system font Arial
 #endif
 #endif
+		atres::renderer->registerFont(new atres::FontIconMap(RESOURCE_PATH "icon_font", "icon_font", 24.0f, 1.0f, 24.0f, 0.0f));
 		atres::renderer->setShadowColor(april::Color::Red);
 		atres::renderer->setBorderColor(april::Color::Aqua);
 	}

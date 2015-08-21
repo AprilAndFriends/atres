@@ -77,7 +77,7 @@ namespace atres
 		
 		bool _readBasicParameter(chstr line);
 
-		void _applyCutoff(const grect& rect, const grect& area, const grect& symbolRect);
+		void _applyCutoff(const grect& rect, const grect& area, const grect& symbolRect, float offsetY = 0.0f);
 		
 	};
 

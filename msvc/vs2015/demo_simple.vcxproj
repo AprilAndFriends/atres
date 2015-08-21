@@ -64,10 +64,10 @@
   <Import Project="props-demos\configuration.props" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugS|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>_LIB;_ATRESTTF;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libatresttf.lib;libfreetype.lib;libpng.lib;libjpeg.lib;zlib1.lib;d3d9.lib;winmm.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libpng.lib;libjpeg.lib;zlib1.lib;d3d9.lib;winmm.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseS|Win32'">

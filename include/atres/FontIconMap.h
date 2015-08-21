@@ -24,8 +24,18 @@ namespace atres
 	class atresExport FontIconMap : public FontDynamic
 	{
 	public:
-		FontIconMap(chstr name);
+		FontIconMap(chstr fontDirectory, chstr name, float height, float scale, float lineHeight = 0.0f, float spacing = 0.0f);
 		~FontIconMap();
+
+	protected:
+		hstr fontDirectory;
+		float spacing;
+
+		bool _isAllowAlphaTextures();
+
+		bool _load();
+
+		april::Image* _loadIconImage(chstr iconName, bool initial, int& advance);
 
 	};
 

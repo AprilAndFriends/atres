@@ -22,6 +22,7 @@
 #include "atres.h"
 #include "Cache.h"
 #include "Font.h"
+#include "FontIconMap.h"
 
 #define ALIGNMENT_IS_WRAPPED(formatting) ((formatting) == LEFT_WRAPPED || (formatting) == CENTER_WRAPPED || (formatting) == RIGHT_WRAPPED || (formatting) == JUSTIFIED)
 #define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED || (formatting) == JUSTIFIED && this->justifiedDefault != JUSTIFIED)
@@ -78,9 +79,12 @@
 
 namespace atres
 {
+	static hstr _iconPlaceholder = hstr::fromUnicode((unsigned int)0xA0);
+
 	Renderer* renderer = NULL;
 
-	Renderer::Renderer() : _characters(_dummyCharacters), _dummyCharacters(hmap<unsigned int, CharacterDefinition>())
+	Renderer::Renderer() : _characters(_dummyCharacters), _dummyCharacters(hmap<unsigned int, CharacterDefinition>()),
+		_icons(_dummyIcons), _dummyIcons(hmap<hstr, IconDefinition>())
 	{
 		this->colors["white"] = april::Color::White.hex();
 		this->colors["black"] = april::Color::Black.hex();
@@ -135,12 +139,14 @@ namespace atres
 		this->defaultFont = NULL;
 		// misc init
 		this->_font = NULL;
+		this->_iconFont = NULL;
 		this->_texture = NULL;
 		this->_height = 0.0f;
 		this->_lineHeight = 0.0f;
 		this->_descender = 0.0f;
 		this->_internalDescender = 0.0f;
 		this->_fontScale = 1.0f;
+		this->_iconFontScale = 1.0f;
 		this->_textScale = 1.0f;
 		this->_scale = 1.0f;
 		this->_effectMode = 0;
@@ -473,7 +479,14 @@ namespace atres
 				}
 				ignoreFormatting = false;
 				stack.removeLast();
-				tag.type = TAG_TYPE_CLOSE;
+				if (str[start + 2] != 'i')
+				{
+					tag.type = TAG_TYPE_CLOSE;
+				}
+				else
+				{
+					tag.type = TAG_TYPE_CLOSE_CONSUME;
+				}
 			}
 			else if (end - start == 2) // empty command
 			{
@@ -488,7 +501,14 @@ namespace atres
 					continue;
 				}
 				stack.removeLast();
-				tag.type = TAG_TYPE_CLOSE;
+				if (str[start + 2] != 'i')
+				{
+					tag.type = TAG_TYPE_CLOSE;
+				}
+				else
+				{
+					tag.type = TAG_TYPE_CLOSE_CONSUME;
+				}
 			}
 			else // opening new tag
 			{
@@ -496,6 +516,9 @@ namespace atres
 				{
 				case 'f':
 					tag.type = TAG_TYPE_FONT;
+					break;
+				case 'i':
+					tag.type = TAG_TYPE_ICON;
 					break;
 				case 'c':
 					tag.type = TAG_TYPE_COLOR;
@@ -534,19 +557,36 @@ namespace atres
 		hstr result;
 		int index = 0;
 		int count = 0;
+		bool hasPreviousTag = false;
 		foreach (FormatTag, it, foundTags)
 		{
-			result += text(index, (*it).start - index);
-			index = (*it).start + (*it).count;
-			if ((*it).type != TAG_TYPE_ESCAPE)
+			if ((*it).type != TAG_TYPE_CLOSE_CONSUME)
 			{
-				(*it).start -= count;
-				tags += (*it);
+				result += text(index, (*it).start - index);
 			}
-			else
+			else if (hasPreviousTag)
+			{
+				tags.last().consumedData = text(index, (*it).start - index);
+				count += (*it).start - index;
+				hasPreviousTag = false;
+			}
+			index = (*it).start + (*it).count;
+			if ((*it).type == TAG_TYPE_ESCAPE)
 			{
 				--count;
 				result += '[';
+			}
+			else
+			{
+				(*it).start -= count;
+				if ((*it).type == TAG_TYPE_ICON)
+				{
+					hasPreviousTag = true;
+					// using a non-breaking space to indicate an icon being rendered here
+					count -= _iconPlaceholder.size();
+					result += _iconPlaceholder;
+				}
+				tags += (*it);
 			}
 			count += (*it).count;
 		}
@@ -709,13 +749,16 @@ namespace atres
 		this->_nextTag = this->_tags.first();
 		this->_fontName = "";
 		this->_font = NULL;
+		this->_iconFont = NULL;
 		this->_texture = NULL;
 		this->_characters = this->_dummyCharacters;
+		this->_icons = this->_dummyIcons;
 		this->_height = 0.0f;
 		this->_lineHeight = 0.0f;
 		this->_descender = 0.0f;
 		this->_internalDescender = 0.0f;
 		this->_fontScale = 1.0f;
+		this->_iconFontScale = 1.0f;
 		this->_textScale = 1.0f;
 		this->_scale = 1.0f;
 	}
@@ -751,7 +794,7 @@ namespace atres
 	{
 		while (this->_tags.size() > 0 && index >= this->_nextTag.start)
 		{
-			if (this->_nextTag.type == TAG_TYPE_CLOSE)
+			if (this->_nextTag.type == TAG_TYPE_CLOSE || this->_nextTag.type == TAG_TYPE_CLOSE_CONSUME)
 			{
 				this->_currentTag = this->_stack.removeLast();
 				if (this->_currentTag.type == TAG_TYPE_FONT)
@@ -759,6 +802,15 @@ namespace atres
 					this->_fontName = this->_currentTag.data;
 					this->_font = this->getFont(this->_fontName);
 					this->_characters = this->_font->getCharacters();
+					this->_icons = this->_font->getIcons();
+					this->_fontScale = this->_font->getScale();
+				}
+				else if (this->_currentTag.type == TAG_TYPE_ICON)
+				{
+					this->_fontName = this->_currentTag.data;
+					this->_font = this->getFont(this->_fontName);
+					this->_characters = this->_font->getCharacters();
+					this->_icons = this->_font->getIcons();
 					this->_fontScale = this->_font->getScale();
 				}
 				else if (this->_currentTag.type == TAG_TYPE_SCALE)
@@ -791,6 +843,33 @@ namespace atres
 					this->_fontName = this->_nextTag.data;
 					this->_characters = this->_font->getCharacters();
 					this->_fontScale = this->_font->getScale();
+				}
+				else
+				{
+					hlog::warnf(logTag, "Font '%s' does not exist!", this->_nextTag.data.cStr());
+				}
+			}
+			else if (this->_nextTag.type == TAG_TYPE_ICON)
+			{
+				this->_currentTag.type = TAG_TYPE_ICON;
+				this->_currentTag.data = this->_fontName;
+				this->_currentTag.consumedData = this->_fontIconName;
+				this->_stack += this->_currentTag;
+				this->_iconFont = dynamic_cast<FontIconMap*>(this->getFont(this->_nextTag.data));
+				if (this->_iconFont != NULL)
+				{
+					if (this->_font == NULL) // if there is no previous font, the height values have to be obtained as well
+					{
+						this->_height = this->_iconFont->getHeight();
+						this->_lineHeight = this->_iconFont->getLineHeight();
+						this->_descender = this->_iconFont->getDescender();
+						this->_internalDescender = this->_iconFont->getInternalDescender();
+					}
+					this->_fontName = this->_nextTag.data;
+					this->_fontIconName = this->_nextTag.consumedData;
+					this->_iconFont->hasIcon(this->_fontIconName);
+					this->_icons = this->_iconFont->getIcons();
+					this->_iconFontScale = this->_iconFont->getScale();
 				}
 				else
 				{
@@ -830,7 +909,7 @@ namespace atres
 	{
 		while (this->_tags.size() > 0 && this->_word.start + index >= this->_nextTag.start)
 		{
-			if (this->_nextTag.type == TAG_TYPE_CLOSE)
+			if (this->_nextTag.type == TAG_TYPE_CLOSE || this->_nextTag.type == TAG_TYPE_CLOSE_CONSUME)
 			{
 				this->_currentTag = this->_stack.removeLast();
 				switch (this->_currentTag.type)
@@ -839,7 +918,17 @@ namespace atres
 					this->_fontName = this->_currentTag.data;
 					this->_font = this->getFont(this->_fontName);
 					this->_characters = this->_font->getCharacters();
+					this->_icons = this->_font->getIcons();
 					this->_fontScale = this->_font->getScale();
+					break;
+				case TAG_TYPE_ICON:
+					this->_fontName = this->_currentTag.data;
+					this->_fontIconName = this->_currentTag.consumedData;
+					this->_font = this->getFont(this->_fontName);
+					this->_characters = this->_font->getCharacters();
+					this->_icons = this->_font->getIcons();
+					this->_fontScale = this->_font->getScale();
+					this->_iconFont = NULL;
 					break;
 				case TAG_TYPE_COLOR:
 					this->_hex = (this->colors.hasKey(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
@@ -879,7 +968,7 @@ namespace atres
 				switch (this->_nextTag.type)
 				{
 				case TAG_TYPE_FONT:
-					this->_currentTag.type = TAG_TYPE_FONT;
+					this->_currentTag.type = this->_nextTag.type;
 					this->_currentTag.data = this->_fontName;
 					this->_stack += this->_currentTag;
 					if (this->_font == NULL)
@@ -902,6 +991,32 @@ namespace atres
 						this->_fontName = this->_nextTag.data;
 						this->_characters = this->_font->getCharacters();
 						this->_fontScale = this->_font->getScale();
+					}
+					else
+					{
+						hlog::warnf(logTag, "Font '%s' does not exist!", this->_nextTag.data.cStr());
+					}
+					break;
+				case TAG_TYPE_ICON:
+					this->_currentTag.type = TAG_TYPE_ICON;
+					this->_currentTag.data = this->_fontName;
+					this->_currentTag.consumedData = this->_fontIconName;
+					this->_stack += this->_currentTag;
+					this->_iconFont = dynamic_cast<FontIconMap*>(this->getFont(this->_nextTag.data));
+					if (this->_iconFont != NULL)
+					{
+						if (this->_font == NULL) // if there is no previous font, the height values have to be obtained as well
+						{
+							this->_height = this->_iconFont->getHeight();
+							this->_lineHeight = this->_iconFont->getLineHeight();
+							this->_descender = this->_iconFont->getDescender();
+							this->_internalDescender = this->_iconFont->getInternalDescender();
+						}
+						this->_fontName = this->_nextTag.data;
+						this->_fontIconName = this->_nextTag.consumedData;
+						this->_iconFont->hasIcon(this->_fontIconName);
+						this->_icons = this->_iconFont->getIcons();
+						this->_iconFontScale = this->_iconFont->getScale();
 					}
 					else
 					{
@@ -989,7 +1104,12 @@ namespace atres
 			{
 				this->_nextTag.start = this->_word.start + this->_word.text.size() + 1;
 			}
-			if (this->_font != NULL)
+			if (this->_iconFont != NULL)
+			{
+				this->_texture = this->_iconFont->getTexture(this->_fontIconName);
+				this->_checkSequenceSwitch();
+			}
+			else if (this->_font != NULL)
 			{
 				this->_texture = this->_font->getTexture(this->_code);
 				this->_checkSequenceSwitch();
@@ -1006,9 +1126,14 @@ namespace atres
 				this->_nextTag.start = this->_word.start + this->_word.text.size() + 1;
 			}
 		}
-		if (this->_font != NULL)
+		// this additional check is required in case the texture had to be changed
+		if (this->_iconFont != NULL)
 		{
-			// this additional check is required in case the texture had to be changed
+			this->_texture = this->_iconFont->getTexture(this->_fontIconName);
+			this->_checkSequenceSwitch();
+		}
+		else if (this->_font != NULL)
+		{
 			this->_texture = this->_font->getTexture(this->_code);
 			this->_checkSequenceSwitch();
 		}
@@ -1063,6 +1188,7 @@ namespace atres
 		harray<RenderWord> result;
 		RenderWord word;
 		unsigned int code = 0;
+		harray<hstr> iconNames;
 		float ax = 0.0f;
 		float aw = 0.0f;
 		float wordX = 0.0f;
@@ -1073,7 +1199,9 @@ namespace atres
 		int chars = 0;
 		int byteSize = 0;
 		bool checkingSpaces = true;
+		bool icon = false;
 		bool tooLong = false;
+		hstr iconName;
 		harray<float> charWidths;
 		word.rect.x = rect.x;
 		word.rect.y = rect.y;
@@ -1085,10 +1213,42 @@ namespace atres
 			chars = 0;
 			wordX = 0.0f;
 			wordW = 0.0f;
+			icon = false;
 			while (i < actualSize) // checking a whole word
 			{
+				ax = 0.0f;
+				aw = 0.0f;
+				addW = 0.0f;
 				code = text.firstUnicodeChar(i, &byteSize);
 				this->_checkFormatTags(text, i);
+				if (this->_iconFont != NULL)
+				{
+					if (i > start)
+					{
+						break;
+					}
+					icon = true;
+					if (this->_icons.hasKey(this->_fontIconName))
+					{
+						this->_icon = &this->_icons[this->_fontIconName];
+						this->_scale = this->_iconFontScale * this->_fontScale * this->_textScale;
+						ax = this->_icon->advance * this->_scale;
+						aw = this->_icon->rect.w * this->_scale;
+						addW = hmax(ax, aw);
+					}
+					if (wordW + addW > rect.w) // word too long for line
+					{
+						tooLong = true;
+						break;
+					}
+					wordW = wordX + addW;
+					wordX += ax;
+					charWidths += ax;
+					i += byteSize;
+					++chars;
+					this->_iconFont = NULL;
+					break;
+				}
 				if (code == '\n')
 				{
 					if (i == start)
@@ -1163,11 +1323,12 @@ namespace atres
 			}
 			if (i > start)
 			{
-				word.text = text(start, i - start);
+				word.text = (!icon ? text(start, i - start) : "");
 				word.rect.w = wordX;
 				word.start = start;
-				word.count = i - start;
-				word.spaces = (checkingSpaces ? i - start : 0);
+				word.count = (!icon ? i - start : 0);
+				word.spaces = (!icon && checkingSpaces ? i - start : 0);
+				word.icon = icon;
 				word.fullWidth = wordW;
 				word.charWidths = charWidths;
 				result += word;
@@ -1179,7 +1340,14 @@ namespace atres
 				break;
 			}
 			tooLong = false;
-			checkingSpaces = !checkingSpaces;
+			if (this->_iconFont != NULL)
+			{
+				checkingSpaces = false;
+			}
+			else if (!icon)
+			{
+				checkingSpaces = !checkingSpaces;
+			}
 		}
 		return result;
 	}
@@ -1299,6 +1467,7 @@ namespace atres
 		this->_initializeLineProcessing(lines);
 		int byteSize = 0;
 		float width = 0.0f;
+		float y = 0.0f;
 		grect destination;
 		grect area;
 		grect drawRect;
@@ -1310,58 +1479,87 @@ namespace atres
 			{
 				width = 0.0f;
 				this->_word = (*it);
-				for_iter_step (i, 0, this->_word.text.size(), byteSize)
+				if (this->_word.icon)
 				{
-					this->_code = this->_word.text.firstUnicodeChar(i, &byteSize);
 					// checking first formatting tag changes
-					this->_processFormatTags(this->_word.text, i);
-					// if character exists in current font
-					if (this->_characters.hasKey(this->_code))
+					this->_processFormatTags(this->_word.text, 0);
+					this->_iconName = this->_fontIconName;
+					// if icon exists in current font
+					if (this->_icons.hasKey(this->_iconName))
 					{
 						// checking the particular character
-						this->_scale = this->_fontScale * this->_textScale;
-						this->_character = &this->_characters[this->_code];
+						this->_scale = this->_iconFontScale * this->_fontScale * this->_textScale;
+						this->_icon = &this->_icons[this->_iconName];
 						area = this->_word.rect;
-						area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale);
+						area.x += hmax(0.0f, width);
 						area.y += (this->_lineHeight - this->_height) * 0.5f;
-						area.w = this->_character->rect.w * this->_scale;
-						area.h = this->_character->rect.h * this->_scale;
+						area.w = this->_icon->rect.w * this->_scale;
+						area.h = this->_icon->rect.h * this->_scale;
 						area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
+						area.y += (this->_lineHeight - area.h) * 0.5f;
 						drawRect = rect;
-						drawRect.h += this->_character->bearing.y * this->_scale;
-						if (this->_font != NULL)
+						if (this->_iconFont != NULL)
 						{
-							this->_renderRect = this->_font->makeRenderRectangle(drawRect, area, this->_code);
-							this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
+							this->_renderRect = this->_iconFont->makeRenderRectangle(drawRect, area, this->_iconName);
 							this->_textSequence.addRenderRectangle(this->_renderRect);
-							destination = this->_renderRect.dest;
-							switch (this->_effectMode)
-							{
-							case EFFECT_MODE_SHADOW: // shadow
-								this->_renderRect.dest = destination + this->shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
-								this->_shadowSequence.addRenderRectangle(this->_renderRect);
-								break;
-							case EFFECT_MODE_BORDER: // border
-								this->_renderRect.dest = destination + gvec2(-this->borderOffset, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-								this->_borderSequence.addRenderRectangle(this->_renderRect);
-								this->_renderRect.dest = destination + gvec2(this->borderOffset, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-								this->_borderSequence.addRenderRectangle(this->_renderRect);
-								this->_renderRect.dest = destination + gvec2(-this->borderOffset, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-								this->_borderSequence.addRenderRectangle(this->_renderRect);
-								this->_renderRect.dest = destination + gvec2(this->borderOffset, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-								this->_borderSequence.addRenderRectangle(this->_renderRect);
-								this->_renderRect.dest = destination + gvec2(0.0f, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-								this->_borderSequence.addRenderRectangle(this->_renderRect);
-								this->_renderRect.dest = destination + gvec2(-this->borderOffset, 0.0f) * (this->globalOffsets ? 1.0f : this->_scale);
-								this->_borderSequence.addRenderRectangle(this->_renderRect);
-								this->_renderRect.dest = destination + gvec2(this->borderOffset, 0.0f) * (this->globalOffsets ? 1.0f : this->_scale);
-								this->_borderSequence.addRenderRectangle(this->_renderRect);
-								this->_renderRect.dest = destination + gvec2(0.0f, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-								this->_borderSequence.addRenderRectangle(this->_renderRect);
-								break;
-							}
 						}
-						width += (width < -this->_character->bearing.x * this->_scale ? (this->_character->advance - this->_character->bearing.x) : this->_character->advance) * this->_scale;
+						width += this->_icon->advance * this->_scale;
+					}
+				}
+				else
+				{
+					for_iter_step (i, 0, this->_word.text.size(), byteSize)
+					{
+						this->_code = this->_word.text.firstUnicodeChar(i, &byteSize);
+						// checking first formatting tag changes
+						this->_processFormatTags(this->_word.text, i);
+						// if character exists in current font
+						if (this->_characters.hasKey(this->_code))
+						{
+							// checking the particular character
+							this->_scale = this->_fontScale * this->_textScale;
+							this->_character = &this->_characters[this->_code];
+							area = this->_word.rect;
+							area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale);
+							area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale;
+							area.w = this->_character->rect.w * this->_scale;
+							area.h = this->_character->rect.h * this->_scale;
+							area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
+							drawRect = rect;
+							if (this->_font != NULL)
+							{
+								this->_renderRect = this->_font->makeRenderRectangle(drawRect, area, this->_code);
+								this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
+								this->_textSequence.addRenderRectangle(this->_renderRect);
+								destination = this->_renderRect.dest;
+								switch (this->_effectMode)
+								{
+								case EFFECT_MODE_SHADOW: // shadow
+									this->_renderRect.dest = destination + this->shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+									this->_shadowSequence.addRenderRectangle(this->_renderRect);
+									break;
+								case EFFECT_MODE_BORDER: // border
+									this->_renderRect.dest = destination + gvec2(-this->borderOffset, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
+									this->_borderSequence.addRenderRectangle(this->_renderRect);
+									this->_renderRect.dest = destination + gvec2(this->borderOffset, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
+									this->_borderSequence.addRenderRectangle(this->_renderRect);
+									this->_renderRect.dest = destination + gvec2(-this->borderOffset, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
+									this->_borderSequence.addRenderRectangle(this->_renderRect);
+									this->_renderRect.dest = destination + gvec2(this->borderOffset, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
+									this->_borderSequence.addRenderRectangle(this->_renderRect);
+									this->_renderRect.dest = destination + gvec2(0.0f, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
+									this->_borderSequence.addRenderRectangle(this->_renderRect);
+									this->_renderRect.dest = destination + gvec2(-this->borderOffset, 0.0f) * (this->globalOffsets ? 1.0f : this->_scale);
+									this->_borderSequence.addRenderRectangle(this->_renderRect);
+									this->_renderRect.dest = destination + gvec2(this->borderOffset, 0.0f) * (this->globalOffsets ? 1.0f : this->_scale);
+									this->_borderSequence.addRenderRectangle(this->_renderRect);
+									this->_renderRect.dest = destination + gvec2(0.0f, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
+									this->_borderSequence.addRenderRectangle(this->_renderRect);
+									break;
+								}
+							}
+							width += (width < -this->_character->bearing.x * this->_scale ? (this->_character->advance - this->_character->bearing.x) : this->_character->advance) * this->_scale;
+						}
 					}
 				}
 			}
@@ -1749,7 +1947,21 @@ namespace atres
 				break;
 			}
 			this->_checkFormatTags(text, i);
-			if (this->_characters.hasKey(code))
+			ax = 0.0f;
+			aw = 0.0f;
+			addW = 0.0f;
+			if (this->_iconFont != NULL)
+			{
+				if (this->_icons.hasKey(this->_fontIconName))
+				{
+					this->_icon = &this->_icons[this->_fontIconName];
+					this->_scale = this->_iconFontScale * this->_fontScale * this->_textScale;
+					ax = this->_icon->advance * this->_scale;
+					aw = this->_icon->rect.w * this->_scale;
+					addW = hmax(ax, aw);
+				}
+			}
+			else if (this->_characters.hasKey(code))
 			{
 				this->_character = &this->_characters[code];
 				this->_scale = this->_fontScale * this->_textScale;

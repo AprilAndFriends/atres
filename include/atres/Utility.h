@@ -50,21 +50,24 @@ namespace atres
 	{
 		TAG_TYPE_ESCAPE,
 		TAG_TYPE_FONT,
+		TAG_TYPE_ICON,
 		TAG_TYPE_COLOR,
 		TAG_TYPE_SCALE,
 		TAG_TYPE_NORMAL,
 		TAG_TYPE_SHADOW,
 		TAG_TYPE_BORDER,
 		TAG_TYPE_IGNORE_FORMATTING,
-		TAG_TYPE_CLOSE
+		TAG_TYPE_CLOSE,
+		TAG_TYPE_CLOSE_CONSUME
 	};
 	
 	class atresExport CharacterDefinition
 	{
 	public:
 		grect rect;
-		gvec2 bearing;
 		float advance;
+		gvec2 bearing;
+		float offsetY;
 		
 		CharacterDefinition();
 		~CharacterDefinition();
@@ -75,6 +78,7 @@ namespace atres
 	{
 	public:
 		grect rect;
+		float advance;
 
 		IconDefinition();
 		~IconDefinition();
@@ -115,6 +119,7 @@ namespace atres
 		int start;
 		int count;
 		int spaces;
+		bool icon;
 		float fullWidth;
 		harray<float> charWidths;
 		
@@ -157,6 +162,7 @@ namespace atres
 	public:
 		FormatTagType type;
 		hstr data;
+		hstr consumedData;
 		int start;
 		int count;
 		

@@ -49,7 +49,7 @@ namespace atresttf
 
 		bool _load();
 		
-		april::Image* _loadCharacterImage(unsigned int charCode, bool initial, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX, int& advance);
+		april::Image* _loadCharacterImage(unsigned int charCode, bool initial, int& advance, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX);
 
 	};
 

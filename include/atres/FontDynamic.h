@@ -42,15 +42,17 @@ namespace atres
 		int penY;
 		int rowHeight;
 
+		virtual bool _isAllowAlphaTextures();
+
 		bool _load();
 
 		april::Texture* _createTexture();
 		bool _addCharacterBitmap(unsigned int charCode, bool initial = false);
 		bool _addIconBitmap(chstr iconName, bool initial = false);
-		TextureContainer* _addBitmap(bool initial, april::Image* image, int bitmapWidth, int bitmapHeight, int offsetY, chstr name);
+		TextureContainer* _addBitmap(bool initial, april::Image* image, int bitmapWidth, int bitmapHeight, chstr symbol, int offsetY = 0, int safeSpace = 0);
 
-		virtual april::Image* _loadCharacterImage(unsigned int charCode, bool initial, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX, int& advance);
-		virtual april::Image* _loadIconImage(chstr iconName, bool initial);
+		virtual april::Image* _loadCharacterImage(unsigned int charCode, bool initial, int& advance, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX);
+		virtual april::Image* _loadIconImage(chstr iconName, bool initial, int& advance);
 
 	};
 

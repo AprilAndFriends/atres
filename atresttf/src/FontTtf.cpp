@@ -186,7 +186,7 @@ namespace atresttf
 		return true;
 	}
 
-	april::Image* FontTtf::_loadCharacterImage(unsigned int charCode, bool initial, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX, int& advance)
+	april::Image* FontTtf::_loadCharacterImage(unsigned int charCode, bool initial, int& advance, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX)
 	{
 		FT_Face face = atresttf::getFace(this);
 		unsigned long charIndex = charCode;
@@ -218,12 +218,12 @@ namespace atresttf
 				return NULL;
 			}
 		}
+		advance = PTSIZE2INT(face->glyph->advance.x);
 		leftOffset = face->glyph->bitmap_left;
 		topOffset = face->glyph->bitmap_top;
 		ascender = (int)(-PTSIZE2INT(face->size->metrics.ascender));
 		descender = (int)(-PTSIZE2INT(face->size->metrics.descender));
 		bearingX =  PTSIZE2INT(face->glyph->metrics.horiBearingX);
-		advance = PTSIZE2INT(face->glyph->advance.x);
 		return april::Image::create(face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer, april::Image::FORMAT_ALPHA);
 	}
 

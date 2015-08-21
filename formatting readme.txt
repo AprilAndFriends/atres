@@ -12,6 +12,8 @@ s	- shadow; parameter (optional): string with hex value for color in RGB or RGBA
 b	- border; parameter (optional): string with hex value for color in RGB or RGBA
 c	- color change; parameter: string with hex value for color in RGB
 f	- font change; parameter: string of the font name definition including optional scale factor
+i	- icon; parameter: string of the icon font name definition including optional scale factor
+            inside-tag: string of the the icon name (from the filename without extension)
 -	- disable [] formatting until this command tag is closed
 
 Examples:
@@ -19,6 +21,7 @@ Examples:
 The word [b]border[/b] has a border. The word [b=0000FF]blue[/b] has a blue border.
 This [f arial:0.9]word[/f] is displayed in "arial" with a scaling factor 0.9.
 The color of the word at the end is [c:00FF00]green[/c].
+Press [i:buttons]x_button[/i] to delete "C:\Windows\system32".
 
 
 Notes:
@@ -34,3 +37,4 @@ Notes:
   equal "=" for the sake of readability).
 - The c command does not support alpha, because of a conflict within AprilUI that would cause
   alpha-animated text to be cached for every possible alpha value (0-255) and rendered very slowly.
+- Nesting "icon" tags is not allowed.

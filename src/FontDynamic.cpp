@@ -14,8 +14,8 @@
 #include "atres.h"
 #include "FontDynamic.h"
 
-#define SAFE_SPACE 2
-#define CHARACTER_SPACE 0
+#define SAFE_SPACE 0
+#define CHARACTER_SPACE 2
 
 namespace atres
 {
@@ -28,6 +28,11 @@ namespace atres
 
 	FontDynamic::~FontDynamic()
 	{
+	}
+
+	bool FontDynamic::_isAllowAlphaTextures()
+	{
+		return isAllowAlphaTextures();
 	}
 
 	april::Texture* FontDynamic::getTexture(unsigned int charCode)
@@ -84,7 +89,7 @@ namespace atres
 	{
 		int textureSize = getTextureSize();
 		april::Texture* texture = NULL;
-		if (isAllowAlphaTextures() && april::rendersys->getCaps().textureFormats.has(april::Image::FORMAT_ALPHA))
+		if (this->_isAllowAlphaTextures() && april::rendersys->getCaps().textureFormats.has(april::Image::FORMAT_ALPHA))
 		{
 			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Clear, april::Image::FORMAT_ALPHA, april::Texture::TYPE_MANAGED);
 			if (texture != NULL && !texture->isLoaded())
@@ -107,13 +112,13 @@ namespace atres
 		{
 			return true;
 		}
+		int advance = 0;
 		int leftOffset = 0;
 		int topOffset = 0;
 		int ascender = 0;
 		int descender = 0;
 		int bearingX = 0;
-		int advance = 0;
-		april::Image* image = this->_loadCharacterImage(charCode, initial, leftOffset, topOffset, ascender, descender, bearingX, advance);
+		april::Image* image = this->_loadCharacterImage(charCode, initial, advance, leftOffset, topOffset, ascender, descender, bearingX);
 		if (image == NULL)
 		{
 			return false;
@@ -127,12 +132,13 @@ namespace atres
 		int charHeight = image->h + SAFE_SPACE * 2 + offsetY;
 		int charWidth = image->w + SAFE_SPACE * 2;
 		// add bitmap to texture
-		TextureContainer* textureContainer = this->_addBitmap(initial, image, charWidth, charHeight, offsetY, hsprintf("character 0x%X", charCode));
+		TextureContainer* textureContainer = this->_addBitmap(initial, image, charWidth, charHeight, hsprintf("character 0x%X", charCode), offsetY, SAFE_SPACE);
 		// character definition
 		CharacterDefinition character;
-		character.rect.set((float)this->penX, (float)this->penY, (float)charWidth, (float)charHeight);
-		character.bearing.set((float)bearingX, (float)(lineOffset + ascender + bearingY));
+		character.rect.set((float)this->penX, (float)this->penY, (float)charWidth, (float)charHeight - offsetY);
 		character.advance = (float)advance;
+		character.bearing.set((float)bearingX, (float)(lineOffset + ascender + bearingY));
+		character.offsetY = (float)(lineOffset - topOffset);
 		this->characters[charCode] = character;
 		this->penX += charWidth + CHARACTER_SPACE * 2;
 		textureContainer->characters += charCode;
@@ -145,26 +151,28 @@ namespace atres
 		{
 			return true;
 		}
-		april::Image* image = this->_loadIconImage(iconName, initial);
+		int advance = 0;
+		april::Image* image = this->_loadIconImage(iconName, initial, advance);
 		if (image == NULL)
 		{
 			return false;
 		}
 		// this makes sure that there is no vertical overlap between icons
-		int iconHeight = image->h + SAFE_SPACE * 2;
-		int iconWidth = image->w + SAFE_SPACE * 2;
+		int iconHeight = image->h;
+		int iconWidth = image->w;
 		// add bitmap to texture
-		TextureContainer* textureContainer = this->_addBitmap(initial, image, iconWidth, iconHeight, 0, hsprintf("icon '%s'", iconName.cStr()));
+		TextureContainer* textureContainer = this->_addBitmap(initial, image, iconWidth, iconHeight, hsprintf("icon '%s'", iconName.cStr()));
 		// icon definition
 		IconDefinition icon;
 		icon.rect.set((float)this->penX, (float)this->penY, (float)iconWidth, (float)iconHeight);
+		icon.advance = (float)advance;
 		this->icons[iconName] = icon;
 		this->penX += iconWidth + CHARACTER_SPACE * 2;
 		textureContainer->icons += iconName;
 		return true;
 	}
 
-	TextureContainer* FontDynamic::_addBitmap(bool initial, april::Image* image, int bitmapWidth, int bitmapHeight, int offsetY, chstr name)
+	TextureContainer* FontDynamic::_addBitmap(bool initial, april::Image* image, int bitmapWidth, int bitmapHeight, chstr symbol, int offsetY, int safeSpace)
 	{
 		// get texture
 		TextureContainer* textureContainer = this->textureContainers.last();
@@ -177,7 +185,7 @@ namespace atres
 			}
 		}
 		// if icon bitmap width exceeds space, go into next line
-		if (this->penX + bitmapWidth + CHARACTER_SPACE > textureContainer->texture->getWidth())
+		if (this->penX + bitmapWidth + CHARACTER_SPACE * 2 > textureContainer->texture->getWidth())
 		{
 			this->penX = 0;
 			this->penY += this->rowHeight + CHARACTER_SPACE * 2;
@@ -187,9 +195,9 @@ namespace atres
 		{
 			this->rowHeight = hmax(this->rowHeight, bitmapHeight);
 		}
-		if (this->penY + this->rowHeight + CHARACTER_SPACE > textureContainer->texture->getHeight())
+		if (this->penY + this->rowHeight + CHARACTER_SPACE * 2 > textureContainer->texture->getHeight())
 		{
-			hlog::debugf(logTag, "Font '%s': %s does not fit, creating new texture.", this->name.cStr(), name.cStr());
+			hlog::debugf(logTag, "Font '%s': %s does not fit, creating new texture.", this->name.cStr(), symbol.cStr());
 			if (initial)
 			{
 				textureContainer->texture->unlock();
@@ -205,17 +213,17 @@ namespace atres
 			this->penY = 0;
 			// if the icon's height is higher than the texture's height, this will obviously not work too well
 		}
-		textureContainer->texture->write(0, 0, image->w, image->h, this->penX + SAFE_SPACE, this->penY + offsetY + SAFE_SPACE, image);
+		textureContainer->texture->write(0, 0, image->w, image->h, this->penX + safeSpace, this->penY + offsetY + safeSpace, image);
 		delete image;
 		return textureContainer;
 	}
 
-	april::Image* FontDynamic::_loadCharacterImage(unsigned int charCode, bool initial, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX, int& advance)
+	april::Image* FontDynamic::_loadCharacterImage(unsigned int charCode, bool initial, int& advance, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX)
 	{
 		return NULL;
 	}
 	
-	april::Image* FontDynamic::_loadIconImage(chstr iconName, bool initial)
+	april::Image* FontDynamic::_loadIconImage(chstr iconName, bool initial, int& advance)
 	{
 		return NULL;
 	}
