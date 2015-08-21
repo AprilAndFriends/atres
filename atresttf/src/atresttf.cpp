@@ -30,8 +30,8 @@ namespace atresttf
 {
 	hstr logTag = "atresttf";
 
-	static FT_Library library = NULL;
-	static hmap<atres::Font*, FT_Face> faces;
+	FT_Library library = NULL;
+	hmap<atres::Font*, FT_Face> faces;
 	static hmap<hstr, hstr> fonts;
 	static bool fontNamesChecked = false;
 
