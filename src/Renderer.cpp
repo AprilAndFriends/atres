@@ -1467,7 +1467,6 @@ namespace atres
 		this->_initializeLineProcessing(lines);
 		int byteSize = 0;
 		float width = 0.0f;
-		float y = 0.0f;
 		grect destination;
 		grect area;
 		grect drawRect;
