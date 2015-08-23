@@ -1231,7 +1231,7 @@ namespace atres
 					if (this->_icons.hasKey(this->_fontIconName))
 					{
 						this->_icon = &this->_icons[this->_fontIconName];
-						this->_scale = this->_iconFontScale * this->_fontScale * this->_textScale;
+						this->_scale = this->_iconFontScale * this->_textScale;
 						ax = this->_icon->advance * this->_scale;
 						aw = this->_icon->rect.w * this->_scale;
 						addW = hmax(ax, aw);
@@ -1487,7 +1487,7 @@ namespace atres
 					if (this->_icons.hasKey(this->_iconName))
 					{
 						// checking the particular character
-						this->_scale = this->_iconFontScale * this->_fontScale * this->_textScale;
+						this->_scale = this->_iconFontScale * this->_textScale;
 						this->_icon = &this->_icons[this->_iconName];
 						area = this->_word.rect;
 						area.x += hmax(0.0f, width);
@@ -1954,7 +1954,7 @@ namespace atres
 				if (this->_icons.hasKey(this->_fontIconName))
 				{
 					this->_icon = &this->_icons[this->_fontIconName];
-					this->_scale = this->_iconFontScale * this->_fontScale * this->_textScale;
+					this->_scale = this->_iconFontScale * this->_textScale;
 					ax = this->_icon->advance * this->_scale;
 					aw = this->_icon->rect.w * this->_scale;
 					addW = hmax(ax, aw);
