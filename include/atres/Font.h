@@ -41,13 +41,18 @@ namespace atres
 		float getInternalDescender();
 		HL_DEFINE_IS(loaded, Loaded);
 		inline hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
+		inline hmap<unsigned int, harray<BorderCharacterDefinition> >& getBorderCharacters() { return this->borderCharacters; }
 		inline hmap<hstr, IconDefinition>& getIcons() { return this->icons; }
 		harray<april::Texture*> getTextures();
-		
+		HL_DEFINE_IS(nativeBorderSupported, NativeBorderSupported);
+
 		virtual april::Texture* getTexture(unsigned int charCode);
+		virtual april::Texture* getBorderTexture(unsigned int charCode, float borderThickness);
 		virtual april::Texture* getTexture(chstr iconName);
 		virtual bool hasCharacter(unsigned int charCode);
+		virtual bool hasBorderCharacter(unsigned int charCode, float borderThickness);
 		virtual bool hasIcon(chstr iconName);
+		BorderCharacterDefinition* getBorderCharacter(unsigned int charCode, float borderThickness);
 
 		/// @note Not thread-safe!
 		float getTextWidth(chstr text);
@@ -56,6 +61,7 @@ namespace atres
 		
 		/// @note Not thread-safe!
 		RenderRectangle makeRenderRectangle(const grect& rect, grect area, unsigned int charCode);
+		RenderRectangle makeBorderRenderRectangle(const grect& rect, grect area, unsigned int charCode, float borderThickness);
 		RenderRectangle makeRenderRectangle(const grect& rect, grect area, chstr iconName);
 
 		DEPRECATED_ATTRIBUTE bool hasChar(unsigned int charCode) { return this->hasCharacter(charCode); }
@@ -69,9 +75,14 @@ namespace atres
 		float descender;
 		float internalDescender;
 		bool loaded;
+		bool nativeBorderSupported;
 		hmap<unsigned int, CharacterDefinition> characters;
+		hmap<unsigned int, harray<BorderCharacterDefinition> > borderCharacters;
 		hmap<hstr, IconDefinition> icons;
 		harray<TextureContainer*> textureContainers;
+		harray<BorderTextureContainer*> borderTextureContainers;
+
+		harray<BorderTextureContainer*> _getBorderTextureContainers(float borderThickness);
 
 		virtual bool _load();
 		

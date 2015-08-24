@@ -8,6 +8,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_STROKER_H
 
 #include <april/RenderSystem.h>
 #include <april/Texture.h>
@@ -23,6 +24,7 @@
 #include "FontTtf.h"
 
 #define PTSIZE2INT(value) (int)(((value) + 63) >> 6)
+#define FLOAT2PTSIZE(value) (int)((value) * 64)
 
 namespace atresttf
 {
@@ -44,6 +46,7 @@ namespace atresttf
 				}
 			}
 		}
+		this->nativeBorderSupported = true;
 	}
 
 	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii) : atres::FontDynamic(name)
@@ -84,6 +87,7 @@ namespace atresttf
 		this->descender = 0.0f;
 		this->internalDescender = 0.0f;
 		this->customDescender = false;
+		this->nativeBorderSupported = true;
 	}
 
 	FontTtf::~FontTtf()
@@ -176,6 +180,7 @@ namespace atresttf
 		// adding all base ASCII characters right away
 		if (this->loadBasicAscii)
 		{
+			this->_tryCreateFirstTextureContainer();
 			this->textureContainers.last()->texture->lock();
 			for_itert (unsigned int, code, 32, 128)
 			{
@@ -223,8 +228,74 @@ namespace atresttf
 		topOffset = face->glyph->bitmap_top;
 		ascender = (int)(-PTSIZE2INT(face->size->metrics.ascender));
 		descender = (int)(-PTSIZE2INT(face->size->metrics.descender));
-		bearingX =  PTSIZE2INT(face->glyph->metrics.horiBearingX);
+		bearingX = PTSIZE2INT(face->glyph->metrics.horiBearingX);
 		return april::Image::create(face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer, april::Image::FORMAT_ALPHA);
+	}
+
+	april::Image* FontTtf::_loadBorderCharacterImage(unsigned int charCode, float borderThickness)
+	{
+		FT_Face face = atresttf::getFace(this);
+		unsigned long charIndex = charCode;
+		if (charIndex == 0xA0) // non-breaking space character should be treated just like a normal space when retrieving the glyph from the font
+		{
+			charIndex = 0x20;
+		}
+		unsigned int glyphIndex = FT_Get_Char_Index(face, charIndex);
+		if (glyphIndex == 0)
+		{
+			if (charCode >= 0x20)
+			{
+				hlog::debugf(logTag, "Border character '0x%X' does not exist in: %s", charCode, this->fontFilename.cStr());
+			}
+			return NULL;
+		}
+		FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_NO_BITMAP);
+		if (error != 0)
+		{
+			hlog::error(logTag, "Could not load glyph from: " + this->fontFilename);
+			return NULL;
+		}
+		if (face->glyph->format != FT_GLYPH_FORMAT_OUTLINE)
+		{
+			hlog::error(logTag, "Not an outline glyph: " + this->fontFilename);
+			this->nativeBorderSupported = false; // native border actually no supported
+			return NULL;
+		}
+		FT_Stroker stroker;
+		error = FT_Stroker_New(atresttf::getLibrary(), &stroker);
+		if (error != 0)
+		{
+			hlog::error(logTag, "Could not create stroker: " + this->fontFilename);
+			return NULL;
+		}
+		FT_Stroker_Set(stroker, FLOAT2PTSIZE(borderThickness), FT_STROKER_LINECAP_ROUND, FT_STROKER_LINEJOIN_ROUND, 0);
+		FT_Glyph glyph;
+		error = FT_Get_Glyph(face->glyph, &glyph);
+		if (error != 0)
+		{
+			hlog::error(logTag, "Could not get glyph from: " + this->fontFilename);
+			FT_Stroker_Done(stroker);
+			return NULL;
+		}
+		error = FT_Glyph_Stroke(&glyph, stroker, 1);
+		FT_Stroker_Done(stroker);
+		if (error != 0)
+		{
+			hlog::error(logTag, "Could not stroke: " + this->fontFilename);
+			FT_Done_Glyph(glyph);
+			return NULL;
+		}
+		error = FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, NULL, false);
+		if (error != 0)
+		{
+			hlog::error(logTag, "Could not render bitmap: " + this->fontFilename);
+			FT_Done_Glyph(glyph);
+			return NULL;
+		}
+		FT_Bitmap bitmap = ((FT_BitmapGlyph)glyph)->bitmap;
+		april::Image* image = april::Image::create(bitmap.width, bitmap.rows, bitmap.buffer, april::Image::FORMAT_ALPHA);
+		FT_Done_Glyph(glyph);
+		return image;
 	}
 
 }

@@ -56,7 +56,7 @@
 #define TEXT_4 "Another [b][0]test [n]that[/n] [f:test]is[/f] [x=0.5]supp[/x]osed[/b] [b][c=fake]to[/c][/b] " \
 	"[c=FFFFFF7F]sh[i:icon_font]blue[/i][i:icon_font]orange[/i]w[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s=00FF00]X_horz_formatting [c=00FF00]justified[/c][/s] " \
 	"[b]w[c=purple]ork[/c]s[/b] [f Arial:1.3]right[/f] or\nnot."
-#define TEXT_5 "[b]This is a vertical test.\nIt really is. Really."
+#define TEXT_5 "[b:,3]This is a vertical test.\nIt really is. Really."
 
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 grect viewport(0.0f, 0.0f, 1024.0f, 768.0f);
@@ -83,7 +83,7 @@ public:
 			atres::renderer->setBorderColor(april::Color(hrand(256), hrand(256), hrand(256)));
 			break;
 		case april::AK_SPACE:
-			atres::renderer->setBorderOffset(hrandf(1.0f, 5.0f));
+			atres::renderer->setBorderThickness(hrandf(1.0f, 5.0f));
 			break;
 		default:
 			break;

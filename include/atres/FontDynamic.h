@@ -33,25 +33,25 @@ namespace atres
 		~FontDynamic();
 
 		april::Texture* getTexture(unsigned int charCode);
+		april::Texture* getBorderTexture(unsigned int charCode, float borderThickness);
 		april::Texture* getTexture(chstr iconName);
 		bool hasCharacter(unsigned int charCode);
+		bool hasBorderCharacter(unsigned int charCode, float borderThickness);
 		bool hasIcon(chstr iconName);
 
 	protected:
-		int penX;
-		int penY;
-		int rowHeight;
-
 		virtual bool _isAllowAlphaTextures();
-
-		bool _load();
+		void _tryCreateFirstTextureContainer();
+		void _tryCreateFirstBorderTextureContainer(float borderThickness);
 
 		april::Texture* _createTexture();
 		bool _addCharacterBitmap(unsigned int charCode, bool initial = false);
+		bool _addBorderCharacterBitmap(unsigned int charCode, float borderThickness);
 		bool _addIconBitmap(chstr iconName, bool initial = false);
-		TextureContainer* _addBitmap(bool initial, april::Image* image, int bitmapWidth, int bitmapHeight, chstr symbol, int offsetY = 0, int safeSpace = 0);
+		TextureContainer* _addBitmap(harray<TextureContainer*>& textureContainers, bool initial, april::Image* image, int bitmapWidth, int bitmapHeight, chstr symbol, int offsetX = 0, int offsetY = 0, int safeSpace = 0);
 
 		virtual april::Image* _loadCharacterImage(unsigned int charCode, bool initial, int& advance, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX);
+		virtual april::Image* _loadBorderCharacterImage(unsigned int charCode, float borderThickness);
 		virtual april::Image* _loadIconImage(chstr iconName, bool initial, int& advance);
 
 	};

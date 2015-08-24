@@ -41,8 +41,8 @@ namespace atres
 		void setShadowOffset(gvec2 value);
 		HL_DEFINE_GET(april::Color, shadowColor, ShadowColor);
 		void setShadowColor(april::Color value);
-		HL_DEFINE_GET(float, borderOffset, BorderOffset);
-		void setBorderOffset(float value);
+		HL_DEFINE_GET(float, borderThickness, BorderThickness);
+		void setBorderThickness(float value);
 		HL_DEFINE_GET(april::Color, borderColor, BorderColor);
 		void setBorderColor(april::Color value);
 		HL_DEFINE_GETSET(bool, globalOffsets, GlobalOffsets);
@@ -109,6 +109,8 @@ namespace atres
 		/// @brief When turned off, this turns justified text into left_wrapped. This is to counter languages with problematic characters.
 		DEPRECATED_ATTRIBUTE bool isJustifiedEnabled() { return (this->justifiedDefault == JUSTIFIED); }
 		DEPRECATED_ATTRIBUTE void setJustifiedEnabled(bool value) { this->setJustifiedDefault(value ? JUSTIFIED : LEFT_WRAPPED); }
+		DEPRECATED_ATTRIBUTE float getBorderOffset() { return this->getBorderThickness(); }
+		DEPRECATED_ATTRIBUTE void setBorderOffset(float value) { this->setBorderThickness(value); }
 
 	protected:
 		hmap<hstr, Font*> fonts;
@@ -116,7 +118,7 @@ namespace atres
 		hmap<hstr, hstr> colors;
 		gvec2 shadowOffset;
 		april::Color shadowColor;
-		float borderOffset;
+		float borderThickness;
 		april::Color borderColor;
 		bool globalOffsets;
 		bool useLegacyLineBreakParsing;
@@ -159,6 +161,7 @@ namespace atres
 		hmap<hstr, IconDefinition>& _icons;
 		hmap<hstr, IconDefinition> _dummyIcons; // required for some compilers
 		CharacterDefinition* _character;
+		BorderCharacterDefinition* _borderCharacter;
 		IconDefinition* _icon;
 		float _height;
 		float _lineHeight;
@@ -168,6 +171,8 @@ namespace atres
 		float _iconFontScale;
 		float _textScale;
 		float _scale;
+		float _borderThickness;
+		float _textBorderThickness;
 
 		harray<RenderSequence> _textSequences;
 		RenderSequence _textSequence;
@@ -181,6 +186,8 @@ namespace atres
 		april::Color _shadowColor;
 		april::Color _borderColor;
 		hstr _hex;
+		hstr _borderColorString;
+		hstr _borderThicknessString;
 		int _effectMode;
 		int _alpha;
 

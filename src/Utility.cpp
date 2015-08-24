@@ -16,7 +16,23 @@ namespace atres
 {
 	static april::TexturedVertex vert[6];
 
-	CharacterDefinition::CharacterDefinition() : advance(0.0f), offsetY(0.0f)
+	RectDefinition::RectDefinition()
+	{
+	}
+
+	RectDefinition::~RectDefinition()
+	{
+	}
+
+	SymbolDefinition::SymbolDefinition() : RectDefinition(), advance(0.0f)
+	{
+	}
+
+	SymbolDefinition::~SymbolDefinition()
+	{
+	}
+
+	CharacterDefinition::CharacterDefinition() : SymbolDefinition(), offsetY(0.0f)
 	{
 	}
 
@@ -24,11 +40,12 @@ namespace atres
 	{
 	}
 
-	IconDefinition::IconDefinition()
+	BorderCharacterDefinition::BorderCharacterDefinition(float borderThickness) : RectDefinition()
 	{
+		this->borderThickness = borderThickness;
 	}
 
-	IconDefinition::~IconDefinition()
+	BorderCharacterDefinition::~BorderCharacterDefinition()
 	{
 	}
 
@@ -91,7 +108,7 @@ namespace atres
 	{
 	}
 
-	TextureContainer::TextureContainer() : texture(NULL)
+	TextureContainer::TextureContainer() : texture(NULL), penX(0), penY(0), rowHeight(0)
 	{
 	}
 
@@ -101,6 +118,25 @@ namespace atres
 		{
 			delete this->texture;
 		}
+	}
+
+	TextureContainer* TextureContainer::createNew()
+	{
+		return new TextureContainer();
+	}
+
+	BorderTextureContainer::BorderTextureContainer(float borderThickness) : TextureContainer()
+	{
+		this->borderThickness = borderThickness;
+	}
+
+	BorderTextureContainer::~BorderTextureContainer()
+	{
+	}
+
+	TextureContainer* BorderTextureContainer::createNew()
+	{
+		return new BorderTextureContainer(this->borderThickness);
 	}
 
 	CacheEntryBasicText::CacheEntryBasicText() : horizontal(CENTER_WRAPPED), vertical(CENTER)

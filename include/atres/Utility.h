@@ -61,29 +61,48 @@ namespace atres
 		TAG_TYPE_CLOSE_CONSUME
 	};
 	
-	class atresExport CharacterDefinition
+	class atresExport RectDefinition
 	{
 	public:
 		grect rect;
+
+		RectDefinition();
+		virtual ~RectDefinition();
+
+	};
+
+	class atresExport SymbolDefinition : public RectDefinition
+	{
+	public:
 		float advance;
+
+		SymbolDefinition();
+		~SymbolDefinition();
+
+	};
+
+	class atresExport CharacterDefinition : public SymbolDefinition
+	{
+	public:
 		gvec2 bearing;
 		float offsetY;
-		
+
 		CharacterDefinition();
 		~CharacterDefinition();
 
 	};
-	
-	class atresExport IconDefinition
+
+	class atresExport BorderCharacterDefinition : public RectDefinition
 	{
 	public:
-		grect rect;
-		float advance;
+		float borderThickness;
 
-		IconDefinition();
-		~IconDefinition();
+		BorderCharacterDefinition(float borderThickness = 0.0f);
+		~BorderCharacterDefinition();
 
 	};
+
+	typedef SymbolDefinition IconDefinition;
 
 	class atresExport RenderRectangle
 	{
@@ -177,9 +196,26 @@ namespace atres
 		april::Texture* texture;
 		harray<unsigned int> characters;
 		harray<hstr> icons;
+		int penX;
+		int penY;
+		int rowHeight;
 
 		TextureContainer();
-		~TextureContainer();
+		virtual ~TextureContainer();
+
+		virtual TextureContainer* createNew();
+
+	};
+
+	class atresExport BorderTextureContainer : public TextureContainer
+	{
+	public:
+		float borderThickness;
+
+		BorderTextureContainer(float borderThickness);
+		~BorderTextureContainer();
+
+		TextureContainer* createNew();
 
 	};
 

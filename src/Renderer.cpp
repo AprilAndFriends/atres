@@ -80,6 +80,7 @@
 namespace atres
 {
 	static hstr _iconPlaceholder = hstr::fromUnicode((unsigned int)0xA0);
+	static float sqrt05 = hsqrt(0.5f);
 
 	Renderer* renderer = NULL;
 
@@ -130,7 +131,7 @@ namespace atres
 		// init
 		this->shadowOffset.set(1.0f, 1.0f);
 		this->shadowColor = april::Color::Black;
-		this->borderOffset = 1.0f;
+		this->borderThickness = 1.0f;
 		this->borderColor = april::Color::Black;
 		this->globalOffsets = false;
 		this->useLegacyLineBreakParsing = false;
@@ -149,6 +150,8 @@ namespace atres
 		this->_iconFontScale = 1.0f;
 		this->_textScale = 1.0f;
 		this->_scale = 1.0f;
+		this->_borderThickness = 1.0f;
+		this->_textBorderThickness = this->borderThickness;
 		this->_effectMode = 0;
 		this->_alpha = -1;
 		// cache
@@ -189,11 +192,11 @@ namespace atres
 		}
 	}
 	
-	void Renderer::setBorderOffset(float value)
+	void Renderer::setBorderThickness(float value)
 	{
-		if (this->borderOffset != value)
+		if (this->borderThickness != value)
 		{
-			this->borderOffset = value;
+			this->borderThickness = value;
 			this->clearCache();
 		}
 	}
@@ -761,6 +764,8 @@ namespace atres
 		this->_iconFontScale = 1.0f;
 		this->_textScale = 1.0f;
 		this->_scale = 1.0f;
+		this->_borderThickness = 1.0f;
+		this->_textBorderThickness = this->borderThickness;
 	}
 
 	void Renderer::_initializeRenderSequences()
@@ -953,7 +958,16 @@ namespace atres
 					break;
 				case TAG_TYPE_BORDER:
 					this->_effectMode = EFFECT_MODE_BORDER;
-					this->_hex = (this->colors.hasKey(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
+					if (this->_currentTag.data.count(',') == 1)
+					{
+						this->_currentTag.data.split(',', this->_borderColorString, this->_borderThicknessString);
+						this->_textBorderThickness = this->_borderThicknessString;
+					}
+					else
+					{
+						this->_borderColorString = this->_currentTag.data;
+					}
+					this->_hex = (this->colors.hasKey(this->_borderColorString) ? this->colors[this->_borderColorString] : this->_borderColorString);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_borderColor.set(this->_hex);
@@ -1070,18 +1084,28 @@ namespace atres
 					break;
 				case TAG_TYPE_BORDER:
 					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? TAG_TYPE_BORDER : (this->_effectMode == EFFECT_MODE_SHADOW ? TAG_TYPE_SHADOW : TAG_TYPE_NORMAL));
-					this->_currentTag.data = this->_borderColor.hex();
+					this->_currentTag.data = this->_borderColor.hex() + "," + hstr(this->_textBorderThickness);
 					this->_stack += this->_currentTag;
 					this->_effectMode = EFFECT_MODE_BORDER;
 					this->_borderColor = this->borderColor;
 					if (this->_nextTag.data != "")
 					{
-						this->_hex = (this->colors.hasKey(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
+						this->_borderThicknessString = "";
+						if (this->_nextTag.data.count(',') == 1)
+						{
+							this->_nextTag.data.split(',', this->_borderColorString, this->_borderThicknessString);
+							this->_textBorderThickness = this->_borderThicknessString;
+						}
+						else
+						{
+							this->_borderColorString = this->_nextTag.data;
+						}
+						this->_hex = (this->colors.hasKey(this->_borderColorString) ? this->colors[this->_borderColorString] : this->_borderColorString);
 						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 						{
 							this->_borderColor.set(this->_hex);
 						}
-						else
+						else if (this->_borderThicknessString == "" || this->_hex != "")
 						{
 							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
@@ -1469,7 +1493,6 @@ namespace atres
 		float width = 0.0f;
 		grect destination;
 		grect area;
-		grect drawRect;
 		
 		while (this->_lines.size() > 0)
 		{
@@ -1496,10 +1519,9 @@ namespace atres
 						area.h = this->_icon->rect.h * this->_scale;
 						area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 						area.y += (this->_lineHeight - area.h) * 0.5f;
-						drawRect = rect;
 						if (this->_iconFont != NULL)
 						{
-							this->_renderRect = this->_iconFont->makeRenderRectangle(drawRect, area, this->_iconName);
+							this->_renderRect = this->_iconFont->makeRenderRectangle(rect, area, this->_iconName);
 							this->_textSequence.addRenderRectangle(this->_renderRect);
 						}
 						width += this->_icon->advance * this->_scale;
@@ -1518,43 +1540,63 @@ namespace atres
 							// checking the particular character
 							this->_scale = this->_fontScale * this->_textScale;
 							this->_character = &this->_characters[this->_code];
+							this->_borderThickness = this->borderThickness * this->_textBorderThickness * (this->globalOffsets ? 1.0f : this->_textScale);
 							area = this->_word.rect;
 							area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale);
 							area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale;
 							area.w = this->_character->rect.w * this->_scale;
 							area.h = this->_character->rect.h * this->_scale;
 							area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
-							drawRect = rect;
 							if (this->_font != NULL)
 							{
-								this->_renderRect = this->_font->makeRenderRectangle(drawRect, area, this->_code);
+								this->_renderRect = this->_font->makeRenderRectangle(rect, area, this->_code);
 								this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
-								this->_textSequence.addRenderRectangle(this->_renderRect);
-								destination = this->_renderRect.dest;
-								switch (this->_effectMode)
+								if (this->_renderRect.src.w > 0.0f && this->_renderRect.src.h > 0.0f && this->_renderRect.dest.w > 0.0f && this->_renderRect.dest.h > 0.0f)
 								{
-								case EFFECT_MODE_SHADOW: // shadow
-									this->_renderRect.dest = destination + this->shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
-									this->_shadowSequence.addRenderRectangle(this->_renderRect);
-									break;
-								case EFFECT_MODE_BORDER: // border
-									this->_renderRect.dest = destination + gvec2(-this->borderOffset, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-									this->_borderSequence.addRenderRectangle(this->_renderRect);
-									this->_renderRect.dest = destination + gvec2(this->borderOffset, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-									this->_borderSequence.addRenderRectangle(this->_renderRect);
-									this->_renderRect.dest = destination + gvec2(-this->borderOffset, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-									this->_borderSequence.addRenderRectangle(this->_renderRect);
-									this->_renderRect.dest = destination + gvec2(this->borderOffset, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-									this->_borderSequence.addRenderRectangle(this->_renderRect);
-									this->_renderRect.dest = destination + gvec2(0.0f, -this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-									this->_borderSequence.addRenderRectangle(this->_renderRect);
-									this->_renderRect.dest = destination + gvec2(-this->borderOffset, 0.0f) * (this->globalOffsets ? 1.0f : this->_scale);
-									this->_borderSequence.addRenderRectangle(this->_renderRect);
-									this->_renderRect.dest = destination + gvec2(this->borderOffset, 0.0f) * (this->globalOffsets ? 1.0f : this->_scale);
-									this->_borderSequence.addRenderRectangle(this->_renderRect);
-									this->_renderRect.dest = destination + gvec2(0.0f, this->borderOffset) * (this->globalOffsets ? 1.0f : this->_scale);
-									this->_borderSequence.addRenderRectangle(this->_renderRect);
-									break;
+									this->_textSequence.addRenderRectangle(this->_renderRect);
+									destination = this->_renderRect.dest;
+									switch (this->_effectMode)
+									{
+									case EFFECT_MODE_SHADOW: // shadow
+										this->_renderRect.dest = destination + this->shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+										this->_shadowSequence.addRenderRectangle(this->_renderRect);
+										break;
+									case EFFECT_MODE_BORDER: // border
+										if (!this->_font->isNativeBorderSupported() || !this->_font->hasBorderCharacter(this->_code, this->_borderThickness))
+										{
+											this->_renderRect.dest = destination + gvec2(-this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
+											this->_borderSequence.addRenderRectangle(this->_renderRect);
+											this->_renderRect.dest = destination + gvec2(this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
+											this->_borderSequence.addRenderRectangle(this->_renderRect);
+											this->_renderRect.dest = destination + gvec2(-this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
+											this->_borderSequence.addRenderRectangle(this->_renderRect);
+											this->_renderRect.dest = destination + gvec2(this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
+											this->_borderSequence.addRenderRectangle(this->_renderRect);
+											this->_renderRect.dest = destination + gvec2(0.0f, -this->_borderThickness);
+											this->_borderSequence.addRenderRectangle(this->_renderRect);
+											this->_renderRect.dest = destination + gvec2(-this->_borderThickness, 0.0f);
+											this->_borderSequence.addRenderRectangle(this->_renderRect);
+											this->_renderRect.dest = destination + gvec2(this->_borderThickness, 0.0f);
+											this->_borderSequence.addRenderRectangle(this->_renderRect);
+											this->_renderRect.dest = destination + gvec2(0.0f, this->_borderThickness);
+											this->_borderSequence.addRenderRectangle(this->_renderRect);
+										}
+										else
+										{
+											this->_borderCharacter = this->_font->getBorderCharacter(this->_code, this->_borderThickness);
+											area = this->_word.rect;
+											area.x += hmax(0.0f, width + (this->_character->bearing.x) * this->_scale) - (this->_borderCharacter->rect.w - this->_character->rect.w) * 0.5f * this->_scale;
+											area.y += (this->_lineHeight - this->_height) * 0.5f + (this->_character->offsetY - (this->_borderCharacter->rect.h - this->_character->rect.h) * 0.5f) * this->_scale;
+											area.w = this->_borderCharacter->rect.w * this->_scale;
+											area.h = this->_borderCharacter->rect.h * this->_scale;
+											area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
+											this->_renderRect = this->_font->makeBorderRenderRectangle(rect, area, this->_code, this->_borderThickness);
+											this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
+											this->_borderSequence.addRenderRectangle(this->_renderRect);
+											this->_borderSequence.texture = this->_font->getBorderTexture(this->_code, this->_borderThickness);
+										}
+										break;
+									}
 								}
 							}
 							width += (width < -this->_character->bearing.x * this->_scale ? (this->_character->advance - this->_character->bearing.x) : this->_character->advance) * this->_scale;
