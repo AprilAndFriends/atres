@@ -14,8 +14,9 @@
 #include "atres.h"
 #include "FontDynamic.h"
 
-#define SAFE_SPACE 0
-#define CHARACTER_SPACE 2
+// don't change these anymore, these are the optimal settings proven through a variety of fonts
+#define SAFE_SPACE 2
+#define CHARACTER_SPACE 0
 
 namespace atres
 {

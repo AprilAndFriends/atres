@@ -168,9 +168,11 @@ namespace atres
 		float _descender;
 		float _internalDescender;
 		float _fontScale;
+		float _fontBaseScale;
 		float _iconFontScale;
 		float _textScale;
 		float _scale;
+		float _borderFontThickness;
 		float _borderThickness;
 		float _textBorderThickness;
 

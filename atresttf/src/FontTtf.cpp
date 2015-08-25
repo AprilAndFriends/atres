@@ -46,7 +46,6 @@ namespace atresttf
 				}
 			}
 		}
-		this->nativeBorderSupported = true;
 	}
 
 	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii) : atres::FontDynamic(name)
@@ -87,7 +86,6 @@ namespace atresttf
 		this->descender = 0.0f;
 		this->internalDescender = 0.0f;
 		this->customDescender = false;
-		this->nativeBorderSupported = true;
 	}
 
 	FontTtf::~FontTtf()
@@ -249,7 +247,7 @@ namespace atresttf
 			}
 			return NULL;
 		}
-		FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_NO_BITMAP);
+		FT_Error error = FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT);
 		if (error != 0)
 		{
 			hlog::error(logTag, "Could not load glyph from: " + this->fontFilename);
@@ -268,7 +266,7 @@ namespace atresttf
 			hlog::error(logTag, "Could not create stroker: " + this->fontFilename);
 			return NULL;
 		}
-		FT_Stroker_Set(stroker, FLOAT2PTSIZE(borderThickness), FT_STROKER_LINECAP_ROUND, FT_STROKER_LINEJOIN_ROUND, 0);
+		FT_Stroker_Set(stroker, FLOAT2PTSIZE(borderThickness), FT_STROKER_LINECAP_ROUND, FT_STROKER_LINEJOIN_MITER_FIXED, 1 << 16);
 		FT_Glyph glyph;
 		error = FT_Get_Glyph(face->glyph, &glyph);
 		if (error != 0)
@@ -277,7 +275,7 @@ namespace atresttf
 			FT_Stroker_Done(stroker);
 			return NULL;
 		}
-		error = FT_Glyph_Stroke(&glyph, stroker, 1);
+		error = FT_Glyph_StrokeBorder(&glyph, stroker, false, true);
 		FT_Stroker_Done(stroker);
 		if (error != 0)
 		{
@@ -285,7 +283,7 @@ namespace atresttf
 			FT_Done_Glyph(glyph);
 			return NULL;
 		}
-		error = FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, NULL, false);
+		error = FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, NULL, true);
 		if (error != 0)
 		{
 			hlog::error(logTag, "Could not render bitmap: " + this->fontFilename);
@@ -293,7 +291,17 @@ namespace atresttf
 			return NULL;
 		}
 		FT_Bitmap bitmap = ((FT_BitmapGlyph)glyph)->bitmap;
-		april::Image* image = april::Image::create(bitmap.width, bitmap.rows, bitmap.buffer, april::Image::FORMAT_ALPHA);
+		april::Image* image = NULL;
+		if (bitmap.width == bitmap.pitch)
+		{
+			image = april::Image::create(bitmap.width, bitmap.rows, bitmap.buffer, april::Image::FORMAT_ALPHA);
+		}
+		else
+		{
+			// making sure data is properly copied if "pitch" does not match "width"
+			image = april::Image::create(bitmap.width, bitmap.rows, april::Color::White, april::Image::FORMAT_ALPHA);
+			image->write(0, 0, bitmap.width, bitmap.rows, 0, 0, bitmap.buffer, bitmap.pitch, bitmap.rows, april::Image::FORMAT_ALPHA);
+		}
 		FT_Done_Glyph(glyph);
 		return image;
 	}

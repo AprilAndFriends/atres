@@ -250,10 +250,13 @@ void april_init(const harray<hstr>& args)
 		atresttf::init();
 		hlog::writef(LOG_TAG, "Found %d fonts installed on the system.", atresttf::getSystemFonts().size());
 #ifdef _ATRESTTF_LOCAL_FONT
-		atres::renderer->registerFont(new atresttf::FontTtf(RESOURCE_PATH "arial.ttf", "Arial", 32, 1.0f)); // invokes a provided font
+		hstr ttfFilename = RESOURCE_PATH "arial.ttf"; // invokes a provided font
 #else
-		atres::renderer->registerFont(new atresttf::FontTtf("", "Arial", 32, 1.0f)); // invokes the installed system font Arial
+		hstr ttfFilename; // invokes the installed system font Arial
 #endif
+		atresttf::FontTtf* fontTtf = new atresttf::FontTtf(ttfFilename, "Arial", 32, 1.0f); 
+		fontTtf->setNativeBorderSupported(true);
+		atres::renderer->registerFont(fontTtf);
 #endif
 		atres::renderer->registerFont(new atres::FontIconMap(RESOURCE_PATH "icon_font", "icon_font", 24.0f, 1.0f, 24.0f, 0.0f));
 		atres::renderer->setShadowColor(april::Color::Red);

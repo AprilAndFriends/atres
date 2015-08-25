@@ -44,7 +44,7 @@ namespace atres
 		inline hmap<unsigned int, harray<BorderCharacterDefinition> >& getBorderCharacters() { return this->borderCharacters; }
 		inline hmap<hstr, IconDefinition>& getIcons() { return this->icons; }
 		harray<april::Texture*> getTextures();
-		HL_DEFINE_IS(nativeBorderSupported, NativeBorderSupported);
+		HL_DEFINE_ISSET(nativeBorderSupported, NativeBorderSupported);
 
 		virtual april::Texture* getTexture(unsigned int charCode);
 		virtual april::Texture* getBorderTexture(unsigned int charCode, float borderThickness);
