@@ -292,7 +292,7 @@ namespace atresttf
 		}
 		FT_Bitmap bitmap = ((FT_BitmapGlyph)glyph)->bitmap;
 		april::Image* image = NULL;
-		if (bitmap.width == bitmap.pitch)
+		if (bitmap.width == (unsigned int)bitmap.pitch)
 		{
 			image = april::Image::create(bitmap.width, bitmap.rows, bitmap.buffer, april::Image::FORMAT_ALPHA);
 		}
