@@ -149,6 +149,8 @@ namespace atres
 		this->_fontScale = 1.0f;
 		this->_fontBaseScale = 1.0f;
 		this->_iconFontScale = 1.0f;
+		this->_iconFontBearingX = 0.0f;
+		this->_iconFontOffsetY = 0.0f;
 		this->_textScale = 1.0f;
 		this->_scale = 1.0f;
 		this->_borderFontThickness = 1.0f;
@@ -765,6 +767,8 @@ namespace atres
 		this->_fontScale = 1.0f;
 		this->_fontBaseScale = 1.0f;
 		this->_iconFontScale = 1.0f;
+		this->_iconFontBearingX = 0.0f;
+		this->_iconFontOffsetY = 0.0f;
 		this->_textScale = 1.0f;
 		this->_scale = 1.0f;
 		this->_borderFontThickness = 1.0f;
@@ -881,7 +885,9 @@ namespace atres
 					this->_fontIconName = this->_nextTag.consumedData;
 					this->_iconFont->hasIcon(this->_fontIconName);
 					this->_icons = this->_iconFont->getIcons();
-					this->_iconFontScale = this->_iconFont->getScale();
+					this->_iconFontScale = this->_iconFont->getScale() * this->_fontScale / this->_fontBaseScale;
+					this->_iconFontBearingX = this->_iconFont->getBearingX();
+					this->_iconFontOffsetY = this->_iconFont->getOffsetY();
 				}
 				else
 				{
@@ -1040,7 +1046,9 @@ namespace atres
 						this->_fontIconName = this->_nextTag.consumedData;
 						this->_iconFont->hasIcon(this->_fontIconName);
 						this->_icons = this->_iconFont->getIcons();
-						this->_iconFontScale = this->_iconFont->getScale();
+						this->_iconFontScale = this->_iconFont->getScale() * this->_fontScale / this->_fontBaseScale;
+						this->_iconFontBearingX = this->_iconFont->getBearingX();
+						this->_iconFontOffsetY = this->_iconFont->getOffsetY();
 					}
 					else
 					{
@@ -1525,12 +1533,12 @@ namespace atres
 						this->_scale = this->_iconFontScale * this->_textScale;
 						this->_icon = &this->_icons[this->_iconName];
 						area = this->_word.rect;
-						area.x += hmax(0.0f, width);
+						area.x += hmax(0.0f, width + this->_iconFontBearingX * this->_scale);
 						area.y += (this->_lineHeight - this->_height) * 0.5f;
 						area.w = this->_icon->rect.w * this->_scale;
 						area.h = this->_icon->rect.h * this->_scale;
 						area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
-						area.y += (this->_lineHeight - area.h) * 0.5f;
+						area.y += this->_iconFontOffsetY * this->_scale + (this->_height - area.h) * 0.5f;
 						drawRect = rect;
 						if (this->_iconFont != NULL)
 						{

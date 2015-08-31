@@ -49,10 +49,10 @@
 
 #define TEXT_0 "This is blasphemy.[i:icon_font]red[/i]"
 #define TEXT_1 "This is [i:icon_font]xmen[/i]madness."
-#define TEXT_2 "No. This is Sparta!"
+#define TEXT_2 "No. [i:icon_font]neon[/i] This is Sparta!"
 #define TEXT_3 "This []]is] a [b=7F00FF][0]test [n]that[/n] [f:test]is[/f] [x=0.5]supp[/x]osed[/b] " \
 	"[b][c=fake]to[/c][/b]   [c=FFFFFF7F]show[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s]X_horz_formatting " \
-	"[c=00FF00]wrapped[/c][/s] [b]w[c=purple][i:icon_font]neon[/i]rk[/c]s[/b] [f Arial:1.3]right[/f] [-][b]or[/b][/k] not."
+	"[c=00FF00]wrapped[/c][/s] [b][c=purple][i:icon_font]neon[/i][/c]w[c=purple][i:icon_font]neon[/i]rk[/c]s[/b] [f Arial:1.3]right[/f] [-][b]or[/b][/k] not."
 #define TEXT_4 "Another [b][0]test [n]that[/n] [f:test]is[/f] [x=0.5]supp[/x]osed[/b] [b][c=fake]to[/c][/b] " \
 	"[c=FFFFFF7F]sh[i:icon_font]blue[/i][i:icon_font]orange[/i]w[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s=00FF00]X_horz_formatting [c=00FF00]justified[/c][/s] " \
 	"[b]w[c=purple]ork[/c]s[/b] [f Arial:1.3]right[/f] or\nnot."
@@ -62,7 +62,7 @@ grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 grect viewport(0.0f, 0.0f, 1024.0f, 768.0f);
 grect textArea0(60.0f, 24.0f, 640.0f, 64.0f);
 grect textArea1(70.0f, 144.0f, 864.0f, 32.0f);
-grect textArea2(180.0f, 400.0f, 512.0f, 128.0f);
+grect textArea2(120.0f, 400.0f, 600.0f, 128.0f);
 grect textArea3(80.0f, 550.0f, 360.0f, 184.0f);
 grect textArea4(768.0f, 200.0f, 160.0f, 384.0f);
 grect textArea5(700.0f, 600.0f, 240.0f, 76.0f);
@@ -254,11 +254,11 @@ void april_init(const harray<hstr>& args)
 #else
 		hstr ttfFilename; // invokes the installed system font Arial
 #endif
-		atresttf::FontTtf* fontTtf = new atresttf::FontTtf(ttfFilename, "Arial", 32, 1.0f); 
+		atresttf::FontTtf* fontTtf = new atresttf::FontTtf(ttfFilename, "Arial", 32.0f, 1.0f);
 		fontTtf->setNativeBorderSupported(true);
 		atres::renderer->registerFont(fontTtf);
 #endif
-		atres::renderer->registerFont(new atres::FontIconMap(RESOURCE_PATH "icon_font", "icon_font", 24.0f, 1.0f, 24.0f, 0.0f));
+		atres::renderer->registerFont(new atres::FontIconMap(RESOURCE_PATH "icon_font", "icon_font", 1.0f, 2.8f, 4.0f));
 		atres::renderer->setShadowColor(april::Color::Red);
 		atres::renderer->setBorderColor(april::Color::Aqua);
 	}

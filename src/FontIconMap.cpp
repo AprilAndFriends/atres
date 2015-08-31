@@ -21,14 +21,16 @@ namespace atres
 		return hresource::withoutExtension(filename);
 	}
 
-	FontIconMap::FontIconMap(chstr fontDirectory, chstr name, float height, float scale, float lineHeight, float spacing) : FontDynamic(name)
+	FontIconMap::FontIconMap(chstr fontDirectory, chstr name, float scale, float bearingX, float offsetY, float spacing) : FontDynamic(name)
 	{
 		this->fontDirectory = fontDirectory;
 		this->name = name;
-		this->height = height;
+		this->height = 0.0f;
 		this->baseScale = scale;
 		this->scale = scale;
-		this->lineHeight = lineHeight;
+		this->lineHeight = 0.0f;
+		this->bearingX = bearingX;
+		this->offsetY = offsetY;
 		this->spacing = spacing;
 	}
 
@@ -43,19 +45,7 @@ namespace atres
 
 	bool FontIconMap::_load()
 	{
-		if (!hrdir::exists(this->fontDirectory))
-		{
-			return false;
-		}
-		if (!FontDynamic::_load())
-		{
-			return false;
-		}
-		if (this->lineHeight == 0.0f)
-		{
-			this->lineHeight = this->height;
-		}
-		return true;
+		return (hrdir::exists(this->fontDirectory) && FontDynamic::_load());
 	}
 
 	april::Image* FontIconMap::_loadIconImage(chstr iconName, bool initial, int& advance)

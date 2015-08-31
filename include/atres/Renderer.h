@@ -170,6 +170,8 @@ namespace atres
 		float _fontScale;
 		float _fontBaseScale;
 		float _iconFontScale;
+		float _iconFontBearingX;
+		float _iconFontOffsetY;
 		float _textScale;
 		float _scale;
 		float _borderFontThickness;
