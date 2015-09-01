@@ -28,7 +28,7 @@ namespace atres
 {
 	class Font;
 	class FontIconMap;
-	template <class T>
+	template <typename T>
 	class Cache;
 
 	class atresExport Renderer

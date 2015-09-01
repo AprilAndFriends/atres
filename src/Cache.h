@@ -25,7 +25,7 @@ namespace atres
 	/// @note The classes uses a hash value to store objects because it would require the implementation of the
 	/// comparison operators if the *Entry objects would be used as keys. This is simply an alternate way to handle
 	/// things. Even though it appears unnecessary and hacky, there is no better way.
-	template <class T>
+	template <typename T>
 	class Cache
 	{
 		typedef typename std::vector<T>::iterator iterator_t;
