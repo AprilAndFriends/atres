@@ -12,6 +12,7 @@
 #include <TargetConditionals.h>
 #endif
 
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <april/Window.h>
 #include <atres/atres.h>
 #include <atres/Font.h>
