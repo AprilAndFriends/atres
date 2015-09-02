@@ -29,6 +29,7 @@ namespace atres
 
 		HL_DEFINE_GET(float, bearingX, BearingX);
 		HL_DEFINE_GET(float, offsetY, OffsetY);
+		void setBorderMode(BorderMode value);
 
 	protected:
 		hstr fontDirectory;

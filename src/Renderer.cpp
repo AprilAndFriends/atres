@@ -1585,7 +1585,7 @@ namespace atres
 										this->_shadowSequence.addRenderRectangle(this->_renderRect);
 										break;
 									case EFFECT_MODE_BORDER: // border
-										if (!this->_font->isNativeBorderSupported() || !this->_font->hasBorderCharacter(this->_code, this->_borderFontThickness))
+										if (this->_font->getBorderMode() == Font::BorderMode::Software || !this->_font->hasBorderCharacter(this->_code, this->_borderFontThickness))
 										{
 											this->_renderRect.dest = destination + gvec2(-this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
 											this->_borderSequence.addRenderRectangle(this->_renderRect);

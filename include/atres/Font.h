@@ -13,6 +13,7 @@
 #ifndef ATRES_FONT_H
 #define ATRES_FONT_H
 
+#include <hltypes/henum.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
@@ -26,6 +27,15 @@ namespace atres
 	class atresExport Font
 	{
 	public:
+		HL_ENUM_CLASS_PREFIX_DECLARE(atresExport, BorderMode,
+		(
+			HL_ENUM_DECLARE(BorderMode, Software);
+			HL_ENUM_DECLARE(BorderMode, FontNative);
+			HL_ENUM_DECLARE(BorderMode, PrerenderSquare);
+			HL_ENUM_DECLARE(BorderMode, PrerenderCircle);
+			HL_ENUM_DECLARE(BorderMode, PrerenderDiamond);
+		));
+
 		Font(chstr name);
 		virtual ~Font();
 
@@ -39,12 +49,13 @@ namespace atres
 		float getLineHeight();
 		float getDescender();
 		float getInternalDescender();
+		HL_DEFINE_GET(BorderMode, borderMode, BorderMode);
+		virtual void setBorderMode(BorderMode value);
 		HL_DEFINE_IS(loaded, Loaded);
 		inline hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
 		inline hmap<unsigned int, harray<BorderCharacterDefinition> >& getBorderCharacters() { return this->borderCharacters; }
 		inline hmap<hstr, IconDefinition>& getIcons() { return this->icons; }
 		harray<april::Texture*> getTextures();
-		HL_DEFINE_ISSET(nativeBorderSupported, NativeBorderSupported);
 
 		virtual april::Texture* getTexture(unsigned int charCode);
 		virtual april::Texture* getBorderTexture(unsigned int charCode, float borderThickness);
@@ -65,6 +76,8 @@ namespace atres
 		RenderRectangle makeRenderRectangle(const grect& rect, grect area, chstr iconName);
 
 		DEPRECATED_ATTRIBUTE bool hasChar(unsigned int charCode) { return this->hasCharacter(charCode); }
+		DEPRECATED_ATTRIBUTE bool isNativeBorderSupported() { return (this->getBorderMode() != BorderMode::Software); }
+		DEPRECATED_ATTRIBUTE void setNativeBorderSupported(bool value) { this->setBorderMode(value ? BorderMode::FontNative : BorderMode::Software); }
 		
 	protected:
 		hstr name;
@@ -76,6 +89,7 @@ namespace atres
 		float internalDescender;
 		bool loaded;
 		bool nativeBorderSupported;
+		BorderMode borderMode;
 		hmap<unsigned int, CharacterDefinition> characters;
 		hmap<unsigned int, harray<BorderCharacterDefinition> > borderCharacters;
 		hmap<hstr, IconDefinition> icons;
@@ -87,6 +101,7 @@ namespace atres
 		virtual bool _load();
 		
 		bool _readBasicParameter(chstr line);
+		void _setBorderMode(BorderMode value);
 
 		void _applyCutoff(const grect& rect, const grect& area, const grect& symbolRect, float offsetY = 0.0f);
 		

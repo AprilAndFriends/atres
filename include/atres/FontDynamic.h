@@ -32,6 +32,8 @@ namespace atres
 		FontDynamic(chstr name);
 		~FontDynamic();
 
+		void setBorderMode(BorderMode value);
+
 		april::Texture* getTexture(unsigned int charCode);
 		april::Texture* getBorderTexture(unsigned int charCode, float borderThickness);
 		april::Texture* getTexture(chstr iconName);
@@ -40,9 +42,23 @@ namespace atres
 		bool hasIcon(chstr iconName);
 
 	protected:
+		class StructuringImageContainer
+		{
+		public:
+			april::Image* image;
+			BorderMode borderMode;
+			float borderThickness;
+
+			StructuringImageContainer(april::Image* image, BorderMode borderMode, float borderThickness);
+			~StructuringImageContainer();
+
+		};
+
 		virtual bool _isAllowAlphaTextures();
 		void _tryCreateFirstTextureContainer();
 		void _tryCreateFirstBorderTextureContainer(float borderThickness);
+
+		StructuringImageContainer* _findStructuringImageContainer(BorderMode borderMode, float borderThickness);
 
 		april::Texture* _createTexture();
 		bool _addCharacterBitmap(unsigned int charCode, bool initial = false);
@@ -52,7 +68,10 @@ namespace atres
 
 		virtual april::Image* _loadCharacterImage(unsigned int charCode, bool initial, int& advance, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX);
 		virtual april::Image* _loadBorderCharacterImage(unsigned int charCode, float borderThickness);
+		virtual april::Image* _generateBorderCharacterImage(unsigned int charCode, float borderThickness);
 		virtual april::Image* _loadIconImage(chstr iconName, bool initial, int& advance);
+
+		harray<StructuringImageContainer*> structuringImageContainers;
 
 	};
 

@@ -96,6 +96,11 @@ namespace atresttf
 		}
 	}
 
+	void FontTtf::setBorderMode(BorderMode value)
+	{
+		this->_setBorderMode(value);
+	}
+
 	bool FontTtf::_load()
 	{
 		if (this->fontStream.size() == 0)

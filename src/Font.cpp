@@ -26,8 +26,17 @@ namespace atres
 		return container->texture;
 	}
 
+	HL_ENUM_CLASS_DEFINE(Font::BorderMode,
+	(
+		HL_ENUM_DEFINE(Font::BorderMode, Software);
+		HL_ENUM_DEFINE(Font::BorderMode, FontNative);
+		HL_ENUM_DEFINE(Font::BorderMode, PrerenderSquare);
+		HL_ENUM_DEFINE(Font::BorderMode, PrerenderCircle);
+		HL_ENUM_DEFINE(Font::BorderMode, PrerenderDiamond);
+	));
+
 	Font::Font(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f), lineHeight(0.0f), descender(0.0f), internalDescender(0.0f),
-		loaded(false), nativeBorderSupported(false)
+		loaded(false), nativeBorderSupported(false), borderMode(BorderMode::Software)
 	{
 		this->name = name;
 	}
@@ -120,6 +129,29 @@ namespace atres
 	float Font::getInternalDescender()
 	{
 		return (this->internalDescender * this->scale * this->baseScale);
+	}
+
+	void Font::setBorderMode(BorderMode value)
+	{
+		if (value != BorderMode::Software)
+		{
+			hlog::warnf(logTag, "BorderModes other than 'Software' are not supported in font '%s'.", this->name.cStr());
+			return;
+		}
+		this->_setBorderMode(value);
+	}
+
+	void Font::_setBorderMode(BorderMode value)
+	{
+		if (this->borderMode != value)
+		{
+			this->borderMode = value;
+			foreach (BorderTextureContainer*, it, this->borderTextureContainers)
+			{
+				delete (*it);
+			}
+			this->borderTextureContainers.clear();
+		}
 	}
 
 	harray<april::Texture*> Font::getTextures()

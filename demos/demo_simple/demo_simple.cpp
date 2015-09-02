@@ -255,7 +255,7 @@ void april_init(const harray<hstr>& args)
 		hstr ttfFilename; // invokes the installed system font Arial
 #endif
 		atresttf::FontTtf* fontTtf = new atresttf::FontTtf(ttfFilename, "Arial", 32.0f, 1.0f);
-		fontTtf->setNativeBorderSupported(true);
+		fontTtf->setBorderMode(atres::Font::BorderMode::PrerenderDiamond);
 		atres::renderer->registerFont(fontTtf);
 #endif
 		atres::renderer->registerFont(new atres::FontIconMap(RESOURCE_PATH "icon_font", "icon_font", 1.0f, 2.8f, 4.0f));

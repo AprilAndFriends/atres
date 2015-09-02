@@ -20,12 +20,38 @@
 
 namespace atres
 {
+	FontDynamic::StructuringImageContainer::StructuringImageContainer(april::Image* image, BorderMode borderMode, float borderThickness)
+	{
+		this->image = image;
+		this->borderMode = borderMode;
+		this->borderThickness = borderThickness;
+	}
+
+	FontDynamic::StructuringImageContainer::~StructuringImageContainer()
+	{
+		delete this->image;
+	}
+
 	FontDynamic::FontDynamic(chstr name) : Font(name)
 	{
 	}
 
 	FontDynamic::~FontDynamic()
 	{
+		foreach (StructuringImageContainer*, it, this->structuringImageContainers)
+		{
+			delete (*it);
+		}
+	}
+
+	void FontDynamic::setBorderMode(BorderMode value)
+	{
+		if (value == BorderMode::FontNative)
+		{
+			hlog::warnf(logTag, "BorderMode 'FontNative' is not supported in font '%s'.", this->name.cStr());
+			return;
+		}
+		this->_setBorderMode(value);
 	}
 
 	bool FontDynamic::_isAllowAlphaTextures()
@@ -52,6 +78,18 @@ namespace atres
 			textureContainer->texture = this->_createTexture();
 			this->borderTextureContainers += textureContainer;
 		}
+	}
+
+	FontDynamic::StructuringImageContainer* FontDynamic::_findStructuringImageContainer(BorderMode borderMode, float borderThickness)
+	{
+		foreach (StructuringImageContainer*, it, this->structuringImageContainers)
+		{
+			if ((*it)->borderMode == borderMode && heqf((*it)->borderThickness, borderThickness))
+			{
+				return (*it);
+			}
+		}
+		return NULL;
 	}
 
 	april::Texture* FontDynamic::getTexture(unsigned int charCode)
@@ -160,11 +198,19 @@ namespace atres
 
 	bool FontDynamic::_addBorderCharacterBitmap(unsigned int charCode, float borderThickness)
 	{
-		if (Font::hasBorderCharacter(charCode, borderThickness)) // cannot use current implementation since it would cause recursion
+		if (Font::hasBorderCharacter(charCode, borderThickness)) // cannot use current class' implementation since it would cause recursion
 		{
 			return true;
 		}
-		april::Image* image = this->_loadBorderCharacterImage(charCode, borderThickness);
+		april::Image* image = NULL;
+		if (this->borderMode == BorderMode::FontNative)
+		{
+			image = this->_loadBorderCharacterImage(charCode, borderThickness);
+		}
+		else if (this->borderMode != BorderMode::Software)
+		{
+			image = this->_generateBorderCharacterImage(charCode, borderThickness);
+		}
 		if (image == NULL)
 		{
 			return false;
@@ -279,6 +325,90 @@ namespace atres
 	april::Image* FontDynamic::_loadBorderCharacterImage(unsigned int charCode, float borderThickness)
 	{
 		return NULL;
+	}
+
+	april::Image* FontDynamic::_generateBorderCharacterImage(unsigned int charCode, float borderThickness)
+	{
+		int advance = 0;
+		int leftOffset = 0;
+		int topOffset = 0;
+		int ascender = 0;
+		int descender = 0;
+		int bearingX = 0;
+		april::Image* characterImage = this->_loadCharacterImage(charCode, false, advance, leftOffset, topOffset, ascender, descender, bearingX);
+		if (characterImage == NULL)
+		{
+			return NULL;
+		}
+		int borderSize = hceil(borderThickness);
+		int size = 1 + borderSize * 2;
+		StructuringImageContainer* structuringImageContainer = this->_findStructuringImageContainer(this->borderMode, borderThickness);
+		if (structuringImageContainer == NULL)
+		{
+			if (this->borderMode == BorderMode::PrerenderSquare)
+			{
+				structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::White, april::Image::FORMAT_ALPHA), this->borderMode, borderThickness);
+			}
+			else if (this->borderMode == BorderMode::PrerenderCircle)
+			{
+				structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::Clear, april::Image::FORMAT_ALPHA), this->borderMode, borderThickness);
+				int index = borderSize + borderSize * size;
+				structuringImageContainer->image->data[index] = 255;
+				unsigned char value = 0;
+				gvec2 vector;
+				gvec2 range(borderThickness, 0.0f);
+				for_iter (j, 0, borderSize + 1)
+				{
+					for_iter (i, j, borderSize + 1)
+					{
+						vector.set((float)i, (float)j);
+						value = (unsigned char)(hclamp(borderThickness - vector.length(), 0.0f, 1.0f) * 255);
+						structuringImageContainer->image->data[index + i + j * size] = value;
+						structuringImageContainer->image->data[index - i + j * size] = value;
+						structuringImageContainer->image->data[index + i - j * size] = value;
+						structuringImageContainer->image->data[index - i - j * size] = value;
+						structuringImageContainer->image->data[index + j + i * size] = value;
+						structuringImageContainer->image->data[index - j + i * size] = value;
+						structuringImageContainer->image->data[index + j - i * size] = value;
+						structuringImageContainer->image->data[index - j - i * size] = value;
+					}
+				}
+			}
+			else if (this->borderMode == BorderMode::PrerenderDiamond)
+			{
+				structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::Clear, april::Image::FORMAT_ALPHA), this->borderMode, borderThickness);
+				int index = borderSize + borderSize * size;
+				structuringImageContainer->image->data[index] = 255;
+				for_iter (j, 0, borderSize + 1)
+				{
+					for_iter (i, 0, borderSize + 1 - j)
+					{
+						structuringImageContainer->image->data[index + i + j * size] = 255;
+						structuringImageContainer->image->data[index - i + j * size] = 255;
+						structuringImageContainer->image->data[index + i - j * size] = 255;
+						structuringImageContainer->image->data[index - i - j * size] = 255;
+					}
+				}
+			}
+			if (structuringImageContainer != NULL)
+			{
+				this->structuringImageContainers += structuringImageContainer;
+			}
+		}
+		if (structuringImageContainer == NULL)
+		{
+			delete characterImage;
+			return NULL;
+		}
+		april::Image* image = april::Image::create(characterImage->w + borderSize * 2, characterImage->h + borderSize * 2, april::Color::Clear, april::Image::FORMAT_ALPHA);
+		image->write(0, 0, characterImage->w, characterImage->h, borderSize, borderSize, characterImage);
+		delete characterImage;
+		if (!image->dilate(structuringImageContainer->image))
+		{
+			delete image;
+			image = NULL;
+		}
+		return image;
 	}
 
 	april::Image* FontDynamic::_loadIconImage(chstr iconName, bool initial, int& advance)

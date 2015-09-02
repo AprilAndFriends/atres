@@ -38,6 +38,7 @@ namespace atresttf
 		~FontTtf();
 
 		HL_DEFINE_GET(hstr, fontFilename, FontFilename);
+		void setBorderMode(BorderMode value);
 
 	protected:
 		bool customDescender;

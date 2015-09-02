@@ -38,6 +38,11 @@ namespace atres
 	{
 	}
 
+	void FontIconMap::setBorderMode(BorderMode value)
+	{
+		hlog::warnf(logTag, "BorderModes are not supported in font '%s'.", this->name.cStr());
+	}
+
 	bool FontIconMap::_isAllowAlphaTextures()
 	{
 		return false;
