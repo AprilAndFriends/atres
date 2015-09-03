@@ -40,7 +40,12 @@ namespace atres
 
 	void FontIconMap::setBorderMode(BorderMode value)
 	{
-		hlog::warnf(logTag, "BorderModes are not supported in font '%s'.", this->name.cStr());
+		if (value != BorderMode::Software)
+		{
+			hlog::warnf(logTag, "BorderModes other than 'Software' are not supported in icon-font '%s'.", this->name.cStr());
+			return;
+		}
+		FontDynamic::setBorderMode(value);
 	}
 
 	bool FontIconMap::_isAllowAlphaTextures()

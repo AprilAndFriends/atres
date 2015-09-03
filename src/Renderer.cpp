@@ -1543,7 +1543,58 @@ namespace atres
 						if (this->_iconFont != NULL)
 						{
 							this->_renderRect = this->_iconFont->makeRenderRectangle(drawRect, area, this->_iconName);
-							this->_textSequence.addRenderRectangle(this->_renderRect);
+							if (this->_renderRect.src.w > 0.0f && this->_renderRect.src.h > 0.0f && this->_renderRect.dest.w > 0.0f && this->_renderRect.dest.h > 0.0f)
+							{
+								this->_textSequence.addRenderRectangle(this->_renderRect);
+								destination = this->_renderRect.dest;
+								switch (this->_effectMode)
+								{
+								case EFFECT_MODE_SHADOW: // shadow
+									this->_renderRect.dest = destination + this->shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+									this->_shadowSequence.addRenderRectangle(this->_renderRect);
+									break;
+								case EFFECT_MODE_BORDER: // border
+									if (this->_iconFont->getBorderMode() == Font::BorderMode::Software || !this->_iconFont->hasBorderCharacter(this->_code, this->_borderFontThickness))
+									{
+										this->_renderRect.dest = destination + gvec2(-this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
+										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_renderRect.dest = destination + gvec2(this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
+										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_renderRect.dest = destination + gvec2(-this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
+										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_renderRect.dest = destination + gvec2(this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
+										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_renderRect.dest = destination + gvec2(0.0f, -this->_borderThickness);
+										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_renderRect.dest = destination + gvec2(-this->_borderThickness, 0.0f);
+										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_renderRect.dest = destination + gvec2(this->_borderThickness, 0.0f);
+										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_renderRect.dest = destination + gvec2(0.0f, this->_borderThickness);
+										this->_borderSequence.addRenderRectangle(this->_renderRect);
+									}
+									else
+									{
+										this->_borderCharacter = this->_iconFont->getBorderCharacter(this->_code, this->_borderFontThickness);
+										area = this->_word.rect;
+										rectSize = (this->_borderCharacter->rect.getSize() - this->_character->rect.getSize()) * 0.5f * this->_scale;
+										area.x += hmax(0.0f, width + (this->_character->bearing.x) * this->_scale) - rectSize.x;
+										area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale - rectSize.y;
+										area.w = this->_borderCharacter->rect.w * this->_scale;
+										area.h = this->_borderCharacter->rect.h * this->_scale;
+										area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
+										drawRect.x -= rectSize.x;
+										drawRect.y -= rectSize.y;
+										drawRect.w += rectSize.x * 2.0f;
+										drawRect.h += rectSize.y * 2.0f;
+										this->_renderRect = this->_font->makeBorderRenderRectangle(drawRect, area, this->_code, this->_borderFontThickness);
+										this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
+										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_borderSequence.texture = this->_font->getBorderTexture(this->_code, this->_borderFontThickness);
+									}
+									break;
+								}
+							}
 						}
 						width += this->_icon->advance * this->_scale;
 					}
