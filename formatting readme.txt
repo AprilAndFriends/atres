@@ -10,6 +10,7 @@ Following formatting commands are supported:
 n	- normal (no shadow / border)
 s	- shadow; parameter (optional): string with hex value for color in RGB or RGBA
 b	- border; parameter (optional): string with hex value for color in RGB or RGBA
+              parameter (optional): border thickness multiplier
 c	- color change; parameter: string with hex value for color in RGB
 f	- font change; parameter: string of the font name definition including optional scale factor
 i	- icon; parameter: string of the icon font name definition including optional scale factor
@@ -19,6 +20,8 @@ i	- icon; parameter: string of the icon font name definition including optional 
 Examples:
 
 The word [b]border[/b] has a border. The word [b=0000FF]blue[/b] has a blue border.
+The word [b:FF0000,1.5]thicker red border[/b] has a 1.5 times thicker red border than the default.
+The word [b:,1.5]thicker border[/b] has a 1.5 times thicker border than the default with default color.
 This [f arial:0.9]word[/f] is displayed in "arial" with a scaling factor 0.9.
 The color of the word at the end is [c:00FF00]green[/c].
 Press [i:buttons]x_button[/i] to delete "C:\Windows\system32".
@@ -38,3 +41,5 @@ Notes:
 - The c command does not support alpha, because of a conflict within AprilUI that would cause
   alpha-animated text to be cached for every possible alpha value (0-255) and rendered very slowly.
 - Nesting "icon" tags is not allowed.
+- When using b and specifying only a border-thickness multiplier, the comma character "," is still
+  mandatory.
