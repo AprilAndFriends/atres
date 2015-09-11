@@ -976,7 +976,7 @@ namespace atres
 					if (this->_currentTag.data.count(',') == 1)
 					{
 						this->_currentTag.data.split(',', this->_borderColorString, this->_borderThicknessString);
-						this->_textBorderThickness = this->_borderThicknessString;
+						this->_textBorderThickness = this->borderThickness * (float)this->_borderThicknessString;
 					}
 					else
 					{
@@ -1112,7 +1112,7 @@ namespace atres
 						if (this->_nextTag.data.count(',') == 1)
 						{
 							this->_nextTag.data.split(',', this->_borderColorString, this->_borderThicknessString);
-							this->_textBorderThickness = this->_borderThicknessString;
+							this->_textBorderThickness = this->borderThickness * (float)this->_borderThicknessString;
 						}
 						else
 						{
