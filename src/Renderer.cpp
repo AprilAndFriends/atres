@@ -24,9 +24,6 @@
 #include "Font.h"
 #include "FontIconMap.h"
 
-#define ALIGNMENT_IS_WRAPPED(formatting) ((formatting) == LEFT_WRAPPED || (formatting) == CENTER_WRAPPED || (formatting) == RIGHT_WRAPPED || (formatting) == JUSTIFIED)
-#define ALIGNMENT_IS_LEFT(formatting) ((formatting) == LEFT || (formatting) == LEFT_WRAPPED || (formatting) == JUSTIFIED && this->justifiedDefault != JUSTIFIED)
-
 #define IS_IDEOGRAPH(code) \
 	( \
 		((code) >= 0x3040 && (code) <= 0x309F) ||	/* Hiragana */ \
@@ -136,7 +133,7 @@ namespace atres
 		this->globalOffsets = false;
 		this->useLegacyLineBreakParsing = false;
 		this->useIdeographWords = false;
-		this->justifiedDefault = JUSTIFIED;
+		this->justifiedDefault = Horizontal::Justified;
 		this->defaultFont = NULL;
 		// misc init
 		this->_font = NULL;
@@ -232,7 +229,7 @@ namespace atres
 		}
 	}
 
-	void Renderer::setJustifiedDefault(Alignment value)
+	void Renderer::setJustifiedDefault(Horizontal value)
 	{
 		if (this->justifiedDefault != value)
 		{
@@ -488,16 +485,16 @@ namespace atres
 				stack.removeLast();
 				if (str[start + 2] != 'i')
 				{
-					tag.type = TAG_TYPE_CLOSE;
+					tag.type = FormatTag::Type::Close;
 				}
 				else
 				{
-					tag.type = TAG_TYPE_CLOSE_CONSUME;
+					tag.type = FormatTag::Type::CloseConsume;
 				}
 			}
 			else if (end - start == 2) // empty command
 			{
-				tag.type = TAG_TYPE_ESCAPE;
+				tag.type = FormatTag::Type::Escape;
 			}
 			else if (str[start + 1] == '/') // closing command
 			{
@@ -510,11 +507,11 @@ namespace atres
 				stack.removeLast();
 				if (str[start + 2] != 'i')
 				{
-					tag.type = TAG_TYPE_CLOSE;
+					tag.type = FormatTag::Type::Close;
 				}
 				else
 				{
-					tag.type = TAG_TYPE_CLOSE_CONSUME;
+					tag.type = FormatTag::Type::CloseConsume;
 				}
 			}
 			else // opening new tag
@@ -522,28 +519,28 @@ namespace atres
 				switch (str[start + 1])
 				{
 				case 'f':
-					tag.type = TAG_TYPE_FONT;
+					tag.type = FormatTag::Type::Font;
 					break;
 				case 'i':
-					tag.type = TAG_TYPE_ICON;
+					tag.type = FormatTag::Type::Icon;
 					break;
 				case 'c':
-					tag.type = TAG_TYPE_COLOR;
+					tag.type = FormatTag::Type::Color;
 					break;
 				case 'x':
-					tag.type = TAG_TYPE_SCALE;
+					tag.type = FormatTag::Type::Scale;
 					break;
 				case 'n':
-					tag.type = TAG_TYPE_NORMAL;
+					tag.type = FormatTag::Type::NoEffect;
 					break;
 				case 's':
-					tag.type = TAG_TYPE_SHADOW;
+					tag.type = FormatTag::Type::Shadow;
 					break;
 				case 'b':
-					tag.type = TAG_TYPE_BORDER;
+					tag.type = FormatTag::Type::Border;
 					break;
 				case '-': // ignore formattting from here on
-					tag.type = TAG_TYPE_IGNORE_FORMATTING;
+					tag.type = FormatTag::Type::IgnoreFormatting;
 					ignoreFormatting = true;
 					//start = end;
 					break;
@@ -567,7 +564,7 @@ namespace atres
 		bool hasPreviousTag = false;
 		foreach (FormatTag, it, foundTags)
 		{
-			if ((*it).type != TAG_TYPE_CLOSE_CONSUME)
+			if ((*it).type != FormatTag::Type::CloseConsume)
 			{
 				result += text(index, (*it).start - index);
 			}
@@ -578,7 +575,7 @@ namespace atres
 				hasPreviousTag = false;
 			}
 			index = (*it).start + (*it).count;
-			if ((*it).type == TAG_TYPE_ESCAPE)
+			if ((*it).type == FormatTag::Type::Escape)
 			{
 				--count;
 				result += '[';
@@ -586,7 +583,7 @@ namespace atres
 			else
 			{
 				(*it).start -= count;
-				if ((*it).type == TAG_TYPE_ICON)
+				if ((*it).type == FormatTag::Type::Icon)
 				{
 					hasPreviousTag = true;
 					// using a non-breaking space to indicate an icon being rendered here
@@ -619,7 +616,7 @@ namespace atres
 		return result;
 	}
 	
-	harray<RenderLine> Renderer::verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float y, float lineHeight, float descender, float internalDescender)
+	harray<RenderLine> Renderer::verticalCorrection(grect rect, Vertical vertical, harray<RenderLine> lines, float y, float lineHeight, float descender, float internalDescender)
 	{
 		harray<RenderLine> result;
 		int lineCount = lines.size();
@@ -628,16 +625,13 @@ namespace atres
 			++lineCount;
 		}
 		// vertical correction
-		switch (vertical)
+		if (vertical == Vertical::Center)
 		{
-		case CENTER:
 			y += (lineCount * lineHeight - rect.h + descender) * 0.5f;
-			break;
-		case BOTTOM:
+		}
+		else if (vertical == Vertical::Bottom)
+		{
 			y += lineCount * lineHeight - rect.h + internalDescender;
-			break;
-		default:
-			break;
 		}
 		// remove lines that cannot be seen anyway
 		foreach (RenderLine, it, lines)
@@ -652,10 +646,10 @@ namespace atres
 		return result;
 	}
 	
-	harray<RenderLine> Renderer::horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float x, float lineWidth)
+	harray<RenderLine> Renderer::horizontalCorrection(grect rect, Horizontal horizontal, harray<RenderLine> lines, float x, float lineWidth)
 	{
 		// horizontal correction not necessary when left aligned
-		if (ALIGNMENT_IS_LEFT(horizontal))
+		if (horizontal.isLeft() || horizontal == Horizontal::Justified && this->justifiedDefault != Horizontal::Justified)
 		{
 			foreach (RenderLine, it, lines)
 			{
@@ -668,27 +662,22 @@ namespace atres
 			return lines;
 		}
 		float ox = 0.0f;
-		if (horizontal != JUSTIFIED || this->justifiedDefault != JUSTIFIED)
+		if (horizontal != Horizontal::Justified || this->justifiedDefault != Horizontal::Justified)
 		{
-			if (horizontal == JUSTIFIED)
+			if (horizontal == Horizontal::Justified)
 			{
 				horizontal = this->justifiedDefault;
 			}
 			// horizontal correction
 			foreach (RenderLine, it, lines)
 			{
-				switch (horizontal)
+				if (horizontal.isCenter())
 				{
-				case CENTER:
-				case CENTER_WRAPPED:
 					ox = -x + (rect.w - (*it).rect.w) * 0.5f;
-					break;
-				case RIGHT:
-				case RIGHT_WRAPPED:
+				}
+				else if (horizontal.isRight())
+				{
 					ox = -x + rect.w - (*it).rect.w;
-					break;
-				default:
-					break;
 				}
 				(*it).rect.x += ox;
 				foreach (RenderWord, it2, (*it).words)
@@ -807,10 +796,10 @@ namespace atres
 	{
 		while (this->_tags.size() > 0 && index >= this->_nextTag.start)
 		{
-			if (this->_nextTag.type == TAG_TYPE_CLOSE || this->_nextTag.type == TAG_TYPE_CLOSE_CONSUME)
+			if (this->_nextTag.type == FormatTag::Type::Close || this->_nextTag.type == FormatTag::Type::CloseConsume)
 			{
 				this->_currentTag = this->_stack.removeLast();
-				if (this->_currentTag.type == TAG_TYPE_FONT)
+				if (this->_currentTag.type == FormatTag::Type::Font)
 				{
 					this->_fontName = this->_currentTag.data;
 					this->_font = this->getFont(this->_fontName);
@@ -819,7 +808,7 @@ namespace atres
 					this->_fontScale = this->_font->getScale();
 					this->_fontBaseScale = this->_font->getBaseScale();
 				}
-				else if (this->_currentTag.type == TAG_TYPE_ICON)
+				else if (this->_currentTag.type == FormatTag::Type::Icon)
 				{
 					this->_fontName = this->_currentTag.data;
 					this->_font = this->getFont(this->_fontName);
@@ -828,14 +817,14 @@ namespace atres
 					this->_fontScale = this->_font->getScale();
 					this->_fontBaseScale = this->_font->getBaseScale();
 				}
-				else if (this->_currentTag.type == TAG_TYPE_SCALE)
+				else if (this->_currentTag.type == FormatTag::Type::Scale)
 				{
 					this->_textScale = this->_currentTag.data;
 				}
 			}
-			else if (this->_nextTag.type == TAG_TYPE_FONT)
+			else if (this->_nextTag.type == FormatTag::Type::Font)
 			{
-				this->_currentTag.type = TAG_TYPE_FONT;
+				this->_currentTag.type = FormatTag::Type::Font;
 				this->_currentTag.data = this->_fontName;
 				this->_stack += this->_currentTag;
 				if (this->_font == NULL) // if there is no previous font, the height values have to be obtained as well
@@ -865,9 +854,9 @@ namespace atres
 					hlog::warnf(logTag, "Font '%s' does not exist!", this->_nextTag.data.cStr());
 				}
 			}
-			else if (this->_nextTag.type == TAG_TYPE_ICON)
+			else if (this->_nextTag.type == FormatTag::Type::Icon)
 			{
-				this->_currentTag.type = TAG_TYPE_ICON;
+				this->_currentTag.type = FormatTag::Type::Icon;
 				this->_currentTag.data = this->_fontName;
 				this->_currentTag.consumedData = this->_fontIconName;
 				this->_stack += this->_currentTag;
@@ -894,21 +883,21 @@ namespace atres
 					hlog::warnf(logTag, "Font '%s' does not exist!", this->_nextTag.data.cStr());
 				}
 			}
-			else if (this->_nextTag.type == TAG_TYPE_COLOR)
+			else if (this->_nextTag.type == FormatTag::Type::Color)
 			{
-				this->_currentTag.type = TAG_TYPE_COLOR;
+				this->_currentTag.type = FormatTag::Type::Color;
 				this->_stack += this->_currentTag;
 			}
-			else if (this->_nextTag.type == TAG_TYPE_SCALE)
+			else if (this->_nextTag.type == FormatTag::Type::Scale)
 			{
-				this->_currentTag.type = TAG_TYPE_SCALE;
+				this->_currentTag.type = FormatTag::Type::Scale;
 				this->_currentTag.data = this->_textScale;
 				this->_stack += this->_currentTag;
 				this->_textScale = this->_nextTag.data;
 			}
 			else
 			{
-				this->_currentTag.type = TAG_TYPE_NORMAL;
+				this->_currentTag.type = FormatTag::Type::NoEffect;
 				this->_stack += this->_currentTag;
 			}
 			this->_tags.removeFirst();
@@ -927,20 +916,20 @@ namespace atres
 	{
 		while (this->_tags.size() > 0 && this->_word.start + index >= this->_nextTag.start)
 		{
-			if (this->_nextTag.type == TAG_TYPE_CLOSE || this->_nextTag.type == TAG_TYPE_CLOSE_CONSUME)
+			if (this->_nextTag.type == FormatTag::Type::Close || this->_nextTag.type == FormatTag::Type::CloseConsume)
 			{
 				this->_currentTag = this->_stack.removeLast();
-				switch (this->_currentTag.type)
+				if (this->_currentTag.type == FormatTag::Type::Font)
 				{
-				case TAG_TYPE_FONT:
 					this->_fontName = this->_currentTag.data;
 					this->_font = this->getFont(this->_fontName);
 					this->_characters = this->_font->getCharacters();
 					this->_icons = this->_font->getIcons();
 					this->_fontScale = this->_font->getScale();
 					this->_fontBaseScale = this->_font->getBaseScale();
-					break;
-				case TAG_TYPE_ICON:
+				}
+				else if (this->_currentTag.type == FormatTag::Type::Icon)
+				{
 					this->_fontName = this->_currentTag.data;
 					this->_fontIconName = this->_currentTag.consumedData;
 					this->_font = this->getFont(this->_fontName);
@@ -949,29 +938,34 @@ namespace atres
 					this->_fontScale = this->_font->getScale();
 					this->_fontBaseScale = this->_font->getBaseScale();
 					this->_iconFont = NULL;
-					break;
-				case TAG_TYPE_COLOR:
+				}
+				else if (this->_currentTag.type == FormatTag::Type::Color)
+				{
 					this->_hex = (this->colors.hasKey(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_textColor.set(this->_hex);
 					}
-					break;
-				case TAG_TYPE_SCALE:
+				}
+				else if (this->_currentTag.type == FormatTag::Type::Scale)
+				{
 					this->_textScale = this->_currentTag.data;
-					break;
-				case TAG_TYPE_NORMAL:
+				}
+				else if (this->_currentTag.type == FormatTag::Type::NoEffect)
+				{
 					this->_effectMode = EFFECT_MODE_NORMAL;
-					break;
-				case TAG_TYPE_SHADOW:
+				}
+				else if (this->_currentTag.type == FormatTag::Type::Shadow)
+				{
 					this->_effectMode = EFFECT_MODE_SHADOW;
 					this->_hex = (this->colors.hasKey(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_shadowColor.set(this->_hex);
 					}
-					break;
-				case TAG_TYPE_BORDER:
+				}
+				else if (this->_currentTag.type == FormatTag::Type::Border)
+				{
 					this->_effectMode = EFFECT_MODE_BORDER;
 					if (this->_currentTag.data.count(',') == 1)
 					{
@@ -987,16 +981,12 @@ namespace atres
 					{
 						this->_borderColor.set(this->_hex);
 					}
-					break;
-				default:
-					break;
 				}
 			}
 			else
 			{
-				switch (this->_nextTag.type)
+				if (this->_nextTag.type == FormatTag::Type::Font)
 				{
-				case TAG_TYPE_FONT:
 					this->_currentTag.type = this->_nextTag.type;
 					this->_currentTag.data = this->_fontName;
 					this->_stack += this->_currentTag;
@@ -1026,9 +1016,10 @@ namespace atres
 					{
 						hlog::warnf(logTag, "Font '%s' does not exist!", this->_nextTag.data.cStr());
 					}
-					break;
-				case TAG_TYPE_ICON:
-					this->_currentTag.type = TAG_TYPE_ICON;
+				}
+				else if (this->_nextTag.type == FormatTag::Type::Icon)
+				{
+					this->_currentTag.type = FormatTag::Type::Icon;
 					this->_currentTag.data = this->_fontName;
 					this->_currentTag.consumedData = this->_fontIconName;
 					this->_stack += this->_currentTag;
@@ -1054,9 +1045,10 @@ namespace atres
 					{
 						hlog::warnf(logTag, "Font '%s' does not exist!", this->_nextTag.data.cStr());
 					}
-					break;
-				case TAG_TYPE_COLOR:
-					this->_currentTag.type = TAG_TYPE_COLOR;
+				}
+				else if (this->_nextTag.type == FormatTag::Type::Color)
+				{
+					this->_currentTag.type = FormatTag::Type::Color;
 					this->_currentTag.data = this->_textColor.hex();
 					this->_stack += this->_currentTag;
 					this->_hex = (this->colors.hasKey(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
@@ -1069,20 +1061,23 @@ namespace atres
 					{
 						hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 					}
-					break;
-				case TAG_TYPE_SCALE:
-					this->_currentTag.type = TAG_TYPE_SCALE;
+				}
+				else if (this->_nextTag.type == FormatTag::Type::Scale)
+				{
+					this->_currentTag.type = FormatTag::Type::Scale;
 					this->_currentTag.data = this->_textScale;
 					this->_stack += this->_currentTag;
 					this->_textScale = this->_nextTag.data;
-					break;
-				case TAG_TYPE_NORMAL:
-					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? TAG_TYPE_BORDER : (this->_effectMode == EFFECT_MODE_SHADOW ? TAG_TYPE_SHADOW : TAG_TYPE_NORMAL));
+				}
+				else if (this->_nextTag.type == FormatTag::Type::NoEffect)
+				{
+					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? FormatTag::Type::Border : (this->_effectMode == EFFECT_MODE_SHADOW ? FormatTag::Type::Shadow : FormatTag::Type::NoEffect));
 					this->_stack += this->_currentTag;
 					this->_effectMode = EFFECT_MODE_NORMAL;
-					break;
-				case TAG_TYPE_SHADOW:
-					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? TAG_TYPE_BORDER : (this->_effectMode == EFFECT_MODE_SHADOW ? TAG_TYPE_SHADOW : TAG_TYPE_NORMAL));
+				}
+				else if (this->_nextTag.type == FormatTag::Type::Shadow)
+				{
+					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? FormatTag::Type::Border : (this->_effectMode == EFFECT_MODE_SHADOW ? FormatTag::Type::Shadow : FormatTag::Type::NoEffect));
 					this->_currentTag.data = this->_shadowColor.hex();
 					this->_stack += this->_currentTag;
 					this->_effectMode = EFFECT_MODE_SHADOW;
@@ -1099,9 +1094,10 @@ namespace atres
 							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
 					}
-					break;
-				case TAG_TYPE_BORDER:
-					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? TAG_TYPE_BORDER : (this->_effectMode == EFFECT_MODE_SHADOW ? TAG_TYPE_SHADOW : TAG_TYPE_NORMAL));
+				}
+				else if (this->_nextTag.type == FormatTag::Type::Border)
+				{
+					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? FormatTag::Type::Border : (this->_effectMode == EFFECT_MODE_SHADOW ? FormatTag::Type::Shadow : FormatTag::Type::NoEffect));
 					this->_currentTag.data = this->_borderColor.hex() + "," + hstr(this->_textBorderThickness);
 					this->_stack += this->_currentTag;
 					this->_effectMode = EFFECT_MODE_BORDER;
@@ -1128,9 +1124,6 @@ namespace atres
 							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
 					}
-					break;
-				default:
-					break;
 				}
 			}
 			this->_tags.removeFirst();
@@ -1395,13 +1388,13 @@ namespace atres
 	}
 
 	harray<RenderLine> Renderer::createRenderLines(grect rect, chstr text, harray<FormatTag> tags,
-		Alignment horizontal, Alignment vertical, gvec2 offset, bool keepWrappedSpaces)
+		Horizontal horizontal, Vertical vertical, gvec2 offset, bool keepWrappedSpaces)
 	{
 		this->analyzeText(tags.first().data, text); // by convention, the first tag is the font name
 		harray<RenderWord> words = this->createRenderWords(rect, text, tags);
 		this->_initializeLineProcessing();
 
-		bool wrapped = ALIGNMENT_IS_WRAPPED(horizontal);
+		bool wrapped = horizontal.isWrapped();
 		float maxWidth = 0.0f;
 		float lineWidth = 0.0f;
 		float x = 0.0f;
@@ -1800,7 +1793,7 @@ namespace atres
 		return true;
 	}
 	
-	void Renderer::drawText(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color,
+	void Renderer::drawText(chstr fontName, grect rect, chstr text, Horizontal horizontal, Vertical vertical, april::Color color,
 		gvec2 offset)
 	{
 		this->_cacheEntryText.set(text, fontName, rect, horizontal, vertical, color, offset);
@@ -1824,7 +1817,7 @@ namespace atres
 		this->_drawRenderText(this->_cacheEntryText.value, color);
 	}
 
-	void Renderer::drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical,
+	void Renderer::drawTextUnformatted(chstr fontName, grect rect, chstr text, Horizontal horizontal, Vertical vertical,
 		april::Color color, gvec2 offset)
 	{
 		this->_cacheEntryText.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
@@ -1847,17 +1840,17 @@ namespace atres
 		this->_drawRenderText(this->_cacheEntryText.value, color);
 	}
 
-	void Renderer::drawText(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
+	void Renderer::drawText(grect rect, chstr text, Horizontal horizontal, Vertical vertical, april::Color color, gvec2 offset)
 	{
 		this->drawText("", rect, text, horizontal, vertical, color, offset);
 	}
 
-	void Renderer::drawTextUnformatted(grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
+	void Renderer::drawTextUnformatted(grect rect, chstr text, Horizontal horizontal, Vertical vertical, april::Color color, gvec2 offset)
 	{
 		this->drawTextUnformatted("", rect, text, horizontal, vertical, color, offset);
 	}
 
-	harray<RenderLine> Renderer::makeRenderLines(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
+	harray<RenderLine> Renderer::makeRenderLines(chstr fontName, grect rect, chstr text, Horizontal horizontal, Vertical vertical, april::Color color, gvec2 offset)
 	{
 		this->_cacheEntryLines.set(text, fontName, rect, horizontal, vertical, color, offset);
 		if (!this->cacheLines->get(this->_cacheEntryLines))
@@ -1871,7 +1864,7 @@ namespace atres
 		return this->_cacheEntryLines.value;
 	}
 
-	harray<RenderLine> Renderer::makeRenderLinesUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
+	harray<RenderLine> Renderer::makeRenderLinesUnformatted(chstr fontName, grect rect, chstr text, Horizontal horizontal, Vertical vertical, april::Color color, gvec2 offset)
 	{
 		this->_cacheEntryLines.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
 		if (!this->cacheLinesUnformatted->get(this->_cacheEntryLines))
@@ -1889,10 +1882,10 @@ namespace atres
 		harray<FormatTag> tags;
 		text = this->analyzeFormatting(text, tags);
 		FormatTag tag;
-		tag.type = TAG_TYPE_COLOR;
+		tag.type = FormatTag::Type::Color;
 		tag.data = color.hex();
 		tags.addFirst(tag);
-		tag.type = TAG_TYPE_FONT;
+		tag.type = FormatTag::Type::Font;
 		tag.data = fontName;
 		tags.addFirst(tag);
 		return tags;
@@ -1902,10 +1895,10 @@ namespace atres
 	{
 		harray<FormatTag> tags;
 		FormatTag tag;
-		tag.type = TAG_TYPE_COLOR;
+		tag.type = FormatTag::Type::Color;
 		tag.data = color.hex();
 		tags.addFirst(tag);
-		tag.type = TAG_TYPE_FONT;
+		tag.type = FormatTag::Type::Font;
 		tag.data = fontName;
 		tags.addFirst(tag);
 		return tags;
@@ -1941,7 +1934,7 @@ namespace atres
 			hstr unformattedText = this->prepareFormatting(fontName, text, tags);
 			if (unformattedText != "")
 			{
-				harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, CHECK_RECT_SIZE), unformattedText, tags, LEFT_WRAPPED, TOP);
+				harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, CHECK_RECT_SIZE), unformattedText, tags, Horizontal::LeftWrapped, Vertical::Top);
 				Font* font = this->getFont(fontName);
 				return (lines.size() * font->getLineHeight() + font->getInternalDescender());
 			}
@@ -1985,7 +1978,7 @@ namespace atres
 		if (text != "" && maxWidth > 0.0f)
 		{
 			harray<FormatTag> tags = this->prepareTags(fontName);
-			harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, CHECK_RECT_SIZE), text, tags, LEFT_WRAPPED, TOP);
+			harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, CHECK_RECT_SIZE), text, tags, Horizontal::LeftWrapped, Vertical::Top);
 			Font* font = this->getFont(fontName);
 			return (lines.size() * font->getLineHeight() + font->getDescender());
 		}
@@ -2006,7 +1999,7 @@ namespace atres
 	{
 		hstr unformattedText = this->analyzeFormatting(text, tags);
 		FormatTag tag;
-		tag.type = TAG_TYPE_FONT;
+		tag.type = FormatTag::Type::Font;
 		tag.data = fontName;
 		tags.addFirst(tag);
 		return unformattedText;
@@ -2016,7 +2009,7 @@ namespace atres
 	{
 		harray<FormatTag> tags;
 		FormatTag tag;
-		tag.type = TAG_TYPE_FONT;
+		tag.type = FormatTag::Type::Font;
 		tag.data = fontName;
 		tags.addFirst(tag);
 		return tags;

@@ -54,8 +54,8 @@ namespace atres
 		HL_DEFINE_GET(bool, useIdeographWords, UseIdeographWords);
 		void setUseIdeographWords(bool value);
 		/// @brief Allows to turn justified text into another formatting. This is to counter languages with problematic characters.
-		HL_DEFINE_GET(Alignment, justifiedDefault, JustifiedDefault);
-		void setJustifiedDefault(Alignment value);
+		HL_DEFINE_GET(Horizontal, justifiedDefault, JustifiedDefault);
+		void setJustifiedDefault(Horizontal value);
 		void setDefaultFont(chstr name);
 		hstr getDefaultFont();
 		bool hasFont(chstr name);
@@ -75,25 +75,25 @@ namespace atres
 		void analyzeText(chstr fontName, chstr text);
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
 		harray<RenderLine> removeOutOfBoundLines(grect rect, harray<RenderLine> lines);
-		harray<RenderLine> verticalCorrection(grect rect, Alignment vertical, harray<RenderLine> lines, float x, float lineHeight, float descender, float internalDescender);
-		harray<RenderLine> horizontalCorrection(grect rect, Alignment horizontal, harray<RenderLine> lines, float y, float lineWidth);
+		harray<RenderLine> verticalCorrection(grect rect, Vertical vertical, harray<RenderLine> lines, float x, float lineHeight, float descender, float internalDescender);
+		harray<RenderLine> horizontalCorrection(grect rect, Horizontal horizontal, harray<RenderLine> lines, float y, float lineWidth);
 		harray<RenderWord> createRenderWords(grect rect, chstr text, harray<FormatTag> tags);
-		harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Alignment horizontal, Alignment vertical, gvec2 offset = gvec2(), bool keepWrappedSpaces = false);
+		harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Horizontal horizontal, Vertical vertical, gvec2 offset = gvec2(), bool keepWrappedSpaces = false);
 		RenderText createRenderText(grect rect, chstr text, harray<RenderLine> lines, harray<FormatTag> tags);
 		harray<RenderSequence> optimizeSequences(harray<RenderSequence>& sequences);
 	
-		void drawText(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT,
-			Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		void drawTextUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT,
-			Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		void drawText(grect rect, chstr text, Alignment horizontal = LEFT,
-			Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		void drawTextUnformatted(grect rect, chstr text, Alignment horizontal = LEFT,
-			Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		harray<RenderLine> makeRenderLines(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT,
-			Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		harray<RenderLine> makeRenderLinesUnformatted(chstr fontName, grect rect, chstr text, Alignment horizontal = LEFT,
-			Alignment vertical = CENTER, april::Color color = april::Color::White, gvec2 offset = gvec2());
+		void drawText(chstr fontName, grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
+		void drawTextUnformatted(chstr fontName, grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
+		void drawText(grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
+		void drawTextUnformatted(grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
+		harray<RenderLine> makeRenderLines(chstr fontName, grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
+		harray<RenderLine> makeRenderLinesUnformatted(chstr fontName, grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
 
 		float getTextWidth(chstr fontName, chstr text);
 		float getTextHeight(chstr fontName, chstr text, float maxWidth);
@@ -107,8 +107,8 @@ namespace atres
 		void clearCache();
 
 		/// @brief When turned off, this turns justified text into left_wrapped. This is to counter languages with problematic characters.
-		DEPRECATED_ATTRIBUTE bool isJustifiedEnabled() { return (this->justifiedDefault == JUSTIFIED); }
-		DEPRECATED_ATTRIBUTE void setJustifiedEnabled(bool value) { this->setJustifiedDefault(value ? JUSTIFIED : LEFT_WRAPPED); }
+		DEPRECATED_ATTRIBUTE bool isJustifiedEnabled() { return (this->justifiedDefault == Horizontal::Justified); }
+		DEPRECATED_ATTRIBUTE void setJustifiedEnabled(bool value) { this->setJustifiedDefault(value ? Horizontal::Justified : Horizontal::LeftWrapped); }
 		DEPRECATED_ATTRIBUTE float getBorderOffset() { return this->getBorderThickness(); }
 		DEPRECATED_ATTRIBUTE void setBorderOffset(float value) { this->setBorderThickness(value); }
 
@@ -123,7 +123,7 @@ namespace atres
 		bool globalOffsets;
 		bool useLegacyLineBreakParsing;
 		bool useIdeographWords;
-		Alignment justifiedDefault;
+		Horizontal justifiedDefault;
 		Cache<CacheEntryText>* cacheText;
 		Cache<CacheEntryText>* cacheTextUnformatted;
 		Cache<CacheEntryLines>* cacheLines;

@@ -19,6 +19,7 @@
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
+#include <hltypes/henum.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
@@ -26,41 +27,35 @@
 
 namespace atres
 {
-	enum Alignment
-	{
-		TOP, // top
-		CENTER, // mid
-		BOTTOM, // bot
-		LEFT,
-		RIGHT,
-		LEFT_WRAPPED,
-		RIGHT_WRAPPED,
-		CENTER_WRAPPED,
-		JUSTIFIED
-	};
-	
-	enum Effect
-	{
-		NONE,
-		SHADOW,
-		BORDER
-	};
-	
-	enum FormatTagType
-	{
-		TAG_TYPE_ESCAPE,
-		TAG_TYPE_FONT,
-		TAG_TYPE_ICON,
-		TAG_TYPE_COLOR,
-		TAG_TYPE_SCALE,
-		TAG_TYPE_NORMAL,
-		TAG_TYPE_SHADOW,
-		TAG_TYPE_BORDER,
-		TAG_TYPE_IGNORE_FORMATTING,
-		TAG_TYPE_CLOSE,
-		TAG_TYPE_CLOSE_CONSUME
-	};
-	
+	HL_ENUM_CLASS_PREFIX_DECLARE(atresExport, Horizontal,
+	(
+		HL_ENUM_DECLARE(Horizontal, Left);
+		HL_ENUM_DECLARE(Horizontal, Center);
+		HL_ENUM_DECLARE(Horizontal, Right);
+		HL_ENUM_DECLARE(Horizontal, LeftWrapped);
+		HL_ENUM_DECLARE(Horizontal, RightWrapped);
+		HL_ENUM_DECLARE(Horizontal, CenterWrapped);
+		HL_ENUM_DECLARE(Horizontal, Justified);
+		bool isLeft();
+		bool isCenter();
+		bool isRight();
+		bool isWrapped();
+	));
+
+	HL_ENUM_CLASS_PREFIX_DECLARE(atresExport, Vertical,
+	(
+		HL_ENUM_DECLARE(Vertical, Top); // top
+		HL_ENUM_DECLARE(Vertical, Center); // mid
+		HL_ENUM_DECLARE(Vertical, Bottom); // bot
+	));
+
+	HL_ENUM_CLASS_PREFIX_DECLARE(atresExport, TextEffect,
+	(
+		HL_ENUM_DECLARE(TextEffect, None);
+		HL_ENUM_DECLARE(TextEffect, Shadow);
+		HL_ENUM_DECLARE(TextEffect, Border);
+	));
+
 	class atresExport RectDefinition
 	{
 	public:
@@ -179,7 +174,22 @@ namespace atres
 	class atresExport FormatTag
 	{
 	public:
-		FormatTagType type;
+		HL_ENUM_CLASS_DECLARE(Type,
+		(
+			HL_ENUM_DECLARE(Type, Escape);
+			HL_ENUM_DECLARE(Type, Font);
+			HL_ENUM_DECLARE(Type, Icon);
+			HL_ENUM_DECLARE(Type, Color);
+			HL_ENUM_DECLARE(Type, Scale);
+			HL_ENUM_DECLARE(Type, NoEffect);
+			HL_ENUM_DECLARE(Type, Shadow);
+			HL_ENUM_DECLARE(Type, Border);
+			HL_ENUM_DECLARE(Type, IgnoreFormatting);
+			HL_ENUM_DECLARE(Type, Close);
+			HL_ENUM_DECLARE(Type, CloseConsume);
+		));
+
+		Type type;
 		hstr data;
 		hstr consumedData;
 		int start;
@@ -225,15 +235,15 @@ namespace atres
 		hstr text;
 		hstr fontName;
 		grect rect;
-		Alignment horizontal;
-		Alignment vertical;
+		Horizontal horizontal;
+		Vertical vertical;
 		april::Color color;
 		gvec2 offset;
 
 		CacheEntryBasicText();
 		virtual ~CacheEntryBasicText();
 
-		void set(hstr text, hstr fontName, grect rect, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset);
+		void set(hstr text, hstr fontName, grect rect, Horizontal horizontal, Vertical vertical, april::Color color, gvec2 offset);
 		bool operator==(const CacheEntryBasicText& other) const;
 		bool operator!=(const CacheEntryBasicText& other) const;
 		unsigned int hash() const;

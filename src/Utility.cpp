@@ -16,6 +16,51 @@ namespace atres
 {
 	static april::TexturedVertex vert[6];
 
+	HL_ENUM_CLASS_DEFINE(Horizontal,
+	(
+		HL_ENUM_DEFINE(Horizontal, Left);
+		HL_ENUM_DEFINE(Horizontal, Center);
+		HL_ENUM_DEFINE(Horizontal, Right);
+		HL_ENUM_DEFINE(Horizontal, LeftWrapped);
+		HL_ENUM_DEFINE(Horizontal, RightWrapped);
+		HL_ENUM_DEFINE(Horizontal, CenterWrapped);
+		HL_ENUM_DEFINE(Horizontal, Justified);
+	));
+
+	bool Horizontal::isLeft()
+	{
+		return (*this == Left || *this == LeftWrapped);
+	}
+
+	bool Horizontal::isCenter()
+	{
+		return (*this == Center || *this == CenterWrapped);
+	}
+
+	bool Horizontal::isRight()
+	{
+		return (*this == Right || *this == RightWrapped);
+	}
+
+	bool Horizontal::isWrapped()
+	{
+		return (*this == LeftWrapped || *this == CenterWrapped || *this == RightWrapped || *this == Justified);
+	}
+
+	HL_ENUM_CLASS_DEFINE(Vertical,
+	(
+		HL_ENUM_DEFINE(Vertical, Top);
+		HL_ENUM_DEFINE(Vertical, Center);
+		HL_ENUM_DEFINE(Vertical, Bottom);
+	));
+
+	HL_ENUM_CLASS_DEFINE(TextEffect,
+	(
+		HL_ENUM_DEFINE(TextEffect, None);
+		HL_ENUM_DEFINE(TextEffect, Shadow);
+		HL_ENUM_DEFINE(TextEffect, Border);
+	));
+
 	RectDefinition::RectDefinition()
 	{
 	}
@@ -100,7 +145,22 @@ namespace atres
 	{
 	}
 
-	FormatTag::FormatTag() : type(TAG_TYPE_ESCAPE), start(0), count(0)
+	HL_ENUM_CLASS_DEFINE(FormatTag::Type,
+	(
+		HL_ENUM_DEFINE(FormatTag::Type, Escape);
+		HL_ENUM_DEFINE(FormatTag::Type, Font);
+		HL_ENUM_DEFINE(FormatTag::Type, Icon);
+		HL_ENUM_DEFINE(FormatTag::Type, Color);
+		HL_ENUM_DEFINE(FormatTag::Type, Scale);
+		HL_ENUM_DEFINE(FormatTag::Type, NoEffect);
+		HL_ENUM_DEFINE(FormatTag::Type, Shadow);
+		HL_ENUM_DEFINE(FormatTag::Type, Border);
+		HL_ENUM_DEFINE(FormatTag::Type, IgnoreFormatting);
+		HL_ENUM_DEFINE(FormatTag::Type, Close);
+		HL_ENUM_DEFINE(FormatTag::Type, CloseConsume);
+	));
+
+	FormatTag::FormatTag() : type(Type::Escape), start(0), count(0)
 	{
 	}
 
@@ -139,7 +199,7 @@ namespace atres
 		return new BorderTextureContainer(this->borderThickness);
 	}
 
-	CacheEntryBasicText::CacheEntryBasicText() : horizontal(CENTER_WRAPPED), vertical(CENTER)
+	CacheEntryBasicText::CacheEntryBasicText() : horizontal(Horizontal::CenterWrapped), vertical(Vertical::Center)
 	{
 	}
 
@@ -147,7 +207,7 @@ namespace atres
 	{
 	}
 
-	void CacheEntryBasicText::set(hstr text, hstr fontName, grect rect, Alignment horizontal, Alignment vertical, april::Color color, gvec2 offset)
+	void CacheEntryBasicText::set(hstr text, hstr fontName, grect rect, Horizontal horizontal, Vertical vertical, april::Color color, gvec2 offset)
 	{
 		this->text = text;
 		this->fontName = fontName;
@@ -195,8 +255,8 @@ namespace atres
 		fvar = &this->rect.y;	result ^= *((unsigned int*)fvar);
 		fvar = &this->rect.w;	result ^= *((unsigned int*)fvar);
 		fvar = &this->rect.h;	result ^= *((unsigned int*)fvar);
-		result ^= (((unsigned int)(this->vertical)) & 0xFFFF);
-		result ^= (((unsigned int)(this->horizontal) << 16) & 0xFFFF);
+		result ^= (((unsigned int)(this->vertical.value)) & 0xFFFF);
+		result ^= (((unsigned int)(this->horizontal.value) << 16) & 0xFFFF);
 		result ^= (this->color.r << 8);
 		result ^= (this->color.g << 16);
 		result ^= (this->color.b << 24);
