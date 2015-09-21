@@ -146,7 +146,7 @@ namespace atres
 			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Clear, april::Image::FORMAT_ALPHA, april::Texture::TYPE_MANAGED);
 			if (texture != NULL && !texture->isLoaded())
 			{
-				delete texture;
+				april::rendersys->destroyTexture(texture);
 				texture = NULL;
 				hlog::warn(logTag, "Could not create alpha texture for font, trying an RGBA format.");
 			}

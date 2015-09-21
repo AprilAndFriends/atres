@@ -116,7 +116,7 @@ namespace atres
 	{
 		if (this->texture != NULL)
 		{
-			delete this->texture;
+			april::rendersys->destroyTexture(this->texture);
 		}
 	}
 
