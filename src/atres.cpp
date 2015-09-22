@@ -10,6 +10,7 @@
 
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hversion.h>
 
 #include "atres.h"
 #include "Renderer.h"
@@ -17,12 +18,15 @@
 namespace atres
 {
 	hstr logTag = "atres";
+
+	static hversion version(4, 0, 0);
+
 	static int textureSize = 1024;
 	static bool allowAlphaTextures = true;
 
 	void init()
 	{
-		hlog::write(logTag, "Initializing Atres.");
+		hlog::write(logTag, "Initializing Atres: " + version.toString());
 		atres::renderer = new Renderer();
 	}
 	

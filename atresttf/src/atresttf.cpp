@@ -23,6 +23,7 @@
 #include <hltypes/hmap.h>
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hversion.h>
 
 #include "atresttf.h"
 #include "atresttfUtil.h"
@@ -31,6 +32,8 @@ namespace atresttf
 {
 	hstr logTag = "atresttf";
 
+	static hversion version(4, 0, 0);
+
 	FT_Library library = NULL;
 	hmap<atres::Font*, FT_Face> faces;
 	static hmap<hstr, hstr> fonts;
@@ -38,7 +41,7 @@ namespace atresttf
 
 	void init()
 	{
-		hlog::write(logTag, "Initializing AtresTTF");
+		hlog::write(logTag, "Initializing AtresTTF: " + version.toString());
 		FT_Error error = FT_Init_FreeType(&library);
 		if (error != 0)
 		{
