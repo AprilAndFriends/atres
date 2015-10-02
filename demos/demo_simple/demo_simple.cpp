@@ -167,12 +167,12 @@ public:
 		april::rendersys->drawFilledRect(textArea4, backgroundColor);
 		april::rendersys->drawFilledRect(textArea5, backgroundColor);
 		// texts
-		atres::renderer->drawText(textArea0, TEXT_0, atres::CENTER, atres::TOP);
-		atres::renderer->drawText("Arial:0.8", textArea1, TEXT_1, atres::LEFT_WRAPPED);
-		atres::renderer->drawText("Arial:2.0", textArea2, TEXT_2, atres::RIGHT_WRAPPED, atres::BOTTOM);
-		atres::renderer->drawText(textArea3, TEXT_3, atres::CENTER_WRAPPED, atres::CENTER);
-		atres::renderer->drawText("Arial:0.8", textArea4, TEXT_4, atres::JUSTIFIED, atres::CENTER, this->color);
-		atres::renderer->drawText(textArea5, TEXT_5, atres::CENTER, atres::CENTER, april::Color::White, mouseDelegate->offset);
+		atres::renderer->drawText(textArea0, TEXT_0, atres::Horizontal::Center, atres::Vertical::Top);
+		atres::renderer->drawText("Arial:0.8", textArea1, TEXT_1, atres::Horizontal::LeftWrapped);
+		atres::renderer->drawText("Arial:2.0", textArea2, TEXT_2, atres::Horizontal::RightWrapped, atres::Vertical::Bottom);
+		atres::renderer->drawText(textArea3, TEXT_3, atres::Horizontal::CenterWrapped, atres::Vertical::Center);
+		atres::renderer->drawText("Arial:0.8", textArea4, TEXT_4, atres::Horizontal::Justified, atres::Vertical::Center, this->color);
+		atres::renderer->drawText(textArea5, TEXT_5, atres::Horizontal::Center, atres::Vertical::Center, april::Color::White, mouseDelegate->offset);
 		return true;
 	}
 

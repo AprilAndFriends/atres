@@ -156,13 +156,14 @@ namespace atres
 		Font* _font;
 		FontIconMap* _iconFont;
 		hstr _fontIconName;
-		hmap<unsigned int, CharacterDefinition>& _characters;
-		hmap<unsigned int, CharacterDefinition> _dummyCharacters; // required for some compilers
-		hmap<hstr, IconDefinition>& _icons;
-		hmap<hstr, IconDefinition> _dummyIcons; // required for some compilers
+		hmap<unsigned int, CharacterDefinition*>& _characters;
+		hmap<unsigned int, CharacterDefinition*> _dummyCharacters; // required for some compilers
+		hmap<hstr, IconDefinition*>& _icons;
+		hmap<hstr, IconDefinition*> _dummyIcons; // required for some compilers
 		CharacterDefinition* _character;
 		BorderCharacterDefinition* _borderCharacter;
 		IconDefinition* _icon;
+		BorderIconDefinition* _borderIcon;
 		float _height;
 		float _lineHeight;
 		float _descender;

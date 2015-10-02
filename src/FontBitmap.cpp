@@ -86,7 +86,7 @@ namespace atres
 			}
 			lines.removeFirst();
 		}
-		CharacterDefinition c;
+		CharacterDefinition* c = NULL;
 		unsigned int code = 0;
 		harray<hstr> data;
 		int minAttribute = (multiTexture ? 5 : 4);
@@ -94,9 +94,10 @@ namespace atres
 		int textureIndex = 0;
 		foreach (hstr, it, lines)
 		{
-			c.bearing.x = 0.0f;
-			c.bearing.y = 0.0f;
-			c.advance = 0.0f;
+			c = new CharacterDefinition();
+			c->bearing.x = 0.0f;
+			c->bearing.y = 0.0f;
+			c->advance = 0.0f;
 			data = (*it).split(" ", -1, true);
 			if (hbetweenII(data.size(), minAttribute, maxAttribute))
 			{
@@ -105,31 +106,31 @@ namespace atres
 				{
 					textureIndex = (int)data.removeFirst();
 				}
-				c.rect.x = (float)data.removeFirst();
-				c.rect.y = (float)data.removeFirst();
-				c.rect.w = (float)data.removeFirst();
-				c.rect.h = this->height;
+				c->rect.x = (float)data.removeFirst();
+				c->rect.y = (float)data.removeFirst();
+				c->rect.w = (float)data.removeFirst();
+				c->rect.h = this->height;
 				if (data.size() > 0)
 				{
-					c.advance = (float)data.removeFirst();
+					c->advance = (float)data.removeFirst();
 					if (data.size() > 0)
 					{
-						c.bearing.x = (float)data.removeFirst();
+						c->bearing.x = (float)data.removeFirst();
 						if (data.size() > 0)
 						{
-							c.rect.h = c.advance;
-							c.advance = c.bearing.x;
-							c.bearing.x = (float)data.removeFirst();
+							c->rect.h = c->advance;
+							c->advance = c->bearing.x;
+							c->bearing.x = (float)data.removeFirst();
 							if (data.size() > 0)
 							{
-								c.bearing.y = (float)data.removeFirst();
+								c->bearing.y = (float)data.removeFirst();
 							}
 						}
 					}
 				}
-				if (c.advance == 0.0f)
+				if (c->advance == 0.0f)
 				{
-					c.advance = c.rect.w;
+					c->advance = c->rect.w;
 				}
 				this->characters[code] = c;
 				this->textureContainers[textureIndex]->characters += code;

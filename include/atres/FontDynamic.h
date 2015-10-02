@@ -37,9 +37,11 @@ namespace atres
 		april::Texture* getTexture(unsigned int charCode);
 		april::Texture* getBorderTexture(unsigned int charCode, float borderThickness);
 		april::Texture* getTexture(chstr iconName);
+		april::Texture* getBorderTexture(chstr iconName, float borderThickness);
 		bool hasCharacter(unsigned int charCode);
 		bool hasBorderCharacter(unsigned int charCode, float borderThickness);
 		bool hasIcon(chstr iconName);
+		bool hasBorderIcon(chstr iconName, float borderThickness);
 
 	protected:
 		class StructuringImageContainer
@@ -54,6 +56,8 @@ namespace atres
 
 		};
 
+		harray<StructuringImageContainer*> structuringImageContainers;
+
 		virtual bool _isAllowAlphaTextures();
 		void _tryCreateFirstTextureContainer();
 		void _tryCreateFirstBorderTextureContainer(float borderThickness);
@@ -64,14 +68,17 @@ namespace atres
 		bool _addCharacterBitmap(unsigned int charCode, bool initial = false);
 		bool _addBorderCharacterBitmap(unsigned int charCode, float borderThickness);
 		bool _addIconBitmap(chstr iconName, bool initial = false);
+		bool _addBorderIconBitmap(chstr iconName, float borderThickness);
 		TextureContainer* _addBitmap(harray<TextureContainer*>& textureContainers, bool initial, april::Image* image, int bitmapWidth, int bitmapHeight, chstr symbol, int offsetX = 0, int offsetY = 0, int safeSpace = 0);
 
 		virtual april::Image* _loadCharacterImage(unsigned int charCode, bool initial, int& advance, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX);
 		virtual april::Image* _loadBorderCharacterImage(unsigned int charCode, float borderThickness);
 		virtual april::Image* _generateBorderCharacterImage(unsigned int charCode, float borderThickness);
 		virtual april::Image* _loadIconImage(chstr iconName, bool initial, int& advance);
+		virtual april::Image* _loadBorderIconImage(chstr iconName, float borderThickness);
+		virtual april::Image* _generateBorderIconImage(chstr iconName, float borderThickness);
 
-		harray<StructuringImageContainer*> structuringImageContainers;
+		StructuringImageContainer* _createStructuringImageContainer(BorderMode borderMode, float borderThickness);
 
 	};
 

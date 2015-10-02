@@ -98,6 +98,7 @@ namespace atres
 	};
 
 	typedef SymbolDefinition IconDefinition;
+	typedef BorderCharacterDefinition BorderIconDefinition;
 
 	class atresExport RenderRectangle
 	{

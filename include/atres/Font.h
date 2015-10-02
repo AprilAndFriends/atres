@@ -52,18 +52,22 @@ namespace atres
 		HL_DEFINE_GET(BorderMode, borderMode, BorderMode);
 		virtual void setBorderMode(BorderMode value);
 		HL_DEFINE_IS(loaded, Loaded);
-		inline hmap<unsigned int, CharacterDefinition>& getCharacters() { return this->characters; }
-		inline hmap<unsigned int, harray<BorderCharacterDefinition> >& getBorderCharacters() { return this->borderCharacters; }
-		inline hmap<hstr, IconDefinition>& getIcons() { return this->icons; }
+		inline hmap<unsigned int, CharacterDefinition*>& getCharacters() { return this->characters; }
+		inline hmap<unsigned int, harray<BorderCharacterDefinition*> >& getBorderCharacters() { return this->borderCharacters; }
+		inline hmap<hstr, IconDefinition*>& getIcons() { return this->icons; }
+		inline hmap<hstr, harray<BorderIconDefinition*> >& getBorderIcons() { return this->borderIcons; }
 		harray<april::Texture*> getTextures();
 
 		virtual april::Texture* getTexture(unsigned int charCode);
 		virtual april::Texture* getBorderTexture(unsigned int charCode, float borderThickness);
 		virtual april::Texture* getTexture(chstr iconName);
+		virtual april::Texture* getBorderTexture(chstr iconName, float borderThickness);
 		virtual bool hasCharacter(unsigned int charCode);
 		virtual bool hasBorderCharacter(unsigned int charCode, float borderThickness);
 		virtual bool hasIcon(chstr iconName);
+		virtual bool hasBorderIcon(chstr iconName, float borderThickness);
 		BorderCharacterDefinition* getBorderCharacter(unsigned int charCode, float borderThickness);
+		BorderIconDefinition* getBorderIcon(chstr iconName, float borderThickness);
 
 		/// @note Not thread-safe!
 		float getTextWidth(chstr text);
@@ -74,6 +78,7 @@ namespace atres
 		RenderRectangle makeRenderRectangle(const grect& rect, grect area, unsigned int charCode);
 		RenderRectangle makeBorderRenderRectangle(const grect& rect, grect area, unsigned int charCode, float borderThickness);
 		RenderRectangle makeRenderRectangle(const grect& rect, grect area, chstr iconName);
+		RenderRectangle makeBorderRenderRectangle(const grect& rect, grect area, chstr iconName, float borderThickness);
 
 		DEPRECATED_ATTRIBUTE bool hasChar(unsigned int charCode) { return this->hasCharacter(charCode); }
 		DEPRECATED_ATTRIBUTE bool isNativeBorderSupported() { return (this->getBorderMode() != BorderMode::Software); }
@@ -90,9 +95,10 @@ namespace atres
 		bool loaded;
 		bool nativeBorderSupported;
 		BorderMode borderMode;
-		hmap<unsigned int, CharacterDefinition> characters;
-		hmap<unsigned int, harray<BorderCharacterDefinition> > borderCharacters;
-		hmap<hstr, IconDefinition> icons;
+		hmap<unsigned int, CharacterDefinition*> characters;
+		hmap<unsigned int, harray<BorderCharacterDefinition*> > borderCharacters;
+		hmap<hstr, IconDefinition*> icons;
+		hmap<hstr, harray<BorderIconDefinition*> > borderIcons;
 		harray<TextureContainer*> textureContainers;
 		harray<BorderTextureContainer*> borderTextureContainers;
 

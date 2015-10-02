@@ -38,16 +38,6 @@ namespace atres
 	{
 	}
 
-	void FontIconMap::setBorderMode(BorderMode value)
-	{
-		if (value != BorderMode::Software)
-		{
-			hlog::warnf(logTag, "BorderModes other than 'Software' are not supported in icon-font '%s'.", this->name.cStr());
-			return;
-		}
-		FontDynamic::setBorderMode(value);
-	}
-
 	bool FontIconMap::_isAllowAlphaTextures()
 	{
 		return false;

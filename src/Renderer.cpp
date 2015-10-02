@@ -81,8 +81,8 @@ namespace atres
 
 	Renderer* renderer = NULL;
 
-	Renderer::Renderer() : _characters(_dummyCharacters), _dummyCharacters(hmap<unsigned int, CharacterDefinition>()),
-		_icons(_dummyIcons), _dummyIcons(hmap<hstr, IconDefinition>())
+	Renderer::Renderer() : _characters(_dummyCharacters), _dummyCharacters(hmap<unsigned int, CharacterDefinition*>()),
+		_icons(_dummyIcons), _dummyIcons(hmap<hstr, IconDefinition*>())
 	{
 		this->colors["white"] = april::Color::White.hex();
 		this->colors["black"] = april::Color::Black.hex();
@@ -1265,7 +1265,7 @@ namespace atres
 					icon = true;
 					if (this->_icons.hasKey(this->_fontIconName))
 					{
-						this->_icon = &this->_icons[this->_fontIconName];
+						this->_icon = this->_icons[this->_fontIconName];
 						this->_scale = this->_iconFontScale * this->_textScale;
 						ax = this->_icon->advance * this->_scale;
 						aw = this->_icon->rect.w * this->_scale;
@@ -1299,7 +1299,7 @@ namespace atres
 				}
 				if (this->_characters.hasKey(code))
 				{
-					this->_character = &this->_characters[code];
+					this->_character = this->_characters[code];
 					this->_scale = this->_fontScale * this->_textScale;
 					if (wordX < -this->_character->bearing.x * this->_scale)
 					{
@@ -1524,14 +1524,14 @@ namespace atres
 					{
 						// checking the particular character
 						this->_scale = this->_iconFontScale * this->_textScale;
-						this->_icon = &this->_icons[this->_iconName];
+						this->_icon = this->_icons[this->_iconName];
 						area = this->_word.rect;
 						area.x += hmax(0.0f, width + this->_iconFontBearingX * this->_scale);
-						area.y += (this->_lineHeight - this->_height) * 0.5f;
+						area.y += (this->_lineHeight - this->_height) * 0.5f + this->_iconFontOffsetY * this->_scale;
 						area.w = this->_icon->rect.w * this->_scale;
 						area.h = this->_icon->rect.h * this->_scale;
 						area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
-						area.y += this->_iconFontOffsetY * this->_scale + (this->_height - area.h) * 0.5f;
+						area.y += (this->_height - this->_icon->rect.h * this->_scale) * 0.5f;
 						drawRect = rect;
 						if (this->_iconFont != NULL)
 						{
@@ -1547,7 +1547,7 @@ namespace atres
 									this->_shadowSequence.addRenderRectangle(this->_renderRect);
 									break;
 								case EFFECT_MODE_BORDER: // border
-									if (this->_iconFont->getBorderMode() == Font::BorderMode::Software || !this->_iconFont->hasBorderCharacter(this->_code, this->_borderFontThickness))
+									if (this->_iconFont->getBorderMode() == Font::BorderMode::Software || !this->_iconFont->hasBorderIcon(this->_iconName, this->_borderFontThickness))
 									{
 										this->_renderRect.dest = destination + gvec2(-this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
 										this->_borderSequence.addRenderRectangle(this->_renderRect);
@@ -1568,22 +1568,22 @@ namespace atres
 									}
 									else
 									{
-										this->_borderCharacter = this->_iconFont->getBorderCharacter(this->_code, this->_borderFontThickness);
+										this->_borderIcon = this->_iconFont->getBorderIcon(this->_iconName, this->_borderFontThickness);
 										area = this->_word.rect;
-										rectSize = (this->_borderCharacter->rect.getSize() - this->_character->rect.getSize()) * 0.5f * this->_scale;
-										area.x += hmax(0.0f, width + (this->_character->bearing.x) * this->_scale) - rectSize.x;
-										area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale - rectSize.y;
-										area.w = this->_borderCharacter->rect.w * this->_scale;
-										area.h = this->_borderCharacter->rect.h * this->_scale;
+										rectSize = (this->_borderIcon->rect.getSize() - this->_icon->rect.getSize()) * 0.5f * this->_scale;
+										area.x += hmax(0.0f, width + this->_iconFontBearingX * this->_scale) - rectSize.x;
+										area.y += (this->_lineHeight - this->_height) * 0.5f + this->_iconFontOffsetY * this->_scale - rectSize.y;
+										area.w = this->_borderIcon->rect.w * this->_scale;
+										area.h = this->_borderIcon->rect.h * this->_scale;
 										area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
+										area.y += (this->_height - this->_icon->rect.h * this->_scale) * 0.5f;
 										drawRect.x -= rectSize.x;
 										drawRect.y -= rectSize.y;
 										drawRect.w += rectSize.x * 2.0f;
 										drawRect.h += rectSize.y * 2.0f;
-										this->_renderRect = this->_font->makeBorderRenderRectangle(drawRect, area, this->_code, this->_borderFontThickness);
-										this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
+										this->_renderRect = this->_iconFont->makeBorderRenderRectangle(drawRect, area, this->_iconName, this->_borderFontThickness);
 										this->_borderSequence.addRenderRectangle(this->_renderRect);
-										this->_borderSequence.texture = this->_font->getBorderTexture(this->_code, this->_borderFontThickness);
+										this->_borderSequence.texture = this->_iconFont->getBorderTexture(this->_iconName, this->_borderFontThickness);
 									}
 									break;
 								}
@@ -1604,7 +1604,7 @@ namespace atres
 						{
 							// checking the particular character
 							this->_scale = this->_fontScale * this->_textScale;
-							this->_character = &this->_characters[this->_code];
+							this->_character = this->_characters[this->_code];
 							this->_borderThickness = this->_textBorderThickness * (this->globalOffsets ? 1.0f : this->_textScale);
 							this->_borderFontThickness = this->_borderThickness / this->_fontBaseScale;
 							area = this->_word.rect;
@@ -1653,7 +1653,7 @@ namespace atres
 											this->_borderCharacter = this->_font->getBorderCharacter(this->_code, this->_borderFontThickness);
 											area = this->_word.rect;
 											rectSize = (this->_borderCharacter->rect.getSize() - this->_character->rect.getSize()) * 0.5f * this->_scale;
-											area.x += hmax(0.0f, width + (this->_character->bearing.x) * this->_scale) - rectSize.x;
+											area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale) - rectSize.x;
 											area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale - rectSize.y;
 											area.w = this->_borderCharacter->rect.w * this->_scale;
 											area.h = this->_borderCharacter->rect.h * this->_scale;
@@ -2067,7 +2067,7 @@ namespace atres
 			{
 				if (this->_icons.hasKey(this->_fontIconName))
 				{
-					this->_icon = &this->_icons[this->_fontIconName];
+					this->_icon = this->_icons[this->_fontIconName];
 					this->_scale = this->_iconFontScale * this->_textScale;
 					ax = this->_icon->advance * this->_scale;
 					aw = this->_icon->rect.w * this->_scale;
@@ -2076,7 +2076,7 @@ namespace atres
 			}
 			else if (this->_characters.hasKey(code))
 			{
-				this->_character = &this->_characters[code];
+				this->_character = this->_characters[code];
 				this->_scale = this->_fontScale * this->_textScale;
 				if (lineX < -this->_character->bearing.x * this->_scale)
 				{

@@ -119,6 +119,15 @@ namespace atres
 		return Font::getTexture(iconName);
 	}
 
+	april::Texture* FontDynamic::getBorderTexture(chstr iconName, float borderThickness)
+	{
+		if (!this->_addBorderIconBitmap(iconName, borderThickness))
+		{
+			return NULL;
+		}
+		return Font::getBorderTexture(iconName, borderThickness);
+	}
+
 	bool FontDynamic::hasCharacter(unsigned int charCode)
 	{
 		this->_addCharacterBitmap(charCode);
@@ -135,6 +144,12 @@ namespace atres
 	{
 		this->_addIconBitmap(iconName);
 		return Font::hasIcon(iconName);
+	}
+
+	bool FontDynamic::hasBorderIcon(chstr iconName, float borderThickness)
+	{
+		this->_addBorderIconBitmap(iconName, borderThickness);
+		return Font::hasBorderIcon(iconName, borderThickness);
 	}
 
 	april::Texture* FontDynamic::_createTexture()
@@ -185,11 +200,11 @@ namespace atres
 		this->_tryCreateFirstTextureContainer();
 		TextureContainer* textureContainer = this->_addBitmap(this->textureContainers, initial, image, charWidth, charHeight, hsprintf("character 0x%X", charCode), hmax(leftOffset, 0), 0, SAFE_SPACE);
 		// character definition
-		CharacterDefinition character;
-		character.rect.set((float)textureContainer->penX, (float)textureContainer->penY, (float)charWidth, (float)charHeight);
-		character.advance = (float)advance;
-		character.bearing.set((float)bearingX, (float)(lineOffset + ascender + bearingY));
-		character.offsetY = (float)(lineOffset - topOffset);
+		CharacterDefinition* character = new CharacterDefinition();
+		character->rect.set((float)textureContainer->penX, (float)textureContainer->penY, (float)charWidth, (float)charHeight);
+		character->advance = (float)advance;
+		character->bearing.set((float)bearingX, (float)(lineOffset + ascender + bearingY));
+		character->offsetY = (float)(lineOffset - topOffset);
 		this->characters[charCode] = character;
 		textureContainer->characters += charCode;
 		textureContainer->penX += charWidth + CHARACTER_SPACE * 2;
@@ -216,7 +231,7 @@ namespace atres
 			return false;
 		}
 		// this makes sure that there is no vertical overlap between characters
-		BorderCharacterDefinition borderCharacter(borderThickness);
+		BorderCharacterDefinition* borderCharacter = new BorderCharacterDefinition(borderThickness);
 		int charWidth = image->w + SAFE_SPACE * 2;
 		int charHeight = image->h + SAFE_SPACE * 2;
 		// add bitmap to texture
@@ -229,7 +244,7 @@ namespace atres
 			this->borderTextureContainers += textureContainers(borderTextureContainers.size(), textureContainers.size() - borderTextureContainers.size()).cast<BorderTextureContainer*>();
 		}
 		// character definition
-		borderCharacter.rect.set((float)textureContainer->penX, (float)textureContainer->penY, (float)charWidth, (float)charHeight);
+		borderCharacter->rect.set((float)textureContainer->penX, (float)textureContainer->penY, (float)charWidth, (float)charHeight);
 		this->borderCharacters[charCode] += borderCharacter;
 		textureContainer->characters += charCode;
 		textureContainer->penX += charWidth + CHARACTER_SPACE * 2;
@@ -255,10 +270,50 @@ namespace atres
 		this->_tryCreateFirstTextureContainer();
 		TextureContainer* textureContainer = this->_addBitmap(this->textureContainers, initial, image, iconWidth, iconHeight, hsprintf("icon '%s'", iconName.cStr()));
 		// icon definition
-		IconDefinition icon;
-		icon.rect.set((float)textureContainer->penX, (float)textureContainer->penY, (float)iconWidth, (float)iconHeight);
-		icon.advance = (float)advance;
+		IconDefinition* icon = new IconDefinition();
+		icon->rect.set((float)textureContainer->penX, (float)textureContainer->penY, (float)iconWidth, (float)iconHeight);
+		icon->advance = (float)advance;
 		this->icons[iconName] = icon;
+		textureContainer->icons += iconName;
+		textureContainer->penX += iconWidth + CHARACTER_SPACE * 2;
+		return true;
+	}
+
+	bool FontDynamic::_addBorderIconBitmap(chstr iconName, float borderThickness)
+	{
+		if (Font::hasBorderIcon(iconName, borderThickness)) // cannot use current class' implementation since it would cause recursion
+		{
+			return true;
+		}
+		april::Image* image = NULL;
+		if (this->borderMode == BorderMode::FontNative)
+		{
+			image = this->_loadBorderIconImage(iconName, borderThickness);
+		}
+		else if (this->borderMode != BorderMode::Software)
+		{
+			image = this->_generateBorderIconImage(iconName, borderThickness);
+		}
+		if (image == NULL)
+		{
+			return false;
+		}
+		// this makes sure that there is no vertical overlap between characters
+		BorderIconDefinition* borderIcon = new BorderIconDefinition(borderThickness);
+		int iconWidth = image->w + SAFE_SPACE * 2;
+		int iconHeight = image->h + SAFE_SPACE * 2;
+		// add bitmap to texture
+		this->_tryCreateFirstBorderTextureContainer(borderThickness);
+		harray<BorderTextureContainer*> borderTextureContainers = this->_getBorderTextureContainers(borderThickness);
+		harray<TextureContainer*> textureContainers = borderTextureContainers.cast<TextureContainer*>();
+		TextureContainer* textureContainer = this->_addBitmap(textureContainers, false, image, iconWidth, iconHeight, "border-icon " + iconName, 0, 0, SAFE_SPACE);
+		if (textureContainers.size() > borderTextureContainers.size())
+		{
+			this->borderTextureContainers += textureContainers(borderTextureContainers.size(), textureContainers.size() - borderTextureContainers.size()).cast<BorderTextureContainer*>();
+		}
+		// character definition
+		borderIcon->rect.set((float)textureContainer->penX, (float)textureContainer->penY, (float)iconWidth, (float)iconHeight);
+		this->borderIcons[iconName] += borderIcon;
 		textureContainer->icons += iconName;
 		textureContainer->penX += iconWidth + CHARACTER_SPACE * 2;
 		return true;
@@ -345,55 +400,7 @@ namespace atres
 		StructuringImageContainer* structuringImageContainer = this->_findStructuringImageContainer(this->borderMode, borderThickness);
 		if (structuringImageContainer == NULL)
 		{
-			if (this->borderMode == BorderMode::PrerenderSquare)
-			{
-				structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::White, april::Image::FORMAT_ALPHA), this->borderMode, borderThickness);
-			}
-			else if (this->borderMode == BorderMode::PrerenderCircle)
-			{
-				structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::Clear, april::Image::FORMAT_ALPHA), this->borderMode, borderThickness);
-				int index = borderSize + borderSize * size;
-				structuringImageContainer->image->data[index] = 255;
-				unsigned char value = 0;
-				gvec2 vector;
-				gvec2 range(borderThickness, 0.0f);
-				for_iter (j, 0, borderSize + 1)
-				{
-					for_iter (i, j, borderSize + 1)
-					{
-						vector.set((float)i, (float)j);
-						value = (unsigned char)(hclamp(borderThickness - vector.length(), 0.0f, 1.0f) * 255);
-						structuringImageContainer->image->data[index + i + j * size] = value;
-						structuringImageContainer->image->data[index - i + j * size] = value;
-						structuringImageContainer->image->data[index + i - j * size] = value;
-						structuringImageContainer->image->data[index - i - j * size] = value;
-						structuringImageContainer->image->data[index + j + i * size] = value;
-						structuringImageContainer->image->data[index - j + i * size] = value;
-						structuringImageContainer->image->data[index + j - i * size] = value;
-						structuringImageContainer->image->data[index - j - i * size] = value;
-					}
-				}
-			}
-			else if (this->borderMode == BorderMode::PrerenderDiamond)
-			{
-				structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::Clear, april::Image::FORMAT_ALPHA), this->borderMode, borderThickness);
-				int index = borderSize + borderSize * size;
-				structuringImageContainer->image->data[index] = 255;
-				for_iter (j, 0, borderSize + 1)
-				{
-					for_iter (i, 0, borderSize + 1 - j)
-					{
-						structuringImageContainer->image->data[index + i + j * size] = 255;
-						structuringImageContainer->image->data[index - i + j * size] = 255;
-						structuringImageContainer->image->data[index + i - j * size] = 255;
-						structuringImageContainer->image->data[index - i - j * size] = 255;
-					}
-				}
-			}
-			if (structuringImageContainer != NULL)
-			{
-				this->structuringImageContainers += structuringImageContainer;
-			}
+			structuringImageContainer = this->_createStructuringImageContainer(this->borderMode, borderThickness);
 		}
 		if (structuringImageContainer == NULL)
 		{
@@ -414,6 +421,99 @@ namespace atres
 	april::Image* FontDynamic::_loadIconImage(chstr iconName, bool initial, int& advance)
 	{
 		return NULL;
+	}
+
+	april::Image* FontDynamic::_loadBorderIconImage(chstr iconName, float borderThickness)
+	{
+		return NULL;
+	}
+
+	april::Image* FontDynamic::_generateBorderIconImage(chstr iconName, float borderThickness)
+	{
+		int advance = 0;
+		april::Image* iconImage = this->_loadIconImage(iconName, false, advance);
+		if (iconImage == NULL)
+		{
+			return NULL;
+		}
+		int borderSize = hceil(borderThickness);
+		int size = 1 + borderSize * 2;
+		StructuringImageContainer* structuringImageContainer = this->_findStructuringImageContainer(this->borderMode, borderThickness);
+		if (structuringImageContainer == NULL)
+		{
+			structuringImageContainer = this->_createStructuringImageContainer(this->borderMode, borderThickness);
+		}
+		if (structuringImageContainer == NULL)
+		{
+			delete iconImage;
+			return NULL;
+		}
+		april::Image* image = april::Image::create(iconImage->w + borderSize * 2, iconImage->h + borderSize * 2, april::Color::Clear, april::Image::FORMAT_ALPHA);
+		image->write(0, 0, iconImage->w, iconImage->h, borderSize, borderSize, iconImage);
+		delete iconImage;
+		if (!image->dilate(structuringImageContainer->image))
+		{
+			delete image;
+			image = NULL;
+		}
+		return image;
+	}
+
+	FontDynamic::StructuringImageContainer* FontDynamic::_createStructuringImageContainer(BorderMode borderMode, float borderThickness)
+	{
+		StructuringImageContainer* structuringImageContainer = NULL;
+		int borderSize = hceil(borderThickness);
+		int size = 1 + borderSize * 2;
+		if (this->borderMode == BorderMode::PrerenderSquare)
+		{
+			structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::White, april::Image::FORMAT_ALPHA), this->borderMode, borderThickness);
+		}
+		else if (this->borderMode == BorderMode::PrerenderCircle)
+		{
+			structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::Clear, april::Image::FORMAT_ALPHA), this->borderMode, borderThickness);
+			int index = borderSize + borderSize * size;
+			structuringImageContainer->image->data[index] = 255;
+			unsigned char value = 0;
+			gvec2 vector;
+			gvec2 range(borderThickness, 0.0f);
+			for_iter(j, 0, borderSize + 1)
+			{
+				for_iter(i, j, borderSize + 1)
+				{
+					vector.set((float)i, (float)j);
+					value = (unsigned char)(hclamp(borderThickness - vector.length(), 0.0f, 1.0f) * 255);
+					structuringImageContainer->image->data[index + i + j * size] = value;
+					structuringImageContainer->image->data[index - i + j * size] = value;
+					structuringImageContainer->image->data[index + i - j * size] = value;
+					structuringImageContainer->image->data[index - i - j * size] = value;
+					structuringImageContainer->image->data[index + j + i * size] = value;
+					structuringImageContainer->image->data[index - j + i * size] = value;
+					structuringImageContainer->image->data[index + j - i * size] = value;
+					structuringImageContainer->image->data[index - j - i * size] = value;
+				}
+			}
+		}
+		else if (this->borderMode == BorderMode::PrerenderDiamond)
+		{
+			structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::Clear, april::Image::FORMAT_ALPHA), this->borderMode, borderThickness);
+			int index = borderSize + borderSize * size;
+			structuringImageContainer->image->data[index] = 255;
+			for_iter(j, 0, borderSize + 1)
+			{
+				for_iter(i, 0, borderSize + 1 - j)
+				{
+					structuringImageContainer->image->data[index + i + j * size] = 255;
+					structuringImageContainer->image->data[index - i + j * size] = 255;
+					structuringImageContainer->image->data[index + i - j * size] = 255;
+					structuringImageContainer->image->data[index - i - j * size] = 255;
+				}
+			}
+		}
+		if (structuringImageContainer != NULL)
+		{
+			this->structuringImageContainers += structuringImageContainer;
+		}
+		return structuringImageContainer;
 	}
 
 }

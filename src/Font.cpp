@@ -43,8 +43,28 @@ namespace atres
 
 	Font::~Font()
 	{
-		this->characters.clear();
-		this->icons.clear();
+		foreach_map (unsigned int, CharacterDefinition*, it, this->characters)
+		{
+			delete it->second;
+		}
+		foreach_map (unsigned int, harray<BorderCharacterDefinition*>, it, this->borderCharacters)
+		{
+			foreach (BorderCharacterDefinition*, it2, it->second)
+			{
+				delete (*it2);
+			}
+		}
+		foreach_map (hstr, IconDefinition*, it, this->icons)
+		{
+			delete it->second;
+		}
+		foreach_map (hstr, harray<BorderIconDefinition*>, it, this->borderIcons)
+		{
+			foreach (BorderIconDefinition*, it2, it->second)
+			{
+				delete (*it2);
+			}
+		}
 		foreach (TextureContainer*, it, this->textureContainers)
 		{
 			delete (*it);
@@ -195,6 +215,18 @@ namespace atres
 		return NULL;
 	}
 
+	april::Texture* Font::getBorderTexture(chstr iconName, float borderThickness)
+	{
+		foreach (BorderTextureContainer*, it, this->borderTextureContainers)
+		{
+			if (heqf((*it)->borderThickness, borderThickness, THICKNESS_TOLERANCE) && (*it)->icons.has(iconName))
+			{
+				return (*it)->texture;
+			}
+		}
+		return NULL;
+	}
+
 	bool Font::hasCharacter(unsigned int charCode)
 	{
 		return this->characters.hasKey(charCode);
@@ -210,13 +242,32 @@ namespace atres
 		return this->icons.hasKey(iconName);
 	}
 
+	bool Font::hasBorderIcon(chstr iconName, float borderThickness)
+	{
+		return (this->getBorderIcon(iconName, borderThickness) != NULL);
+	}
+
 	BorderCharacterDefinition* Font::getBorderCharacter(unsigned int charCode, float borderThickness)
 	{
-		foreach (BorderCharacterDefinition, it, this->borderCharacters[charCode])
+		harray<BorderCharacterDefinition*> definitions = this->borderCharacters[charCode];
+		foreach (BorderCharacterDefinition*, it, definitions)
 		{
-			if (heqf((*it).borderThickness, borderThickness, THICKNESS_TOLERANCE))
+			if (heqf((*it)->borderThickness, borderThickness, THICKNESS_TOLERANCE))
 			{
-				return &(*it);
+				return (*it);
+			}
+		}
+		return NULL;
+	}
+
+	BorderIconDefinition* Font::getBorderIcon(chstr iconName, float borderThickness)
+	{
+		harray<BorderIconDefinition*> definitions = this->borderIcons[iconName];
+		foreach (BorderIconDefinition*, it, definitions)
+		{
+			if (heqf((*it)->borderThickness, borderThickness, THICKNESS_TOLERANCE))
+			{
+				return (*it);
 			}
 		}
 		return NULL;
@@ -242,7 +293,6 @@ namespace atres
 	static float _aw = 0.0f;
 	static float _scale = 1.0f;
 	static CharacterDefinition* _character = NULL;
-	static BorderCharacterDefinition* _borderCharacter = NULL;
 	static std::basic_string<unsigned int> _chars;
 
 	float Font::getTextWidth(chstr text)
@@ -256,7 +306,7 @@ namespace atres
 		_chars = text.uStr();
 		for_itert (unsigned int, i, 0, _chars.size())
 		{
-			_character = &this->characters[_chars[i]];
+			_character = this->characters[_chars[i]];
 			if (_textX < -_character->bearing.x * _scale)
 			{
 				_ax = (_character->advance - _character->bearing.x) * _scale;
@@ -283,7 +333,7 @@ namespace atres
 		_chars = text.uStr();
 		for_itert (unsigned int, i, 0, _chars.size())
 		{
-			_character = &this->characters[_chars[i]];
+			_character = this->characters[_chars[i]];
 			if (_textX < -_character->bearing.x * _scale)
 			{
 				_ax = (_character->advance - _character->bearing.x) * _scale;
@@ -335,10 +385,9 @@ namespace atres
 		// if destination rectangle not entirely inside drawing area
 		if (rect.intersects(_result.dest))
 		{
-			_character = &this->characters[charCode];
 			_texture = this->getTexture(charCode);
 			_textureInvertedSize.set(1.0f / _texture->getWidth(), 1.0f / _texture->getHeight());
-			this->_applyCutoff(rect, area, _character->rect/*, _character->offsetY * _textureInvertedSize.y*/);
+			this->_applyCutoff(rect, area, this->characters[charCode]->rect);
 		}
 		return _result;
 	}
@@ -350,10 +399,9 @@ namespace atres
 		// if destination rectangle not entirely inside drawing area
 		if (rect.intersects(_result.dest))
 		{
-			_borderCharacter = this->getBorderCharacter(charCode, borderThickness);
 			_texture = this->getBorderTexture(charCode, borderThickness);
 			_textureInvertedSize.set(1.0f / _texture->getWidth(), 1.0f / _texture->getHeight());
-			this->_applyCutoff(rect, area, _borderCharacter->rect);
+			this->_applyCutoff(rect, area, this->getBorderCharacter(charCode, borderThickness)->rect);
 		}
 		return _result;
 	}
@@ -367,7 +415,21 @@ namespace atres
 		{
 			_texture = this->getTexture(iconName);
 			_textureInvertedSize.set(1.0f / _texture->getWidth(), 1.0f / _texture->getHeight());
-			this->_applyCutoff(rect, area, this->icons[iconName].rect);
+			this->_applyCutoff(rect, area, this->icons[iconName]->rect);
+		}
+		return _result;
+	}
+
+	RenderRectangle Font::makeBorderRenderRectangle(const grect& rect, grect area, chstr iconName, float borderThickness)
+	{
+		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
+		_result.dest = area;
+		// if destination rectangle not entirely inside drawing area
+		if (rect.intersects(_result.dest))
+		{
+			_texture = this->getBorderTexture(iconName, borderThickness);
+			_textureInvertedSize.set(1.0f / _texture->getWidth(), 1.0f / _texture->getHeight());
+			this->_applyCutoff(rect, area, this->getBorderIcon(iconName, borderThickness)->rect);
 		}
 		return _result;
 	}
