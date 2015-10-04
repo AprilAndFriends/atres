@@ -407,7 +407,7 @@ namespace atres
 			delete characterImage;
 			return NULL;
 		}
-		if (characterImage->format != april::Image::FORMAT_ALPHA)
+		if (characterImage->format != april::Image::FORMAT_ALPHA && characterImage->format != april::Image::FORMAT_GRAYSCALE)
 		{
 			april::Image* alphaImage = characterImage->extractAlpha();
 			delete characterImage;
@@ -454,7 +454,7 @@ namespace atres
 			delete iconImage;
 			return NULL;
 		}
-		if (iconImage->format != april::Image::FORMAT_ALPHA)
+		if (iconImage->format != april::Image::FORMAT_ALPHA && iconImage->format != april::Image::FORMAT_GRAYSCALE)
 		{
 			april::Image* alphaImage = iconImage->extractAlpha();
 			delete iconImage;
