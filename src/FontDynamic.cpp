@@ -395,8 +395,6 @@ namespace atres
 		{
 			return NULL;
 		}
-		int borderSize = hceil(borderThickness);
-		int size = 1 + borderSize * 2;
 		StructuringImageContainer* structuringImageContainer = this->_findStructuringImageContainer(this->borderMode, borderThickness);
 		if (structuringImageContainer == NULL)
 		{
@@ -413,6 +411,7 @@ namespace atres
 			delete characterImage;
 			characterImage = alphaImage;
 		}
+		int borderSize = hceil(borderThickness);
 		april::Image* image = april::Image::create(characterImage->w + borderSize * 2, characterImage->h + borderSize * 2, april::Color::Clear, april::Image::FORMAT_ALPHA);
 		image->write(0, 0, characterImage->w, characterImage->h, borderSize, borderSize, characterImage);
 		delete characterImage;
@@ -442,8 +441,6 @@ namespace atres
 		{
 			return NULL;
 		}
-		int borderSize = hceil(borderThickness);
-		int size = 1 + borderSize * 2;
 		StructuringImageContainer* structuringImageContainer = this->_findStructuringImageContainer(this->borderMode, borderThickness);
 		if (structuringImageContainer == NULL)
 		{
@@ -460,6 +457,7 @@ namespace atres
 			delete iconImage;
 			iconImage = alphaImage;
 		}
+		int borderSize = hceil(borderThickness);
 		april::Image* image = april::Image::create(iconImage->w + borderSize * 2, iconImage->h + borderSize * 2, april::Color::Clear, april::Image::FORMAT_ALPHA);
 		image->write(0, 0, iconImage->w, iconImage->h, borderSize, borderSize, iconImage);
 		delete iconImage;
