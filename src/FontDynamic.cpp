@@ -407,10 +407,16 @@ namespace atres
 			delete characterImage;
 			return NULL;
 		}
+		if (characterImage->format != april::Image::FORMAT_ALPHA)
+		{
+			april::Image* alphaImage = characterImage->extractAlpha();
+			delete characterImage;
+			characterImage = alphaImage;
+		}
 		april::Image* image = april::Image::create(characterImage->w + borderSize * 2, characterImage->h + borderSize * 2, april::Color::Clear, april::Image::FORMAT_ALPHA);
 		image->write(0, 0, characterImage->w, characterImage->h, borderSize, borderSize, characterImage);
 		delete characterImage;
-		if (!image->dilate(structuringImageContainer->image))
+		if (image != NULL && !image->dilate(structuringImageContainer->image))
 		{
 			delete image;
 			image = NULL;
@@ -448,10 +454,16 @@ namespace atres
 			delete iconImage;
 			return NULL;
 		}
+		if (iconImage->format != april::Image::FORMAT_ALPHA)
+		{
+			april::Image* alphaImage = iconImage->extractAlpha();
+			delete iconImage;
+			iconImage = alphaImage;
+		}
 		april::Image* image = april::Image::create(iconImage->w + borderSize * 2, iconImage->h + borderSize * 2, april::Color::Clear, april::Image::FORMAT_ALPHA);
 		image->write(0, 0, iconImage->w, iconImage->h, borderSize, borderSize, iconImage);
 		delete iconImage;
-		if (!image->dilate(structuringImageContainer->image))
+		if (image != NULL && !image->dilate(structuringImageContainer->image))
 		{
 			delete image;
 			image = NULL;
@@ -476,9 +488,9 @@ namespace atres
 			unsigned char value = 0;
 			gvec2 vector;
 			gvec2 range(borderThickness, 0.0f);
-			for_iter(j, 0, borderSize + 1)
+			for_iter (j, 0, borderSize + 1)
 			{
-				for_iter(i, j, borderSize + 1)
+				for_iter (i, j, borderSize + 1)
 				{
 					vector.set((float)i, (float)j);
 					value = (unsigned char)(hclamp(borderThickness - vector.length(), 0.0f, 1.0f) * 255);
@@ -498,9 +510,9 @@ namespace atres
 			structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::Clear, april::Image::FORMAT_ALPHA), this->borderMode, borderThickness);
 			int index = borderSize + borderSize * size;
 			structuringImageContainer->image->data[index] = 255;
-			for_iter(j, 0, borderSize + 1)
+			for_iter (j, 0, borderSize + 1)
 			{
-				for_iter(i, 0, borderSize + 1 - j)
+				for_iter (i, 0, borderSize + 1 - j)
 				{
 					structuringImageContainer->image->data[index + i + j * size] = 255;
 					structuringImageContainer->image->data[index - i + j * size] = 255;

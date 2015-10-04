@@ -152,7 +152,7 @@ namespace atres
 		this->_scale = 1.0f;
 		this->_borderFontThickness = 1.0f;
 		this->_borderThickness = 1.0f;
-		this->_textBorderThickness = this->borderThickness;
+		this->_textBorderThickness = 1.0f;
 		this->_effectMode = 0;
 		this->_alpha = -1;
 		// cache
@@ -762,7 +762,7 @@ namespace atres
 		this->_scale = 1.0f;
 		this->_borderFontThickness = 1.0f;
 		this->_borderThickness = 1.0f;
-		this->_textBorderThickness = this->borderThickness;
+		this->_textBorderThickness = 1.0f;
 	}
 
 	void Renderer::_initializeRenderSequences()
@@ -970,7 +970,7 @@ namespace atres
 					if (this->_currentTag.data.count(',') == 1)
 					{
 						this->_currentTag.data.split(',', this->_borderColorString, this->_borderThicknessString);
-						this->_textBorderThickness = this->borderThickness * (float)this->_borderThicknessString;
+						this->_textBorderThickness = (float)this->_borderThicknessString;
 					}
 					else
 					{
@@ -1108,7 +1108,7 @@ namespace atres
 						if (this->_nextTag.data.count(',') == 1)
 						{
 							this->_nextTag.data.split(',', this->_borderColorString, this->_borderThicknessString);
-							this->_textBorderThickness = this->borderThickness * (float)this->_borderThicknessString;
+							this->_textBorderThickness = (float)this->_borderThicknessString;
 						}
 						else
 						{
@@ -1525,6 +1525,8 @@ namespace atres
 						// checking the particular character
 						this->_scale = this->_iconFontScale * this->_textScale;
 						this->_icon = this->_icons[this->_iconName];
+						this->_borderThickness = this->borderThickness * this->_textBorderThickness * (this->globalOffsets ? 1.0f : this->_textScale);
+						this->_borderFontThickness = this->_borderThickness;
 						area = this->_word.rect;
 						area.x += hmax(0.0f, width + this->_iconFontBearingX * this->_scale);
 						area.y += (this->_lineHeight - this->_height) * 0.5f + this->_iconFontOffsetY * this->_scale;
@@ -1605,7 +1607,7 @@ namespace atres
 							// checking the particular character
 							this->_scale = this->_fontScale * this->_textScale;
 							this->_character = this->_characters[this->_code];
-							this->_borderThickness = this->_textBorderThickness * (this->globalOffsets ? 1.0f : this->_textScale);
+							this->_borderThickness = this->borderThickness * this->_textBorderThickness * (this->globalOffsets ? 1.0f : this->_textScale);
 							this->_borderFontThickness = this->_borderThickness / this->_fontBaseScale;
 							area = this->_word.rect;
 							area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale);
