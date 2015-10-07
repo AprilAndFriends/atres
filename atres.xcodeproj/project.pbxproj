@@ -361,6 +361,7 @@
 			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
 					"$(inherited)",
@@ -377,6 +378,7 @@
 		C981CCCD132AEF8C0072B5A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
@@ -399,6 +401,7 @@
 			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -437,6 +440,7 @@
 			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
 					"$(inherited)",
@@ -507,6 +511,7 @@
 			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -525,6 +530,7 @@
 			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
@@ -542,6 +548,7 @@
 			baseConfigurationReference = D1681BA918D7684A0088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
