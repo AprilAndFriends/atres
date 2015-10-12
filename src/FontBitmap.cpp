@@ -51,6 +51,7 @@ namespace atres
 				{
 					textureContainer = new atres::TextureContainer();
 					textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::joinPath(path, line.replaced("Texture=", "")), april::Texture::TYPE_IMMUTABLE, april::Texture::LOAD_ASYNC);
+					textureContainer->texture->loadMetaData();
 					this->textureContainers += textureContainer;
 				}
 				else if (line.startsWith("MultiTexture="))
@@ -60,6 +61,7 @@ namespace atres
 					{
 						textureContainer = new atres::TextureContainer();
 						textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::joinPath(path, (*it)), april::Texture::TYPE_IMMUTABLE, april::Texture::LOAD_ASYNC);
+						textureContainer->texture->loadMetaData();
 						this->textureContainers += textureContainer;
 					}
 					multiTexture = true;
