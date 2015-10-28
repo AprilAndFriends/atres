@@ -1749,21 +1749,13 @@ namespace atres
 		april::rendersys->setTexture(sequence.texture);
 		if (sequence.texture->getFormat() == april::Image::FORMAT_ALPHA)
 		{
-			april::rendersys->setTextureColorMode(april::CM_ALPHA_MAP);
+			april::rendersys->setColorMode(april::CM_ALPHA_MAP);
 		}
 		else
 		{
-			april::rendersys->setTextureColorMode(april::CM_DEFAULT);
+			april::rendersys->setColorMode(april::CM_DEFAULT);
 		}
-		if (color == april::Color::White)
-		{
-			april::rendersys->render(april::RO_TRIANGLE_LIST, (april::TexturedVertex*)sequence.vertices, sequence.vertices.size());
-		}
-		else
-		{
-			april::rendersys->render(april::RO_TRIANGLE_LIST, (april::TexturedVertex*)sequence.vertices, sequence.vertices.size(), color);
-		}
-		april::rendersys->setTextureColorMode(april::CM_DEFAULT);
+		april::rendersys->render(april::RO_TRIANGLE_LIST, (april::TexturedVertex*)sequence.vertices, sequence.vertices.size(), color);
 	}
 
 	bool Renderer::_checkTextures()
