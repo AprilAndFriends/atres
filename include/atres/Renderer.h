@@ -122,7 +122,6 @@ namespace atres
 		Cache<CacheEntryText>* cacheTextUnformatted;
 		Cache<CacheEntryLines>* cacheLines;
 		Cache<CacheEntryLines>* cacheLinesUnformatted;
-		Cache<CacheEntryLine>* cacheLine;
 
 		void _updateCache();
 

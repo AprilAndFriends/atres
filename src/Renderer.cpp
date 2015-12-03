@@ -160,7 +160,6 @@ namespace atres
 		this->cacheTextUnformatted = new Cache<CacheEntryText>();
 		this->cacheLines = new Cache<CacheEntryLines>();
 		this->cacheLinesUnformatted = new Cache<CacheEntryLines>();
-		this->cacheLine = new Cache<CacheEntryLine>();
 	}
 
 	Renderer::~Renderer()
@@ -170,7 +169,6 @@ namespace atres
 		delete this->cacheTextUnformatted;
 		delete this->cacheLines;
 		delete this->cacheLinesUnformatted;
-		delete this->cacheLine;
 	}
 
 /******* PROPERTIES ****************************************************/
@@ -275,7 +273,6 @@ namespace atres
 		this->cacheTextUnformatted->setMaxSize(value);
 		this->cacheLines->setMaxSize(value);
 		this->cacheLinesUnformatted->setMaxSize(value);
-		this->cacheLine->setMaxSize(value);
 	}
 	
 /******* FONT **********************************************************/
@@ -399,7 +396,6 @@ namespace atres
 		this->cacheTextUnformatted->update();
 		this->cacheLines->update();
 		this->cacheLinesUnformatted->update();
-		this->cacheLine->update();
 	}
 	
 	void Renderer::clearCache()
@@ -423,11 +419,6 @@ namespace atres
 		{
 			hlog::writef(logTag, "Clearing %d unformatted lines cache entries...", this->cacheLinesUnformatted->size());
 			this->cacheLinesUnformatted->clear();
-		}
-		if (this->cacheLine->size() > 0)
-		{
-			hlog::writef(logTag, "Clearing %d line calculation cache entries...", this->cacheLine->size());
-			this->cacheLine->clear();
 		}
 	}
 	
