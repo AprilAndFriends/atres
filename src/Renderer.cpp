@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -72,7 +72,7 @@
 #define EFFECT_MODE_SHADOW 1
 #define EFFECT_MODE_BORDER 2
 
-#define CHECK_RECT_SIZE 100000.0f
+#define CHECK_RECT_SIZE 100000.0f // because of the 7-digit precision in floats
 
 namespace atres
 {
@@ -1903,203 +1903,61 @@ namespace atres
 	
 	float Renderer::getTextWidth(chstr fontName, chstr text)
 	{
+		float result = 0.0f;
 		if (text != "")
 		{
-			harray<FormatTag> tags;
-			hstr unformattedText = this->prepareFormatting(fontName, text, tags);
-			if (unformattedText != "")
+			static grect defaultRect(0.0f, 0.0f, CHECK_RECT_SIZE, CHECK_RECT_SIZE);
+			this->_lines = this->makeRenderLines(fontName, defaultRect, text);
+			foreach (RenderLine, it, this->_lines)
 			{
-				float w = 0.0f;
-				harray<hstr> lines = unformattedText.split('\n', -1, true);
-				foreach (hstr, it, lines)
-				{
-					w = hmax(w, this->getFittingLine(fontName, grect(0.0f, 0.0f, CHECK_RECT_SIZE, 1.0f), (*it), tags).rect.w);
-				}
-				return w;
+				result = hmax(result, (*it).rect.w);
 			}
 		}
-		return 0.0f;
+		return result;
+	}
+
+	float Renderer::getTextWidthUnformatted(chstr fontName, chstr text)
+	{
+		return this->getTextWidth(fontName, "[-]" + text);
 	}
 
 	float Renderer::getTextHeight(chstr fontName, chstr text, float maxWidth)
 	{
 		if (text != "" && maxWidth > 0.0f)
 		{
-			harray<FormatTag> tags;
-			hstr unformattedText = this->prepareFormatting(fontName, text, tags);
-			if (unformattedText != "")
-			{
-				harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, CHECK_RECT_SIZE), unformattedText, tags, Horizontal::LeftWrapped, Vertical::Top);
-				Font* font = this->getFont(fontName);
-				return (lines.size() * font->getLineHeight() + font->getInternalDescender());
-			}
+			static grect defaultRect(0.0f, 0.0f, 0.0f, CHECK_RECT_SIZE);
+			static Font* font = NULL;
+			defaultRect.w = maxWidth;
+			this->_lines = this->makeRenderLines(fontName, defaultRect, text);
+			font = this->getFont(fontName);
+			return (this->_lines.size() * font->getLineHeight() + font->getInternalDescender());
 		}
 		return 0.0f;
 	}
 	
-	int Renderer::getTextCount(chstr fontName, chstr text, float maxWidth)
-	{
-		if (text != "" && maxWidth > 0.0f)
-		{
-			harray<FormatTag> tags;
-			hstr unformattedText = this->prepareFormatting(fontName, text, tags);
-			if (unformattedText != "")
-			{
-				return this->getFittingLine(fontName, grect(0.0f, 0.0f, maxWidth, 1.0f), unformattedText, tags).text.size();
-			}
-		}
-		return 0;
-	}
-	
-	float Renderer::getTextWidthUnformatted(chstr fontName, chstr text)
-	{
-		if (text != "")
-		{
-			harray<FormatTag> tags = this->prepareTags(fontName);
-			float w = 0.0f;
-			harray<hstr> lines = text.split('\n', -1, true);
-			grect rect(0.0f, 0.0f, CHECK_RECT_SIZE, 1.0f);
-			foreach (hstr, it, lines)
-			{
-				w = hmax(w, this->getFittingLine(fontName, rect, (*it), tags).rect.w);
-			}
-			return w;
-		}
-		return 0.0f;
-	}
-
 	float Renderer::getTextHeightUnformatted(chstr fontName, chstr text, float maxWidth)
 	{
-		if (text != "" && maxWidth > 0.0f)
-		{
-			harray<FormatTag> tags = this->prepareTags(fontName);
-			harray<RenderLine> lines = this->createRenderLines(grect(0.0f, 0.0f, maxWidth, CHECK_RECT_SIZE), text, tags, Horizontal::LeftWrapped, Vertical::Top);
-			Font* font = this->getFont(fontName);
-			return (lines.size() * font->getLineHeight() + font->getDescender());
-		}
-		return 0.0f;
-	}
-	
-	int Renderer::getTextCountUnformatted(chstr fontName, chstr text, float maxWidth)
-	{
-		if (text != "" && maxWidth > 0.0f)
-		{
-			harray<FormatTag> tags = this->prepareTags(fontName);
-			return this->getFittingLine(fontName, grect(0.0f, 0.0f, maxWidth, 1.0f), text, tags).text.size();
-		}
-		return 0;
-	}
-	
-	hstr Renderer::prepareFormatting(chstr fontName, chstr text, harray<FormatTag>& tags)
-	{
-		hstr unformattedText = this->analyzeFormatting(text, tags);
-		FormatTag tag;
-		tag.type = FormatTag::Type::Font;
-		tag.data = fontName;
-		tags.addFirst(tag);
-		return unformattedText;
-	}
-	
-	harray<FormatTag> Renderer::prepareTags(chstr fontName)
-	{
-		harray<FormatTag> tags;
-		FormatTag tag;
-		tag.type = FormatTag::Type::Font;
-		tag.data = fontName;
-		tags.addFirst(tag);
-		return tags;
-	}
-	
-	RenderLine Renderer::getFittingLine(chstr fontName, grect rect, chstr text, harray<FormatTag> tags)
-	{
-		this->_cacheEntryLine.set(text, fontName, rect.getSize());
-		if (!this->cacheLine->get(this->_cacheEntryLine))
-		{
-			this->_cacheEntryLine.value = this->_calculateFittingLine(rect, text, tags);
-			this->cacheLine->add(this->_cacheEntryLine);
-			this->cacheLine->update();
-		}
-		return this->_cacheEntryLine.value;
+		return this->getTextHeight(fontName, "[-]" + text, maxWidth);
 	}
 
-	RenderLine Renderer::_calculateFittingLine(grect rect, chstr text, harray<FormatTag> tags)
+	float Renderer::getTextWidth(chstr text)
 	{
-		this->analyzeText(tags.first().data, text);
-		this->_initializeFormatTags(tags);
-		int actualSize = text.indexOf('\0');
-		if (actualSize < 0)
-		{
-			actualSize = text.size();
-		}
-		else if (actualSize < text.size())
-		{
-			hlog::warnf(logTag, "Text '%s' has \\0 character before the actual end!", text.cStr());
-		}
+		return this->getTextWidth("", text);
+	}
 
-		unsigned int code = 0;
-		float ax = 0.0f;
-		float aw = 0.0f;
-		float lineX = 0.0f;
-		float lineW = 0.0f;
-		float addW = 0.0f;
-		int i = 0;
-		int byteSize = 0;
-		RenderLine result;
-		result.rect.h = this->_height;
-		
-		while (i < actualSize) // checking all characters
-		{
-			code = text.firstUnicodeChar(i, &byteSize);
-			if (code == '\n')
-			{
-				break;
-			}
-			this->_checkFormatTags(text, i);
-			ax = 0.0f;
-			aw = 0.0f;
-			addW = 0.0f;
-			if (this->_iconFont != NULL)
-			{
-				if (this->_icons.hasKey(this->_fontIconName))
-				{
-					this->_icon = this->_icons[this->_fontIconName];
-					this->_scale = this->_iconFontScale * this->_textScale;
-					ax = this->_icon->advance * this->_scale;
-					aw = this->_icon->rect.w * this->_scale;
-					addW = hmax(ax, aw);
-				}
-			}
-			else if (this->_characters.hasKey(code))
-			{
-				this->_character = this->_characters[code];
-				this->_scale = this->_fontScale * this->_textScale;
-				if (lineX < -this->_character->bearing.x * this->_scale)
-				{
-					ax = (this->_character->advance - this->_character->bearing.x) * this->_scale;
-					aw = this->_character->rect.w * this->_scale;
-				}
-				else
-				{
-					ax = this->_character->advance * this->_scale;
-					aw = (this->_character->rect.w + this->_character->bearing.x) * this->_scale;
-				}
-				addW = hmax(ax, aw);
-			}
-			else
-			{
-				addW = this->_font->getHeight() * 0.5f;
-			}
-			if (lineX + addW > rect.w) // doesn't fit any more in this line
-			{
-				break;
-			}
-			lineW = lineX + addW;
-			lineX += ax;
-			i += byteSize;
-		}
-		result.text = text(0, i);
-		result.rect.w = lineW;
-		return result;
+	float Renderer::getTextWidthUnformatted(chstr text)
+	{
+		return this->getTextWidth("", "[-]" + text);
+	}
+
+	float Renderer::getTextHeight(chstr text, float maxWidth)
+	{
+		return this->getTextHeight("", text, maxWidth);
+	}
+
+	float Renderer::getTextHeightUnformatted(chstr text, float maxWidth)
+	{
+		return this->getTextHeight("", "[-]" + text, maxWidth);
 	}
 
 }

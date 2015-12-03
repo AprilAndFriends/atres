@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -96,21 +96,15 @@ namespace atres
 			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
 
 		float getTextWidth(chstr fontName, chstr text);
-		float getTextHeight(chstr fontName, chstr text, float maxWidth);
-		int getTextCount(chstr fontName, chstr text, float maxWidth);
 		float getTextWidthUnformatted(chstr fontName, chstr text);
+		float getTextHeight(chstr fontName, chstr text, float maxWidth);
 		float getTextHeightUnformatted(chstr fontName, chstr text, float maxWidth);
-		int getTextCountUnformatted(chstr fontName, chstr text, float maxWidth);
-		hstr prepareFormatting(chstr fontName, chstr text, harray<FormatTag>& tags);
-		harray<FormatTag> prepareTags(chstr fontName);
-		RenderLine getFittingLine(chstr fontName, grect rect, chstr text, harray<FormatTag> tags);
-		void clearCache();
+		float getTextWidth(chstr text);
+		float getTextWidthUnformatted(chstr text);
+		float getTextHeight(chstr text, float maxWidth);
+		float getTextHeightUnformatted(chstr text, float maxWidth);
 
-		/// @brief When turned off, this turns justified text into left_wrapped. This is to counter languages with problematic characters.
-		DEPRECATED_ATTRIBUTE bool isJustifiedEnabled() { return (this->justifiedDefault == Horizontal::Justified); }
-		DEPRECATED_ATTRIBUTE void setJustifiedEnabled(bool value) { this->setJustifiedDefault(value ? Horizontal::Justified : Horizontal::LeftWrapped); }
-		DEPRECATED_ATTRIBUTE float getBorderOffset() { return this->getBorderThickness(); }
-		DEPRECATED_ATTRIBUTE void setBorderOffset(float value) { this->setBorderThickness(value); }
+		void clearCache();
 
 	protected:
 		hmap<hstr, Font*> fonts;
@@ -138,7 +132,6 @@ namespace atres
 		void _checkFormatTags(chstr text, int index);
 		void _processFormatTags(chstr text, int index);
 		void _checkSequenceSwitch();
-		RenderLine _calculateFittingLine(grect rect, chstr text, harray<FormatTag> tags);
 		bool _checkTextures();
 		harray<FormatTag> _makeDefaultTags(april::Color color, chstr fontName, hstr& text);
 		harray<FormatTag> _makeDefaultTagsUnformatted(april::Color color, chstr fontName);

@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -8,7 +8,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines all functions for text rendering.
+/// Defines all accessible functions for atres.
 
 #ifndef ATRES_H
 #define ATRES_H
