@@ -1919,7 +1919,7 @@ namespace atres
 			static grect defaultRect(0.0f, 0.0f, 0.0f, CHECK_RECT_SIZE);
 			static Font* font = NULL;
 			defaultRect.w = maxWidth;
-			this->_lines = this->makeRenderLines(fontName, defaultRect, text);
+			this->_lines = this->makeRenderLines(fontName, defaultRect, text, Horizontal::LeftWrapped, Vertical::Top);
 			font = this->getFont(fontName);
 			return (this->_lines.size() * font->getLineHeight() + font->getInternalDescender());
 		}
