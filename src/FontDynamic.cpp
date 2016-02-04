@@ -491,7 +491,7 @@ namespace atres
 				for_iter (i, j, borderSize + 1)
 				{
 					vector.set((float)i, (float)j);
-					value = (unsigned char)(hclamp(borderThickness - vector.length(), 0.0f, 1.0f) * 255);
+					value = (unsigned char)(hclamp(borderThickness + 1.0f - vector.length(), 0.0f, 1.0f) * 255);
 					structuringImageContainer->image->data[index + i + j * size] = value;
 					structuringImageContainer->image->data[index - i + j * size] = value;
 					structuringImageContainer->image->data[index + i - j * size] = value;
