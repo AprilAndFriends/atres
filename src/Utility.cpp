@@ -102,7 +102,7 @@ namespace atres
 	{
 	}
 
-	RenderSequence::RenderSequence() : texture(NULL)
+	RenderSequence::RenderSequence() : texture(NULL), multiplyAlpha(false)
 	{
 	}
 

@@ -116,6 +116,7 @@ namespace atres
 	public:
 		april::Texture* texture;
 		april::Color color;
+		bool multiplyAlpha;
 		harray<april::TexturedVertex> vertices;
 		
 		RenderSequence();

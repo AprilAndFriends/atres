@@ -766,7 +766,6 @@ namespace atres
 		this->_borderSequences.clear();
 		this->_borderSequence = RenderSequence();
 		this->_borderSequence.color = this->borderColor;
-		this->_borderSequence.color.a = (unsigned char)(this->borderColor.a * this->borderColor.a_f() * this->borderColor.a_f());
 		this->_renderRect = RenderRectangle();
 		this->_textColor = april::Color::White;
 		this->_shadowColor = this->shadowColor;
@@ -1558,6 +1557,7 @@ namespace atres
 										this->_borderSequence.addRenderRectangle(this->_renderRect);
 										this->_renderRect.dest = destination + gvec2(0.0f, this->_borderThickness);
 										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_borderSequence.multiplyAlpha = true;
 									}
 									else
 									{
@@ -1577,6 +1577,7 @@ namespace atres
 										this->_renderRect = this->_iconFont->makeBorderRenderRectangle(drawRect, area, this->_iconName, this->_borderFontThickness);
 										this->_borderSequence.addRenderRectangle(this->_renderRect);
 										this->_borderSequence.texture = this->_iconFont->getBorderTexture(this->_iconName, this->_borderFontThickness);
+										this->_borderSequence.multiplyAlpha = false;
 									}
 									break;
 								}
@@ -1640,6 +1641,7 @@ namespace atres
 											this->_borderSequence.addRenderRectangle(this->_renderRect);
 											this->_renderRect.dest = destination + gvec2(0.0f, this->_borderThickness);
 											this->_borderSequence.addRenderRectangle(this->_renderRect);
+											this->_borderSequence.multiplyAlpha = true;
 										}
 										else
 										{
@@ -1659,6 +1661,7 @@ namespace atres
 											this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
 											this->_borderSequence.addRenderRectangle(this->_renderRect);
 											this->_borderSequence.texture = this->_font->getBorderTexture(this->_code, this->_borderFontThickness);
+											this->_borderSequence.multiplyAlpha = false;
 										}
 										break;
 									}
@@ -1701,7 +1704,7 @@ namespace atres
 			current = sequences.removeFirst();
 			for_iter (i, 0, sequences.size())
 			{
-				if (current.texture == sequences[i].texture && current.color.hex(true) == sequences[i].color.hex(true))
+				if (current.texture == sequences[i].texture && current.color.hex(true) == sequences[i].color.hex(true) && current.multiplyAlpha == sequences[i].multiplyAlpha)
 				{
 					current.vertices += sequences[i].vertices;
 					sequences.removeAt(i);
@@ -1723,7 +1726,14 @@ namespace atres
 		}
 		foreach (RenderSequence, it, renderText.borderSequences)
 		{
-			this->_drawRenderSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f() * color.a_f())));
+			if ((*it).multiplyAlpha)
+			{
+				this->_drawRenderSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f() * color.a_f())));
+			}
+			else
+			{
+				this->_drawRenderSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f())));
+			}
 		}
 		foreach (RenderSequence, it, renderText.textSequences)
 		{
