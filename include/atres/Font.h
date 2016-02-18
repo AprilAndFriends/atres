@@ -80,10 +80,6 @@ namespace atres
 		RenderRectangle makeRenderRectangle(const grect& rect, grect area, chstr iconName);
 		RenderRectangle makeBorderRenderRectangle(const grect& rect, grect area, chstr iconName, float borderThickness);
 
-		DEPRECATED_ATTRIBUTE bool hasChar(unsigned int charCode) { return this->hasCharacter(charCode); }
-		DEPRECATED_ATTRIBUTE bool isNativeBorderSupported() { return (this->getBorderMode() != BorderMode::Software); }
-		DEPRECATED_ATTRIBUTE void setNativeBorderSupported(bool value) { this->setBorderMode(value ? BorderMode::FontNative : BorderMode::Software); }
-		
 	protected:
 		hstr name;
 		float height;
