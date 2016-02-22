@@ -533,7 +533,6 @@ namespace atres
 				case '-': // ignore formattting from here on
 					tag.type = FormatTag::Type::IgnoreFormatting;
 					ignoreFormatting = true;
-					//start = end;
 					break;
 				default: // command not supported, regard as normal text
 					start = end;
@@ -1114,6 +1113,11 @@ namespace atres
 							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
 					}
+				}
+				else if (this->_nextTag.type == FormatTag::Type::IgnoreFormatting)
+				{
+					this->_currentTag.type = FormatTag::Type::IgnoreFormatting;
+					this->_stack += this->_currentTag;
 				}
 			}
 			this->_tags.removeFirst();
