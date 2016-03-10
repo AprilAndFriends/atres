@@ -1519,7 +1519,7 @@ namespace atres
 						// checking the particular character
 						this->_scale = this->_iconFontScale * this->_textScale;
 						this->_icon = this->_icons[this->_iconName];
-						this->_borderThickness = this->borderThickness * this->_textBorderThickness * (this->globalOffsets ? 1.0f : this->_textScale);
+						this->_borderThickness = this->borderThickness * this->_textBorderThickness;
 						this->_borderFontThickness = this->_borderThickness;
 						area = this->_word.rect;
 						area.x += hmax(0.0f, width + this->_iconFontBearingX * this->_scale);
@@ -1603,7 +1603,7 @@ namespace atres
 							// checking the particular character
 							this->_scale = this->_fontScale * this->_textScale;
 							this->_character = this->_characters[this->_code];
-							this->_borderThickness = this->borderThickness * this->_textBorderThickness * (this->globalOffsets ? 1.0f : this->_textScale);
+							this->_borderThickness = this->borderThickness * this->_textBorderThickness;
 							this->_borderFontThickness = this->_borderThickness / this->_fontBaseScale;
 							area = this->_word.rect;
 							area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale);

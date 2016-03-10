@@ -154,7 +154,7 @@ public:
 	bool onUpdate(float timeDelta)
 	{
 		this->time += timeDelta;
-		this->color.a = 191 + (unsigned char)(64 * dsin(this->time * 360.0f));
+		this->color.a = 191 + (unsigned char)(64 * hsin(this->time * 360.0f));
 		// rendering
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(viewport);
