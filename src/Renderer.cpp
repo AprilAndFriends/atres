@@ -1222,6 +1222,7 @@ namespace atres
 		float aw = 0.0f;
 		float wordX = 0.0f;
 		float wordW = 0.0f;
+		float fullWidth = 0.0f;
 		float addW = 0.0f;
 		int start = 0;
 		int i = 0;
@@ -1265,7 +1266,8 @@ namespace atres
 						aw = this->_icon->rect.w * this->_scale;
 						addW = hmax(ax, aw);
 					}
-					if (wordW + addW > rect.w) // word too long for line
+					fullWidth = wordW + addW;
+					if (fullWidth > rect.w) // word too long for line
 					{
 						tooLong = true;
 						break;
@@ -1311,7 +1313,8 @@ namespace atres
 				{
 					addW = this->_font->getHeight() * 0.5f;
 				}
-				if (wordW + addW > rect.w) // word too long for line
+				fullWidth = wordW + addW;
+				if (fullWidth > rect.w) // word too long for line
 				{
 					if (!checkingSpaces)
 					{
@@ -1358,7 +1361,7 @@ namespace atres
 				word.count = (!icon ? i - start : 0);
 				word.spaces = (!icon && checkingSpaces ? i - start : 0);
 				word.icon = icon;
-				word.fullWidth = wordW;
+				word.fullWidth = fullWidth;
 				word.charWidths = charWidths;
 				result += word;
 				charWidths.clear();
