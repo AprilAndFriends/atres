@@ -121,7 +121,7 @@ namespace atres
 		this->vertices.add(vert, 6);
 	}
 	
-	RenderWord::RenderWord() : start(0), count(0), spaces(0), icon(false), fullWidth(0.0f)
+	RenderWord::RenderWord() : start(0), count(0), spaces(0), icon(false), advanceX(0.0f)
 	{
 	}
 
@@ -129,7 +129,7 @@ namespace atres
 	{
 	}
 
-	RenderLine::RenderLine() : start(0), count(0), spaces(0), terminated(false)
+	RenderLine::RenderLine() : start(0), count(0), spaces(0), advanceX(0.0f), terminated(false)
 	{
 	}
 	

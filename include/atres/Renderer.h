@@ -97,10 +97,14 @@ namespace atres
 
 		float getTextWidth(chstr fontName, chstr text);
 		float getTextWidthUnformatted(chstr fontName, chstr text);
+		float getTextAdvanceX(chstr fontName, chstr text);
+		float getTextAdvanceXUnformatted(chstr fontName, chstr text);
 		float getTextHeight(chstr fontName, chstr text, float maxWidth);
 		float getTextHeightUnformatted(chstr fontName, chstr text, float maxWidth);
 		float getTextWidth(chstr text);
 		float getTextWidthUnformatted(chstr text);
+		float getTextAdvanceX(chstr text);
+		float getTextAdvanceXUnformatted(chstr text);
 		float getTextHeight(chstr text, float maxWidth);
 		float getTextHeightUnformatted(chstr text, float maxWidth);
 

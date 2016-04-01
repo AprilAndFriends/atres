@@ -1356,12 +1356,12 @@ namespace atres
 			if (i > start)
 			{
 				word.text = (!icon ? text(start, i - start) : "");
-				word.rect.w = wordX;
+				word.rect.w = fullWidth;
+				word.advanceX = wordX;
 				word.start = start;
 				word.count = (!icon ? i - start : 0);
 				word.spaces = (!icon && checkingSpaces ? i - start : 0);
 				word.icon = icon;
-				word.fullWidth = fullWidth;
 				word.charWidths = charWidths;
 				result += word;
 				charWidths.clear();
@@ -1412,7 +1412,7 @@ namespace atres
 				nextLine = true;
 				forcedNextLine = true;
 			}
-			else if (lineWidth + words[i].fullWidth > rect.w && wrapped)
+			else if (lineWidth + words[i].rect.w > rect.w && wrapped)
 			{
 				if (this->_line.words.size() > 0)
 				{
@@ -1429,7 +1429,7 @@ namespace atres
 			if (addWord)
 			{
 				words[i].rect.y += this->_lines.size() * this->_lineHeight;
-				lineWidth += words[i].rect.w;
+				lineWidth += words[i].advanceX;
 				this->_line.words += words[i];
 				this->_line.count += words[i].count;
 			}
@@ -1449,16 +1449,16 @@ namespace atres
 				}
 				if (this->_line.words.size() > 0)
 				{
-					this->_line.words.last().rect.w = hmax(this->_line.words.last().rect.w, this->_line.words.last().fullWidth);
 					x = this->_line.words.first().rect.x;
 					foreach (RenderWord, it, this->_line.words)
 					{
 						this->_line.text += (*it).text;
 						this->_line.spaces += (*it).spaces;
-						this->_line.rect.w += (*it).rect.w;
+						this->_line.advanceX += (*it).advanceX;
 						(*it).rect.x = x;
-						x += (*it).rect.w;
+						x += (*it).advanceX;
 					}
+					this->_line.rect.w = this->_line.advanceX + hmax(this->_line.words.last().rect.w - this->_line.words.last().advanceX, 0.0f);
 				}
 				maxWidth = hmax(maxWidth, this->_line.rect.w);
 				this->_line.rect.y = rect.y + this->_lines.size() * this->_lineHeight;
@@ -1472,6 +1472,7 @@ namespace atres
 				this->_line.start = 0;
 				this->_line.count = 0;
 				this->_line.spaces = 0;
+				this->_line.advanceX = 0.0f;
 				this->_line.terminated = false;
 				this->_line.rect.w = 0.0f;
 				this->_line.words.clear();
@@ -1929,6 +1930,26 @@ namespace atres
 		return this->getTextWidth(fontName, "[-]" + text);
 	}
 
+	float Renderer::getTextAdvanceX(chstr fontName, chstr text)
+	{
+		float result = 0.0f;
+		if (text != "")
+		{
+			static grect defaultRect(0.0f, 0.0f, CHECK_RECT_SIZE, CHECK_RECT_SIZE);
+			this->_lines = this->makeRenderLines(fontName, defaultRect, text);
+			foreach(RenderLine, it, this->_lines)
+			{
+				result = hmax(result, (*it).advanceX);
+			}
+		}
+		return result;
+	}
+
+	float Renderer::getTextAdvanceXUnformatted(chstr fontName, chstr text)
+	{
+		return this->getTextAdvanceX(fontName, "[-]" + text);
+	}
+
 	float Renderer::getTextHeight(chstr fontName, chstr text, float maxWidth)
 	{
 		if (text != "" && maxWidth > 0.0f)
@@ -1956,6 +1977,16 @@ namespace atres
 	float Renderer::getTextWidthUnformatted(chstr text)
 	{
 		return this->getTextWidth("", "[-]" + text);
+	}
+
+	float Renderer::getTextAdvanceX(chstr text)
+	{
+		return this->getTextAdvanceX("", text);
+	}
+
+	float Renderer::getTextAdvanceXUnformatted(chstr text)
+	{
+		return this->getTextAdvanceX("", "[-]" + text);
 	}
 
 	float Renderer::getTextHeight(chstr text, float maxWidth)

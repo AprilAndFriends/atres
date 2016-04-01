@@ -136,7 +136,7 @@ namespace atres
 		int count;
 		int spaces;
 		bool icon;
-		float fullWidth;
+		float advanceX;
 		harray<float> charWidths;
 		
 		RenderWord();
@@ -152,6 +152,7 @@ namespace atres
 		int start;
 		int count;
 		int spaces;
+		float advanceX;
 		bool terminated;
 		harray<RenderWord> words;
 		
