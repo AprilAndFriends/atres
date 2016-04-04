@@ -1221,9 +1221,8 @@ namespace atres
 		float ax = 0.0f;
 		float aw = 0.0f;
 		float wordX = 0.0f;
-		float wordW = 0.0f;
-		float fullWidth = 0.0f;
 		float addW = 0.0f;
+		float fullWidth = 0.0f;
 		int start = 0;
 		int i = 0;
 		int chars = 0;
@@ -1242,7 +1241,6 @@ namespace atres
 			start = i;
 			chars = 0;
 			wordX = 0.0f;
-			wordW = 0.0f;
 			icon = false;
 			while (i < actualSize) // checking a whole word
 			{
@@ -1266,13 +1264,12 @@ namespace atres
 						aw = this->_icon->rect.w * this->_scale;
 						addW = hmax(ax, aw);
 					}
-					fullWidth = wordW + addW;
+					fullWidth = wordX + addW;
 					if (fullWidth > rect.w) // word too long for line
 					{
 						tooLong = true;
 						break;
 					}
-					wordW = wordX + addW;
 					wordX += ax;
 					charWidths += ax;
 					i += byteSize;
@@ -1313,7 +1310,7 @@ namespace atres
 				{
 					addW = this->_font->getHeight() * 0.5f;
 				}
-				fullWidth = wordW + addW;
+				fullWidth = wordX + addW;
 				if (fullWidth > rect.w) // word too long for line
 				{
 					if (!checkingSpaces)
@@ -1322,7 +1319,6 @@ namespace atres
 					}
 					break;
 				}
-				wordW = wordX + addW;
 				wordX += ax;
 				charWidths += ax;
 				i += byteSize;
