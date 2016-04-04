@@ -1933,7 +1933,7 @@ namespace atres
 		{
 			static grect defaultRect(0.0f, 0.0f, CHECK_RECT_SIZE, CHECK_RECT_SIZE);
 			this->_lines = this->makeRenderLines(fontName, defaultRect, text);
-			foreach(RenderLine, it, this->_lines)
+			foreach (RenderLine, it, this->_lines)
 			{
 				result = hmax(result, (*it).advanceX);
 			}
@@ -1954,8 +1954,11 @@ namespace atres
 			static Font* font = NULL;
 			defaultRect.w = maxWidth;
 			this->_lines = this->makeRenderLines(fontName, defaultRect, text, Horizontal::LeftWrapped, Vertical::Top);
-			font = this->getFont(fontName);
-			return (this->_lines.size() * font->getLineHeight() + font->getInternalDescender());
+			if (this->_lines.size() > 0)
+			{
+				font = this->getFont(fontName);
+				return (this->_lines.size() * font->getLineHeight() + font->getInternalDescender());
+			}
 		}
 		return 0.0f;
 	}
