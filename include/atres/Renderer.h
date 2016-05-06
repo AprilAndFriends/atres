@@ -171,8 +171,10 @@ namespace atres
 		float _iconFontOffsetY;
 		float _textScale;
 		float _scale;
-		float _borderFontThickness;
+		gvec2 _shadowOffset;
+		gvec2 _textShadowOffset;
 		float _borderThickness;
+		float _borderFontThickness;
 		float _textBorderThickness;
 
 		harray<RenderSequence> _textSequences;
@@ -187,7 +189,8 @@ namespace atres
 		april::Color _shadowColor;
 		april::Color _borderColor;
 		hstr _hex;
-		hstr _borderColorString;
+		hstr _effectColorString;
+		hstr _shadowOffsetString;
 		hstr _borderThicknessString;
 		int _effectMode;
 		int _alpha;

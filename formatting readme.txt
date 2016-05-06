@@ -9,6 +9,7 @@ Following formatting commands are supported:
 
 n	- normal (no shadow / border)
 s	- shadow; parameter (optional): string with hex value for color in RGB or RGBA
+              parameter (optional): shadow offset as "X,Y" multiplier (counted as 1 parameter)
 b	- border; parameter (optional): string with hex value for color in RGB or RGBA
               parameter (optional): border thickness multiplier
 c	- color change; parameter: string with hex value for color in RGB

@@ -150,8 +150,10 @@ namespace atres
 		this->_iconFontOffsetY = 0.0f;
 		this->_textScale = 1.0f;
 		this->_scale = 1.0f;
-		this->_borderFontThickness = 1.0f;
+		this->_shadowOffset.set(1.0f, 1.0f);
+		this->_textShadowOffset.set(1.0f, 1.0f);
 		this->_borderThickness = 1.0f;
+		this->_borderFontThickness = 1.0f;
 		this->_textBorderThickness = 1.0f;
 		this->_effectMode = 0;
 		this->_alpha = -1;
@@ -750,8 +752,10 @@ namespace atres
 		this->_iconFontOffsetY = 0.0f;
 		this->_textScale = 1.0f;
 		this->_scale = 1.0f;
-		this->_borderFontThickness = 1.0f;
+		this->_shadowOffset.set(1.0f, 1.0f);
+		this->_textShadowOffset.set(1.0f, 1.0f);
 		this->_borderThickness = 1.0f;
+		this->_borderFontThickness = 1.0f;
 		this->_textBorderThickness = 1.0f;
 	}
 
@@ -930,7 +934,7 @@ namespace atres
 				}
 				else if (this->_currentTag.type == FormatTag::Type::Color)
 				{
-					this->_hex = (this->colors.hasKey(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
+					this->_hex = this->colors.tryGet(this->_currentTag.data, this->_currentTag.data);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_textColor.set(this->_hex);
@@ -947,7 +951,16 @@ namespace atres
 				else if (this->_currentTag.type == FormatTag::Type::Shadow)
 				{
 					this->_effectMode = EFFECT_MODE_SHADOW;
-					this->_hex = (this->colors.hasKey(this->_currentTag.data) ? this->colors[this->_currentTag.data] : this->_currentTag.data);
+					if (this->_currentTag.data.count(',') == 2)
+					{
+						this->_currentTag.data.split(',', this->_effectColorString, this->_shadowOffsetString);
+						this->_textShadowOffset = april::hstrToGvec2(this->_shadowOffsetString);
+					}
+					else
+					{
+						this->_effectColorString = this->_currentTag.data;
+					}
+					this->_hex = this->colors.tryGet(this->_effectColorString, this->_effectColorString);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_shadowColor.set(this->_hex);
@@ -958,14 +971,14 @@ namespace atres
 					this->_effectMode = EFFECT_MODE_BORDER;
 					if (this->_currentTag.data.count(',') == 1)
 					{
-						this->_currentTag.data.split(',', this->_borderColorString, this->_borderThicknessString);
+						this->_currentTag.data.split(',', this->_effectColorString, this->_borderThicknessString);
 						this->_textBorderThickness = (float)this->_borderThicknessString;
 					}
 					else
 					{
-						this->_borderColorString = this->_currentTag.data;
+						this->_effectColorString = this->_currentTag.data;
 					}
-					this->_hex = (this->colors.hasKey(this->_borderColorString) ? this->colors[this->_borderColorString] : this->_borderColorString);
+					this->_hex = this->colors.tryGet(this->_effectColorString, this->_effectColorString);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_borderColor.set(this->_hex);
@@ -1073,12 +1086,22 @@ namespace atres
 					this->_shadowColor = this->shadowColor;
 					if (this->_nextTag.data != "")
 					{
-						this->_hex = (this->colors.hasKey(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
+						this->_shadowOffsetString = "";
+						if (this->_nextTag.data.count(',') == 2)
+						{
+							this->_nextTag.data.split(',', this->_effectColorString, this->_shadowOffsetString);
+							this->_textShadowOffset = april::hstrToGvec2(this->_shadowOffsetString);
+						}
+						else
+						{
+							this->_effectColorString = this->_nextTag.data;
+						}
+						this->_hex = this->colors.tryGet(this->_effectColorString, this->_effectColorString);
 						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 						{
 							this->_shadowColor.set(this->_hex);
 						}
-						else
+						else if (this->_shadowOffsetString == "" || this->_hex != "")
 						{
 							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
@@ -1096,14 +1119,14 @@ namespace atres
 						this->_borderThicknessString = "";
 						if (this->_nextTag.data.count(',') == 1)
 						{
-							this->_nextTag.data.split(',', this->_borderColorString, this->_borderThicknessString);
+							this->_nextTag.data.split(',', this->_effectColorString, this->_borderThicknessString);
 							this->_textBorderThickness = (float)this->_borderThicknessString;
 						}
 						else
 						{
-							this->_borderColorString = this->_nextTag.data;
+							this->_effectColorString = this->_nextTag.data;
 						}
-						this->_hex = (this->colors.hasKey(this->_borderColorString) ? this->colors[this->_borderColorString] : this->_borderColorString);
+						this->_hex = this->colors.tryGet(this->_effectColorString, this->_effectColorString);
 						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 						{
 							this->_borderColor.set(this->_hex);
@@ -1519,6 +1542,7 @@ namespace atres
 						// checking the particular character
 						this->_scale = this->_iconFontScale * this->_textScale;
 						this->_icon = this->_icons[this->_iconName];
+						this->_shadowOffset = this->shadowOffset * this->_textShadowOffset;
 						this->_borderThickness = this->borderThickness * this->_textBorderThickness;
 						this->_borderFontThickness = this->_borderThickness;
 						area = this->_word.rect;
@@ -1539,7 +1563,7 @@ namespace atres
 								switch (this->_effectMode)
 								{
 								case EFFECT_MODE_SHADOW: // shadow
-									this->_renderRect.dest = destination + this->shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+									this->_renderRect.dest = destination + this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
 									this->_shadowSequence.addRenderRectangle(this->_renderRect);
 									break;
 								case EFFECT_MODE_BORDER: // border
@@ -1603,6 +1627,7 @@ namespace atres
 							// checking the particular character
 							this->_scale = this->_fontScale * this->_textScale;
 							this->_character = this->_characters[this->_code];
+							this->_shadowOffset = this->shadowOffset * this->_textShadowOffset;
 							this->_borderThickness = this->borderThickness * this->_textBorderThickness;
 							this->_borderFontThickness = this->_borderThickness / this->_fontBaseScale;
 							area = this->_word.rect;
@@ -1623,7 +1648,7 @@ namespace atres
 									switch (this->_effectMode)
 									{
 									case EFFECT_MODE_SHADOW: // shadow
-										this->_renderRect.dest = destination + this->shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+										this->_renderRect.dest = destination + this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
 										this->_shadowSequence.addRenderRectangle(this->_renderRect);
 										break;
 									case EFFECT_MODE_BORDER: // border
