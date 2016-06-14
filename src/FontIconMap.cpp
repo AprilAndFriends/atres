@@ -16,11 +16,6 @@
 
 namespace atres
 {
-	static hstr _map_withoutExtension(hstr filename)
-	{
-		return hresource::withoutExtension(filename);
-	}
-
 	FontIconMap::FontIconMap(chstr fontDirectory, chstr name, float scale, float bearingX, float offsetY, float spacing) : FontDynamic(name)
 	{
 		this->fontDirectory = fontDirectory;
@@ -50,7 +45,8 @@ namespace atres
 
 	april::Image* FontIconMap::_loadIconImage(chstr iconName, bool initial, int& advance)
 	{
-		harray<hstr> files = hrdir::files(this->fontDirectory).mapped(&_map_withoutExtension);
+		HL_LAMBDA_CLASS(_withoutExtension, hstr, ((hstr const& filename) { return hresource::withoutExtension(filename); }));
+		harray<hstr> files = hrdir::files(this->fontDirectory).mapped(&_withoutExtension::lambda);
 		if (!files.has(iconName))
 		{
 			return NULL;

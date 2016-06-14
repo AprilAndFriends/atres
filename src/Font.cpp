@@ -21,11 +21,6 @@
 
 namespace atres
 {
-	static april::Texture* _map_texture(TextureContainer* container)
-	{
-		return container->texture;
-	}
-
 	HL_ENUM_CLASS_DEFINE(Font::BorderMode,
 	(
 		HL_ENUM_DEFINE(Font::BorderMode, Software);
@@ -176,7 +171,8 @@ namespace atres
 
 	harray<april::Texture*> Font::getTextures()
 	{
-		return (this->textureContainers + this->borderTextureContainers.cast<TextureContainer*>()).mapped(&_map_texture);
+		HL_LAMBDA_CLASS(_containerTextures, april::Texture*, ((TextureContainer* const& container) { return container->texture; }));
+		return (this->textureContainers + this->borderTextureContainers.cast<TextureContainer*>()).mapped(&_containerTextures::lambda);
 	}
 	
 	april::Texture* Font::getTexture(unsigned int charCode)
