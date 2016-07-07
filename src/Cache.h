@@ -98,7 +98,7 @@ namespace atres
 			this->entries.clear();
 		}
 		
-		inline int size()
+		inline int size() const
 		{
 			return this->data.size();
 		}

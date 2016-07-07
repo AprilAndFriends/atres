@@ -173,8 +173,6 @@ namespace atres
 		delete this->cacheLinesUnformatted;
 	}
 
-/******* PROPERTIES ****************************************************/
-
 	void Renderer::setShadowOffset(gvec2 value)
 	{
 		if (this->shadowOffset != value)
@@ -238,6 +236,11 @@ namespace atres
 		}
 	}
 
+	hstr Renderer::getDefaultFont() const
+	{
+		return (this->defaultFont != NULL ? this->defaultFont->getName() : "");
+	}
+
 	void Renderer::setDefaultFont(chstr name)
 	{
 		if (name == "")
@@ -258,17 +261,6 @@ namespace atres
 		}
 	}
 	
-	hstr Renderer::getDefaultFont()
-	{
-		if (this->defaultFont == NULL) return "";
-		return this->defaultFont->getName();
-	}
-
-	bool Renderer::hasFont(chstr name)
-	{
-		return (name == "" && this->defaultFont != NULL || this->fonts.hasKey(name));
-	}
-	
 	void Renderer::setCacheSize(int value)
 	{
 		this->cacheText->setMaxSize(value);
@@ -276,9 +268,12 @@ namespace atres
 		this->cacheLines->setMaxSize(value);
 		this->cacheLinesUnformatted->setMaxSize(value);
 	}
-	
-/******* FONT **********************************************************/
 
+	bool Renderer::hasFont(chstr name) const
+	{
+		return (name == "" && this->defaultFont != NULL || this->fonts.hasKey(name));
+	}
+	
 	void Renderer::registerFont(Font* font, bool allowDefault)
 	{
 		font->load();
@@ -385,8 +380,6 @@ namespace atres
 		return font;
 	}
 	
-/******* MISC **********************************************************/
-
 	void Renderer::addColor(chstr key, chstr value)
 	{
 		this->colors[key.lowered()] = value.uppered();
@@ -424,8 +417,6 @@ namespace atres
 		}
 	}
 	
-/******* ANALYZE TEXT **************************************************/
-
 	void Renderer::analyzeText(chstr fontName, chstr text)
 	{
 		// makes sure dynamically allocated characters are loaded
@@ -1745,8 +1736,6 @@ namespace atres
 		return result;
 	}
 
-/******* DRAW TEXT *****************************************************/
-
 	void Renderer::_drawRenderText(RenderText& renderText, april::Color color)
 	{
 		foreach (RenderSequence, it, renderText.shadowSequences)
@@ -1929,8 +1918,6 @@ namespace atres
 		return tags;
 	}
 
-/******* MISC **********************************************************/
-	
 	float Renderer::getTextWidth(chstr fontName, chstr text)
 	{
 		float result = 0.0f;

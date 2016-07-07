@@ -121,27 +121,27 @@ namespace atres
 		return false;
 	}
 	
-	float Font::getHeight()
+	float Font::getHeight() const
 	{
 		return (this->height * this->scale * this->baseScale);
 	}
 	
-	float Font::getScale()
+	float Font::getScale() const
 	{
 		return (this->scale * this->baseScale);
 	}
 	
-	float Font::getLineHeight()
+	float Font::getLineHeight() const
 	{
 		return (this->lineHeight * this->scale * this->baseScale);
 	}
 
-	float Font::getDescender()
+	float Font::getDescender() const
 	{
 		return (this->descender * this->scale * this->baseScale);
 	}
 
-	float Font::getInternalDescender()
+	float Font::getInternalDescender() const
 	{
 		return (this->internalDescender * this->scale * this->baseScale);
 	}
@@ -169,7 +169,7 @@ namespace atres
 		}
 	}
 
-	harray<april::Texture*> Font::getTextures()
+	harray<april::Texture*> Font::getTextures() const
 	{
 		HL_LAMBDA_CLASS(_containerTextures, april::Texture*, ((TextureContainer* const& container) { return container->texture; }));
 		return (this->textureContainers + this->borderTextureContainers.cast<TextureContainer*>()).mapped(&_containerTextures::lambda);
@@ -177,7 +177,7 @@ namespace atres
 	
 	april::Texture* Font::getTexture(unsigned int charCode)
 	{
-		foreach (TextureContainer*, it, this->textureContainers)
+		foreachc (TextureContainer*, it, this->textureContainers)
 		{
 			if ((*it)->characters.has(charCode))
 			{
@@ -189,7 +189,7 @@ namespace atres
 
 	april::Texture* Font::getBorderTexture(unsigned int charCode, float borderThickness)
 	{
-		foreach (BorderTextureContainer*, it, this->borderTextureContainers)
+		foreachc (BorderTextureContainer*, it, this->borderTextureContainers)
 		{
 			if (heqf((*it)->borderThickness, borderThickness, THICKNESS_TOLERANCE) && (*it)->characters.has(charCode))
 			{
@@ -201,7 +201,7 @@ namespace atres
 
 	april::Texture* Font::getTexture(chstr iconName)
 	{
-		foreach (TextureContainer*, it, this->textureContainers)
+		foreachc (TextureContainer*, it, this->textureContainers)
 		{
 			if ((*it)->icons.has(iconName))
 			{
@@ -213,7 +213,7 @@ namespace atres
 
 	april::Texture* Font::getBorderTexture(chstr iconName, float borderThickness)
 	{
-		foreach (BorderTextureContainer*, it, this->borderTextureContainers)
+		foreachc (BorderTextureContainer*, it, this->borderTextureContainers)
 		{
 			if (heqf((*it)->borderThickness, borderThickness, THICKNESS_TOLERANCE) && (*it)->icons.has(iconName))
 			{
@@ -246,7 +246,7 @@ namespace atres
 	BorderCharacterDefinition* Font::getBorderCharacter(unsigned int charCode, float borderThickness)
 	{
 		harray<BorderCharacterDefinition*> definitions = this->borderCharacters[charCode];
-		foreach (BorderCharacterDefinition*, it, definitions)
+		foreachc (BorderCharacterDefinition*, it, definitions)
 		{
 			if (heqf((*it)->borderThickness, borderThickness, THICKNESS_TOLERANCE))
 			{
@@ -259,7 +259,7 @@ namespace atres
 	BorderIconDefinition* Font::getBorderIcon(chstr iconName, float borderThickness)
 	{
 		harray<BorderIconDefinition*> definitions = this->borderIcons[iconName];
-		foreach (BorderIconDefinition*, it, definitions)
+		foreachc (BorderIconDefinition*, it, definitions)
 		{
 			if (heqf((*it)->borderThickness, borderThickness, THICKNESS_TOLERANCE))
 			{
@@ -269,10 +269,10 @@ namespace atres
 		return NULL;
 	}
 
-	harray<BorderTextureContainer*> Font::_getBorderTextureContainers(float borderThickness)
+	harray<BorderTextureContainer*> Font::_getBorderTextureContainers(float borderThickness) const
 	{
 		harray<BorderTextureContainer*> result;
-		foreach (BorderTextureContainer*, it, this->borderTextureContainers)
+		foreachc (BorderTextureContainer*, it, this->borderTextureContainers)
 		{
 			if (heqf((*it)->borderThickness, borderThickness, THICKNESS_TOLERANCE))
 			{
@@ -358,7 +358,7 @@ namespace atres
 	static gvec2 _textureInvertedSize;
 	static april::Texture* _texture = NULL;
 
-	void Font::_applyCutoff(const grect& rect, const grect& area, const grect& symbolRect, float offsetY)
+	void Font::_applyCutoff(const grect& rect, const grect& area, const grect& symbolRect, float offsetY) const
 	{
 		// vertical/horizontal cutoff of destination rectangle (using left/right/top/bottom semantics for consistency)
 		_leftTop.x = (area.left() < rect.left() ? (area.right() - rect.left()) / area.w : _fullSize.x);

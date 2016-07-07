@@ -54,7 +54,7 @@ namespace atres
 		this->_setBorderMode(value);
 	}
 
-	bool FontDynamic::_isAllowAlphaTextures()
+	bool FontDynamic::_isAllowAlphaTextures() const
 	{
 		return isAllowAlphaTextures();
 	}

@@ -58,7 +58,7 @@ namespace atres
 
 		harray<StructuringImageContainer*> structuringImageContainers;
 
-		virtual bool _isAllowAlphaTextures();
+		virtual bool _isAllowAlphaTextures() const;
 		void _tryCreateFirstTextureContainer();
 		void _tryCreateFirstBorderTextureContainer(float borderThickness);
 

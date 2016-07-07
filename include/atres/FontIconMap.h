@@ -36,7 +36,7 @@ namespace atres
 		float offsetY;
 		float spacing;
 
-		bool _isAllowAlphaTextures();
+		bool _isAllowAlphaTextures() const;
 
 		bool _load();
 

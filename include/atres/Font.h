@@ -42,13 +42,13 @@ namespace atres
 		bool load();
 
 		HL_DEFINE_GET(hstr, name, Name);
-		float getHeight();
-		float getScale();
+		float getHeight() const;
+		float getScale() const;
 		HL_DEFINE_SET(float, scale, Scale);
 		HL_DEFINE_GETSET(float, baseScale, BaseScale);
-		float getLineHeight();
-		float getDescender();
-		float getInternalDescender();
+		float getLineHeight() const;
+		float getDescender() const;
+		float getInternalDescender() const;
 		HL_DEFINE_GET(BorderMode, borderMode, BorderMode);
 		virtual void setBorderMode(BorderMode value);
 		HL_DEFINE_IS(loaded, Loaded);
@@ -56,7 +56,7 @@ namespace atres
 		inline hmap<unsigned int, harray<BorderCharacterDefinition*> >& getBorderCharacters() { return this->borderCharacters; }
 		inline hmap<hstr, IconDefinition*>& getIcons() { return this->icons; }
 		inline hmap<hstr, harray<BorderIconDefinition*> >& getBorderIcons() { return this->borderIcons; }
-		harray<april::Texture*> getTextures();
+		harray<april::Texture*> getTextures() const;
 
 		virtual april::Texture* getTexture(unsigned int charCode);
 		virtual april::Texture* getBorderTexture(unsigned int charCode, float borderThickness);
@@ -98,14 +98,14 @@ namespace atres
 		harray<TextureContainer*> textureContainers;
 		harray<BorderTextureContainer*> borderTextureContainers;
 
-		harray<BorderTextureContainer*> _getBorderTextureContainers(float borderThickness);
+		harray<BorderTextureContainer*> _getBorderTextureContainers(float borderThickness) const;
 
 		virtual bool _load();
 		
 		bool _readBasicParameter(chstr line);
 		void _setBorderMode(BorderMode value);
 
-		void _applyCutoff(const grect& rect, const grect& area, const grect& symbolRect, float offsetY = 0.0f);
+		void _applyCutoff(const grect& rect, const grect& area, const grect& symbolRect, float offsetY = 0.0f) const;
 		
 	};
 

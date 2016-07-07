@@ -33,7 +33,7 @@ namespace atres
 	{
 	}
 
-	bool FontIconMap::_isAllowAlphaTextures()
+	bool FontIconMap::_isAllowAlphaTextures() const
 	{
 		return false;
 	}
