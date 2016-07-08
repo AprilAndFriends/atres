@@ -36,10 +36,10 @@ namespace atres
 		HL_ENUM_DECLARE(Horizontal, RightWrapped);
 		HL_ENUM_DECLARE(Horizontal, CenterWrapped);
 		HL_ENUM_DECLARE(Horizontal, Justified);
-		bool isLeft();
-		bool isCenter();
-		bool isRight();
-		bool isWrapped();
+		bool isLeft() const;
+		bool isCenter() const;
+		bool isRight() const;
+		bool isWrapped() const;
 	));
 
 	HL_ENUM_CLASS_PREFIX_DECLARE(atresExport, Vertical,
@@ -216,7 +216,7 @@ namespace atres
 		TextureContainer();
 		virtual ~TextureContainer();
 
-		virtual TextureContainer* createNew();
+		virtual TextureContainer* createNew() const;
 
 	};
 
@@ -228,7 +228,7 @@ namespace atres
 		BorderTextureContainer(float borderThickness);
 		~BorderTextureContainer();
 
-		TextureContainer* createNew();
+		TextureContainer* createNew() const;
 
 	};
 

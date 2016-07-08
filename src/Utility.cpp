@@ -27,22 +27,22 @@ namespace atres
 		HL_ENUM_DEFINE(Horizontal, Justified);
 	));
 
-	bool Horizontal::isLeft()
+	bool Horizontal::isLeft() const
 	{
 		return (*this == Left || *this == LeftWrapped);
 	}
 
-	bool Horizontal::isCenter()
+	bool Horizontal::isCenter() const
 	{
 		return (*this == Center || *this == CenterWrapped);
 	}
 
-	bool Horizontal::isRight()
+	bool Horizontal::isRight() const
 	{
 		return (*this == Right || *this == RightWrapped);
 	}
 
-	bool Horizontal::isWrapped()
+	bool Horizontal::isWrapped() const
 	{
 		return (*this == LeftWrapped || *this == CenterWrapped || *this == RightWrapped || *this == Justified);
 	}
@@ -180,7 +180,7 @@ namespace atres
 		}
 	}
 
-	TextureContainer* TextureContainer::createNew()
+	TextureContainer* TextureContainer::createNew() const
 	{
 		return new TextureContainer();
 	}
@@ -194,7 +194,7 @@ namespace atres
 	{
 	}
 
-	TextureContainer* BorderTextureContainer::createNew()
+	TextureContainer* BorderTextureContainer::createNew() const
 	{
 		return new BorderTextureContainer(this->borderThickness);
 	}
