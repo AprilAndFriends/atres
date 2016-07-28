@@ -2121,9 +2121,9 @@ namespace atres
 		while (sequences.size() > 0)
 		{
 			current = sequences.removeFirst();
-			for_iter(i, 0, sequences.size())
+			for_iter (i, 0, sequences.size())
 			{
-				if (current.color.hex(true) == sequences[i].color.hex(true) && current.multiplyAlpha == sequences[i].multiplyAlpha)
+				if (current.color.hex(true) == sequences[i].color.hex(true))
 				{
 					current.vertices += sequences[i].vertices;
 					sequences.removeAt(i);
@@ -2158,14 +2158,7 @@ namespace atres
 		}
 		foreach (RenderLiningSequence, it, renderText.borderLiningSequences)
 		{
-			if ((*it).multiplyAlpha)
-			{
-				this->_drawRenderLiningSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f() * color.a_f())));
-			}
-			else
-			{
-				this->_drawRenderLiningSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f())));
-			}
+			this->_drawRenderLiningSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f())));
 		}
 		foreach (RenderSequence, it, renderText.textSequences)
 		{

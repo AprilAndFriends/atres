@@ -16,10 +16,8 @@ namespace atres
 {
 	static april::TexturedVertex _tVertices[6];
 	static april::PlainVertex _pVertices[6];
-	static float left = 0.0f;
-	static float right = 0.0f;
-	static float top = 0.0f;
-	static float bottom = 0.0f;
+	static float _top = 0.0f;
+	static float _bottom = 0.0f;
 
 	HL_ENUM_CLASS_DEFINE(Horizontal,
 	(
@@ -128,7 +126,7 @@ namespace atres
 		this->vertices.add(_tVertices, 6);
 	}
 	
-	RenderLiningSequence::RenderLiningSequence() : multiplyAlpha(false)
+	RenderLiningSequence::RenderLiningSequence()
 	{
 	}
 
@@ -138,9 +136,9 @@ namespace atres
 
 	void RenderLiningSequence::addRectangle(const grect& rect)
 	{
-		top = rect.top();
-		bottom = rect.bottom();
-		if (this->vertices.size() > 0 && this->vertices[this->vertices.size() - 1].y == bottom && this->vertices[this->vertices.size() - 3].y == top)
+		_top = rect.top();
+		_bottom = rect.bottom();
+		if (this->vertices.size() > 0 && this->vertices[this->vertices.size() - 1].y == _bottom && this->vertices[this->vertices.size() - 3].y == _top)
 		{
 			this->vertices[this->vertices.size() - 1].x = this->vertices[this->vertices.size() - 3].x = this->vertices[this->vertices.size() - 5].x = rect.right();
 		}
@@ -148,8 +146,8 @@ namespace atres
 		{
 			_pVertices[0].x = _pVertices[2].x = _pVertices[4].x = rect.left();
 			_pVertices[1].x = _pVertices[3].x = _pVertices[5].x = rect.right();
-			_pVertices[0].y = _pVertices[1].y = _pVertices[3].y = top;
-			_pVertices[2].y = _pVertices[4].y = _pVertices[5].y = bottom;
+			_pVertices[0].y = _pVertices[1].y = _pVertices[3].y = _top;
+			_pVertices[2].y = _pVertices[4].y = _pVertices[5].y = _bottom;
 			this->vertices.add(_pVertices, 6);
 		}
 	}

@@ -131,7 +131,6 @@ namespace atres
 	{
 	public:
 		april::Color color;
-		bool multiplyAlpha;
 		harray<april::PlainVertex> vertices;
 
 		RenderLiningSequence();
