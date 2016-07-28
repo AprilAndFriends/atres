@@ -43,6 +43,10 @@ namespace atres
 		void setShadowColor(april::Color value);
 		HL_DEFINE_GET(float, borderThickness, BorderThickness);
 		void setBorderThickness(float value);
+		HL_DEFINE_GET(float, strikeThroughThickness, StrikeThroughThickness);
+		void setStrikeThroughThickness(float value);
+		HL_DEFINE_GET(float, underlineThickness, UnderlineThickness);
+		void setUnderlineThickness(float value);
 		HL_DEFINE_GET(april::Color, borderColor, BorderColor);
 		void setBorderColor(april::Color value);
 		HL_DEFINE_GETSET(bool, globalOffsets, GlobalOffsets);
@@ -82,7 +86,8 @@ namespace atres
 		harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Horizontal horizontal, Vertical vertical, gvec2 offset = gvec2(), bool keepWrappedSpaces = false);
 		RenderText createRenderText(grect rect, chstr text, harray<RenderLine> lines, harray<FormatTag> tags);
 		harray<RenderSequence> optimizeSequences(harray<RenderSequence>& sequences);
-	
+		harray<RenderLiningSequence> optimizeSequences(harray<RenderLiningSequence>& sequences);
+
 		void drawText(chstr fontName, grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
 			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
 		void drawTextUnformatted(chstr fontName, grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
@@ -134,6 +139,8 @@ namespace atres
 		gvec2 shadowOffset;
 		april::Color shadowColor;
 		float borderThickness;
+		float strikeThroughThickness;
+		float underlineThickness;
 		april::Color borderColor;
 		bool globalOffsets;
 		bool useLegacyLineBreakParsing;
@@ -152,12 +159,14 @@ namespace atres
 		void _checkFormatTags(chstr text, int index);
 		void _processFormatTags(chstr text, int index);
 		void _checkSequenceSwitch();
+		void _updateLiningSequenceSwitch(bool force = false);
 		bool _checkTextures();
 		harray<FormatTag> _makeDefaultTags(april::Color color, chstr fontName, hstr& text);
 		harray<FormatTag> _makeDefaultTagsUnformatted(april::Color color, chstr fontName);
 
 		void _drawRenderText(RenderText& renderText, april::Color);
 		void _drawRenderSequence(RenderSequence& sequence, april::Color);
+		void _drawRenderLiningSequence(RenderLiningSequence& sequence, april::Color);
 
 	private:
 		harray<FormatTag> _tags;
@@ -201,6 +210,15 @@ namespace atres
 		harray<RenderSequence> _borderSequences;
 		RenderSequence _borderSequence;
 		RenderRectangle _renderRect;
+		harray<RenderLiningSequence> _textLiningSequences;
+		RenderLiningSequence _textStrikeThroughSequence;
+		RenderLiningSequence _textUnderlineSequence;
+		harray<RenderLiningSequence> _shadowLiningSequences;
+		RenderLiningSequence _shadowStrikeThroughSequence;
+		RenderLiningSequence _shadowUnderlineSequence;
+		harray<RenderLiningSequence> _borderLiningSequences;
+		RenderLiningSequence _borderStrikeThroughSequence;
+		RenderLiningSequence _borderUnderlineSequence;
 
 		april::Color _textColor;
 		april::Color _shadowColor;
@@ -210,6 +228,12 @@ namespace atres
 		hstr _shadowOffsetString;
 		hstr _borderThicknessString;
 		int _effectMode;
+		bool _strikeThroughActive;
+		float _strikeThroughThickness;
+		float _textStrikeThroughThickness;
+		bool _underlineActive;
+		float _underlineThickness;
+		float _textUnderlineThickness;
 		int _alpha;
 
 		harray<RenderLine> _lines;
@@ -231,4 +255,3 @@ namespace atres
 };
 
 #endif
-

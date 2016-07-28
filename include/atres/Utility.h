@@ -123,10 +123,25 @@ namespace atres
 		~RenderSequence();
 
 		/// @note Not thread-safe!
-		void addRenderRectangle(RenderRectangle rect);
+		void addRenderRectangle(const RenderRectangle& rect);
 
 	};
 	
+	class atresExport RenderLiningSequence
+	{
+	public:
+		april::Color color;
+		bool multiplyAlpha;
+		harray<april::PlainVertex> vertices;
+
+		RenderLiningSequence();
+		~RenderLiningSequence();
+
+		/// @note Not thread-safe!
+		void addRectangle(const grect& rect);
+
+	};
+
 	class atresExport RenderWord
 	{
 	public:
@@ -144,6 +159,18 @@ namespace atres
 
 	};
 	
+	class atresExport RenderLining
+	{
+	public:
+		grect rect;
+		int start;
+		int count;
+
+		RenderLining();
+		~RenderLining();
+
+	};
+
 	class atresExport RenderLine
 	{
 	public:
@@ -168,6 +195,9 @@ namespace atres
 		harray<RenderSequence> textSequences;
 		harray<RenderSequence> shadowSequences;
 		harray<RenderSequence> borderSequences;
+		harray<RenderLiningSequence> textLiningSequences;
+		harray<RenderLiningSequence> shadowLiningSequences;
+		harray<RenderLiningSequence> borderLiningSequences;
 
 		RenderText();
 		~RenderText();
@@ -187,6 +217,8 @@ namespace atres
 			HL_ENUM_DECLARE(Type, NoEffect);
 			HL_ENUM_DECLARE(Type, Shadow);
 			HL_ENUM_DECLARE(Type, Border);
+			HL_ENUM_DECLARE(Type, StrikeThrough);
+			HL_ENUM_DECLARE(Type, Underline);
 			HL_ENUM_DECLARE(Type, IgnoreFormatting);
 			HL_ENUM_DECLARE(Type, Close);
 			HL_ENUM_DECLARE(Type, CloseConsume);

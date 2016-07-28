@@ -12,6 +12,8 @@ s	- shadow; parameter (optional): string with hex value for color in RGB or RGBA
               parameter (optional): shadow offset as "X,Y" multiplier (counted as 1 parameter)
 b	- border; parameter (optional): string with hex value for color in RGB or RGBA
               parameter (optional): border thickness multiplier
+t	- strike-through; parameter (optional): strike-through thickness multiplier
+u	- underline; parameter (optional): underline thickness multiplier
 c	- color change; parameter: string with hex value for color in RGB
 f	- font change; parameter: string of the font name definition including optional scale factor
 i	- icon; parameter: string of the icon font name definition including optional scale factor

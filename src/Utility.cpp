@@ -14,7 +14,12 @@
 
 namespace atres
 {
-	static april::TexturedVertex vert[6];
+	static april::TexturedVertex _tVertices[6];
+	static april::PlainVertex _pVertices[6];
+	static float left = 0.0f;
+	static float right = 0.0f;
+	static float top = 0.0f;
+	static float bottom = 0.0f;
 
 	HL_ENUM_CLASS_DEFINE(Horizontal,
 	(
@@ -110,17 +115,45 @@ namespace atres
 	{
 	}
 
-	void RenderSequence::addRenderRectangle(RenderRectangle rect)
+	void RenderSequence::addRenderRectangle(const RenderRectangle& rect)
 	{
-		vert[0].x = rect.dest.left();	vert[0].y = rect.dest.top();	vert[0].u = rect.src.left();	vert[0].v = rect.src.top();
-		vert[1].x = rect.dest.right();	vert[1].y = rect.dest.top();	vert[1].u = rect.src.right();	vert[1].v = rect.src.top();
-		vert[2].x = rect.dest.left();	vert[2].y = rect.dest.bottom();	vert[2].u = rect.src.left();	vert[2].v = rect.src.bottom();
-		vert[3].x = rect.dest.right();	vert[3].y = rect.dest.top();	vert[3].u = rect.src.right();	vert[3].v = rect.src.top();
-		vert[4].x = rect.dest.right();	vert[4].y = rect.dest.bottom();	vert[4].u = rect.src.right();	vert[4].v = rect.src.bottom();
-		vert[5].x = rect.dest.left();	vert[5].y = rect.dest.bottom();	vert[5].u = rect.src.left();	vert[5].v = rect.src.bottom();
-		this->vertices.add(vert, 6);
+		_tVertices[0].x = _tVertices[2].x = _tVertices[4].x = rect.dest.left();
+		_tVertices[1].x = _tVertices[3].x = _tVertices[5].x = rect.dest.right();
+		_tVertices[0].y = _tVertices[1].y = _tVertices[3].y = rect.dest.top();
+		_tVertices[2].y = _tVertices[4].y = _tVertices[5].y = rect.dest.bottom();
+		_tVertices[0].u = _tVertices[2].u = _tVertices[4].u = rect.src.left();
+		_tVertices[1].u = _tVertices[3].u = _tVertices[5].u = rect.src.right();
+		_tVertices[0].v = _tVertices[1].v = _tVertices[3].v = rect.src.top();
+		_tVertices[2].v = _tVertices[4].v = _tVertices[5].v = rect.src.bottom();
+		this->vertices.add(_tVertices, 6);
 	}
 	
+	RenderLiningSequence::RenderLiningSequence() : multiplyAlpha(false)
+	{
+	}
+
+	RenderLiningSequence::~RenderLiningSequence()
+	{
+	}
+
+	void RenderLiningSequence::addRectangle(const grect& rect)
+	{
+		top = rect.top();
+		bottom = rect.bottom();
+		if (this->vertices.size() > 0 && this->vertices[this->vertices.size() - 1].y == bottom && this->vertices[this->vertices.size() - 3].y == top)
+		{
+			this->vertices[this->vertices.size() - 1].x = this->vertices[this->vertices.size() - 3].x = this->vertices[this->vertices.size() - 5].x = rect.right();
+		}
+		else
+		{
+			_pVertices[0].x = _pVertices[2].x = _pVertices[4].x = rect.left();
+			_pVertices[1].x = _pVertices[3].x = _pVertices[5].x = rect.right();
+			_pVertices[0].y = _pVertices[1].y = _pVertices[3].y = top;
+			_pVertices[2].y = _pVertices[4].y = _pVertices[5].y = bottom;
+			this->vertices.add(_pVertices, 6);
+		}
+	}
+
 	RenderWord::RenderWord() : start(0), count(0), spaces(0), icon(false), advanceX(0.0f)
 	{
 	}
@@ -155,6 +188,8 @@ namespace atres
 		HL_ENUM_DEFINE(FormatTag::Type, NoEffect);
 		HL_ENUM_DEFINE(FormatTag::Type, Shadow);
 		HL_ENUM_DEFINE(FormatTag::Type, Border);
+		HL_ENUM_DEFINE(FormatTag::Type, StrikeThrough);
+		HL_ENUM_DEFINE(FormatTag::Type, Underline);
 		HL_ENUM_DEFINE(FormatTag::Type, IgnoreFormatting);
 		HL_ENUM_DEFINE(FormatTag::Type, Close);
 		HL_ENUM_DEFINE(FormatTag::Type, CloseConsume);

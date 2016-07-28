@@ -57,6 +57,8 @@
 	"[c=FFFFFF7F]sh[i:icon_font]blue[/i][i:icon_font]orange[/i]w[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s=00FF00]X_horz_formatting [c=00FF00]justified[/c][/s] " \
 	"[b]w[c=purple]ork[/c]s[/b] [f Arial:1.3]right[/f] or\nnot."
 #define TEXT_5 "[b:,3]This is a vertical test.\nIt really is. Really."
+#define TEXT_6 "This is [t]a [b=007FFF,2]strike-[i:icon_font]blue[/i]-[c:00FF00]through[/c]\ntest[/b][/t] and " \
+	"this[u:4]\nis an [s=007FFF,2,2]under[c:FF0000]line[/c]\nte[/s]st[/u]."
 
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 grect viewport(0.0f, 0.0f, 1024.0f, 768.0f);
@@ -66,6 +68,7 @@ grect textArea2(120.0f, 400.0f, 600.0f, 128.0f);
 grect textArea3(80.0f, 550.0f, 360.0f, 184.0f);
 grect textArea4(768.0f, 200.0f, 160.0f, 384.0f);
 grect textArea5(700.0f, 600.0f, 240.0f, 76.0f);
+grect textArea6(60.0f, 200.0f, 400.0f, 160.0f);
 april::Color backgroundColor = april::Color(0, 0, 0, 128);
 
 class KeyboardDelegate : public april::KeyboardDelegate
@@ -166,6 +169,7 @@ public:
 		april::rendersys->drawFilledRect(textArea3, backgroundColor);
 		april::rendersys->drawFilledRect(textArea4, backgroundColor);
 		april::rendersys->drawFilledRect(textArea5, backgroundColor);
+		april::rendersys->drawFilledRect(textArea6, backgroundColor);
 		// texts
 		atres::renderer->drawText(textArea0, TEXT_0, atres::Horizontal::Center, atres::Vertical::Top);
 		atres::renderer->drawText("Arial:0.8", textArea1, TEXT_1, atres::Horizontal::LeftWrapped);
@@ -173,6 +177,7 @@ public:
 		atres::renderer->drawText(textArea3, TEXT_3, atres::Horizontal::CenterWrapped, atres::Vertical::Center);
 		atres::renderer->drawText("Arial:0.8", textArea4, TEXT_4, atres::Horizontal::Justified, atres::Vertical::Center, this->color);
 		atres::renderer->drawText(textArea5, TEXT_5, atres::Horizontal::Center, atres::Vertical::Center, april::Color::White, mouseDelegate->offset);
+		atres::renderer->drawText(textArea6, TEXT_6, atres::Horizontal::Center, atres::Vertical::Center, april::Color::White, mouseDelegate->offset);
 		return true;
 	}
 
@@ -261,6 +266,7 @@ void april_init(const harray<hstr>& args)
 		atres::renderer->registerFont(new atres::FontIconMap(RESOURCE_PATH "icon_font", "icon_font", 1.0f, 2.8f, 4.0f));
 		atres::renderer->setShadowColor(april::Color::Red);
 		atres::renderer->setBorderColor(april::Color::Aqua);
+		atres::renderer->setStrikeThroughThickness(2.0f);
 	}
 	catch (hexception& e)
 	{

@@ -129,6 +129,8 @@ namespace atres
 		this->shadowOffset.set(1.0f, 1.0f);
 		this->shadowColor = april::Color::Black;
 		this->borderThickness = 1.0f;
+		this->strikeThroughThickness = 1.0f;
+		this->underlineThickness = 1.0f;
 		this->borderColor = april::Color::Black;
 		this->globalOffsets = false;
 		this->useLegacyLineBreakParsing = false;
@@ -156,6 +158,12 @@ namespace atres
 		this->_borderFontThickness = 1.0f;
 		this->_textBorderThickness = 1.0f;
 		this->_effectMode = 0;
+		this->_strikeThroughActive = false;
+		this->_strikeThroughThickness = 1.0f;
+		this->_textStrikeThroughThickness = 1.0f;
+		this->_underlineActive = false;
+		this->_underlineThickness = 1.0f;
+		this->_textUnderlineThickness = 1.0f;
 		this->_alpha = -1;
 		// cache
 		this->cacheText = new Cache<CacheEntryText>();
@@ -200,6 +208,24 @@ namespace atres
 		}
 	}
 	
+	void Renderer::setStrikeThroughThickness(float value)
+	{
+		if (this->strikeThroughThickness != value)
+		{
+			this->strikeThroughThickness = value;
+			this->clearCache();
+		}
+	}
+
+	void Renderer::setUnderlineThickness(float value)
+	{
+		if (this->underlineThickness != value)
+		{
+			this->underlineThickness = value;
+			this->clearCache();
+		}
+	}
+
 	void Renderer::setBorderColor(april::Color value)
 	{
 		if (this->borderColor != value)
@@ -523,6 +549,12 @@ namespace atres
 				case 'b':
 					tag.type = FormatTag::Type::Border;
 					break;
+				case 't':
+					tag.type = FormatTag::Type::StrikeThrough;
+					break;
+				case 'u':
+					tag.type = FormatTag::Type::Underline;
+					break;
 				case '-': // ignore formattting from here on
 					tag.type = FormatTag::Type::IgnoreFormatting;
 					ignoreFormatting = true;
@@ -748,6 +780,12 @@ namespace atres
 		this->_borderThickness = 1.0f;
 		this->_borderFontThickness = 1.0f;
 		this->_textBorderThickness = 1.0f;
+		this->_strikeThroughActive = false;
+		this->_strikeThroughThickness = 1.0f;
+		this->_textStrikeThroughThickness = 1.0f;
+		this->_underlineActive = false;
+		this->_underlineThickness = 1.0f;
+		this->_textUnderlineThickness = 1.0f;
 	}
 
 	void Renderer::_initializeRenderSequences()
@@ -761,11 +799,30 @@ namespace atres
 		this->_borderSequence = RenderSequence();
 		this->_borderSequence.color = this->borderColor;
 		this->_renderRect = RenderRectangle();
+		this->_textLiningSequences.clear();
+		this->_textStrikeThroughSequence = RenderLiningSequence();
+		this->_textUnderlineSequence = RenderLiningSequence();
+		this->_shadowLiningSequences.clear();
+		this->_shadowStrikeThroughSequence = RenderLiningSequence();
+		this->_shadowStrikeThroughSequence.color = this->shadowColor;
+		this->_shadowUnderlineSequence = RenderLiningSequence();
+		this->_shadowUnderlineSequence.color = this->shadowColor;
+		this->_borderLiningSequences.clear();
+		this->_borderStrikeThroughSequence = RenderLiningSequence();
+		this->_borderStrikeThroughSequence.color = this->borderColor;
+		this->_borderUnderlineSequence = RenderLiningSequence();
+		this->_borderUnderlineSequence.color = this->borderColor;
 		this->_textColor = april::Color::White;
 		this->_shadowColor = this->shadowColor;
 		this->_borderColor = this->borderColor;
 		this->_hex = "";
 		this->_effectMode = 0;
+		this->_strikeThroughActive = false;
+		this->_strikeThroughThickness = 1.0f;
+		this->_textStrikeThroughThickness = 1.0f;
+		this->_underlineActive = false;
+		this->_underlineThickness = 1.0f;
+		this->_textUnderlineThickness = 1.0f;
 		this->_alpha = -1;
 	}
 
@@ -879,6 +936,20 @@ namespace atres
 				this->_stack += this->_currentTag;
 				this->_textScale = this->_nextTag.data;
 			}
+			else if (this->_nextTag.type == FormatTag::Type::StrikeThrough)
+			{
+				this->_currentTag.type = FormatTag::Type::StrikeThrough;
+				this->_currentTag.data = this->_textStrikeThroughThickness;
+				this->_stack += this->_currentTag;
+				this->_textStrikeThroughThickness = (this->_nextTag.data != "" ? (float)this->_nextTag.data : 1.0f);
+			}
+			else if (this->_nextTag.type == FormatTag::Type::Underline)
+			{
+				this->_currentTag.type = FormatTag::Type::Underline;
+				this->_currentTag.data = this->_textUnderlineThickness;
+				this->_stack += this->_currentTag;
+				this->_textUnderlineThickness = (this->_nextTag.data != "" ? (float)this->_nextTag.data : 1.0f);
+			}
 			else
 			{
 				this->_currentTag.type = FormatTag::Type::NoEffect;
@@ -974,6 +1045,16 @@ namespace atres
 					{
 						this->_borderColor.set(this->_hex);
 					}
+				}
+				else if (this->_currentTag.type == FormatTag::Type::StrikeThrough)
+				{
+					this->_strikeThroughActive = false;
+					this->_textStrikeThroughThickness = (float)this->_currentTag.data;
+				}
+				else if (this->_currentTag.type == FormatTag::Type::Underline)
+				{
+					this->_underlineActive = false;
+					this->_textUnderlineThickness = (float)this->_currentTag.data;
 				}
 			}
 			else
@@ -1128,6 +1209,28 @@ namespace atres
 						}
 					}
 				}
+				else if (this->_nextTag.type == FormatTag::Type::StrikeThrough)
+				{
+					this->_currentTag.type = FormatTag::Type::StrikeThrough;
+					this->_currentTag.data = this->_textStrikeThroughThickness;
+					this->_stack += this->_currentTag;
+					this->_strikeThroughActive = true;
+					if (this->_nextTag.data != "")
+					{
+						this->_textStrikeThroughThickness = (float)this->_nextTag.data;
+					}
+				}
+				else if (this->_nextTag.type == FormatTag::Type::Underline)
+				{
+					this->_currentTag.type = FormatTag::Type::Underline;
+					this->_currentTag.data = this->_textUnderlineThickness;
+					this->_stack += this->_currentTag;
+					this->_underlineActive = true;
+					if (this->_nextTag.data != "")
+					{
+						this->_textUnderlineThickness = (float)this->_nextTag.data;
+					}
+				}
 				else if (this->_nextTag.type == FormatTag::Type::IgnoreFormatting)
 				{
 					this->_currentTag.type = FormatTag::Type::IgnoreFormatting;
@@ -1214,6 +1317,91 @@ namespace atres
 			this->_borderSequence.texture = this->_texture;
 			this->_borderSequence.color = this->_borderColor;
 		}
+		if (this->_textStrikeThroughSequence.color != this->_textColor)
+		{
+			if (this->_textStrikeThroughSequence.vertices.size() > 0)
+			{
+				this->_textLiningSequences += this->_textStrikeThroughSequence;
+				this->_textStrikeThroughSequence.vertices.clear();
+			}
+			this->_textStrikeThroughSequence.color = this->_textColor;
+			if (this->_textUnderlineSequence.vertices.size() > 0)
+			{
+				this->_textLiningSequences += this->_textUnderlineSequence;
+				this->_textUnderlineSequence.vertices.clear();
+			}
+			this->_textUnderlineSequence.color = this->_textColor;
+		}
+		if (this->_shadowStrikeThroughSequence.color != this->_shadowColor)
+		{
+			if (this->_shadowStrikeThroughSequence.vertices.size() > 0)
+			{
+				this->_shadowLiningSequences += this->_shadowStrikeThroughSequence;
+				this->_shadowStrikeThroughSequence.vertices.clear();
+			}
+			this->_shadowStrikeThroughSequence.color = this->_shadowColor;
+			if (this->_shadowUnderlineSequence.vertices.size() > 0)
+			{
+				this->_shadowLiningSequences += this->_shadowUnderlineSequence;
+				this->_shadowUnderlineSequence.vertices.clear();
+			}
+			this->_shadowUnderlineSequence.color = this->_shadowColor;
+		}
+		if (this->_borderStrikeThroughSequence.color != this->_borderColor)
+		{
+			if (this->_borderStrikeThroughSequence.vertices.size() > 0)
+			{
+				this->_borderLiningSequences += this->_borderStrikeThroughSequence;
+				this->_borderStrikeThroughSequence.vertices.clear();
+			}
+			this->_borderStrikeThroughSequence.color = this->_borderColor;
+			if (this->_borderUnderlineSequence.vertices.size() > 0)
+			{
+				this->_borderLiningSequences += this->_borderUnderlineSequence;
+				this->_borderUnderlineSequence.vertices.clear();
+			}
+			this->_borderUnderlineSequence.color = this->_borderColor;
+		}
+	}
+
+	void Renderer::_updateLiningSequenceSwitch(bool force)
+	{
+		if (!this->_strikeThroughActive || force)
+		{
+			if (this->_textStrikeThroughSequence.vertices.size() > 0)
+			{
+				this->_textLiningSequences += this->_textStrikeThroughSequence;
+				this->_textStrikeThroughSequence.vertices.clear();
+			}
+			if (this->_shadowStrikeThroughSequence.vertices.size() > 0)
+			{
+				this->_shadowLiningSequences += this->_shadowStrikeThroughSequence;
+				this->_shadowStrikeThroughSequence.vertices.clear();
+			}
+			if (this->_borderStrikeThroughSequence.vertices.size() > 0)
+			{
+				this->_borderLiningSequences += this->_borderStrikeThroughSequence;
+				this->_borderStrikeThroughSequence.vertices.clear();
+			}
+		}
+		if (!this->_underlineActive || force)
+		{
+			if (this->_textUnderlineSequence.vertices.size() > 0)
+			{
+				this->_textLiningSequences += this->_textUnderlineSequence;
+				this->_textUnderlineSequence.vertices.clear();
+			}
+			if (this->_shadowUnderlineSequence.vertices.size() > 0)
+			{
+				this->_shadowLiningSequences += this->_shadowUnderlineSequence;
+				this->_shadowUnderlineSequence.vertices.clear();
+			}
+			if (this->_borderUnderlineSequence.vertices.size() > 0)
+			{
+				this->_borderLiningSequences += this->_borderUnderlineSequence;
+				this->_borderUnderlineSequence.vertices.clear();
+			}
+		}
 	}
 
 	harray<RenderWord> Renderer::createRenderWords(grect rect, chstr text, harray<FormatTag> tags)
@@ -1249,14 +1437,15 @@ namespace atres
 		word.rect.x = rect.x;
 		word.rect.y = rect.y;
 		word.rect.h = this->_height;
-		
-		while (i < actualSize) // checking all words
+		// checking all words
+		while (i < actualSize)
 		{
 			start = i;
 			chars = 0;
 			wordX = 0.0f;
 			icon = false;
-			while (i < actualSize) // checking a whole word
+			// checking a whole word
+			while (i < actualSize)
 			{
 				ax = 0.0f;
 				aw = 0.0f;
@@ -1510,14 +1699,17 @@ namespace atres
 		this->_initializeLineProcessing(lines);
 		int byteSize = 0;
 		float width = 0.0f;
-		grect destination;
+		float characterX = 0.0f;
+		float advanceWidth = 0.0f;
+		RenderRectangle currentRect;
 		grect area;
 		grect drawRect;
 		gvec2 rectSize;
-		
-		while (this->_lines.size() > 0)
+		grect liningRect;
+		// basic text with borders, shadows and icons
+		for_iter (i, 0, this->_lines.size())
 		{
-			this->_line = this->_lines.removeFirst();
+			this->_line = this->_lines[i];
 			foreach (RenderWord, it, this->_line.words)
 			{
 				width = 0.0f;
@@ -1536,7 +1728,10 @@ namespace atres
 						this->_shadowOffset = this->shadowOffset * this->_textShadowOffset;
 						this->_borderThickness = this->borderThickness * this->_textBorderThickness;
 						this->_borderFontThickness = this->_borderThickness;
+						this->_strikeThroughThickness = this->strikeThroughThickness * this->_textStrikeThroughThickness;
+						this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
 						area = this->_word.rect;
+						characterX = area.x + width;
 						area.x += hmax(0.0f, width + this->_iconFontBearingX * this->_scale);
 						area.y += (this->_lineHeight - this->_height) * 0.5f + this->_iconFontOffsetY * this->_scale;
 						area.w = this->_icon->rect.w * this->_scale;
@@ -1544,37 +1739,38 @@ namespace atres
 						area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 						area.y += (this->_height - this->_icon->rect.h * this->_scale) * 0.5f;
 						drawRect = rect;
+						advanceWidth = this->_icon->advance * this->_scale;
 						if (this->_iconFont != NULL)
 						{
 							this->_renderRect = this->_iconFont->makeRenderRectangle(drawRect, area, this->_iconName);
 							if (this->_renderRect.src.w > 0.0f && this->_renderRect.src.h > 0.0f && this->_renderRect.dest.w > 0.0f && this->_renderRect.dest.h > 0.0f)
 							{
 								this->_textSequence.addRenderRectangle(this->_renderRect);
-								destination = this->_renderRect.dest;
 								switch (this->_effectMode)
 								{
 								case EFFECT_MODE_SHADOW: // shadow
-									this->_renderRect.dest = destination + this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+									this->_renderRect.dest += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
 									this->_shadowSequence.addRenderRectangle(this->_renderRect);
 									break;
 								case EFFECT_MODE_BORDER: // border
 									if (this->_iconFont->getBorderMode() == Font::BorderMode::Software || !this->_iconFont->hasBorderIcon(this->_iconName, this->_borderFontThickness))
 									{
-										this->_renderRect.dest = destination + gvec2(-this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
+										currentRect = this->_renderRect;
+										this->_renderRect.dest = currentRect.dest + gvec2(-this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
 										this->_borderSequence.addRenderRectangle(this->_renderRect);
-										this->_renderRect.dest = destination + gvec2(this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
+										this->_renderRect.dest = currentRect.dest + gvec2(this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
 										this->_borderSequence.addRenderRectangle(this->_renderRect);
-										this->_renderRect.dest = destination + gvec2(-this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
+										this->_renderRect.dest = currentRect.dest + gvec2(-this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
 										this->_borderSequence.addRenderRectangle(this->_renderRect);
-										this->_renderRect.dest = destination + gvec2(this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
+										this->_renderRect.dest = currentRect.dest + gvec2(this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
 										this->_borderSequence.addRenderRectangle(this->_renderRect);
-										this->_renderRect.dest = destination + gvec2(0.0f, -this->_borderThickness);
+										this->_renderRect.dest = currentRect.dest + gvec2(0.0f, -this->_borderThickness);
 										this->_borderSequence.addRenderRectangle(this->_renderRect);
-										this->_renderRect.dest = destination + gvec2(-this->_borderThickness, 0.0f);
+										this->_renderRect.dest = currentRect.dest + gvec2(-this->_borderThickness, 0.0f);
 										this->_borderSequence.addRenderRectangle(this->_renderRect);
-										this->_renderRect.dest = destination + gvec2(this->_borderThickness, 0.0f);
+										this->_renderRect.dest = currentRect.dest + gvec2(this->_borderThickness, 0.0f);
 										this->_borderSequence.addRenderRectangle(this->_renderRect);
-										this->_renderRect.dest = destination + gvec2(0.0f, this->_borderThickness);
+										this->_renderRect.dest = currentRect.dest + gvec2(0.0f, this->_borderThickness);
 										this->_borderSequence.addRenderRectangle(this->_renderRect);
 										this->_borderSequence.multiplyAlpha = true;
 									}
@@ -1599,10 +1795,61 @@ namespace atres
 										this->_borderSequence.multiplyAlpha = false;
 									}
 									break;
+								default:
+									break;
+								}
+								this->_updateLiningSequenceSwitch();
+								if (this->_strikeThroughActive)
+								{
+									liningRect.x = characterX;
+									liningRect.y = this->_word.rect.y + (this->_height - this->_strikeThroughThickness) * 0.5f;
+									liningRect.w = advanceWidth;
+									liningRect.h = this->_strikeThroughThickness;
+									this->_textStrikeThroughSequence.addRectangle(liningRect);
+									switch (this->_effectMode)
+									{
+									case EFFECT_MODE_SHADOW: // shadow
+										liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+										this->_shadowStrikeThroughSequence.addRectangle(liningRect);
+										break;
+									case EFFECT_MODE_BORDER: // border
+										liningRect.x -= this->_borderThickness;
+										liningRect.y -= this->_borderThickness;
+										liningRect.w += this->_borderThickness * 2.0f;
+										liningRect.h += this->_borderThickness * 2.0f;
+										this->_borderStrikeThroughSequence.addRectangle(liningRect);
+										break;
+									default:
+										break;
+									}
+								}
+								if (this->_underlineActive)
+								{
+									liningRect.x = characterX;
+									liningRect.y = this->_word.rect.y + (this->_height - this->_underlineThickness);
+									liningRect.w = advanceWidth;
+									liningRect.h = this->_underlineThickness;
+									this->_textUnderlineSequence.addRectangle(liningRect);
+									switch (this->_effectMode)
+									{
+									case EFFECT_MODE_SHADOW: // shadow
+										liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+										this->_shadowUnderlineSequence.addRectangle(liningRect);
+										break;
+									case EFFECT_MODE_BORDER: // border
+										liningRect.x -= this->_borderThickness;
+										liningRect.y -= this->_borderThickness;
+										liningRect.w += this->_borderThickness * 2.0f;
+										liningRect.h += this->_borderThickness * 2.0f;
+										this->_borderUnderlineSequence.addRectangle(liningRect);
+										break;
+									default:
+										break;
+									}
 								}
 							}
 						}
-						width += this->_icon->advance * this->_scale;
+						width += advanceWidth;
 					}
 				}
 				else
@@ -1621,13 +1868,17 @@ namespace atres
 							this->_shadowOffset = this->shadowOffset * this->_textShadowOffset;
 							this->_borderThickness = this->borderThickness * this->_textBorderThickness;
 							this->_borderFontThickness = this->_borderThickness / this->_fontBaseScale;
+							this->_strikeThroughThickness = this->strikeThroughThickness * this->_textStrikeThroughThickness;
+							this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
 							area = this->_word.rect;
+							characterX = area.x + width;
 							area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale);
 							area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale;
 							area.w = this->_character->rect.w * this->_scale;
 							area.h = this->_character->rect.h * this->_scale;
 							area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 							drawRect = rect;
+							advanceWidth = (width < -this->_character->bearing.x * this->_scale ? (this->_character->advance - this->_character->bearing.x) : this->_character->advance) * this->_scale;
 							if (this->_font != NULL)
 							{
 								this->_renderRect = this->_font->makeRenderRectangle(drawRect, area, this->_code);
@@ -1635,31 +1886,31 @@ namespace atres
 								if (this->_renderRect.src.w > 0.0f && this->_renderRect.src.h > 0.0f && this->_renderRect.dest.w > 0.0f && this->_renderRect.dest.h > 0.0f)
 								{
 									this->_textSequence.addRenderRectangle(this->_renderRect);
-									destination = this->_renderRect.dest;
 									switch (this->_effectMode)
 									{
 									case EFFECT_MODE_SHADOW: // shadow
-										this->_renderRect.dest = destination + this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+										this->_renderRect.dest += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
 										this->_shadowSequence.addRenderRectangle(this->_renderRect);
 										break;
 									case EFFECT_MODE_BORDER: // border
 										if (this->_font->getBorderMode() == Font::BorderMode::Software || !this->_font->hasBorderCharacter(this->_code, this->_borderFontThickness))
 										{
-											this->_renderRect.dest = destination + gvec2(-this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
+											currentRect = this->_renderRect;
+											this->_renderRect.dest = currentRect.dest + gvec2(-this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
 											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = destination + gvec2(this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
+											this->_renderRect.dest = currentRect.dest + gvec2(this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
 											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = destination + gvec2(-this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
+											this->_renderRect.dest = currentRect.dest + gvec2(-this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
 											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = destination + gvec2(this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
+											this->_renderRect.dest = currentRect.dest + gvec2(this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
 											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = destination + gvec2(0.0f, -this->_borderThickness);
+											this->_renderRect.dest = currentRect.dest + gvec2(0.0f, -this->_borderThickness);
 											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = destination + gvec2(-this->_borderThickness, 0.0f);
+											this->_renderRect.dest = currentRect.dest + gvec2(-this->_borderThickness, 0.0f);
 											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = destination + gvec2(this->_borderThickness, 0.0f);
+											this->_renderRect.dest = currentRect.dest + gvec2(this->_borderThickness, 0.0f);
 											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = destination + gvec2(0.0f, this->_borderThickness);
+											this->_renderRect.dest = currentRect.dest + gvec2(0.0f, this->_borderThickness);
 											this->_borderSequence.addRenderRectangle(this->_renderRect);
 											this->_borderSequence.multiplyAlpha = true;
 										}
@@ -1684,10 +1935,61 @@ namespace atres
 											this->_borderSequence.multiplyAlpha = false;
 										}
 										break;
+									default:
+										break;
+									}
+									this->_updateLiningSequenceSwitch();
+									if (this->_strikeThroughActive)
+									{
+										liningRect.x = characterX;
+										liningRect.y = this->_word.rect.y + (this->_height - this->_strikeThroughThickness) * 0.5f;
+										liningRect.w = advanceWidth;
+										liningRect.h = this->_strikeThroughThickness;
+										this->_textStrikeThroughSequence.addRectangle(liningRect);
+										switch (this->_effectMode)
+										{
+										case EFFECT_MODE_SHADOW: // shadow
+											liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+											this->_shadowStrikeThroughSequence.addRectangle(liningRect);
+											break;
+										case EFFECT_MODE_BORDER: // border
+											liningRect.x -= this->_borderThickness;
+											liningRect.y -= this->_borderThickness;
+											liningRect.w += this->_borderThickness * 2.0f;
+											liningRect.h += this->_borderThickness * 2.0f;
+											this->_borderStrikeThroughSequence.addRectangle(liningRect);
+											break;
+										default:
+											break;
+										}
+									}
+									if (this->_underlineActive)
+									{
+										liningRect.x = characterX;
+										liningRect.y = this->_word.rect.y + (this->_height - this->_underlineThickness);
+										liningRect.w = advanceWidth;
+										liningRect.h = this->_underlineThickness;
+										this->_textUnderlineSequence.addRectangle(liningRect);
+										switch (this->_effectMode)
+										{
+										case EFFECT_MODE_SHADOW: // shadow
+											liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+											this->_shadowUnderlineSequence.addRectangle(liningRect);
+											break;
+										case EFFECT_MODE_BORDER: // border
+											liningRect.x -= this->_borderThickness;
+											liningRect.y -= this->_borderThickness;
+											liningRect.w += this->_borderThickness * 2.0f;
+											liningRect.h += this->_borderThickness * 2.0f;
+											this->_borderUnderlineSequence.addRectangle(liningRect);
+											break;
+										default:
+											break;
+										}
 									}
 								}
 							}
-							width += (width < -this->_character->bearing.x * this->_scale ? (this->_character->advance - this->_character->bearing.x) : this->_character->advance) * this->_scale;
+							width += advanceWidth;
 						}
 					}
 				}
@@ -1708,10 +2010,16 @@ namespace atres
 			this->_borderSequences += this->_borderSequence;
 			this->_borderSequence.vertices.clear();
 		}
+		this->_updateLiningSequenceSwitch(true);
+		// clear data and optimizations
+		this->_lines.clear();
 		RenderText result;
 		result.textSequences = this->optimizeSequences(this->_textSequences);
 		result.shadowSequences = this->optimizeSequences(this->_shadowSequences);
 		result.borderSequences = this->optimizeSequences(this->_borderSequences);
+		result.textLiningSequences = this->optimizeSequences(this->_textLiningSequences);
+		result.shadowLiningSequences = this->optimizeSequences(this->_shadowLiningSequences);
+		result.borderLiningSequences = this->optimizeSequences(this->_borderLiningSequences);
 		return result;
 	}
 
@@ -1736,11 +2044,36 @@ namespace atres
 		return result;
 	}
 
+	harray<RenderLiningSequence> Renderer::optimizeSequences(harray<RenderLiningSequence>& sequences)
+	{
+		harray<RenderLiningSequence> result;
+		RenderLiningSequence current;
+		while (sequences.size() > 0)
+		{
+			current = sequences.removeFirst();
+			for_iter(i, 0, sequences.size())
+			{
+				if (current.color.hex(true) == sequences[i].color.hex(true) && current.multiplyAlpha == sequences[i].multiplyAlpha)
+				{
+					current.vertices += sequences[i].vertices;
+					sequences.removeAt(i);
+					--i;
+				}
+			}
+			result += current;
+		}
+		return result;
+	}
+
 	void Renderer::_drawRenderText(RenderText& renderText, april::Color color)
 	{
 		foreach (RenderSequence, it, renderText.shadowSequences)
 		{
 			this->_drawRenderSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f())));
+		}
+		foreach (RenderLiningSequence, it, renderText.shadowLiningSequences)
+		{
+			this->_drawRenderLiningSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f())));
 		}
 		foreach (RenderSequence, it, renderText.borderSequences)
 		{
@@ -1753,9 +2086,24 @@ namespace atres
 				this->_drawRenderSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f())));
 			}
 		}
+		foreach (RenderLiningSequence, it, renderText.borderLiningSequences)
+		{
+			if ((*it).multiplyAlpha)
+			{
+				this->_drawRenderLiningSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f() * color.a_f())));
+			}
+			else
+			{
+				this->_drawRenderLiningSequence((*it), april::Color((*it).color, (unsigned char)((*it).color.a * color.a_f())));
+			}
+		}
 		foreach (RenderSequence, it, renderText.textSequences)
 		{
 			this->_drawRenderSequence((*it), april::Color((*it).color, color.a));
+		}
+		foreach (RenderLiningSequence, it, renderText.textLiningSequences)
+		{
+			this->_drawRenderLiningSequence((*it), april::Color((*it).color, color.a));
 		}
 	}
 
@@ -1776,6 +2124,17 @@ namespace atres
 			april::rendersys->setColorMode(april::CM_DEFAULT);
 		}
 		april::rendersys->render(april::RO_TRIANGLE_LIST, (april::TexturedVertex*)sequence.vertices, sequence.vertices.size(), color);
+	}
+
+	void Renderer::_drawRenderLiningSequence(RenderLiningSequence& sequence, april::Color color)
+	{
+		if (sequence.vertices.size() == 0 || color.a == 0)
+		{
+			return;
+		}
+		april::rendersys->setBlendMode(april::BM_DEFAULT);
+		april::rendersys->setColorMode(april::CM_DEFAULT);
+		april::rendersys->render(april::RO_TRIANGLE_LIST, (april::PlainVertex*)sequence.vertices, sequence.vertices.size(), color);
 	}
 
 	bool Renderer::_checkTextures()
