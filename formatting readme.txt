@@ -12,8 +12,10 @@ s	- shadow; parameter (optional): string with hex value for color in RGB or RGBA
               parameter (optional): shadow offset as "X,Y" multiplier (counted as 1 parameter)
 b	- border; parameter (optional): string with hex value for color in RGB or RGBA
               parameter (optional): border thickness multiplier
-t	- strike-through; parameter (optional): strike-through thickness multiplier
-u	- underline; parameter (optional): underline thickness multiplier
+t	- strike-through; parameter (optional): string with hex value for color in RGB or RGBA
+                      parameter (optional): strike-through thickness multiplier
+u	- underline; parameter (optional): string with hex value for color in RGB or RGBA
+                 parameter (optional): underline thickness multiplier
 c	- color change; parameter: string with hex value for color in RGB
 f	- font change; parameter: string of the font name definition including optional scale factor
 i	- icon; parameter: string of the icon font name definition including optional scale factor
@@ -28,6 +30,8 @@ The word [b:,1.5]thicker border[/b] has a 1.5 times thicker border than the defa
 This [f arial:0.9]word[/f] is displayed in "arial" with a scaling factor 0.9.
 The color of the word at the end is [c:00FF00]green[/c].
 Press [i:buttons]x_button[/i] to delete "C:\Windows\system32".
+This [u:FFFF00,2]underline[/i] is yellow and 2 pixels thick.
+This [t:,3]strike-through[/i] is 3 pixels thick, but uses the text color.
 
 
 Notes:
