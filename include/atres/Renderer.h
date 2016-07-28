@@ -223,10 +223,11 @@ namespace atres
 		april::Color _textColor;
 		april::Color _shadowColor;
 		april::Color _borderColor;
+		april::Color _strikeThroughColor;
+		april::Color _underlineColor;
 		hstr _hex;
-		hstr _effectColorString;
-		hstr _shadowOffsetString;
-		hstr _borderThicknessString;
+		hstr _parameterString0;
+		hstr _parameterString1;
 		int _effectMode;
 		bool _strikeThroughActive;
 		float _strikeThroughThickness;

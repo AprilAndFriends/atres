@@ -57,8 +57,8 @@
 	"[c=FFFFFF7F]sh[i:icon_font]blue[/i][i:icon_font]orange[/i]w[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s=00FF00]X_horz_formatting [c=00FF00]justified[/c][/s] " \
 	"[b]w[c=purple]ork[/c]s[/b] [f Arial:1.3]right[/f] or\nnot."
 #define TEXT_5 "[b:,3]This is a vertical test.\nIt really is. Really."
-#define TEXT_6 "This is [t]a [b=007FFF,2]strike-[i:icon_font]blue[/i]-[c:00FF00]through[/c]\ntest[/b][/t] and " \
-	"this[u:4]\nis an [s=007FFF,2,2]under[c:FF0000]line[/c]\nte[/s]st[/u]."
+#define TEXT_6 "This is [c:FFFF00][t:FF0000]a [b=007FFF,2]strike-[i:icon_font]blue[/i]-[c:00FF00]through[/c]\ntest[/b][/t] [t]an[/t][/c][t]d[/t] " \
+	"this[u:,4]\nis an [s=007FFF,2,2]under[c:FF0000]line[/c]\nte[/s]st[/u]."
 
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 grect viewport(0.0f, 0.0f, 1024.0f, 768.0f);

@@ -815,6 +815,8 @@ namespace atres
 		this->_textColor = april::Color::White;
 		this->_shadowColor = this->shadowColor;
 		this->_borderColor = this->borderColor;
+		this->_strikeThroughColor = april::Color::White;
+		this->_underlineColor = april::Color::White;
 		this->_hex = "";
 		this->_effectMode = 0;
 		this->_strikeThroughActive = false;
@@ -936,20 +938,6 @@ namespace atres
 				this->_stack += this->_currentTag;
 				this->_textScale = this->_nextTag.data;
 			}
-			else if (this->_nextTag.type == FormatTag::Type::StrikeThrough)
-			{
-				this->_currentTag.type = FormatTag::Type::StrikeThrough;
-				this->_currentTag.data = this->_textStrikeThroughThickness;
-				this->_stack += this->_currentTag;
-				this->_textStrikeThroughThickness = (this->_nextTag.data != "" ? (float)this->_nextTag.data : 1.0f);
-			}
-			else if (this->_nextTag.type == FormatTag::Type::Underline)
-			{
-				this->_currentTag.type = FormatTag::Type::Underline;
-				this->_currentTag.data = this->_textUnderlineThickness;
-				this->_stack += this->_currentTag;
-				this->_textUnderlineThickness = (this->_nextTag.data != "" ? (float)this->_nextTag.data : 1.0f);
-			}
 			else
 			{
 				this->_currentTag.type = FormatTag::Type::NoEffect;
@@ -999,6 +987,14 @@ namespace atres
 					this->_hex = this->colors.tryGet(this->_currentTag.data, this->_currentTag.data);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
+						if (this->_textColor == this->_strikeThroughColor)
+						{
+							this->_strikeThroughColor.set(this->_hex);
+						}
+						if (this->_textColor == this->_underlineColor)
+						{
+							this->_underlineColor.set(this->_hex);
+						}
 						this->_textColor.set(this->_hex);
 					}
 				}
@@ -1015,14 +1011,14 @@ namespace atres
 					this->_effectMode = EFFECT_MODE_SHADOW;
 					if (this->_currentTag.data.count(',') == 2)
 					{
-						this->_currentTag.data.split(',', this->_effectColorString, this->_shadowOffsetString);
-						this->_textShadowOffset = april::hstrToGvec2(this->_shadowOffsetString);
+						this->_currentTag.data.split(',', this->_parameterString0, this->_parameterString1);
+						this->_textShadowOffset = april::hstrToGvec2(this->_parameterString1);
 					}
 					else
 					{
-						this->_effectColorString = this->_currentTag.data;
+						this->_parameterString0 = this->_currentTag.data;
 					}
-					this->_hex = this->colors.tryGet(this->_effectColorString, this->_effectColorString);
+					this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_shadowColor.set(this->_hex);
@@ -1033,14 +1029,14 @@ namespace atres
 					this->_effectMode = EFFECT_MODE_BORDER;
 					if (this->_currentTag.data.count(',') == 1)
 					{
-						this->_currentTag.data.split(',', this->_effectColorString, this->_borderThicknessString);
-						this->_textBorderThickness = (float)this->_borderThicknessString;
+						this->_currentTag.data.split(',', this->_parameterString0, this->_parameterString1);
+						this->_textBorderThickness = (float)this->_parameterString1;
 					}
 					else
 					{
-						this->_effectColorString = this->_currentTag.data;
+						this->_parameterString0 = this->_currentTag.data;
 					}
-					this->_hex = this->colors.tryGet(this->_effectColorString, this->_effectColorString);
+					this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_borderColor.set(this->_hex);
@@ -1049,12 +1045,39 @@ namespace atres
 				else if (this->_currentTag.type == FormatTag::Type::StrikeThrough)
 				{
 					this->_strikeThroughActive = false;
-					this->_textStrikeThroughThickness = (float)this->_currentTag.data;
+					if (this->_currentTag.data.count(',') == 1)
+					{
+						this->_currentTag.data.split(',', this->_parameterString0, this->_parameterString1);
+						this->_textStrikeThroughThickness = (float)this->_parameterString1;
+					}
+					else
+					{
+						this->_parameterString0 = this->_currentTag.data;
+					}
+					this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
+					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
+					{
+						this->_strikeThroughColor.set(this->_hex);
+					}
+
 				}
 				else if (this->_currentTag.type == FormatTag::Type::Underline)
 				{
 					this->_underlineActive = false;
-					this->_textUnderlineThickness = (float)this->_currentTag.data;
+					if (this->_currentTag.data.count(',') == 1)
+					{
+						this->_currentTag.data.split(',', this->_parameterString0, this->_parameterString1);
+						this->_textUnderlineThickness = (float)this->_parameterString1;
+					}
+					else
+					{
+						this->_parameterString0 = this->_currentTag.data;
+					}
+					this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
+					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
+					{
+						this->_underlineColor.set(this->_hex);
+					}
 				}
 			}
 			else
@@ -1128,6 +1151,14 @@ namespace atres
 					this->_hex = (this->colors.hasKey(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
+						if (this->_textColor == this->_strikeThroughColor)
+						{
+							this->_strikeThroughColor.set(this->_hex);
+						}
+						if (this->_textColor == this->_underlineColor)
+						{
+							this->_underlineColor.set(this->_hex);
+						}
 						this->_textColor.set(this->_hex);
 						this->_alpha == -1 ? this->_alpha = this->_textColor.a : this->_textColor.a = (unsigned char)(this->_alpha * this->_textColor.a_f());
 					}
@@ -1152,28 +1183,28 @@ namespace atres
 				else if (this->_nextTag.type == FormatTag::Type::Shadow)
 				{
 					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? FormatTag::Type::Border : (this->_effectMode == EFFECT_MODE_SHADOW ? FormatTag::Type::Shadow : FormatTag::Type::NoEffect));
-					this->_currentTag.data = this->_shadowColor.hex();
+					this->_currentTag.data = this->_shadowColor.hex() + "," + april::gvec2ToHstr(this->_textShadowOffset);
 					this->_stack += this->_currentTag;
 					this->_effectMode = EFFECT_MODE_SHADOW;
 					this->_shadowColor = this->shadowColor;
 					if (this->_nextTag.data != "")
 					{
-						this->_shadowOffsetString = "";
+						this->_parameterString1 = "";
 						if (this->_nextTag.data.count(',') == 2)
 						{
-							this->_nextTag.data.split(',', this->_effectColorString, this->_shadowOffsetString);
-							this->_textShadowOffset = april::hstrToGvec2(this->_shadowOffsetString);
+							this->_nextTag.data.split(',', this->_parameterString0, this->_parameterString1);
+							this->_textShadowOffset = april::hstrToGvec2(this->_parameterString1);
 						}
 						else
 						{
-							this->_effectColorString = this->_nextTag.data;
+							this->_parameterString0 = this->_nextTag.data;
 						}
-						this->_hex = this->colors.tryGet(this->_effectColorString, this->_effectColorString);
+						this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
 						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 						{
 							this->_shadowColor.set(this->_hex);
 						}
-						else if (this->_shadowOffsetString == "" || this->_hex != "")
+						else if (this->_parameterString1 == "" || this->_hex != "")
 						{
 							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
@@ -1188,22 +1219,22 @@ namespace atres
 					this->_borderColor = this->borderColor;
 					if (this->_nextTag.data != "")
 					{
-						this->_borderThicknessString = "";
+						this->_parameterString1 = "";
 						if (this->_nextTag.data.count(',') == 1)
 						{
-							this->_nextTag.data.split(',', this->_effectColorString, this->_borderThicknessString);
-							this->_textBorderThickness = (float)this->_borderThicknessString;
+							this->_nextTag.data.split(',', this->_parameterString0, this->_parameterString1);
+							this->_textBorderThickness = (float)this->_parameterString1;
 						}
 						else
 						{
-							this->_effectColorString = this->_nextTag.data;
+							this->_parameterString0 = this->_nextTag.data;
 						}
-						this->_hex = this->colors.tryGet(this->_effectColorString, this->_effectColorString);
+						this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
 						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 						{
 							this->_borderColor.set(this->_hex);
 						}
-						else if (this->_borderThicknessString == "" || this->_hex != "")
+						else if (this->_parameterString1 == "" || this->_hex != "")
 						{
 							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
@@ -1212,23 +1243,59 @@ namespace atres
 				else if (this->_nextTag.type == FormatTag::Type::StrikeThrough)
 				{
 					this->_currentTag.type = FormatTag::Type::StrikeThrough;
-					this->_currentTag.data = this->_textStrikeThroughThickness;
+					this->_currentTag.data = this->_strikeThroughColor.hex() + "," + hstr(this->_textStrikeThroughThickness);
 					this->_stack += this->_currentTag;
 					this->_strikeThroughActive = true;
 					if (this->_nextTag.data != "")
 					{
-						this->_textStrikeThroughThickness = (float)this->_nextTag.data;
+						this->_parameterString1 = "";
+						if (this->_nextTag.data.count(',') == 1)
+						{
+							this->_nextTag.data.split(',', this->_parameterString0, this->_parameterString1);
+							this->_textStrikeThroughThickness = (float)this->_parameterString1;
+						}
+						else
+						{
+							this->_parameterString0 = this->_nextTag.data;
+						}
+						this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
+						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
+						{
+							this->_strikeThroughColor.set(this->_hex);
+						}
+						else if (this->_parameterString1 == "" || this->_hex != "")
+						{
+							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
+						}
 					}
 				}
 				else if (this->_nextTag.type == FormatTag::Type::Underline)
 				{
 					this->_currentTag.type = FormatTag::Type::Underline;
-					this->_currentTag.data = this->_textUnderlineThickness;
+					this->_currentTag.data = this->_underlineColor.hex() + "," + hstr(this->_textUnderlineThickness);
 					this->_stack += this->_currentTag;
 					this->_underlineActive = true;
 					if (this->_nextTag.data != "")
 					{
-						this->_textUnderlineThickness = (float)this->_nextTag.data;
+						this->_parameterString1 = "";
+						if (this->_nextTag.data.count(',') == 1)
+						{
+							this->_nextTag.data.split(',', this->_parameterString0, this->_parameterString1);
+							this->_textUnderlineThickness = (float)this->_parameterString1;
+						}
+						else
+						{
+							this->_parameterString0 = this->_nextTag.data;
+						}
+						this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
+						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
+						{
+							this->_underlineColor.set(this->_hex);
+						}
+						else if (this->_parameterString1 == "" || this->_hex != "")
+						{
+							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
+						}
 					}
 				}
 				else if (this->_nextTag.type == FormatTag::Type::IgnoreFormatting)
@@ -1317,20 +1384,23 @@ namespace atres
 			this->_borderSequence.texture = this->_texture;
 			this->_borderSequence.color = this->_borderColor;
 		}
-		if (this->_textStrikeThroughSequence.color != this->_textColor)
+		if (this->_textStrikeThroughSequence.color != this->_strikeThroughColor)
 		{
 			if (this->_textStrikeThroughSequence.vertices.size() > 0)
 			{
 				this->_textLiningSequences += this->_textStrikeThroughSequence;
 				this->_textStrikeThroughSequence.vertices.clear();
 			}
-			this->_textStrikeThroughSequence.color = this->_textColor;
+			this->_textStrikeThroughSequence.color = this->_strikeThroughColor;
+		}
+		if (this->_textUnderlineSequence.color != this->_underlineColor)
+		{
 			if (this->_textUnderlineSequence.vertices.size() > 0)
 			{
 				this->_textLiningSequences += this->_textUnderlineSequence;
 				this->_textUnderlineSequence.vertices.clear();
 			}
-			this->_textUnderlineSequence.color = this->_textColor;
+			this->_textUnderlineSequence.color = this->_underlineColor;
 		}
 		if (this->_shadowStrikeThroughSequence.color != this->_shadowColor)
 		{
