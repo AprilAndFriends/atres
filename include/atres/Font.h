@@ -49,6 +49,8 @@ namespace atres
 		float getLineHeight() const;
 		float getDescender() const;
 		float getInternalDescender() const;
+		float getStrikeThroughOffset() const;
+		float getUnderlineOffset() const;
 		HL_DEFINE_GET(BorderMode, borderMode, BorderMode);
 		virtual void setBorderMode(BorderMode value);
 		HL_DEFINE_IS(loaded, Loaded);
@@ -88,6 +90,8 @@ namespace atres
 		float lineHeight;
 		float descender;
 		float internalDescender;
+		float strikeThroughOffset;
+		float underlineOffset;
 		bool loaded;
 		bool nativeBorderSupported;
 		BorderMode borderMode;

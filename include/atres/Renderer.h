@@ -190,6 +190,8 @@ namespace atres
 		float _lineHeight;
 		float _descender;
 		float _internalDescender;
+		float _strikeThroughOffset;
+		float _underlineOffset;
 		float _fontScale;
 		float _fontBaseScale;
 		float _iconFontScale;

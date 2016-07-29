@@ -24,11 +24,13 @@ namespace atres
 	class atresExport FontIconMap : public FontDynamic
 	{
 	public:
-		FontIconMap(chstr fontDirectory, chstr name, float scale, float bearingX = 0.0f, float offsetY = 0.0f, float spacing = 0.0f);
+		FontIconMap(chstr fontDirectory, chstr name, float scale, float bearingX = 0.0f, float offsetY = 0.0f, float spacing = 0.0f,
+			float strikeThroughOffset = 0.0f, float underlineOffset = 0.0f);
 		~FontIconMap();
 
 		HL_DEFINE_GET(float, bearingX, BearingX);
 		HL_DEFINE_GET(float, offsetY, OffsetY);
+		HL_DEFINE_GET(float, spacing, Spacing);
 
 	protected:
 		hstr fontDirectory;

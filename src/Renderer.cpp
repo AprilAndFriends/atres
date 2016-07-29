@@ -145,6 +145,8 @@ namespace atres
 		this->_lineHeight = 0.0f;
 		this->_descender = 0.0f;
 		this->_internalDescender = 0.0f;
+		this->_strikeThroughOffset = 0.0f;
+		this->_underlineOffset = 0.0f;
 		this->_fontScale = 1.0f;
 		this->_fontBaseScale = 1.0f;
 		this->_iconFontScale = 1.0f;
@@ -768,6 +770,8 @@ namespace atres
 		this->_lineHeight = 0.0f;
 		this->_descender = 0.0f;
 		this->_internalDescender = 0.0f;
+		this->_strikeThroughOffset = 0.0f;
+		this->_underlineOffset = 0.0f;
 		this->_fontScale = 1.0f;
 		this->_fontBaseScale = 1.0f;
 		this->_iconFontScale = 1.0f;
@@ -870,7 +874,7 @@ namespace atres
 				this->_currentTag.type = FormatTag::Type::Font;
 				this->_currentTag.data = this->_fontName;
 				this->_stack += this->_currentTag;
-				if (this->_font == NULL) // if there is no previous font, the height values have to be obtained as well
+				if (this->_font == NULL) // if there is no previous font, some special values have to be obtained as well
 				{
 					this->_font = this->getFont(this->_nextTag.data);
 					if (this->_font != NULL)
@@ -879,6 +883,8 @@ namespace atres
 						this->_lineHeight = this->_font->getLineHeight();
 						this->_descender = this->_font->getDescender();
 						this->_internalDescender = this->_font->getInternalDescender();
+						this->_strikeThroughOffset = this->_font->getStrikeThroughOffset();
+						this->_underlineOffset = this->_font->getUnderlineOffset();
 					}
 				}
 				else
@@ -906,12 +912,14 @@ namespace atres
 				this->_iconFont = dynamic_cast<FontIconMap*>(this->getFont(this->_nextTag.data));
 				if (this->_iconFont != NULL)
 				{
-					if (this->_font == NULL) // if there is no previous font, the height values have to be obtained as well
+					if (this->_font == NULL) // if there is no previous font, some special values have to be obtained as well
 					{
 						this->_height = this->_iconFont->getHeight();
 						this->_lineHeight = this->_iconFont->getLineHeight();
 						this->_descender = this->_iconFont->getDescender();
 						this->_internalDescender = this->_iconFont->getInternalDescender();
+						this->_strikeThroughOffset = this->_iconFont->getStrikeThroughOffset();
+						this->_underlineOffset = this->_iconFont->getUnderlineOffset();
 					}
 					this->_fontName = this->_nextTag.data;
 					this->_fontIconName = this->_nextTag.consumedData;
@@ -1087,7 +1095,7 @@ namespace atres
 					this->_currentTag.type = this->_nextTag.type;
 					this->_currentTag.data = this->_fontName;
 					this->_stack += this->_currentTag;
-					if (this->_font == NULL)
+					if (this->_font == NULL) // if there is no previous font, some special values have to be obtained as well
 					{
 						this->_font = this->getFont(this->_nextTag.data);
 						if (this->_font != NULL)
@@ -1096,6 +1104,8 @@ namespace atres
 							this->_lineHeight = this->_font->getLineHeight();
 							this->_descender = this->_font->getDescender();
 							this->_internalDescender = this->_font->getInternalDescender();
+							this->_strikeThroughOffset = this->_font->getStrikeThroughOffset();
+							this->_underlineOffset = this->_font->getUnderlineOffset();
 						}
 					}
 					else
@@ -1123,12 +1133,14 @@ namespace atres
 					this->_iconFont = dynamic_cast<FontIconMap*>(this->getFont(this->_nextTag.data));
 					if (this->_iconFont != NULL)
 					{
-						if (this->_font == NULL) // if there is no previous font, the height values have to be obtained as well
+						if (this->_font == NULL) // if there is no previous font, some special values have to be obtained as well
 						{
 							this->_height = this->_iconFont->getHeight();
 							this->_lineHeight = this->_iconFont->getLineHeight();
 							this->_descender = this->_iconFont->getDescender();
 							this->_internalDescender = this->_iconFont->getInternalDescender();
+							this->_strikeThroughOffset = this->_font->getStrikeThroughOffset();
+							this->_underlineOffset = this->_font->getUnderlineOffset();
 						}
 						this->_fontName = this->_nextTag.data;
 						this->_fontIconName = this->_nextTag.consumedData;
@@ -1872,7 +1884,7 @@ namespace atres
 								if (this->_strikeThroughActive)
 								{
 									liningRect.x = characterX;
-									liningRect.y = this->_word.rect.y + (this->_height - this->_strikeThroughThickness) * 0.5f;
+									liningRect.y = this->_word.rect.y + (this->_height - this->_strikeThroughThickness) * 0.5f + this->_strikeThroughOffset;
 									liningRect.w = advanceWidth;
 									liningRect.h = this->_strikeThroughThickness;
 									this->_textStrikeThroughSequence.addRectangle(liningRect);
@@ -1896,7 +1908,7 @@ namespace atres
 								if (this->_underlineActive)
 								{
 									liningRect.x = characterX;
-									liningRect.y = this->_word.rect.y + (this->_height - this->_underlineThickness);
+									liningRect.y = this->_word.rect.y + this->_height + this->_underlineOffset;
 									liningRect.w = advanceWidth;
 									liningRect.h = this->_underlineThickness;
 									this->_textUnderlineSequence.addRectangle(liningRect);
@@ -2012,7 +2024,7 @@ namespace atres
 									if (this->_strikeThroughActive)
 									{
 										liningRect.x = characterX;
-										liningRect.y = this->_word.rect.y + (this->_height - this->_strikeThroughThickness) * 0.5f;
+										liningRect.y = this->_word.rect.y + (this->_height - this->_strikeThroughThickness) * 0.5f + this->_strikeThroughOffset;
 										liningRect.w = advanceWidth;
 										liningRect.h = this->_strikeThroughThickness;
 										this->_textStrikeThroughSequence.addRectangle(liningRect);
@@ -2036,7 +2048,7 @@ namespace atres
 									if (this->_underlineActive)
 									{
 										liningRect.x = characterX;
-										liningRect.y = this->_word.rect.y + (this->_height - this->_underlineThickness);
+										liningRect.y = this->_word.rect.y + this->_height + this->_underlineOffset;
 										liningRect.w = advanceWidth;
 										liningRect.h = this->_underlineThickness;
 										this->_textUnderlineSequence.addRectangle(liningRect);

@@ -31,7 +31,7 @@ namespace atres
 	));
 
 	Font::Font(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f), lineHeight(0.0f), descender(0.0f), internalDescender(0.0f),
-		loaded(false), nativeBorderSupported(false), borderMode(BorderMode::Software)
+		strikeThroughOffset(0.0f), underlineOffset(0.0f), loaded(false), nativeBorderSupported(false), borderMode(BorderMode::Software)
 	{
 		this->name = name;
 	}
@@ -118,6 +118,16 @@ namespace atres
 			this->descender = (float)line.replaced("Descender=", "");
 			return true;
 		}
+		if (line.startsWith("StrikeThroughOffset="))
+		{
+			this->strikeThroughOffset = (float)line.replaced("StrikeThroughOffset=", "");
+			return true;
+		}
+		if (line.startsWith("UnderlineOffset="))
+		{
+			this->underlineOffset = (float)line.replaced("UnderlineOffset=", "");
+			return true;
+		}
 		return false;
 	}
 	
@@ -144,6 +154,16 @@ namespace atres
 	float Font::getInternalDescender() const
 	{
 		return (this->internalDescender * this->scale * this->baseScale);
+	}
+
+	float Font::getStrikeThroughOffset() const
+	{
+		return (this->strikeThroughOffset * this->scale * this->baseScale);
+	}
+
+	float Font::getUnderlineOffset() const
+	{
+		return (this->underlineOffset * this->scale * this->baseScale);
 	}
 
 	void Font::setBorderMode(BorderMode value)

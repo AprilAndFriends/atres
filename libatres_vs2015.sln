@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 14 for Windows Desktop
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libatres", "msvc\vs2015\libatres.vcxproj", "{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -22,8 +22,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libapril", "..\april\msvc\v
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libgtypes", "..\gtypes\msvc\vs2015\libgtypes.vcxproj", "{9C043B29-DB40-48D5-97D8-1BC44128E3BA}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ttf_fontgen", "scripts\ttf_font_generator\ttf_fontgen.vcxproj", "{FC4F17E2-A496-4301-ABBB-167B6060269D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "..\hltypes\lib\zlib\msvc\vs2015\zlib.vcxproj", "{60F89955-91C6-3A36-8000-13C592FEC2DF}"
 EndProject
@@ -181,18 +179,6 @@ Global
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.ReleaseS|Android-x86.Build.0 = ReleaseS|Android-x86
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.ReleaseS|Win32.ActiveCfg = ReleaseS|Win32
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.ReleaseS|Win32.Build.0 = ReleaseS|Win32
-		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Debug|Android.ActiveCfg = Debug|Win32
-		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Debug|Android-x86.ActiveCfg = Debug|Android-x86
-		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Debug|Win32.ActiveCfg = Debug|Win32
-		{FC4F17E2-A496-4301-ABBB-167B6060269D}.DebugS|Android.ActiveCfg = Debug|Android
-		{FC4F17E2-A496-4301-ABBB-167B6060269D}.DebugS|Android-x86.ActiveCfg = Debug|Android-x86
-		{FC4F17E2-A496-4301-ABBB-167B6060269D}.DebugS|Win32.ActiveCfg = Debug|Win32
-		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Release|Android.ActiveCfg = Release|Android
-		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Release|Android-x86.ActiveCfg = Release|Android-x86
-		{FC4F17E2-A496-4301-ABBB-167B6060269D}.Release|Win32.ActiveCfg = Release|Win32
-		{FC4F17E2-A496-4301-ABBB-167B6060269D}.ReleaseS|Android.ActiveCfg = Release|Android
-		{FC4F17E2-A496-4301-ABBB-167B6060269D}.ReleaseS|Android-x86.ActiveCfg = Release|Android-x86
-		{FC4F17E2-A496-4301-ABBB-167B6060269D}.ReleaseS|Win32.ActiveCfg = Release|Win32
 		{60F89955-91C6-3A36-8000-13C592FEC2DF}.Debug|Android.ActiveCfg = Debug|Win32
 		{60F89955-91C6-3A36-8000-13C592FEC2DF}.Debug|Android-x86.ActiveCfg = Debug|Win32
 		{60F89955-91C6-3A36-8000-13C592FEC2DF}.Debug|Win32.ActiveCfg = Debug|Win32
