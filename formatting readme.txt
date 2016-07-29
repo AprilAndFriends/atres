@@ -30,8 +30,8 @@ The word [b:,1.5]thicker border[/b] has a 1.5 times thicker border than the defa
 This [f arial:0.9]word[/f] is displayed in "arial" with a scaling factor 0.9.
 The color of the word at the end is [c:00FF00]green[/c].
 Press [i:buttons]x_button[/i] to delete "C:\Windows\system32".
-This [u:FFFF00,2]underline[/i] is yellow and 2 pixels thick.
-This [t:,3]strike-through[/i] is 3 pixels thick, but uses the text color.
+This [u:FFFF00,2]underline[/u] is yellow and 2 pixels thick.
+This [t:,3]strike-through[/t] is 3 pixels thick, but uses the text color.
 
 
 Notes:
