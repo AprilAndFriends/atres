@@ -20,7 +20,7 @@
 
 namespace atresttf
 {
-	extern hstr logTag;
+	atresttfExport extern hstr logTag;
 
 	atresttfFnExport void init();
 	atresttfFnExport void destroy();

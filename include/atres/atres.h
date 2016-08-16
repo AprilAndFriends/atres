@@ -20,7 +20,7 @@
 
 namespace atres
 {
-	extern hstr logTag;
+	atresExport extern hstr logTag;
 
 	atresFnExport void init();
 	atresFnExport void destroy();
