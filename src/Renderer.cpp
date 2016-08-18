@@ -2367,9 +2367,19 @@ namespace atres
 		return result;
 	}
 
+	float Renderer::getTextWidth(chstr text)
+	{
+		return this->getTextWidth("", text);
+	}
+
 	float Renderer::getTextWidthUnformatted(chstr fontName, chstr text)
 	{
 		return this->getTextWidth(fontName, "[-]" + text);
+	}
+
+	float Renderer::getTextWidthUnformatted(chstr text)
+	{
+		return this->getTextWidth("", "[-]" + text);
 	}
 
 	float Renderer::getTextAdvanceX(chstr fontName, chstr text)
@@ -2387,9 +2397,19 @@ namespace atres
 		return result;
 	}
 
+	float Renderer::getTextAdvanceX(chstr text)
+	{
+		return this->getTextAdvanceX("", text);
+	}
+
 	float Renderer::getTextAdvanceXUnformatted(chstr fontName, chstr text)
 	{
 		return this->getTextAdvanceX(fontName, "[-]" + text);
+	}
+
+	float Renderer::getTextAdvanceXUnformatted(chstr text)
+	{
+		return this->getTextAdvanceX("", "[-]" + text);
 	}
 
 	float Renderer::getTextHeight(chstr fontName, chstr text, float maxWidth)
@@ -2409,34 +2429,14 @@ namespace atres
 		return 0.0f;
 	}
 	
-	float Renderer::getTextHeightUnformatted(chstr fontName, chstr text, float maxWidth)
-	{
-		return this->getTextHeight(fontName, "[-]" + text, maxWidth);
-	}
-
-	float Renderer::getTextWidth(chstr text)
-	{
-		return this->getTextWidth("", text);
-	}
-
-	float Renderer::getTextWidthUnformatted(chstr text)
-	{
-		return this->getTextWidth("", "[-]" + text);
-	}
-
-	float Renderer::getTextAdvanceX(chstr text)
-	{
-		return this->getTextAdvanceX("", text);
-	}
-
-	float Renderer::getTextAdvanceXUnformatted(chstr text)
-	{
-		return this->getTextAdvanceX("", "[-]" + text);
-	}
-
 	float Renderer::getTextHeight(chstr text, float maxWidth)
 	{
 		return this->getTextHeight("", text, maxWidth);
+	}
+
+	float Renderer::getTextHeightUnformatted(chstr fontName, chstr text, float maxWidth)
+	{
+		return this->getTextHeight(fontName, "[-]" + text, maxWidth);
 	}
 
 	float Renderer::getTextHeightUnformatted(chstr text, float maxWidth)

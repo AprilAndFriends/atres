@@ -102,9 +102,13 @@ namespace atres
 			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
 
 		float getTextWidth(chstr fontName, chstr text);
+		float getTextWidth(chstr text);
 		float getTextWidthUnformatted(chstr fontName, chstr text);
+		float getTextWidthUnformatted(chstr text);
 		float getTextAdvanceX(chstr fontName, chstr text);
+		float getTextAdvanceX(chstr text);
 		float getTextAdvanceXUnformatted(chstr fontName, chstr text);
+		float getTextAdvanceXUnformatted(chstr text);
 		// @note If you used getTextWidth() or makeRenderLines() to get the text width, you probably want to add a very little number to that width (e.g. 0.01)
 		// due to floating point rounding errors.
 		// @see getTextWidth()
@@ -114,16 +118,12 @@ namespace atres
 		// due to floating point rounding errors.
 		// @see getTextWidth()
 		// @see makeRenderLines()
-		float getTextHeightUnformatted(chstr fontName, chstr text, float maxWidth);
-		float getTextWidth(chstr text);
-		float getTextWidthUnformatted(chstr text);
-		float getTextAdvanceX(chstr text);
-		float getTextAdvanceXUnformatted(chstr text);
+		float getTextHeight(chstr text, float maxWidth);
 		// @note If you used getTextWidth() or makeRenderLines() to get the text width, you probably want to add a very little number to that width (e.g. 0.01)
 		// due to floating point rounding errors.
 		// @see getTextWidth()
 		// @see makeRenderLines()
-		float getTextHeight(chstr text, float maxWidth);
+		float getTextHeightUnformatted(chstr fontName, chstr text, float maxWidth);
 		// @note If you used getTextWidth() or makeRenderLines() to get the text width, you probably want to add a very little number to that width (e.g. 0.01)
 		// due to floating point rounding errors.
 		// @see getTextWidth()
