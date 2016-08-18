@@ -210,6 +210,15 @@ namespace atres
 		}
 	}
 	
+	void Renderer::setBorderColor(april::Color value)
+	{
+		if (this->borderColor != value)
+		{
+			this->borderColor = value;
+			this->clearCache();
+		}
+	}
+
 	void Renderer::setStrikeThroughThickness(float value)
 	{
 		if (this->strikeThroughThickness != value)
@@ -224,15 +233,6 @@ namespace atres
 		if (this->underlineThickness != value)
 		{
 			this->underlineThickness = value;
-			this->clearCache();
-		}
-	}
-
-	void Renderer::setBorderColor(april::Color value)
-	{
-		if (this->borderColor != value)
-		{
-			this->borderColor = value;
 			this->clearCache();
 		}
 	}

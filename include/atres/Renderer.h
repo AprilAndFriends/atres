@@ -43,19 +43,19 @@ namespace atres
 		void setShadowColor(april::Color value);
 		HL_DEFINE_GET(float, borderThickness, BorderThickness);
 		void setBorderThickness(float value);
+		HL_DEFINE_GET(april::Color, borderColor, BorderColor);
+		void setBorderColor(april::Color value);
 		HL_DEFINE_GET(float, strikeThroughThickness, StrikeThroughThickness);
 		void setStrikeThroughThickness(float value);
 		HL_DEFINE_GET(float, underlineThickness, UnderlineThickness);
 		void setUnderlineThickness(float value);
-		HL_DEFINE_GET(april::Color, borderColor, BorderColor);
-		void setBorderColor(april::Color value);
-		HL_DEFINE_GETSET(bool, globalOffsets, GlobalOffsets);
+		HL_DEFINE_ISSET(globalOffsets, GlobalOffsets);
 		/// @brief Option to use old, non-smart line-break parsing for ideographs.
-		HL_DEFINE_GET(bool, useLegacyLineBreakParsing, UseLegacyLineBreakParsing);
+		HL_DEFINE_IS(useLegacyLineBreakParsing, UseLegacyLineBreakParsing);
 		void setUseLegacyLineBreakParsing(bool value);
 		/// @brief When turned on, this regards ideographs as words when segmenting text into lines.
 		/// @note This is particularly useful when having Japanese or Chinese text. Korean text has actual spaces so this is not necessary, but still useful.
-		HL_DEFINE_GET(bool, useIdeographWords, UseIdeographWords);
+		HL_DEFINE_IS(useIdeographWords, UseIdeographWords);
 		void setUseIdeographWords(bool value);
 		/// @brief Allows to turn justified text into another formatting. This is to counter languages with problematic characters.
 		HL_DEFINE_GET(Horizontal, justifiedDefault, JustifiedDefault);
@@ -131,6 +131,10 @@ namespace atres
 		float getTextHeightUnformatted(chstr text, float maxWidth);
 
 		void clearCache();
+
+		DEPRECATED_ATTRIBUTE bool getGlobalOffsets() { return this->isGlobalOffsets(); }
+		DEPRECATED_ATTRIBUTE bool getUseLegacyLineBreakParsing() { return this->isUseLegacyLineBreakParsing(); }
+		DEPRECATED_ATTRIBUTE bool getUseIdeographWords() { return this->isUseIdeographWords(); }
 
 	protected:
 		hmap<hstr, Font*> fonts;
