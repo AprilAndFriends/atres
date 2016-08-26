@@ -50,7 +50,7 @@ namespace atres
 				if (line.startsWith("Texture="))
 				{
 					textureContainer = new atres::TextureContainer();
-					textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::joinPath(path, line.replaced("Texture=", "")), april::Texture::TYPE_IMMUTABLE, april::Texture::LOAD_ASYNC);
+					textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::joinPath(path, line.replaced("Texture=", "")), april::Texture::Type::Immutable, april::Texture::LoadMode::Async);
 					textureContainer->texture->loadMetaData();
 					this->textureContainers += textureContainer;
 				}
@@ -60,7 +60,7 @@ namespace atres
 					foreach (hstr, it, textureNames)
 					{
 						textureContainer = new atres::TextureContainer();
-						textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::joinPath(path, (*it)), april::Texture::TYPE_IMMUTABLE, april::Texture::LOAD_ASYNC);
+						textureContainer->texture = april::rendersys->createTextureFromResource(hrdir::joinPath(path, (*it)), april::Texture::Type::Immutable, april::Texture::LoadMode::Async);
 						textureContainer->texture->loadMetaData();
 						this->textureContainers += textureContainer;
 					}

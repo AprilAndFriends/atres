@@ -158,7 +158,7 @@ namespace atres
 		april::Texture* texture = NULL;
 		if (this->_isAllowAlphaTextures() && april::rendersys->getCaps().textureFormats.has(april::Image::FORMAT_ALPHA))
 		{
-			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Clear, april::Image::FORMAT_ALPHA, april::Texture::TYPE_MANAGED);
+			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Clear, april::Image::FORMAT_ALPHA, april::Texture::Type::Managed);
 			if (texture != NULL && !texture->isLoaded())
 			{
 				april::rendersys->destroyTexture(texture);
@@ -168,7 +168,7 @@ namespace atres
 		}
 		if (texture == NULL)
 		{
-			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Blank, april::rendersys->getNativeTextureFormat(april::Image::FORMAT_RGBA), april::Texture::TYPE_MANAGED);
+			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Blank, april::rendersys->getNativeTextureFormat(april::Image::FORMAT_RGBA), april::Texture::Type::Managed);
 		}
 		return texture;
 	}
