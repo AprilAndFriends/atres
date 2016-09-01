@@ -7,10 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B4902A611D781E8E00763CC9 /* atresttfUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = B4902A601D781E8E00763CC9 /* atresttfUtil.h */; };
 		C9C0515914BB2A0D005BD333 /* atresttf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C0515614BB2A0D005BD333 /* atresttf.cpp */; };
 		C9C0515A14BB2A0D005BD333 /* atresttf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C0515614BB2A0D005BD333 /* atresttf.cpp */; };
-		C9C0515D14BB2A0D005BD333 /* freetype.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0515814BB2A0D005BD333 /* freetype.h */; };
-		C9C0515E14BB2A0D005BD333 /* freetype.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0515814BB2A0D005BD333 /* freetype.h */; };
 		C9C0516214BB2A16005BD333 /* atresttf.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0515F14BB2A16005BD333 /* atresttf.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9C0516314BB2A16005BD333 /* atresttf.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0515F14BB2A16005BD333 /* atresttf.h */; };
 		C9C0516414BB2A16005BD333 /* atresttfExport.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0516014BB2A16005BD333 /* atresttfExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -41,7 +40,6 @@
 		D178E5121560F6EF0026CCD0 /* atresttf.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* atresttf.framework */; };
 		D178E5151560F72B0026CCD0 /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5131560F7250026CCD0 /* SDL.framework */; };
 		D1F27B18177A2F7700E5C131 /* atresttf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C0515614BB2A0D005BD333 /* atresttf.cpp */; };
-		D1F27B1C177A2F7700E5C131 /* freetype.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0515814BB2A0D005BD333 /* freetype.h */; };
 		D1F27B1D177A2F7700E5C131 /* atresttf.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0515F14BB2A16005BD333 /* atresttf.h */; };
 		D1F27B1E177A2F7700E5C131 /* atresttfExport.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0516014BB2A16005BD333 /* atresttfExport.h */; };
 /* End PBXBuildFile section */
@@ -70,8 +68,8 @@
 /* Begin PBXFileReference section */
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* atresttf.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = atresttf.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4902A601D781E8E00763CC9 /* atresttfUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = atresttfUtil.h; path = src/atresttfUtil.h; sourceTree = "<group>"; };
 		C9C0515614BB2A0D005BD333 /* atresttf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = atresttf.cpp; path = src/atresttf.cpp; sourceTree = "<group>"; };
-		C9C0515814BB2A0D005BD333 /* freetype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = freetype.h; path = src/freetype.h; sourceTree = "<group>"; };
 		C9C0515F14BB2A16005BD333 /* atresttf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = atresttf.h; path = include/atresttf/atresttf.h; sourceTree = "<group>"; };
 		C9C0516014BB2A16005BD333 /* atresttfExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = atresttfExport.h; path = include/atresttf/atresttfExport.h; sourceTree = "<group>"; };
 		C9C0516814BB2A6E005BD333 /* april.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = april.framework; path = "../../../__build__/pharaoh/Build/Products/Debug-LLVM/april.framework"; sourceTree = "<group>"; };
@@ -172,9 +170,9 @@
 		7F42F6E711EB0E0200B1C1DF /* src */ = {
 			isa = PBXGroup;
 			children = (
+				B4902A601D781E8E00763CC9 /* atresttfUtil.h */,
 				D14BDFB8192210950085027D /* FontTtf.cpp */,
 				C9C0515614BB2A0D005BD333 /* atresttf.cpp */,
-				C9C0515814BB2A0D005BD333 /* freetype.h */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -265,7 +263,7 @@
 				D14BDFBD1922109E0085027D /* FontTtf.h in Headers */,
 				C9C0516214BB2A16005BD333 /* atresttf.h in Headers */,
 				C9C0516414BB2A16005BD333 /* atresttfExport.h in Headers */,
-				C9C0515D14BB2A0D005BD333 /* freetype.h in Headers */,
+				B4902A611D781E8E00763CC9 /* atresttfUtil.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,7 +271,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9C0515E14BB2A0D005BD333 /* freetype.h in Headers */,
 				C9C0516314BB2A16005BD333 /* atresttf.h in Headers */,
 				C9C0516514BB2A16005BD333 /* atresttfExport.h in Headers */,
 			);
@@ -283,7 +280,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1F27B1C177A2F7700E5C131 /* freetype.h in Headers */,
 				D1F27B1D177A2F7700E5C131 /* atresttf.h in Headers */,
 				D1F27B1E177A2F7700E5C131 /* atresttfExport.h in Headers */,
 			);
