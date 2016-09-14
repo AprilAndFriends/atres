@@ -60,8 +60,8 @@ namespace atres
 		/// @brief Allows to turn justified text into another formatting. This is to counter languages with problematic characters.
 		HL_DEFINE_GET(Horizontal, justifiedDefault, JustifiedDefault);
 		void setJustifiedDefault(Horizontal value);
-		hstr getDefaultFont() const;
-		void setDefaultFont(chstr name);
+		hstr getDefaultFontName() const;
+		void setDefaultFontName(chstr value);
 		void setCacheSize(int value);
 
 		bool hasFont(chstr name) const;
@@ -135,6 +135,8 @@ namespace atres
 		DEPRECATED_ATTRIBUTE bool getGlobalOffsets() { return this->isGlobalOffsets(); }
 		DEPRECATED_ATTRIBUTE bool getUseLegacyLineBreakParsing() { return this->isUseLegacyLineBreakParsing(); }
 		DEPRECATED_ATTRIBUTE bool getUseIdeographWords() { return this->isUseIdeographWords(); }
+		DEPRECATED_ATTRIBUTE hstr getDefaultFont() const { return this->getDefaultFontName(); }
+		DEPRECATED_ATTRIBUTE void setDefaultFont(chstr value) { this->setDefaultFontName(value); }
 
 	protected:
 		hmap<hstr, Font*> fonts;

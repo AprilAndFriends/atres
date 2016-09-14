@@ -264,12 +264,12 @@ namespace atres
 		}
 	}
 
-	hstr Renderer::getDefaultFont() const
+	hstr Renderer::getDefaultFontName() const
 	{
 		return (this->defaultFont != NULL ? this->defaultFont->getName() : "");
 	}
 
-	void Renderer::setDefaultFont(chstr name)
+	void Renderer::setDefaultFontName(chstr name)
 	{
 		if (name == "")
 		{
