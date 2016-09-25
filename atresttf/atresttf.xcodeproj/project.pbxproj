@@ -598,7 +598,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681BAA18D768620088FC68 /* iOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -618,7 +617,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681BAA18D768620088FC68 /* iOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -638,7 +636,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681BAA18D768620088FC68 /* iOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
