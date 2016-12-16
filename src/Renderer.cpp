@@ -1687,7 +1687,11 @@ namespace atres
 			nextLine = (i == words.size() - 1);
 			addWord = true;
 			forcedNextLine = false;
-			if (words[i].text == "\n")
+			if (this->_line.words.size() == 0 && words[i].spaces > 0 && wrapped && !keepWrappedSpaces)
+			{
+				addWord = false;
+			}
+			else if (words[i].text == "\n")
 			{
 				addWord = false;
 				nextLine = true;
