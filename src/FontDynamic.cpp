@@ -193,7 +193,7 @@ namespace atres
 		// this makes sure that there is no vertical overlap between characters
 		int lineOffset = (int)this->height - descender;
 		int bearingY = -hmin(lineOffset - topOffset, 0);
-//		int offsetY = hmax(lineOffset - topOffset, 0);
+		int offsetY = hmax(lineOffset - topOffset, 0);
 		int charWidth = image->w + SAFE_SPACE * 2;
 		int charHeight = image->h + SAFE_SPACE * 2;
 		// add bitmap to texture
@@ -204,7 +204,7 @@ namespace atres
 		character->rect.set((float)textureContainer->penX, (float)textureContainer->penY, (float)charWidth, (float)charHeight);
 		character->advance = (float)advance;
 		character->bearing.set((float)bearingX, (float)(lineOffset + ascender + bearingY));
-		character->offsetY = (float)(lineOffset - topOffset);
+		character->offsetY = (float)offsetY;
 		this->characters[charCode] = character;
 		textureContainer->characters += charCode;
 		textureContainer->penX += charWidth + CHARACTER_SPACE * 2;
