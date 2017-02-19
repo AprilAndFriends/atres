@@ -9,6 +9,7 @@
 #include <math.h>
 #include <stdio.h>
 
+#include <april/april.h>
 #include <april/RenderSystem.h>
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
@@ -84,47 +85,6 @@ namespace atres
 	Renderer::Renderer() : _characters(_dummyCharacters), _dummyCharacters(hmap<unsigned int, CharacterDefinition*>()),
 		_icons(_dummyIcons), _dummyIcons(hmap<hstr, IconDefinition*>())
 	{
-		this->colors["white"] = april::Color::White.hex();
-		this->colors["black"] = april::Color::Black.hex();
-		this->colors["grey"] = april::Color::Grey.hex();
-		this->colors["red"] = april::Color::Red.hex();
-		this->colors["green"] = april::Color::Green.hex();
-		this->colors["blue"] = april::Color::Blue.hex();
-		this->colors["yellow"] = april::Color::Yellow.hex();
-		this->colors["magenta"] = april::Color::Magenta.hex();
-		this->colors["cyan"] = april::Color::Cyan.hex();
-		this->colors["orange"] = april::Color::Orange.hex();
-		this->colors["pink"] = april::Color::Pink.hex();
-		this->colors["teal"] = april::Color::Teal.hex();
-		this->colors["neon"] = april::Color::Neon.hex();
-		this->colors["purple"] = april::Color::Purple.hex();
-		this->colors["aqua"] = april::Color::Aqua.hex();
-		this->colors["light_grey"] = april::Color::LightGrey.hex();
-		this->colors["light_red"] = april::Color::LightRed.hex();
-		this->colors["light_green"] = april::Color::LightGreen.hex();
-		this->colors["light_blue"] = april::Color::LightBlue.hex();
-		this->colors["light_yellow"] = april::Color::LightYellow.hex();
-		this->colors["light_magenta"] = april::Color::LightMagenta.hex();
-		this->colors["light_cyan"] = april::Color::LightCyan.hex();
-		this->colors["light_orange"] = april::Color::LightOrange.hex();
-		this->colors["light_pink"] = april::Color::LightPink.hex();
-		this->colors["light_teal"] = april::Color::LightTeal.hex();
-		this->colors["light_neon"] = april::Color::LightNeon.hex();
-		this->colors["light_purple"] = april::Color::LightPurple.hex();
-		this->colors["light_aqua"] = april::Color::LightAqua.hex();
-		this->colors["dark_grey"] = april::Color::DarkGrey.hex();
-		this->colors["dark_red"] = april::Color::DarkRed.hex();
-		this->colors["dark_green"] = april::Color::DarkGreen.hex();
-		this->colors["dark_blue"] = april::Color::DarkBlue.hex();
-		this->colors["dark_yellow"] = april::Color::DarkYellow.hex();
-		this->colors["dark_magenta"] = april::Color::DarkMagenta.hex();
-		this->colors["dark_cyan"] = april::Color::DarkCyan.hex();
-		this->colors["dark_orange"] = april::Color::DarkOrange.hex();
-		this->colors["dark_pink"] = april::Color::DarkPink.hex();
-		this->colors["dark_teal"] = april::Color::DarkTeal.hex();
-		this->colors["dark_neon"] = april::Color::DarkNeon.hex();
-		this->colors["dark_purple"] = april::Color::DarkPurple.hex();
-		this->colors["dark_aqua"] = april::Color::DarkAqua.hex();
 		// init
 		this->shadowOffset.set(1.0f, 1.0f);
 		this->shadowColor = april::Color::Black;
@@ -410,7 +370,7 @@ namespace atres
 	
 	void Renderer::addColor(chstr key, chstr value)
 	{
-		this->colors[key.lowered()] = value.uppered();
+		april::addSymbolicColor(key, value);
 	}
 	
 	void Renderer::_updateCache()
@@ -992,7 +952,10 @@ namespace atres
 				}
 				else if (this->_currentTag.type == FormatTag::Type::Color)
 				{
-					this->_hex = this->colors.tryGet(this->_currentTag.data, this->_currentTag.data);
+					if (!april::findSymbolicColor(this->_currentTag.data.lowered(), this->_hex))
+					{
+						this->_hex = this->_currentTag.data;
+					}
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						if (this->_textColor == this->_strikeThroughColor)
@@ -1026,7 +989,10 @@ namespace atres
 					{
 						this->_parameterString0 = this->_currentTag.data;
 					}
-					this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
+					if (!april::findSymbolicColor(this->_parameterString0.lowered(), this->_hex))
+					{
+						this->_hex = this->_parameterString0;
+					}
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_shadowColor.set(this->_hex);
@@ -1044,7 +1010,10 @@ namespace atres
 					{
 						this->_parameterString0 = this->_currentTag.data;
 					}
-					this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
+					if (!april::findSymbolicColor(this->_parameterString0.lowered(), this->_hex))
+					{
+						this->_hex = this->_parameterString0;
+					}
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_borderColor.set(this->_hex);
@@ -1062,7 +1031,10 @@ namespace atres
 					{
 						this->_parameterString0 = this->_currentTag.data;
 					}
-					this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
+					if (!april::findSymbolicColor(this->_parameterString0.lowered(), this->_hex))
+					{
+						this->_hex = this->_parameterString0;
+					}
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_strikeThroughColor.set(this->_hex);
@@ -1081,7 +1053,10 @@ namespace atres
 					{
 						this->_parameterString0 = this->_currentTag.data;
 					}
-					this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
+					if (!april::findSymbolicColor(this->_parameterString0.lowered(), this->_hex))
+					{
+						this->_hex = this->_parameterString0;
+					}
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						this->_underlineColor.set(this->_hex);
@@ -1160,7 +1135,10 @@ namespace atres
 					this->_currentTag.type = FormatTag::Type::Color;
 					this->_currentTag.data = this->_textColor.hex();
 					this->_stack += this->_currentTag;
-					this->_hex = (this->colors.hasKey(this->_nextTag.data) ? this->colors[this->_nextTag.data] : this->_nextTag.data);
+					if (!april::findSymbolicColor(this->_nextTag.data.lowered(), this->_hex))
+					{
+						this->_hex = this->_nextTag.data;
+					}
 					if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 					{
 						if (this->_textColor == this->_strikeThroughColor)
@@ -1211,7 +1189,10 @@ namespace atres
 						{
 							this->_parameterString0 = this->_nextTag.data;
 						}
-						this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
+						if (!april::findSymbolicColor(this->_parameterString0.lowered(), this->_hex))
+						{
+							this->_hex = this->_parameterString0;
+						}
 						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 						{
 							this->_shadowColor.set(this->_hex);
@@ -1241,7 +1222,10 @@ namespace atres
 						{
 							this->_parameterString0 = this->_nextTag.data;
 						}
-						this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
+						if (!april::findSymbolicColor(this->_parameterString0.lowered(), this->_hex))
+						{
+							this->_hex = this->_parameterString0;
+						}
 						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 						{
 							this->_borderColor.set(this->_hex);
@@ -1270,7 +1254,10 @@ namespace atres
 						{
 							this->_parameterString0 = this->_nextTag.data;
 						}
-						this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
+						if (!april::findSymbolicColor(this->_parameterString0.lowered(), this->_hex))
+						{
+							this->_hex = this->_parameterString0;
+						}
 						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 						{
 							this->_strikeThroughColor.set(this->_hex);
@@ -1299,7 +1286,10 @@ namespace atres
 						{
 							this->_parameterString0 = this->_nextTag.data;
 						}
-						this->_hex = this->colors.tryGet(this->_parameterString0, this->_parameterString0);
+						if (!april::findSymbolicColor(this->_parameterString0.lowered(), this->_hex))
+						{
+							this->_hex = this->_parameterString0;
+						}
 						if ((this->_hex.size() == 6 || this->_hex.size() == 8) && this->_hex.isHex())
 						{
 							this->_underlineColor.set(this->_hex);
@@ -1671,7 +1661,7 @@ namespace atres
 		this->analyzeText(tags.first().data, text); // by convention, the first tag is the font name
 		harray<RenderWord> words = this->createRenderWords(rect, text, tags);
 		this->_initializeLineProcessing();
-
+		// helper variables
 		bool wrapped = horizontal.isWrapped();
 		float maxWidth = 0.0f;
 		float lineWidth = 0.0f;
@@ -1681,7 +1671,7 @@ namespace atres
 		bool addWord = false;
 		this->_line.rect.x = rect.x;
 		this->_line.rect.h = this->_height;
-
+		// iterate through each word
 		for_iter (i, 0, words.size())
 		{
 			nextLine = (i == words.size() - 1);
@@ -1783,6 +1773,7 @@ namespace atres
 		this->_initializeFormatTags(tags);
 		this->_initializeRenderSequences();
 		this->_initializeLineProcessing(lines);
+		// helper variables
 		int byteSize = 0;
 		float width = 0.0f;
 		float characterX = 0.0f;

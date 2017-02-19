@@ -75,7 +75,6 @@ namespace atres
 		Font* getFont(chstr name);
 		
 		inline const hmap<hstr, Font*>& getFonts() const { return this->fonts; }
-		void addColor(chstr key, chstr value);
 
 		void analyzeText(chstr fontName, chstr text);
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
@@ -132,6 +131,7 @@ namespace atres
 
 		void clearCache();
 
+		DEPRECATED_ATTRIBUTE void addColor(chstr key, chstr value);
 		DEPRECATED_ATTRIBUTE bool getGlobalOffsets() { return this->isGlobalOffsets(); }
 		DEPRECATED_ATTRIBUTE bool getUseLegacyLineBreakParsing() { return this->isUseLegacyLineBreakParsing(); }
 		DEPRECATED_ATTRIBUTE bool getUseIdeographWords() { return this->isUseIdeographWords(); }
@@ -141,7 +141,6 @@ namespace atres
 	protected:
 		hmap<hstr, Font*> fonts;
 		Font* defaultFont;
-		hmap<hstr, hstr> colors;
 		gvec2 shadowOffset;
 		april::Color shadowColor;
 		float borderThickness;
