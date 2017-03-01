@@ -206,7 +206,7 @@ namespace atres
 	class atresExport FormatTag
 	{
 	public:
-		HL_ENUM_CLASS_DECLARE(Type,
+		HL_ENUM_CLASS_PREFIX_DECLARE(atresExport, Type,
 		(
 			HL_ENUM_DECLARE(Type, Escape);
 			HL_ENUM_DECLARE(Type, Font);
@@ -328,7 +328,5 @@ namespace atres
 
 	};
 
-};
-
+}
 #endif
-
