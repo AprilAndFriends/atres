@@ -238,7 +238,7 @@ namespace atresttf
 		ascender = (int)(-PTSIZE2INT(face->size->metrics.ascender));
 		descender = (int)(-PTSIZE2INT(face->size->metrics.descender));
 		bearingX = PTSIZE2INT(face->glyph->metrics.horiBearingX);
-		return april::Image::create(face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer, april::Image::FORMAT_ALPHA);
+		return april::Image::create(face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer, april::Image::Format::Alpha);
 	}
 
 	april::Image* FontTtf::_loadBorderCharacterImage(unsigned int charCode, float borderThickness)
@@ -305,13 +305,13 @@ namespace atresttf
 		april::Image* image = NULL;
 		if (bitmap.width == (unsigned int)bitmap.pitch)
 		{
-			image = april::Image::create(bitmap.width, bitmap.rows, bitmap.buffer, april::Image::FORMAT_ALPHA);
+			image = april::Image::create(bitmap.width, bitmap.rows, bitmap.buffer, april::Image::Format::Alpha);
 		}
 		else
 		{
 			// making sure data is properly copied if "pitch" does not match "width"
-			image = april::Image::create(bitmap.width, bitmap.rows, april::Color::White, april::Image::FORMAT_ALPHA);
-			image->write(0, 0, bitmap.width, bitmap.rows, 0, 0, bitmap.buffer, bitmap.pitch, bitmap.rows, april::Image::FORMAT_ALPHA);
+			image = april::Image::create(bitmap.width, bitmap.rows, april::Color::White, april::Image::Format::Alpha);
+			image->write(0, 0, bitmap.width, bitmap.rows, 0, 0, bitmap.buffer, bitmap.pitch, bitmap.rows, april::Image::Format::Alpha);
 		}
 		FT_Done_Glyph(glyph);
 		return image;

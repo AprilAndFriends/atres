@@ -2185,7 +2185,7 @@ namespace atres
 		}
 		april::rendersys->setTexture(sequence.texture);
 		april::rendersys->setBlendMode(april::BlendMode::Alpha);
-		if (sequence.texture->getFormat() == april::Image::FORMAT_ALPHA)
+		if (sequence.texture->getFormat() == april::Image::Format::Alpha)
 		{
 			april::rendersys->setColorMode(april::ColorMode::AlphaMap);
 		}

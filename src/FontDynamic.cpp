@@ -156,9 +156,9 @@ namespace atres
 	{
 		int textureSize = getTextureSize();
 		april::Texture* texture = NULL;
-		if (this->_isAllowAlphaTextures() && april::rendersys->getCaps().textureFormats.has(april::Image::FORMAT_ALPHA))
+		if (this->_isAllowAlphaTextures() && april::rendersys->getCaps().textureFormats.has(april::Image::Format::Alpha))
 		{
-			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Clear, april::Image::FORMAT_ALPHA, april::Texture::Type::Managed);
+			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Clear, april::Image::Format::Alpha, april::Texture::Type::Managed);
 			if (texture != NULL && !texture->isLoaded())
 			{
 				april::rendersys->destroyTexture(texture);
@@ -168,7 +168,7 @@ namespace atres
 		}
 		if (texture == NULL)
 		{
-			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Blank, april::rendersys->getNativeTextureFormat(april::Image::FORMAT_RGBA), april::Texture::Type::Managed);
+			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Blank, april::rendersys->getNativeTextureFormat(april::Image::Format::RGBA), april::Texture::Type::Managed);
 		}
 		return texture;
 	}
@@ -405,14 +405,14 @@ namespace atres
 			delete characterImage;
 			return NULL;
 		}
-		if (characterImage->format != april::Image::FORMAT_ALPHA && characterImage->format != april::Image::FORMAT_GRAYSCALE)
+		if (characterImage->format != april::Image::Format::Alpha && characterImage->format != april::Image::Format::Greyscale)
 		{
 			april::Image* alphaImage = characterImage->extractAlpha();
 			delete characterImage;
 			characterImage = alphaImage;
 		}
 		int borderSize = hceil(borderThickness);
-		april::Image* image = april::Image::create(characterImage->w + borderSize * 2, characterImage->h + borderSize * 2, april::Color::Clear, april::Image::FORMAT_ALPHA);
+		april::Image* image = april::Image::create(characterImage->w + borderSize * 2, characterImage->h + borderSize * 2, april::Color::Clear, april::Image::Format::Alpha);
 		image->write(0, 0, characterImage->w, characterImage->h, borderSize, borderSize, characterImage);
 		delete characterImage;
 		if (image != NULL && !image->dilate(structuringImageContainer->image))
@@ -451,14 +451,14 @@ namespace atres
 			delete iconImage;
 			return NULL;
 		}
-		if (iconImage->format != april::Image::FORMAT_ALPHA && iconImage->format != april::Image::FORMAT_GRAYSCALE)
+		if (iconImage->format != april::Image::Format::Alpha && iconImage->format != april::Image::Format::Greyscale)
 		{
 			april::Image* alphaImage = iconImage->extractAlpha();
 			delete iconImage;
 			iconImage = alphaImage;
 		}
 		int borderSize = hceil(borderThickness);
-		april::Image* image = april::Image::create(iconImage->w + borderSize * 2, iconImage->h + borderSize * 2, april::Color::Clear, april::Image::FORMAT_ALPHA);
+		april::Image* image = april::Image::create(iconImage->w + borderSize * 2, iconImage->h + borderSize * 2, april::Color::Clear, april::Image::Format::Alpha);
 		image->write(0, 0, iconImage->w, iconImage->h, borderSize, borderSize, iconImage);
 		delete iconImage;
 		if (image != NULL && !image->dilate(structuringImageContainer->image))
@@ -476,11 +476,11 @@ namespace atres
 		int size = 1 + borderSize * 2;
 		if (this->borderMode == BorderMode::PrerenderSquare)
 		{
-			structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::White, april::Image::FORMAT_ALPHA), this->borderMode, borderThickness);
+			structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::White, april::Image::Format::Alpha), this->borderMode, borderThickness);
 		}
 		else if (this->borderMode == BorderMode::PrerenderCircle)
 		{
-			structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::Clear, april::Image::FORMAT_ALPHA), this->borderMode, borderThickness);
+			structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::Clear, april::Image::Format::Alpha), this->borderMode, borderThickness);
 			int index = borderSize + borderSize * size;
 			structuringImageContainer->image->data[index] = 255;
 			unsigned char value = 0;
@@ -505,7 +505,7 @@ namespace atres
 		}
 		else if (this->borderMode == BorderMode::PrerenderDiamond)
 		{
-			structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::Clear, april::Image::FORMAT_ALPHA), this->borderMode, borderThickness);
+			structuringImageContainer = new StructuringImageContainer(april::Image::create(size, size, april::Color::Clear, april::Image::Format::Alpha), this->borderMode, borderThickness);
 			int index = borderSize + borderSize * size;
 			structuringImageContainer->image->data[index] = 255;
 			for_iter (j, 0, borderSize + 1)
