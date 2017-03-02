@@ -2184,16 +2184,16 @@ namespace atres
 			return;
 		}
 		april::rendersys->setTexture(sequence.texture);
-		april::rendersys->setBlendMode(april::BM_DEFAULT);
+		april::rendersys->setBlendMode(april::BlendMode::Alpha);
 		if (sequence.texture->getFormat() == april::Image::FORMAT_ALPHA)
 		{
-			april::rendersys->setColorMode(april::CM_ALPHA_MAP);
+			april::rendersys->setColorMode(april::ColorMode::AlphaMap);
 		}
 		else
 		{
-			april::rendersys->setColorMode(april::CM_DEFAULT);
+			april::rendersys->setColorMode(april::ColorMode::Multiply);
 		}
-		april::rendersys->render(april::RO_TRIANGLE_LIST, (april::TexturedVertex*)sequence.vertices, sequence.vertices.size(), color);
+		april::rendersys->render(april::RenderOperation::TriangleList, (april::TexturedVertex*)sequence.vertices, sequence.vertices.size(), color);
 	}
 
 	void Renderer::_drawRenderLiningSequence(RenderLiningSequence& sequence, april::Color color)
@@ -2202,9 +2202,9 @@ namespace atres
 		{
 			return;
 		}
-		april::rendersys->setBlendMode(april::BM_DEFAULT);
-		april::rendersys->setColorMode(april::CM_DEFAULT);
-		april::rendersys->render(april::RO_TRIANGLE_LIST, (april::PlainVertex*)sequence.vertices, sequence.vertices.size(), color);
+		april::rendersys->setBlendMode(april::BlendMode::Alpha);
+		april::rendersys->setColorMode(april::ColorMode::Multiply);
+		april::rendersys->render(april::RenderOperation::TriangleList, (april::PlainVertex*)sequence.vertices, sequence.vertices.size(), color);
 	}
 
 	bool Renderer::_checkTextures()
