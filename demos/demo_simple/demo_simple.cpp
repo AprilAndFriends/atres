@@ -85,7 +85,7 @@ public:
 		case april::AK_BACK:
 			atres::renderer->setBorderColor(april::Color(hrand(256), hrand(256), hrand(256)));
 			break;
-		case april::AK_SPACE:
+		case april::Key::Space:
 			atres::renderer->setBorderThickness(hrandf(1.0f, 5.0f));
 			break;
 		default:
