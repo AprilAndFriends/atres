@@ -30,8 +30,10 @@ namespace atres
 		HL_ENUM_DEFINE(Font::BorderMode, PrerenderDiamond);
 	));
 
+	Font::BorderMode Font::defaultBorderMode = Font::BorderMode::Software;
+
 	Font::Font(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f), lineHeight(0.0f), descender(0.0f), internalDescender(0.0f),
-		strikeThroughOffset(0.0f), underlineOffset(0.0f), loaded(false), nativeBorderSupported(false), borderMode(BorderMode::Software)
+		strikeThroughOffset(0.0f), underlineOffset(0.0f), loaded(false), nativeBorderSupported(false), borderMode(Font::defaultBorderMode)
 	{
 		this->name = name;
 	}

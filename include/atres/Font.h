@@ -82,6 +82,8 @@ namespace atres
 		RenderRectangle makeRenderRectangle(const grect& rect, grect area, chstr iconName);
 		RenderRectangle makeBorderRenderRectangle(const grect& rect, grect area, chstr iconName, float borderThickness);
 
+		static BorderMode defaultBorderMode;
+
 	protected:
 		hstr name;
 		float height;
