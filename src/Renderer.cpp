@@ -1479,6 +1479,7 @@ namespace atres
 	harray<RenderWord> Renderer::createRenderWords(grect rect, chstr text, harray<FormatTag> tags)
 	{
 		this->_initializeFormatTags(tags);
+		hstr initialFontName = this->_tags.first().data; // by convention, the first tag is the font name
 		int actualSize = text.indexOf('\0');
 		if (actualSize < 0)
 		{
@@ -1564,6 +1565,11 @@ namespace atres
 				if ((code == 0x20) != checkingSpaces)
 				{
 					break;
+				}
+				// non-initial font might need character table update
+				if (initialFontName != this->_fontName && !this->_characters.hasKey(code) && this->_font->hasCharacter(code))
+				{
+					this->_characters = this->_font->getCharacters();
 				}
 				if (this->_characters.hasKey(code))
 				{
