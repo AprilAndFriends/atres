@@ -304,25 +304,24 @@ namespace atres
 		return result;
 	}
 
-	// using static definitions to avoid memory allocation for optimization
+	// using static definitions to avoid memory allocation for optimization, NOT THREAD-SAFE
 	static float _textX = 0.0f;
 	static float _textW = 0.0f;
 	static float _ax = 0.0f;
 	static float _aw = 0.0f;
 	static float _scale = 1.0f;
 	static CharacterDefinition* _character = NULL;
-	static std::basic_string<unsigned int> _chars;
+	static std::ustring _chars;
 
 	float Font::getTextWidth(chstr text)
 	{
-		// using static definitions to avoid memory allocation for optimization
 		_textX = 0.0f;
 		_textW = 0.0f;
 		_ax = 0.0f;
 		_aw = 0.0f;
 		_scale = this->getScale();
 		_chars = text.uStr();
-		for_itert (unsigned int, i, 0, _chars.size())
+		for_itert (size_t, i, 0, _chars.size())
 		{
 			_character = this->characters[_chars[i]];
 			if (_textX < -_character->bearing.x * _scale)
@@ -349,7 +348,7 @@ namespace atres
 		_aw = 0.0f;
 		_scale = this->getScale();
 		_chars = text.uStr();
-		for_itert (unsigned int, i, 0, _chars.size())
+		for_itert (size_t, i, 0, _chars.size())
 		{
 			_character = this->characters[_chars[i]];
 			if (_textX < -_character->bearing.x * _scale)
@@ -372,7 +371,7 @@ namespace atres
 		return text.size();
 	}
 	
-	// using static definitions to avoid memory allocation for optimization
+	// using static definitions to avoid memory allocation for optimization, NOT THREAD-SAFE
 	static RenderRectangle _result;
 	static gvec2 _fullSize(1.0f, 1.0f);
 	static gvec2 _leftTop;

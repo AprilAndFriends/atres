@@ -78,12 +78,12 @@ namespace atres
 
 		void analyzeText(chstr fontName, chstr text);
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
-		harray<RenderLine> removeOutOfBoundLines(grect rect, harray<RenderLine> lines);
-		harray<RenderLine> verticalCorrection(grect rect, Vertical vertical, harray<RenderLine> lines, float x, float lineHeight, float descender, float internalDescender);
-		harray<RenderLine> horizontalCorrection(grect rect, Horizontal horizontal, harray<RenderLine> lines, float y, float lineWidth);
-		harray<RenderWord> createRenderWords(grect rect, chstr text, harray<FormatTag> tags);
-		harray<RenderLine> createRenderLines(grect rect, chstr text, harray<FormatTag> tags, Horizontal horizontal, Vertical vertical, gvec2 offset = gvec2(), bool keepWrappedSpaces = false);
-		RenderText createRenderText(grect rect, chstr text, harray<RenderLine> lines, harray<FormatTag> tags);
+		harray<RenderLine> removeOutOfBoundLines(const harray<RenderLine>& lines, grect rect);
+		void verticalCorrection(harray<RenderLine>& lines, grect rect, Vertical vertical, float x, float lineHeight, float descender, float internalDescender);
+		void horizontalCorrection(harray<RenderLine>& lines, grect rect, Horizontal horizontal, float y, float lineWidth);
+		harray<RenderWord> createRenderWords(grect rect, chstr text, const harray<FormatTag>& tags);
+		harray<RenderLine> createRenderLines(grect rect, chstr text, const harray<FormatTag>& tags, Horizontal horizontal, Vertical vertical, gvec2 offset = gvec2(), bool keepWrappedSpaces = false);
+		RenderText createRenderText(grect rect, chstr text, const harray<RenderLine>& lines, const harray<FormatTag>& tags);
 		harray<RenderSequence> optimizeSequences(harray<RenderSequence>& sequences);
 		harray<RenderLiningSequence> optimizeSequences(harray<RenderLiningSequence>& sequences);
 
@@ -158,8 +158,8 @@ namespace atres
 
 		void _updateCache();
 
-		void _initializeFormatTags(harray<FormatTag>& tags);
-		void _initializeLineProcessing(harray<RenderLine> lines = harray<RenderLine>());
+		void _initializeFormatTags(const harray<FormatTag>& tags);
+		void _initializeLineProcessing(const harray<RenderLine>& lines = harray<RenderLine>());
 		void _initializeRenderSequences();
 		void _checkFormatTags(chstr text, int index);
 		void _processFormatTags(chstr text, int index);

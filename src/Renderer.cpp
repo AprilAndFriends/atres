@@ -408,7 +408,7 @@ namespace atres
 	void Renderer::analyzeText(chstr fontName, chstr text)
 	{
 		// makes sure dynamically allocated characters are loaded
-		std::basic_string<unsigned int> chars = text.uStr();
+		std::ustring chars = text.uStr();
 		Font* font = this->getFont(fontName);
 		if (font != NULL)
 		{
@@ -421,7 +421,7 @@ namespace atres
 
 	hstr Renderer::analyzeFormatting(chstr text, harray<FormatTag>& tags)
 	{
-		std::basic_string<unsigned int> uText = text.uStr();
+		std::ustring uText = text.uStr();
 		const unsigned int* str = uText.c_str();
 		int start = 0;
 		int end = 0;
@@ -579,10 +579,10 @@ namespace atres
 		return result;
 	}
 
-	harray<RenderLine> Renderer::removeOutOfBoundLines(grect rect, harray<RenderLine> lines)
+	harray<RenderLine> Renderer::removeOutOfBoundLines(const harray<RenderLine>& lines, grect rect)
 	{
 		harray<RenderLine> result;
-		foreach (RenderLine, it, lines)
+		foreachc (RenderLine, it, lines)
 		{
 			// zero-length rectangles should be included
 			if ((*it).rect.w == 0.0f || (*it).rect.h == 0.0f || (*it).rect.intersects(rect))
@@ -593,7 +593,7 @@ namespace atres
 		return result;
 	}
 	
-	harray<RenderLine> Renderer::verticalCorrection(grect rect, Vertical vertical, harray<RenderLine> lines, float y, float lineHeight, float descender, float internalDescender)
+	void Renderer::verticalCorrection(harray<RenderLine>& lines, grect rect, Vertical vertical, float y, float lineHeight, float descender, float internalDescender)
 	{
 		harray<RenderLine> result;
 		int lineCount = lines.size();
@@ -620,10 +620,9 @@ namespace atres
 			}
 			result += (*it);
 		}
-		return result;
 	}
 	
-	harray<RenderLine> Renderer::horizontalCorrection(grect rect, Horizontal horizontal, harray<RenderLine> lines, float x, float lineWidth)
+	void Renderer::horizontalCorrection(harray<RenderLine>& lines, grect rect, Horizontal horizontal, float x, float lineWidth)
 	{
 		// horizontal correction not necessary when left aligned
 		if (horizontal.isLeft() || horizontal == Horizontal::Justified && this->justifiedDefault != Horizontal::Justified)
@@ -636,7 +635,7 @@ namespace atres
 					(*it2).rect.x -= x;
 				}
 			}
-			return lines;
+			return;
 		}
 		float ox = 0.0f;
 		if (horizontal != Horizontal::Justified || this->justifiedDefault != Horizontal::Justified)
@@ -711,10 +710,9 @@ namespace atres
 				}
 			}
 		}
-		return lines;
 	}
 
-	void Renderer::_initializeFormatTags(harray<FormatTag>& tags)
+	void Renderer::_initializeFormatTags(const harray<FormatTag>& tags)
 	{
 		this->_tags = tags;
 		this->_stack.clear();
@@ -792,7 +790,7 @@ namespace atres
 		this->_alpha = -1;
 	}
 
-	void Renderer::_initializeLineProcessing(harray<RenderLine> lines)
+	void Renderer::_initializeLineProcessing(const harray<RenderLine>& lines)
 	{
 		this->_lines = lines;
 		this->_line = RenderLine();
@@ -1476,7 +1474,7 @@ namespace atres
 		}
 	}
 
-	harray<RenderWord> Renderer::createRenderWords(grect rect, chstr text, harray<FormatTag> tags)
+	harray<RenderWord> Renderer::createRenderWords(grect rect, chstr text, const harray<FormatTag>& tags)
 	{
 		this->_initializeFormatTags(tags);
 		hstr initialFontName = this->_tags.first().data; // by convention, the first tag is the font name
@@ -1661,7 +1659,7 @@ namespace atres
 		return result;
 	}
 
-	harray<RenderLine> Renderer::createRenderLines(grect rect, chstr text, harray<FormatTag> tags,
+	harray<RenderLine> Renderer::createRenderLines(grect rect, chstr text, const harray<FormatTag>& tags,
 		Horizontal horizontal, Vertical vertical, gvec2 offset, bool keepWrappedSpaces)
 	{
 		this->analyzeText(tags.first().data, text); // by convention, the first tag is the font name
@@ -1763,17 +1761,17 @@ namespace atres
 		maxWidth = hmin(maxWidth, rect.w);
 		if (this->_lines.size() > 0)
 		{
-			this->_lines = this->verticalCorrection(rect, vertical, this->_lines, offset.y, this->_lineHeight, this->_descender, this->_internalDescender);
-			this->_lines = this->removeOutOfBoundLines(rect, this->_lines);
+			this->verticalCorrection(this->_lines, rect, vertical, offset.y, this->_lineHeight, this->_descender, this->_internalDescender);
+			this->_lines = this->removeOutOfBoundLines(this->_lines, rect);
 			if (this->_lines.size() > 0)
 			{
-				this->_lines = this->horizontalCorrection(rect, horizontal, this->_lines, offset.x, maxWidth);
+				this->horizontalCorrection(this->_lines, rect, horizontal, offset.x, maxWidth);
 			}
 		}
 		return this->_lines;
 	}
 	
-	RenderText Renderer::createRenderText(grect rect, chstr text, harray<RenderLine> lines, harray<FormatTag> tags)
+	RenderText Renderer::createRenderText(grect rect, chstr text, const harray<RenderLine>& lines, const harray<FormatTag>& tags)
 	{
 		this->analyzeText(tags.first().data, text); // by convention, the first tag is the font name
 		this->_initializeFormatTags(tags);
