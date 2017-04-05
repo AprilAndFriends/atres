@@ -365,7 +365,7 @@ namespace atres
 			_textX += _ax;
 			if (_textW > maxWidth)
 			{
-				return text.utf8SubString(0, i).size();
+				return text.utf8SubString(0, (int)i).size();
 			}
 		}
 		return text.size();
