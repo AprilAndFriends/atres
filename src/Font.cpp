@@ -379,7 +379,7 @@ namespace atres
 	static gvec2 _textureInvertedSize;
 	static april::Texture* _texture = NULL;
 
-	void Font::_applyCutoff(const grect& rect, const grect& area, const grect& symbolRect, float offsetY) const
+	void Font::_applyCutoff(cgrect rect, cgrect area, cgrect symbolRect, float offsetY) const
 	{
 		// vertical/horizontal cutoff of destination rectangle (using left/right/top/bottom semantics for consistency)
 		_leftTop.x = (area.left() < rect.left() ? (area.right() - rect.left()) / area.w : _fullSize.x);
@@ -395,7 +395,7 @@ namespace atres
 		_result.src.setSize((symbolRect.getSize() * (_leftTop + _rightBottom - _fullSize)) * _textureInvertedSize);
 	}
 
-	RenderRectangle Font::makeRenderRectangle(const grect& rect, grect area, unsigned int charCode)
+	RenderRectangle Font::makeRenderRectangle(cgrect rect, grect area, unsigned int charCode)
 	{
 		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
 		_result.dest = area;
@@ -409,7 +409,7 @@ namespace atres
 		return _result;
 	}
 
-	RenderRectangle Font::makeBorderRenderRectangle(const grect& rect, grect area, unsigned int charCode, float borderThickness)
+	RenderRectangle Font::makeBorderRenderRectangle(cgrect rect, grect area, unsigned int charCode, float borderThickness)
 	{
 		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
 		_result.dest = area;
@@ -423,7 +423,7 @@ namespace atres
 		return _result;
 	}
 
-	RenderRectangle Font::makeRenderRectangle(const grect& rect, grect area, chstr iconName)
+	RenderRectangle Font::makeRenderRectangle(cgrect rect, grect area, chstr iconName)
 	{
 		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
 		_result.dest = area;
@@ -437,7 +437,7 @@ namespace atres
 		return _result;
 	}
 
-	RenderRectangle Font::makeBorderRenderRectangle(const grect& rect, grect area, chstr iconName, float borderThickness)
+	RenderRectangle Font::makeBorderRenderRectangle(cgrect rect, grect area, chstr iconName, float borderThickness)
 	{
 		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
 		_result.dest = area;

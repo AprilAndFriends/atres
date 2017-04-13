@@ -134,7 +134,7 @@ namespace atres
 	{
 	}
 
-	void RenderLiningSequence::addRectangle(const grect& rect)
+	void RenderLiningSequence::addRectangle(cgrect rect)
 	{
 		_top = rect.top();
 		_bottom = rect.bottom();

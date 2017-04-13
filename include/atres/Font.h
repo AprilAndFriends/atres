@@ -77,10 +77,10 @@ namespace atres
 		int getTextCount(chstr text, float maxWidth);
 		
 		/// @note Not thread-safe!
-		RenderRectangle makeRenderRectangle(const grect& rect, grect area, unsigned int charCode);
-		RenderRectangle makeBorderRenderRectangle(const grect& rect, grect area, unsigned int charCode, float borderThickness);
-		RenderRectangle makeRenderRectangle(const grect& rect, grect area, chstr iconName);
-		RenderRectangle makeBorderRenderRectangle(const grect& rect, grect area, chstr iconName, float borderThickness);
+		RenderRectangle makeRenderRectangle(cgrect rect, grect area, unsigned int charCode);
+		RenderRectangle makeBorderRenderRectangle(cgrect rect, grect area, unsigned int charCode, float borderThickness);
+		RenderRectangle makeRenderRectangle(cgrect rect, grect area, chstr iconName);
+		RenderRectangle makeBorderRenderRectangle(cgrect rect, grect area, chstr iconName, float borderThickness);
 
 		static BorderMode defaultBorderMode;
 
@@ -111,7 +111,7 @@ namespace atres
 		bool _readBasicParameter(chstr line);
 		void _setBorderMode(BorderMode value);
 
-		void _applyCutoff(const grect& rect, const grect& area, const grect& symbolRect, float offsetY = 0.0f) const;
+		void _applyCutoff(cgrect rect, cgrect area, cgrect symbolRect, float offsetY = 0.0f) const;
 		
 	};
 

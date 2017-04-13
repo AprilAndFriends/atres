@@ -137,7 +137,7 @@ namespace atres
 		~RenderLiningSequence();
 
 		/// @note Not thread-safe!
-		void addRectangle(const grect& rect);
+		void addRectangle(cgrect rect);
 
 	};
 
