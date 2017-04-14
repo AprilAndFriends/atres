@@ -277,7 +277,7 @@ namespace atres
 		CacheEntryBasicText();
 		virtual ~CacheEntryBasicText();
 
-		void set(hstr text, hstr fontName, grect rect, Horizontal horizontal, Vertical vertical, april::Color color, gvec2 offset);
+		void set(chstr text, chstr fontName, cgrect rect, Horizontal horizontal, Vertical vertical, const april::Color& color, cgvec2 offset);
 		bool operator==(const CacheEntryBasicText& other) const;
 		bool operator!=(const CacheEntryBasicText& other) const;
 		unsigned int hash() const;
@@ -321,7 +321,7 @@ namespace atres
 		CacheEntryLine();
 		~CacheEntryLine();
 
-		void set(hstr text, hstr fontName, gvec2 size);
+		void set(chstr text, chstr fontName, cgvec2 size);
 		bool operator==(const CacheEntryLine& other) const;
 		bool operator!=(const CacheEntryLine& other) const;
 		unsigned int hash() const;

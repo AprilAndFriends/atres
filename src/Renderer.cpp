@@ -143,7 +143,7 @@ namespace atres
 		delete this->cacheLinesUnformatted;
 	}
 
-	void Renderer::setShadowOffset(gvec2 value)
+	void Renderer::setShadowOffset(cgvec2 value)
 	{
 		if (this->shadowOffset != value)
 		{
@@ -152,7 +152,7 @@ namespace atres
 		}
 	}
 	
-	void Renderer::setShadowColor(april::Color value)
+	void Renderer::setShadowColor(const april::Color& value)
 	{
 		if (this->shadowColor != value)
 		{
@@ -170,7 +170,7 @@ namespace atres
 		}
 	}
 	
-	void Renderer::setBorderColor(april::Color value)
+	void Renderer::setBorderColor(const april::Color& value)
 	{
 		if (this->borderColor != value)
 		{
@@ -579,7 +579,7 @@ namespace atres
 		return result;
 	}
 
-	harray<RenderLine> Renderer::removeOutOfBoundLines(const harray<RenderLine>& lines, grect rect)
+	harray<RenderLine> Renderer::removeOutOfBoundLines(const harray<RenderLine>& lines, cgrect rect)
 	{
 		harray<RenderLine> result;
 		foreachc (RenderLine, it, lines)
@@ -593,7 +593,7 @@ namespace atres
 		return result;
 	}
 	
-	void Renderer::verticalCorrection(harray<RenderLine>& lines, grect rect, Vertical vertical, float y, float lineHeight, float descender, float internalDescender)
+	void Renderer::verticalCorrection(harray<RenderLine>& lines, cgrect rect, Vertical vertical, float y, float lineHeight, float descender, float internalDescender)
 	{
 		harray<RenderLine> result;
 		int lineCount = lines.size();
@@ -622,7 +622,7 @@ namespace atres
 		}
 	}
 	
-	void Renderer::horizontalCorrection(harray<RenderLine>& lines, grect rect, Horizontal horizontal, float x, float lineWidth)
+	void Renderer::horizontalCorrection(harray<RenderLine>& lines, cgrect rect, Horizontal horizontal, float x, float lineWidth)
 	{
 		// horizontal correction not necessary when left aligned
 		if (horizontal.isLeft() || horizontal == Horizontal::Justified && this->justifiedDefault != Horizontal::Justified)
@@ -1474,7 +1474,7 @@ namespace atres
 		}
 	}
 
-	harray<RenderWord> Renderer::createRenderWords(grect rect, chstr text, const harray<FormatTag>& tags)
+	harray<RenderWord> Renderer::createRenderWords(cgrect rect, chstr text, const harray<FormatTag>& tags)
 	{
 		this->_initializeFormatTags(tags);
 		hstr initialFontName = this->_tags.first().data; // by convention, the first tag is the font name
@@ -1659,8 +1659,8 @@ namespace atres
 		return result;
 	}
 
-	harray<RenderLine> Renderer::createRenderLines(grect rect, chstr text, const harray<FormatTag>& tags,
-		Horizontal horizontal, Vertical vertical, gvec2 offset, bool keepWrappedSpaces)
+	harray<RenderLine> Renderer::createRenderLines(cgrect rect, chstr text, const harray<FormatTag>& tags,
+		Horizontal horizontal, Vertical vertical, cgvec2 offset, bool keepWrappedSpaces)
 	{
 		this->analyzeText(tags.first().data, text); // by convention, the first tag is the font name
 		harray<RenderWord> words = this->createRenderWords(rect, text, tags);
@@ -1771,7 +1771,7 @@ namespace atres
 		return this->_lines;
 	}
 	
-	RenderText Renderer::createRenderText(grect rect, chstr text, const harray<RenderLine>& lines, const harray<FormatTag>& tags)
+	RenderText Renderer::createRenderText(cgrect rect, chstr text, const harray<RenderLine>& lines, const harray<FormatTag>& tags)
 	{
 		this->analyzeText(tags.first().data, text); // by convention, the first tag is the font name
 		this->_initializeFormatTags(tags);
@@ -2146,7 +2146,7 @@ namespace atres
 		return result;
 	}
 
-	void Renderer::_drawRenderText(RenderText& renderText, april::Color color)
+	void Renderer::_drawRenderText(RenderText& renderText, const april::Color& color)
 	{
 		foreach (RenderSequence, it, renderText.shadowSequences)
 		{
@@ -2181,7 +2181,7 @@ namespace atres
 		}
 	}
 
-	void Renderer::_drawRenderSequence(RenderSequence& sequence, april::Color color)
+	void Renderer::_drawRenderSequence(RenderSequence& sequence, const april::Color& color)
 	{
 		if (sequence.vertices.size() == 0 || sequence.texture == NULL || color.a == 0)
 		{
@@ -2200,7 +2200,7 @@ namespace atres
 		april::rendersys->render(april::RenderOperation::TriangleList, (april::TexturedVertex*)sequence.vertices, sequence.vertices.size(), color);
 	}
 
-	void Renderer::_drawRenderLiningSequence(RenderLiningSequence& sequence, april::Color color)
+	void Renderer::_drawRenderLiningSequence(RenderLiningSequence& sequence, const april::Color& color)
 	{
 		if (sequence.vertices.size() == 0 || color.a == 0)
 		{
@@ -2240,8 +2240,8 @@ namespace atres
 		return true;
 	}
 	
-	void Renderer::drawText(chstr fontName, grect rect, chstr text, Horizontal horizontal, Vertical vertical, april::Color color,
-		gvec2 offset)
+	void Renderer::drawText(chstr fontName, cgrect rect, chstr text, Horizontal horizontal, Vertical vertical, const april::Color& color,
+		cgvec2 offset)
 	{
 		this->_cacheEntryText.set(text, fontName, rect, horizontal, vertical, color, offset);
 		if (!this->cacheText->get(this->_cacheEntryText) || !this->_checkTextures())
@@ -2264,8 +2264,8 @@ namespace atres
 		this->_drawRenderText(this->_cacheEntryText.value, color);
 	}
 
-	void Renderer::drawTextUnformatted(chstr fontName, grect rect, chstr text, Horizontal horizontal, Vertical vertical,
-		april::Color color, gvec2 offset)
+	void Renderer::drawTextUnformatted(chstr fontName, cgrect rect, chstr text, Horizontal horizontal, Vertical vertical,
+		const april::Color& color, cgvec2 offset)
 	{
 		this->_cacheEntryText.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
 		if (!this->cacheTextUnformatted->get(this->_cacheEntryText) || !this->_checkTextures())
@@ -2287,17 +2287,17 @@ namespace atres
 		this->_drawRenderText(this->_cacheEntryText.value, color);
 	}
 
-	void Renderer::drawText(grect rect, chstr text, Horizontal horizontal, Vertical vertical, april::Color color, gvec2 offset)
+	void Renderer::drawText(cgrect rect, chstr text, Horizontal horizontal, Vertical vertical, const april::Color& color, cgvec2 offset)
 	{
 		this->drawText("", rect, text, horizontal, vertical, color, offset);
 	}
 
-	void Renderer::drawTextUnformatted(grect rect, chstr text, Horizontal horizontal, Vertical vertical, april::Color color, gvec2 offset)
+	void Renderer::drawTextUnformatted(cgrect rect, chstr text, Horizontal horizontal, Vertical vertical, const april::Color& color, cgvec2 offset)
 	{
 		this->drawTextUnformatted("", rect, text, horizontal, vertical, color, offset);
 	}
 
-	harray<RenderLine> Renderer::makeRenderLines(chstr fontName, grect rect, chstr text, Horizontal horizontal, Vertical vertical, april::Color color, gvec2 offset)
+	harray<RenderLine> Renderer::makeRenderLines(chstr fontName, cgrect rect, chstr text, Horizontal horizontal, Vertical vertical, const april::Color& color, cgvec2 offset)
 	{
 		this->_cacheEntryLines.set(text, fontName, rect, horizontal, vertical, color, offset);
 		if (!this->cacheLines->get(this->_cacheEntryLines))
@@ -2311,7 +2311,7 @@ namespace atres
 		return this->_cacheEntryLines.value;
 	}
 
-	harray<RenderLine> Renderer::makeRenderLinesUnformatted(chstr fontName, grect rect, chstr text, Horizontal horizontal, Vertical vertical, april::Color color, gvec2 offset)
+	harray<RenderLine> Renderer::makeRenderLinesUnformatted(chstr fontName, cgrect rect, chstr text, Horizontal horizontal, Vertical vertical, const april::Color& color, cgvec2 offset)
 	{
 		this->_cacheEntryLines.set(text, fontName, rect, horizontal, vertical, april::Color(color, 255), offset);
 		if (!this->cacheLinesUnformatted->get(this->_cacheEntryLines))
@@ -2324,7 +2324,7 @@ namespace atres
 		return this->_cacheEntryLines.value;
 	}
 
-	harray<FormatTag> Renderer::_makeDefaultTags(april::Color color, chstr fontName, hstr& text)
+	harray<FormatTag> Renderer::_makeDefaultTags(const april::Color& color, chstr fontName, hstr& text)
 	{
 		harray<FormatTag> tags;
 		text = this->analyzeFormatting(text, tags);
@@ -2338,7 +2338,7 @@ namespace atres
 		return tags;
 	}
 
-	harray<FormatTag> Renderer::_makeDefaultTagsUnformatted(april::Color color, chstr fontName)
+	harray<FormatTag> Renderer::_makeDefaultTagsUnformatted(const april::Color& color, chstr fontName)
 	{
 		harray<FormatTag> tags;
 		FormatTag tag;

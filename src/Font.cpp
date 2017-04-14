@@ -395,7 +395,7 @@ namespace atres
 		_result.src.setSize((symbolRect.getSize() * (_leftTop + _rightBottom - _fullSize)) * _textureInvertedSize);
 	}
 
-	RenderRectangle Font::makeRenderRectangle(cgrect rect, grect area, unsigned int charCode)
+	RenderRectangle Font::makeRenderRectangle(cgrect rect, cgrect area, unsigned int charCode)
 	{
 		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
 		_result.dest = area;
@@ -409,7 +409,7 @@ namespace atres
 		return _result;
 	}
 
-	RenderRectangle Font::makeBorderRenderRectangle(cgrect rect, grect area, unsigned int charCode, float borderThickness)
+	RenderRectangle Font::makeBorderRenderRectangle(cgrect rect, cgrect area, unsigned int charCode, float borderThickness)
 	{
 		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
 		_result.dest = area;
@@ -423,7 +423,7 @@ namespace atres
 		return _result;
 	}
 
-	RenderRectangle Font::makeRenderRectangle(cgrect rect, grect area, chstr iconName)
+	RenderRectangle Font::makeRenderRectangle(cgrect rect, cgrect area, chstr iconName)
 	{
 		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
 		_result.dest = area;
@@ -437,7 +437,7 @@ namespace atres
 		return _result;
 	}
 
-	RenderRectangle Font::makeBorderRenderRectangle(cgrect rect, grect area, chstr iconName, float borderThickness)
+	RenderRectangle Font::makeBorderRenderRectangle(cgrect rect, cgrect area, chstr iconName, float borderThickness)
 	{
 		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
 		_result.dest = area;

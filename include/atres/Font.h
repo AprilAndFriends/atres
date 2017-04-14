@@ -77,10 +77,10 @@ namespace atres
 		int getTextCount(chstr text, float maxWidth);
 		
 		/// @note Not thread-safe!
-		RenderRectangle makeRenderRectangle(cgrect rect, grect area, unsigned int charCode);
-		RenderRectangle makeBorderRenderRectangle(cgrect rect, grect area, unsigned int charCode, float borderThickness);
-		RenderRectangle makeRenderRectangle(cgrect rect, grect area, chstr iconName);
-		RenderRectangle makeBorderRenderRectangle(cgrect rect, grect area, chstr iconName, float borderThickness);
+		RenderRectangle makeRenderRectangle(cgrect rect, cgrect area, unsigned int charCode);
+		RenderRectangle makeBorderRenderRectangle(cgrect rect, cgrect area, unsigned int charCode, float borderThickness);
+		RenderRectangle makeRenderRectangle(cgrect rect, cgrect area, chstr iconName);
+		RenderRectangle makeBorderRenderRectangle(cgrect rect, cgrect area, chstr iconName, float borderThickness);
 
 		static BorderMode defaultBorderMode;
 

@@ -240,7 +240,7 @@ namespace atres
 	{
 	}
 
-	void CacheEntryBasicText::set(hstr text, hstr fontName, grect rect, Horizontal horizontal, Vertical vertical, april::Color color, gvec2 offset)
+	void CacheEntryBasicText::set(chstr text, chstr fontName, cgrect rect, Horizontal horizontal, Vertical vertical, const april::Color& color, cgvec2 offset)
 	{
 		this->text = text;
 		this->fontName = fontName;
@@ -342,7 +342,7 @@ namespace atres
 	{
 	}
 
-	void CacheEntryLine::set(hstr text, hstr fontName, gvec2 size)
+	void CacheEntryLine::set(chstr text, chstr fontName, cgvec2 size)
 	{
 		this->text = text;
 		this->fontName = fontName;

@@ -38,13 +38,13 @@ namespace atres
 		~Renderer();
 
 		HL_DEFINE_GET(gvec2, shadowOffset, ShadowOffset);
-		void setShadowOffset(gvec2 value);
+		void setShadowOffset(cgvec2 value);
 		HL_DEFINE_GET(april::Color, shadowColor, ShadowColor);
-		void setShadowColor(april::Color value);
+		void setShadowColor(const april::Color& value);
 		HL_DEFINE_GET(float, borderThickness, BorderThickness);
 		void setBorderThickness(float value);
 		HL_DEFINE_GET(april::Color, borderColor, BorderColor);
-		void setBorderColor(april::Color value);
+		void setBorderColor(const april::Color& value);
 		HL_DEFINE_GET(float, strikeThroughThickness, StrikeThroughThickness);
 		void setStrikeThroughThickness(float value);
 		HL_DEFINE_GET(float, underlineThickness, UnderlineThickness);
@@ -78,27 +78,27 @@ namespace atres
 
 		void analyzeText(chstr fontName, chstr text);
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
-		harray<RenderLine> removeOutOfBoundLines(const harray<RenderLine>& lines, grect rect);
-		void verticalCorrection(harray<RenderLine>& lines, grect rect, Vertical vertical, float x, float lineHeight, float descender, float internalDescender);
-		void horizontalCorrection(harray<RenderLine>& lines, grect rect, Horizontal horizontal, float y, float lineWidth);
-		harray<RenderWord> createRenderWords(grect rect, chstr text, const harray<FormatTag>& tags);
-		harray<RenderLine> createRenderLines(grect rect, chstr text, const harray<FormatTag>& tags, Horizontal horizontal, Vertical vertical, gvec2 offset = gvec2(), bool keepWrappedSpaces = false);
-		RenderText createRenderText(grect rect, chstr text, const harray<RenderLine>& lines, const harray<FormatTag>& tags);
+		harray<RenderLine> removeOutOfBoundLines(const harray<RenderLine>& lines, cgrect rect);
+		void verticalCorrection(harray<RenderLine>& lines, cgrect rect, Vertical vertical, float x, float lineHeight, float descender, float internalDescender);
+		void horizontalCorrection(harray<RenderLine>& lines, cgrect rect, Horizontal horizontal, float y, float lineWidth);
+		harray<RenderWord> createRenderWords(cgrect rect, chstr text, const harray<FormatTag>& tags);
+		harray<RenderLine> createRenderLines(cgrect rect, chstr text, const harray<FormatTag>& tags, Horizontal horizontal, Vertical vertical, cgvec2 offset = gvec2(), bool keepWrappedSpaces = false);
+		RenderText createRenderText(cgrect rect, chstr text, const harray<RenderLine>& lines, const harray<FormatTag>& tags);
 		harray<RenderSequence> optimizeSequences(harray<RenderSequence>& sequences);
 		harray<RenderLiningSequence> optimizeSequences(harray<RenderLiningSequence>& sequences);
 
-		void drawText(chstr fontName, grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
-			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		void drawTextUnformatted(chstr fontName, grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
-			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		void drawText(grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
-			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		void drawTextUnformatted(grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
-			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		harray<RenderLine> makeRenderLines(chstr fontName, grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
-			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
-		harray<RenderLine> makeRenderLinesUnformatted(chstr fontName, grect rect, chstr text, Horizontal horizontal = Horizontal::Left,
-			Vertical vertical = Vertical::Center, april::Color color = april::Color::White, gvec2 offset = gvec2());
+		void drawText(chstr fontName, cgrect rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2 offset = gvec2());
+		void drawTextUnformatted(chstr fontName, cgrect rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2 offset = gvec2());
+		void drawText(cgrect rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2 offset = gvec2());
+		void drawTextUnformatted(cgrect rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2 offset = gvec2());
+		harray<RenderLine> makeRenderLines(chstr fontName, cgrect rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2 offset = gvec2());
+		harray<RenderLine> makeRenderLinesUnformatted(chstr fontName, cgrect rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2 offset = gvec2());
 
 		float getTextWidth(chstr fontName, chstr text);
 		float getTextWidth(chstr text);
@@ -166,12 +166,12 @@ namespace atres
 		void _checkSequenceSwitch();
 		void _updateLiningSequenceSwitch(bool force = false);
 		bool _checkTextures();
-		harray<FormatTag> _makeDefaultTags(april::Color color, chstr fontName, hstr& text);
-		harray<FormatTag> _makeDefaultTagsUnformatted(april::Color color, chstr fontName);
+		harray<FormatTag> _makeDefaultTags(const april::Color& color, chstr fontName, hstr& text);
+		harray<FormatTag> _makeDefaultTagsUnformatted(const april::Color& color, chstr fontName);
 
-		void _drawRenderText(RenderText& renderText, april::Color);
-		void _drawRenderSequence(RenderSequence& sequence, april::Color);
-		void _drawRenderLiningSequence(RenderLiningSequence& sequence, april::Color);
+		void _drawRenderText(RenderText& renderText, const april::Color& color);
+		void _drawRenderSequence(RenderSequence& sequence, const april::Color& color);
+		void _drawRenderLiningSequence(RenderLiningSequence& sequence, const april::Color& color);
 
 	private:
 		harray<FormatTag> _tags;
