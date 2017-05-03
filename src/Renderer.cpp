@@ -69,6 +69,10 @@
 		(code) == 0xFF63	/* fullwidth closing quotation mark */ \
 	)
 
+#define UNICODE_CHAR_SPACE 0x20
+#define UNICODE_CHAR_ZERO_WIDTH_SPACE 0x200B
+#define UNICODE_CHAR_NEWLINE 0x0A
+
 #define EFFECT_MODE_NORMAL 0
 #define EFFECT_MODE_SHADOW 1
 #define EFFECT_MODE_BORDER 2
@@ -1551,7 +1555,7 @@ namespace atres
 					this->_iconFont = NULL;
 					break;
 				}
-				if (code == '\n')
+				if (code == UNICODE_CHAR_NEWLINE)
 				{
 					if (i == start)
 					{
@@ -1560,7 +1564,7 @@ namespace atres
 					}
 					break;
 				}
-				if ((code == 0x20) != checkingSpaces)
+				if ((code == UNICODE_CHAR_SPACE || code == UNICODE_CHAR_ZERO_WIDTH_SPACE) != checkingSpaces)
 				{
 					break;
 				}
