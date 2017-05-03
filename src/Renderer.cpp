@@ -1499,7 +1499,8 @@ namespace atres
 		float aw = 0.0f;
 		float wordX = 0.0f;
 		float addW = 0.0f;
-		float fullWidth = 0.0f;
+		float wordWidth = 0.0f;
+		float maxWidth = 0.0f;
 		int start = 0;
 		int i = 0;
 		int chars = 0;
@@ -1542,8 +1543,9 @@ namespace atres
 						aw = this->_icon->rect.w * this->_scale;
 						addW = hmax(ax, aw);
 					}
-					fullWidth = wordX + addW;
-					if (fullWidth > rect.w) // word too long for line
+					wordWidth = hmax(wordX + addW, maxWidth);
+					maxWidth = wordX + addW;
+					if (wordWidth > rect.w) // word too long for line
 					{
 						tooLong = true;
 						break;
@@ -1593,8 +1595,9 @@ namespace atres
 				{
 					addW = this->_font->getHeight() * 0.5f;
 				}
-				fullWidth = wordX + addW;
-				if (fullWidth > rect.w) // word too long for line
+				wordWidth = hmax(wordX + addW, maxWidth);
+				maxWidth = wordX + addW;
+				if (wordWidth > rect.w) // word too long for line
 				{
 					if (!checkingSpaces)
 					{
@@ -1635,7 +1638,7 @@ namespace atres
 			if (i > start)
 			{
 				word.text = (!icon ? text(start, i - start) : "");
-				word.rect.w = fullWidth;
+				word.rect.w = wordWidth;
 				word.advanceX = wordX;
 				word.start = start;
 				word.count = (!icon ? i - start : 0);
@@ -1643,6 +1646,7 @@ namespace atres
 				word.icon = icon;
 				word.charWidths = charWidths;
 				result += word;
+				maxWidth = 0.0f;
 				charWidths.clear();
 			}
 			else if (tooLong) // this prevents an infinite loop if not at least one character fits in the line
