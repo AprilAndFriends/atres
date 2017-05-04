@@ -1519,6 +1519,8 @@ namespace atres
 			start = i;
 			chars = 0;
 			wordX = 0.0f;
+			wordWidth = 0.0f;
+			maxWidth = 0.0f;
 			icon = false;
 			// checking a whole word
 			while (i < actualSize)
@@ -1579,10 +1581,10 @@ namespace atres
 				{
 					this->_character = this->_characters[code];
 					this->_scale = this->_fontScale * this->_textScale;
-					if (wordX < -this->_character->bearing.x * this->_scale)
+					if (this->_character->bearing.x < 0.0f)
 					{
-						ax = (this->_character->advance - this->_character->bearing.x) * this->_scale;
-						aw = this->_character->rect.w * this->_scale;
+						ax = hmax((this->_character->advance + this->_character->bearing.x) * this->_scale, 0.0f);
+						aw = (this->_character->rect.w + this->_character->bearing.x) * this->_scale;
 					}
 					else
 					{
@@ -1646,7 +1648,6 @@ namespace atres
 				word.icon = icon;
 				word.charWidths = charWidths;
 				result += word;
-				maxWidth = 0.0f;
 				charWidths.clear();
 			}
 			else if (tooLong) // this prevents an infinite loop if not at least one character fits in the line
@@ -1789,7 +1790,8 @@ namespace atres
 		int byteSize = 0;
 		float width = 0.0f;
 		float characterX = 0.0f;
-		float advanceWidth = 0.0f;
+		float wordX = 0.0f;
+		float advanceX = 0.0f;
 		RenderRectangle currentRect;
 		grect area;
 		grect drawRect;
@@ -1802,6 +1804,8 @@ namespace atres
 			foreach (RenderWord, it, this->_line.words)
 			{
 				width = 0.0f;
+				wordX = 0.0f;
+				advanceX = 0.0f;
 				this->_word = (*it);
 				if (this->_word.icon)
 				{
@@ -1821,14 +1825,21 @@ namespace atres
 						this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
 						area = this->_word.rect;
 						characterX = area.x + width;
-						area.x += hmax(0.0f, width + this->_iconFontBearingX * this->_scale);
+						if (this->_character->bearing.x < 0.0f)
+						{
+							area.x += width - wordX + hmax(0.0f, wordX + this->_iconFontBearingX * this->_scale);
+						}
+						else
+						{
+							area.x += hmax(0.0f, width + this->_iconFontBearingX * this->_scale);
+						}
 						area.y += (this->_lineHeight - this->_height) * 0.5f + this->_iconFontOffsetY * this->_scale;
 						area.w = this->_icon->rect.w * this->_scale;
 						area.h = this->_icon->rect.h * this->_scale;
 						area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 						area.y += (this->_height - this->_icon->rect.h * this->_scale) * 0.5f;
 						drawRect = rect;
-						advanceWidth = this->_icon->advance * this->_scale;
+						advanceX = this->_icon->advance * this->_scale;
 						if (this->_iconFont != NULL)
 						{
 							this->_renderRect = this->_iconFont->makeRenderRectangle(drawRect, area, this->_iconName);
@@ -1892,7 +1903,7 @@ namespace atres
 								{
 									liningRect.x = characterX;
 									liningRect.y = this->_word.rect.y + (this->_height - this->_strikeThroughThickness) * 0.5f + this->_strikeThroughOffset;
-									liningRect.w = advanceWidth;
+									liningRect.w = advanceX;
 									liningRect.h = this->_strikeThroughThickness;
 									this->_textStrikeThroughSequence.addRectangle(liningRect);
 									switch (this->_effectMode)
@@ -1916,7 +1927,7 @@ namespace atres
 								{
 									liningRect.x = characterX;
 									liningRect.y = this->_word.rect.y + this->_height + this->_underlineOffset;
-									liningRect.w = advanceWidth;
+									liningRect.w = advanceX;
 									liningRect.h = this->_underlineThickness;
 									this->_textUnderlineSequence.addRectangle(liningRect);
 									switch (this->_effectMode)
@@ -1938,7 +1949,8 @@ namespace atres
 								}
 							}
 						}
-						width += advanceWidth;
+						width += advanceX;
+						wordX = advanceX;
 					}
 				}
 				else
@@ -1961,13 +1973,27 @@ namespace atres
 							this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
 							area = this->_word.rect;
 							characterX = area.x + width;
-							area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale);
+							if (this->_character->bearing.x < 0.0f)
+							{
+								area.x += width - wordX + hmax(0.0f, wordX + this->_character->bearing.x * this->_scale);
+							}
+							else
+							{
+								area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale);
+							}
 							area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale;
 							area.w = this->_character->rect.w * this->_scale;
 							area.h = this->_character->rect.h * this->_scale;
 							area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 							drawRect = rect;
-							advanceWidth = (width < -this->_character->bearing.x * this->_scale ? (this->_character->advance - this->_character->bearing.x) : this->_character->advance) * this->_scale;
+							if (this->_character->bearing.x < 0.0f)
+							{
+								advanceX = hmax((this->_character->advance + this->_character->bearing.x) * this->_scale, 0.0f);
+							}
+							else
+							{
+								advanceX = this->_character->advance * this->_scale;
+							}
 							if (this->_font != NULL)
 							{
 								this->_renderRect = this->_font->makeRenderRectangle(drawRect, area, this->_code);
@@ -2008,7 +2034,14 @@ namespace atres
 											this->_borderCharacter = this->_font->getBorderCharacter(this->_code, this->_borderFontThickness);
 											area = this->_word.rect;
 											rectSize = (this->_borderCharacter->rect.getSize() - this->_character->rect.getSize()) * 0.5f * this->_scale;
-											area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale) - rectSize.x;
+											if (this->_character->bearing.x < 0.0f)
+											{
+												area.x += width - wordX + hmax(0.0f, wordX + this->_character->bearing.x * this->_scale) - rectSize.x;
+											}
+											else
+											{
+												area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale) - rectSize.x;
+											}
 											area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale - rectSize.y;
 											area.w = this->_borderCharacter->rect.w * this->_scale;
 											area.h = this->_borderCharacter->rect.h * this->_scale;
@@ -2032,7 +2065,7 @@ namespace atres
 									{
 										liningRect.x = characterX;
 										liningRect.y = this->_word.rect.y + (this->_height - this->_strikeThroughThickness) * 0.5f + this->_strikeThroughOffset;
-										liningRect.w = advanceWidth;
+										liningRect.w = advanceX;
 										liningRect.h = this->_strikeThroughThickness;
 										this->_textStrikeThroughSequence.addRectangle(liningRect);
 										switch (this->_effectMode)
@@ -2056,7 +2089,7 @@ namespace atres
 									{
 										liningRect.x = characterX;
 										liningRect.y = this->_word.rect.y + this->_height + this->_underlineOffset;
-										liningRect.w = advanceWidth;
+										liningRect.w = advanceX;
 										liningRect.h = this->_underlineThickness;
 										this->_textUnderlineSequence.addRectangle(liningRect);
 										switch (this->_effectMode)
@@ -2078,7 +2111,8 @@ namespace atres
 									}
 								}
 							}
-							width += advanceWidth;
+							width += advanceX;
+							wordX = advanceX;
 						}
 					}
 				}
