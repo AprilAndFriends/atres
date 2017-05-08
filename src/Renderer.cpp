@@ -25,6 +25,10 @@
 #include "Font.h"
 #include "FontIconMap.h"
 
+#ifdef _DEBUG
+//#define _DEBUG_RENDER_TEXT
+#endif
+
 #define IS_IDEOGRAPH(code) \
 	( \
 		((code) >= 0x3040 && (code) <= 0x309F) ||	/* Hiragana */ \
@@ -626,7 +630,7 @@ namespace atres
 		}
 	}
 	
-	void Renderer::horizontalCorrection(harray<RenderLine>& lines, cgrect rect, Horizontal horizontal, float x, float lineWidth)
+	void Renderer::horizontalCorrection(harray<RenderLine>& lines, cgrect rect, Horizontal horizontal, float x)
 	{
 		// horizontal correction not necessary when left aligned
 		if (horizontal.isLeft() || horizontal == Horizontal::Justified && this->justifiedDefault != Horizontal::Justified)
@@ -668,8 +672,9 @@ namespace atres
 		}
 		else // justified correction
 		{
-			float width;
-			float widthPerSpace;
+			float width = 0.0f;
+			float widthPerSpace = 0.0f;
+			float lineRight = 0.0f;
 			harray<RenderWord> words;
 			for_iter (i, 0, lines.size() - 1)
 			{
@@ -682,11 +687,20 @@ namespace atres
 						{
 							if ((*it2).spaces == 0)
 							{
-								width += (*it2).rect.w;
+								width += (*it2).advanceX;
+							}
+						}
+						foreach_r (RenderWord, it2, lines[i].words)
+						{
+							if ((*it2).spaces == 0)
+							{
+								width += hmax((*it2).rect.w - (*it2).advanceX, 0.0f);
+								break;
 							}
 						}
 						widthPerSpace = (rect.w - width) / lines[i].spaces;
 						width = 0.0f;
+						lineRight = lines[i].rect.right();
 						words.clear();
 						foreach (RenderWord, it, lines[i].words)
 						{
@@ -694,6 +708,7 @@ namespace atres
 							{
 								(*it).rect.x += hroundf(width);
 								words += (*it);
+								lineRight = (*it).rect.right();
 							}
 							else
 							{
@@ -701,6 +716,7 @@ namespace atres
 							}
 						}
 						lines[i].words = words;
+						lines[i].rect.w = lineRight - lines[i].rect.x;
 					}
 					else // no spaces, just force a centered horizontal alignment
 					{
@@ -1499,8 +1515,8 @@ namespace atres
 		float aw = 0.0f;
 		float wordX = 0.0f;
 		float addW = 0.0f;
+		float previousWordWidth = 0.0f;
 		float wordWidth = 0.0f;
-		float maxWidth = 0.0f;
 		int start = 0;
 		int i = 0;
 		int chars = 0;
@@ -1519,8 +1535,8 @@ namespace atres
 			start = i;
 			chars = 0;
 			wordX = 0.0f;
+			previousWordWidth = 0.0f;
 			wordWidth = 0.0f;
-			maxWidth = 0.0f;
 			icon = false;
 			// checking a whole word
 			while (i < actualSize)
@@ -1545,10 +1561,11 @@ namespace atres
 						aw = this->_icon->rect.w * this->_scale;
 						addW = hmax(ax, aw);
 					}
-					wordWidth = hmax(wordX + addW, maxWidth);
-					maxWidth = wordX + addW;
+					previousWordWidth = wordWidth;
+					wordWidth = hmax(wordX + addW, wordWidth);
 					if (wordWidth > rect.w) // word too long for line
 					{
+						wordWidth = previousWordWidth;
 						tooLong = true;
 						break;
 					}
@@ -1581,28 +1598,25 @@ namespace atres
 				{
 					this->_character = this->_characters[code];
 					this->_scale = this->_fontScale * this->_textScale;
+					ax = this->_character->advance * this->_scale;
 					if (this->_character->bearing.x < 0.0f)
 					{
-						ax = hmax((this->_character->advance + this->_character->bearing.x) * this->_scale, 0.0f);
-						aw = (this->_character->rect.w + this->_character->bearing.x) * this->_scale;
+						ax = hmax(ax - hmin(0.0f, wordWidth + this->_character->bearing.x * this->_scale), 0.0f);
 					}
-					else
-					{
-						ax = this->_character->advance * this->_scale;
-						aw = (this->_character->rect.w + this->_character->bearing.x) * this->_scale;
-					}
+					aw = (this->_character->rect.w + this->_character->bearing.x) * this->_scale;
 					addW = hmax(ax, aw);
 				}
 				else
 				{
 					addW = this->_font->getHeight() * 0.5f;
 				}
-				wordWidth = hmax(wordX + addW, maxWidth);
-				maxWidth = wordX + addW;
+				previousWordWidth = wordWidth;
+				wordWidth = hmax(wordX + addW, wordWidth);
 				if (wordWidth > rect.w) // word too long for line
 				{
 					if (!checkingSpaces)
 					{
+						wordWidth = previousWordWidth;
 						tooLong = true;
 					}
 					break;
@@ -1676,7 +1690,6 @@ namespace atres
 		this->_initializeLineProcessing();
 		// helper variables
 		bool wrapped = horizontal.isWrapped();
-		float maxWidth = 0.0f;
 		float lineWidth = 0.0f;
 		float x = 0.0f;
 		bool nextLine = false;
@@ -1748,7 +1761,6 @@ namespace atres
 					}
 					this->_line.rect.w = this->_line.advanceX + hmax(this->_line.words.last().rect.w - this->_line.words.last().advanceX, 0.0f);
 				}
-				maxWidth = hmax(maxWidth, this->_line.rect.w);
 				this->_line.rect.y = rect.y + this->_lines.size() * this->_lineHeight;
 				this->_line.terminated = forcedNextLine;
 				if (this->_line.words.size() > 0 || this->_line.terminated) // prevents empty lines with only spaces to be used
@@ -1767,14 +1779,13 @@ namespace atres
 				lineWidth = 0.0f;
 			}
 		}
-		maxWidth = hmin(maxWidth, rect.w);
 		if (this->_lines.size() > 0)
 		{
 			this->verticalCorrection(this->_lines, rect, vertical, offset.y, this->_lineHeight, this->_descender, this->_internalDescender);
 			this->_lines = this->removeOutOfBoundLines(this->_lines, rect);
 			if (this->_lines.size() > 0)
 			{
-				this->horizontalCorrection(this->_lines, rect, horizontal, offset.x, maxWidth);
+				this->horizontalCorrection(this->_lines, rect, horizontal, offset.x);
 			}
 		}
 		return this->_lines;
@@ -1825,14 +1836,7 @@ namespace atres
 						this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
 						area = this->_word.rect;
 						characterX = area.x + width;
-						if (this->_character->bearing.x < 0.0f)
-						{
-							area.x += width - wordX + hmax(0.0f, wordX + this->_iconFontBearingX * this->_scale);
-						}
-						else
-						{
-							area.x += hmax(0.0f, width + this->_iconFontBearingX * this->_scale);
-						}
+						area.x += hmax(0.0f, width + this->_iconFontBearingX * this->_scale);
 						area.y += (this->_lineHeight - this->_height) * 0.5f + this->_iconFontOffsetY * this->_scale;
 						area.w = this->_icon->rect.w * this->_scale;
 						area.h = this->_icon->rect.h * this->_scale;
@@ -1973,26 +1977,16 @@ namespace atres
 							this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
 							area = this->_word.rect;
 							characterX = area.x + width;
-							if (this->_character->bearing.x < 0.0f)
-							{
-								area.x += width - wordX + hmax(0.0f, wordX + this->_character->bearing.x * this->_scale);
-							}
-							else
-							{
-								area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale);
-							}
+							area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale);
 							area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale;
 							area.w = this->_character->rect.w * this->_scale;
 							area.h = this->_character->rect.h * this->_scale;
 							area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 							drawRect = rect;
+							advanceX = this->_character->advance * this->_scale;
 							if (this->_character->bearing.x < 0.0f)
 							{
-								advanceX = hmax((this->_character->advance + this->_character->bearing.x) * this->_scale, 0.0f);
-							}
-							else
-							{
-								advanceX = this->_character->advance * this->_scale;
+								advanceX -= hmin(0.0f, width + this->_character->bearing.x * this->_scale);
 							}
 							if (this->_font != NULL)
 							{
@@ -2215,6 +2209,22 @@ namespace atres
 		}
 		foreach (RenderSequence, it, renderText.textSequences)
 		{
+#ifdef _DEBUG_RENDER_TEXT
+			april::rendersys->setTexture(NULL);
+			april::rendersys->setBlendMode(april::BlendMode::Alpha);
+			april::rendersys->setColorMode(april::ColorMode::Multiply);
+			static harray<april::PlainVertex> v;
+			for_iter (i, 0, (*it).vertices.size() / 3)
+			{
+				v += april::PlainVertex((*it).vertices[i * 3]);
+				v.add(april::PlainVertex((*it).vertices[i * 3 + 1]), 2);
+				v.add(april::PlainVertex((*it).vertices[i * 3 + 2]), 2);
+				v += april::PlainVertex((*it).vertices[i * 3]);
+			}
+			static april::Color polygonColor(april::Color::Red, 128);
+			april::rendersys->render(april::RenderOperation::LineList, (april::PlainVertex*)v, v.size(), polygonColor);
+			v.clear();
+#endif
 			this->_drawRenderSequence((*it), april::Color((*it).color, color.a));
 		}
 		foreach (RenderLiningSequence, it, renderText.textLiningSequences)
