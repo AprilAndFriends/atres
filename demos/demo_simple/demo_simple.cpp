@@ -80,16 +80,13 @@ public:
 
 	void onKeyUp(april::Key keyCode)
 	{
-		switch (keyCode)
+		if (keyCode == april::Key::Backspace)
 		{
-		case april::AK_BACK:
 			atres::renderer->setBorderColor(april::Color(hrand(256), hrand(256), hrand(256)));
-			break;
-		case april::Key::Space:
+		}
+		else if (keyCode == april::Key::Space)
+		{
 			atres::renderer->setBorderThickness(hrandf(1.0f, 5.0f));
-			break;
-		default:
-			break;
 		}
 	}
 
