@@ -260,7 +260,7 @@ void april_init(const harray<hstr>& args)
 		fontTtf->setBorderMode(atres::Font::BorderMode::PrerenderDiamond);
 		atres::renderer->registerFont(fontTtf);
 #endif
-		atres::renderer->registerFont(new atres::FontIconMap(RESOURCE_PATH "icon_font", "icon_font", 1.0f, 2.8f, 4.0f));
+		atres::renderer->registerFont(new atres::FontIconMap(RESOURCE_PATH "icon_font", "icon_font", 1.0f, 0.0f, 4.0f));
 		atres::renderer->setShadowColor(april::Color::Red);
 		atres::renderer->setBorderColor(april::Color::Aqua);
 		atres::renderer->setStrikeThroughThickness(2.0f);

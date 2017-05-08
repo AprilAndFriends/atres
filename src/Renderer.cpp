@@ -2028,14 +2028,7 @@ namespace atres
 											this->_borderCharacter = this->_font->getBorderCharacter(this->_code, this->_borderFontThickness);
 											area = this->_word.rect;
 											rectSize = (this->_borderCharacter->rect.getSize() - this->_character->rect.getSize()) * 0.5f * this->_scale;
-											if (this->_character->bearing.x < 0.0f)
-											{
-												area.x += width - wordX + hmax(0.0f, wordX + this->_character->bearing.x * this->_scale) - rectSize.x;
-											}
-											else
-											{
-												area.x += hmax(0.0f, width + this->_character->bearing.x * this->_scale) - rectSize.x;
-											}
+											area.x += width - wordX + hmax(0.0f, wordX + this->_character->bearing.x * this->_scale) - rectSize.x;
 											area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale - rectSize.y;
 											area.w = this->_borderCharacter->rect.w * this->_scale;
 											area.h = this->_borderCharacter->rect.h * this->_scale;
