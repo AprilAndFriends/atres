@@ -82,7 +82,7 @@ namespace atres
 		void verticalCorrection(harray<RenderLine>& lines, cgrect rect, Vertical vertical, float x, float lineHeight, float descender, float internalDescender);
 		void horizontalCorrection(harray<RenderLine>& lines, cgrect rect, Horizontal horizontal, float y);
 		harray<RenderWord> createRenderWords(cgrect rect, chstr text, const harray<FormatTag>& tags);
-		harray<RenderLine> createRenderLines(cgrect rect, chstr text, const harray<FormatTag>& tags, Horizontal horizontal, Vertical vertical, cgvec2 offset = gvec2(), bool keepWrappedSpaces = false);
+		harray<RenderLine> createRenderLines(cgrect rect, chstr text, const harray<FormatTag>& tags, Horizontal horizontal, Vertical vertical, cgvec2 offset = gvec2());
 		RenderText createRenderText(cgrect rect, chstr text, const harray<RenderLine>& lines, const harray<FormatTag>& tags);
 		harray<RenderSequence> optimizeSequences(harray<RenderSequence>& sequences);
 		harray<RenderLiningSequence> optimizeSequences(harray<RenderLiningSequence>& sequences);

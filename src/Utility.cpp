@@ -25,29 +25,38 @@ namespace atres
 		HL_ENUM_DEFINE(Horizontal, Center);
 		HL_ENUM_DEFINE(Horizontal, Right);
 		HL_ENUM_DEFINE(Horizontal, LeftWrapped);
+		HL_ENUM_DEFINE(Horizontal, LeftWrappedUntrimmed);
 		HL_ENUM_DEFINE(Horizontal, RightWrapped);
+		HL_ENUM_DEFINE(Horizontal, RightWrappedUntrimmed);
 		HL_ENUM_DEFINE(Horizontal, CenterWrapped);
+		HL_ENUM_DEFINE(Horizontal, CenterWrappedUntrimmed);
 		HL_ENUM_DEFINE(Horizontal, Justified);
 	));
 
 	bool Horizontal::isLeft() const
 	{
-		return (*this == Left || *this == LeftWrapped);
+		return (*this == Left || *this == LeftWrapped || *this == LeftWrappedUntrimmed);
 	}
 
 	bool Horizontal::isCenter() const
 	{
-		return (*this == Center || *this == CenterWrapped);
+		return (*this == Center || *this == CenterWrapped || *this == CenterWrappedUntrimmed);
 	}
 
 	bool Horizontal::isRight() const
 	{
-		return (*this == Right || *this == RightWrapped);
+		return (*this == Right || *this == RightWrapped || *this == RightWrappedUntrimmed);
 	}
 
 	bool Horizontal::isWrapped() const
 	{
-		return (*this == LeftWrapped || *this == CenterWrapped || *this == RightWrapped || *this == Justified);
+		return (*this == LeftWrapped || *this == LeftWrappedUntrimmed || *this == CenterWrapped || *this == CenterWrappedUntrimmed ||
+			*this == RightWrapped || *this == RightWrappedUntrimmed || *this == Justified);
+	}
+
+	bool Horizontal::isUntrimmed() const
+	{
+		return (*this == LeftWrappedUntrimmed || *this == CenterWrappedUntrimmed || *this == RightWrappedUntrimmed);
 	}
 
 	HL_ENUM_CLASS_DEFINE(Vertical,

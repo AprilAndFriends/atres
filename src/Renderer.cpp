@@ -1688,13 +1688,14 @@ namespace atres
 	}
 
 	harray<RenderLine> Renderer::createRenderLines(cgrect rect, chstr text, const harray<FormatTag>& tags,
-		Horizontal horizontal, Vertical vertical, cgvec2 offset, bool keepWrappedSpaces)
+		Horizontal horizontal, Vertical vertical, cgvec2 offset)
 	{
 		this->analyzeText(tags.first().data, text); // by convention, the first tag is the font name
 		harray<RenderWord> words = this->createRenderWords(rect, text, tags);
 		this->_initializeLineProcessing();
 		// helper variables
 		bool wrapped = horizontal.isWrapped();
+		bool untrimmed = horizontal.isUntrimmed();
 		float lineWidth = 0.0f;
 		float x = 0.0f;
 		bool nextLine = false;
@@ -1714,7 +1715,7 @@ namespace atres
 				nextLine = true;
 				forcedNextLine = true;
 			}
-			else if (this->_line.words.size() == 0 && words[i].spaces > 0 && wrapped && !keepWrappedSpaces)
+			else if (this->_line.words.size() == 0 && words[i].spaces > 0 && wrapped && !untrimmed)
 			{
 				addWord = false;
 			}
@@ -1742,7 +1743,7 @@ namespace atres
 			if (nextLine)
 			{
 				// remove spaces at beginning and end in wrapped formatting styles
-				if (wrapped && !keepWrappedSpaces)
+				if (wrapped && !untrimmed)
 				{
 					while (this->_line.words.size() > 0 && this->_line.words.first().spaces > 0)
 					{

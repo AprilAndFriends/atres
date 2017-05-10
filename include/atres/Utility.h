@@ -33,13 +33,17 @@ namespace atres
 		HL_ENUM_DECLARE(Horizontal, Center);
 		HL_ENUM_DECLARE(Horizontal, Right);
 		HL_ENUM_DECLARE(Horizontal, LeftWrapped);
+		HL_ENUM_DECLARE(Horizontal, LeftWrappedUntrimmed);
 		HL_ENUM_DECLARE(Horizontal, RightWrapped);
+		HL_ENUM_DECLARE(Horizontal, RightWrappedUntrimmed);
 		HL_ENUM_DECLARE(Horizontal, CenterWrapped);
+		HL_ENUM_DECLARE(Horizontal, CenterWrappedUntrimmed);
 		HL_ENUM_DECLARE(Horizontal, Justified);
 		bool isLeft() const;
 		bool isCenter() const;
 		bool isRight() const;
 		bool isWrapped() const;
+		bool isUntrimmed() const;
 	));
 
 	HL_ENUM_CLASS_PREFIX_DECLARE(atresExport, Vertical,
