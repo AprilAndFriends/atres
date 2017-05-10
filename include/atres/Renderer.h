@@ -128,6 +128,10 @@ namespace atres
 		// @see getTextWidth()
 		// @see makeRenderLines()
 		float getTextHeightUnformatted(chstr text, float maxWidth);
+		hstr getFittingText(chstr fontName, chstr text, float maxWidth);
+		hstr getFittingText(chstr text, float maxWidth);
+		hstr getFittingTextUnformatted(chstr fontName, chstr text, float maxWidth);
+		hstr getFittingTextUnformatted(chstr text, float maxWidth);
 
 		void clearCache();
 

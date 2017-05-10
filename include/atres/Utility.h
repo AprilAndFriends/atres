@@ -152,7 +152,8 @@ namespace atres
 		bool icon;
 		float advanceX;
 		harray<float> charWidths;
-		
+		harray<float> segmentWidths;
+
 		RenderWord();
 		~RenderWord();
 

@@ -1526,6 +1526,7 @@ namespace atres
 		bool tooLong = false;
 		hstr iconName;
 		harray<float> charWidths;
+		harray<float> segmentWidths;
 		word.rect.x = rect.x;
 		word.rect.y = rect.y;
 		word.rect.h = this->_height;
@@ -1571,6 +1572,7 @@ namespace atres
 					}
 					wordX += ax;
 					charWidths += ax;
+					segmentWidths += wordWidth;
 					i += byteSize;
 					++chars;
 					this->_iconFont = NULL;
@@ -1623,6 +1625,7 @@ namespace atres
 				}
 				wordX += ax;
 				charWidths += ax;
+				segmentWidths += wordWidth;
 				i += byteSize;
 				++chars;
 				if (!checkingSpaces && i < actualSize)
@@ -1661,8 +1664,10 @@ namespace atres
 				word.spaces = (!icon && checkingSpaces ? i - start : 0);
 				word.icon = icon;
 				word.charWidths = charWidths;
+				word.segmentWidths = segmentWidths;
 				result += word;
 				charWidths.clear();
+				segmentWidths.clear();
 			}
 			else if (tooLong) // this prevents an infinite loop if not at least one character fits in the line
 			{
@@ -1988,7 +1993,8 @@ namespace atres
 							{
 								advanceX -= hmin(0.0f, width + this->_character->bearing.x * this->_scale);
 							}
-							if (this->_font != NULL)
+							// optimization, don't even render spaces
+							if (this->_font != NULL && this->_code != UNICODE_CHAR_SPACE && this->_code != UNICODE_CHAR_ZERO_WIDTH_SPACE)
 							{
 								this->_renderRect = this->_font->makeRenderRectangle(drawRect, area, this->_code);
 								this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
@@ -2460,13 +2466,11 @@ namespace atres
 	{
 		if (text != "" && maxWidth > 0.0f)
 		{
-			static grect defaultRect(0.0f, 0.0f, 0.0f, CHECK_RECT_SIZE);
-			static Font* font = NULL;
-			defaultRect.w = maxWidth;
+			grect defaultRect(0.0f, 0.0f, maxWidth, CHECK_RECT_SIZE);
 			this->_lines = this->makeRenderLines(fontName, defaultRect, text, Horizontal::LeftWrapped, Vertical::Top);
 			if (this->_lines.size() > 0)
 			{
-				font = this->getFont(fontName);
+				Font* font = this->getFont(fontName);
 				return (this->_lines.size() * font->getLineHeight() + font->getInternalDescender());
 			}
 		}
@@ -2486,6 +2490,56 @@ namespace atres
 	float Renderer::getTextHeightUnformatted(chstr text, float maxWidth)
 	{
 		return this->getTextHeight("", "[-]" + text, maxWidth);
+	}
+
+	hstr Renderer::getFittingText(chstr fontName, chstr text, float maxWidth)
+	{
+		if (text != "" && maxWidth > 0.0f)
+		{
+			grect defaultRect(0.0f, 0.0f, CHECK_RECT_SIZE, CHECK_RECT_SIZE);
+			this->_lines = this->makeRenderLines(fontName, defaultRect, text, Horizontal::LeftWrapped, Vertical::Top);
+			if (this->_lines.size() > 0)
+			{
+				float width = 0.0f;
+				harray<hstr> result;
+				std::ustring ustr;
+				foreach (RenderWord, it, this->_lines[0].words)
+				{
+					if ((*it).rect.right() > maxWidth)
+					{
+						ustr = (*it).text.uStr();
+						for_itert (size_t, i, 0, ustr.size())
+						{
+							if (width + (*it).segmentWidths[i] > maxWidth)
+							{
+								break;
+							}
+							result += hstr::fromUnicode(ustr[i]);
+						}
+						break;
+					}
+					width = (*it).rect.right();
+					result += (*it).text;
+				}
+				return result.joined("");
+			}
+		}
+		return "";
+	}
+
+	hstr Renderer::getFittingText(chstr text, float maxWidth)
+	{
+		return this->getFittingText("", text, maxWidth);
+	}
+
+	hstr Renderer::getFittingTextUnformatted(chstr fontName, chstr text, float maxWidth)
+	{
+		return this->getFittingText(fontName, "[-]" + text, maxWidth);
+	}
+
+	hstr Renderer::getFittingTextUnformatted(chstr text, float maxWidth)
+	{
+		return this->getFittingText("", "[-]" + text, maxWidth);
 	}
 
 }
