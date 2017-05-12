@@ -161,7 +161,7 @@ namespace atres
 		}
 	}
 
-	RenderWord::RenderWord() : start(0), count(0), spaces(0), icon(false), advanceX(0.0f)
+	RenderWord::RenderWord() : start(0), count(0), spaces(0), icon(false), advanceX(0.0f), bearingX(0.0f)
 	{
 	}
 

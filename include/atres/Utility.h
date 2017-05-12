@@ -155,6 +155,7 @@ namespace atres
 		int spaces;
 		bool icon;
 		float advanceX;
+		float bearingX;
 		harray<float> charXs;
 		harray<float> charAdvanceXs;
 		harray<float> segmentWidths;

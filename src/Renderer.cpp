@@ -1519,6 +1519,7 @@ namespace atres
 		float bearingX = 0.0f;
 		float previousWordWidth = 0.0f;
 		float wordWidth = 0.0f;
+		float wordBearingX = 0.0f;
 		float kerning = 0.0f;
 		int start = 0;
 		int i = 0;
@@ -1542,6 +1543,7 @@ namespace atres
 			charX = 0.0f;
 			previousWordWidth = 0.0f;
 			wordWidth = 0.0f;
+			wordBearingX = 0.0f;
 			icon = false;
 			// checking a whole word
 			while (i < actualSize)
@@ -1564,7 +1566,29 @@ namespace atres
 						this->_icon = this->_icons[this->_fontIconName];
 						this->_scale = this->_iconFontScale * this->_textScale;
 						ax = this->_icon->advance * this->_scale;
-						aw = this->_icon->rect.w * this->_scale;
+						if (this->_iconFontBearingX < 0.0f)
+						{
+							ax -= this->_iconFontBearingX * this->_scale;
+							bearingX = charX + this->_iconFontBearingX * this->_scale;
+							if (bearingX < 0)
+							{
+								charX = 0.0f;
+								wordBearingX = hmin(wordBearingX, bearingX);
+								foreach (float, it, charXs)
+								{
+									(*it) -= bearingX;
+								}
+								foreach (float, it, segmentWidths)
+								{
+									(*it) -= bearingX;
+								}
+							}
+							else
+							{
+								charX = bearingX;
+							}
+						}
+						aw = (this->_icon->rect.w + this->_iconFontBearingX) * this->_scale;
 						addW = hmax(ax, aw);
 					}
 					previousWordWidth = wordWidth;
@@ -1614,9 +1638,12 @@ namespace atres
 					ax = (this->_character->advance + kerning) * this->_scale;
 					if (this->_character->bearing.x < 0.0f)
 					{
+						ax -= this->_character->bearing.x * this->_scale;
 						bearingX = charX + this->_character->bearing.x * this->_scale;
 						if (bearingX < 0)
 						{
+							charX = 0.0f;
+							wordBearingX = hmin(wordBearingX, bearingX);
 							foreach (float, it, charXs)
 							{
 								(*it) -= bearingX;
@@ -1625,12 +1652,10 @@ namespace atres
 							{
 								(*it) -= bearingX;
 							}
-							ax -= bearingX;
 						}
 						else
 						{
 							charX = bearingX;
-							ax -= this->_character->bearing.x * this->_scale;
 						}
 					}
 					aw = (this->_character->rect.w + this->_character->bearing.x + kerning) * this->_scale;
@@ -1688,6 +1713,7 @@ namespace atres
 				word.text = (!icon ? text(start, i - start) : "");
 				word.rect.w = wordWidth;
 				word.advanceX = charX;
+				word.bearingX = wordBearingX;
 				word.start = start;
 				word.count = (!icon ? i - start : 0);
 				word.spaces = (!icon && checkingSpaces ? i - start : 0);
@@ -1838,6 +1864,8 @@ namespace atres
 		int byteSize = 0;
 		float characterX = 0.0f;
 		float advanceX = 0.0f;
+		float wordX = 0.0f;
+		float bearingX = 0.0f;
 		RenderRectangle currentRect;
 		grect area;
 		grect drawRect;
@@ -1848,9 +1876,13 @@ namespace atres
 		for_iter (j, 0, this->_lines.size())
 		{
 			this->_line = this->_lines[j];
+			bearingX = 0.0f;
 			foreach (RenderWord, it, this->_line.words)
 			{
 				this->_word = (*it);
+				wordX = this->_word.rect.x - this->_line.rect.x;
+				bearingX += this->_word.bearingX;
+				index = 0;
 				if (this->_word.icon)
 				{
 					// checking first formatting tag changes
@@ -1868,15 +1900,23 @@ namespace atres
 						this->_strikeThroughThickness = this->strikeThroughThickness * this->_textStrikeThroughThickness;
 						this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
 						area = this->_word.rect;
-						characterX = area.x + this->_word.charXs[0];
-						area.x += this->_word.charXs[0];
+						if (wordX + bearingX > 0.0f)
+						{
+							//area.x += bearingX;
+						}
+						else
+						{
+							//bearingX = 0.0f;
+						}
+						characterX = area.x + this->_word.charXs[index];
+						area.x += this->_word.charXs[index];
 						area.y += (this->_lineHeight - this->_height) * 0.5f + this->_iconFontOffsetY * this->_scale;
 						area.w = this->_icon->rect.w * this->_scale;
 						area.h = this->_icon->rect.h * this->_scale;
 						area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 						area.y += (this->_height - this->_icon->rect.h * this->_scale) * 0.5f;
 						drawRect = rect;
-						advanceX = this->_word.charXs[0] + this->_word.charAdvanceXs[0];
+						advanceX = this->_word.charXs[index] + this->_word.charAdvanceXs[index];
 						if (this->_iconFont != NULL)
 						{
 							this->_renderRect = this->_iconFont->makeRenderRectangle(drawRect, area, this->_iconName);
@@ -1916,7 +1956,7 @@ namespace atres
 										this->_borderIcon = this->_iconFont->getBorderIcon(this->_iconName, this->_borderFontThickness);
 										area = this->_word.rect;
 										rectSize = (this->_borderIcon->rect.getSize() - this->_icon->rect.getSize()) * 0.5f * this->_scale;
-										area.x += this->_word.charXs[0] - rectSize.x;
+										area.x += this->_word.charXs[index] - rectSize.x;
 										area.y += (this->_lineHeight - this->_height) * 0.5f + this->_iconFontOffsetY * this->_scale - rectSize.y;
 										area.w = this->_borderIcon->rect.w * this->_scale;
 										area.h = this->_borderIcon->rect.h * this->_scale;
@@ -1990,7 +2030,6 @@ namespace atres
 				}
 				else
 				{
-					index = 0;
 					for_iter_step (i, 0, this->_word.text.size(), byteSize)
 					{
 						this->_code = this->_word.text.firstUnicodeChar(i, &byteSize);
@@ -2008,8 +2047,18 @@ namespace atres
 							this->_strikeThroughThickness = this->strikeThroughThickness * this->_textStrikeThroughThickness;
 							this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
 							area = this->_word.rect;
-							characterX = area.x + this->_word.charXs[index];
-							area.x += this->_word.charXs[index];
+							if (wordX + bearingX > 0.0f)
+							{
+								//area.x += bearingX;
+							}
+							else
+							{
+								//area.x += bearingX;
+								//bearingX += wordX;
+								//bearingX = 0.0f;
+							}
+							characterX = area.x + this->_word.charXs[index];// +this->_word.bearingX;
+							area.x += this->_word.charXs[index];// +this->_word.bearingX;
 							area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale;
 							area.w = this->_character->rect.w * this->_scale;
 							area.h = this->_character->rect.h * this->_scale;
