@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -32,7 +32,7 @@ namespace atresttf
 {
 	hstr logTag = "atresttf";
 
-	static hversion version(4, 0, 0);
+	static hversion version(5, 0, 0);
 
 	FT_Library library = NULL;
 	hmap<atres::Font*, FT_Face> faces;

@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.2
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -19,7 +19,7 @@ namespace atres
 {
 	hstr logTag = "atres";
 
-	static hversion version(4, 2);
+	static hversion version(5, 0, 0);
 
 	static int textureSize = 1024;
 	static bool allowAlphaTextures = true;
