@@ -46,7 +46,7 @@ namespace atres
 		return (hrdir::exists(this->fontDirectory) && FontDynamic::_load());
 	}
 
-	april::Image* FontIconMap::_loadIconImage(chstr iconName, bool initial, int& advance)
+	april::Image* FontIconMap::_loadIconImage(chstr iconName, bool initial, float& advance)
 	{
 		HL_LAMBDA_CLASS(_withoutExtension, hstr, ((hstr const& filename) { return hresource::withoutExtension(filename); }));
 		harray<hstr> files = hrdir::files(this->fontDirectory).mapped(&_withoutExtension::lambda);
@@ -60,7 +60,7 @@ namespace atres
 			return NULL;
 		}
 		april::Image* image = april::Image::createFromResource(filename);
-		advance = image->w + (int)this->spacing;
+		advance = image->w + this->spacing;
 		return image;
 	}
 

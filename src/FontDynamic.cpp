@@ -154,7 +154,7 @@ namespace atres
 
 	april::Texture* FontDynamic::_createTexture()
 	{
-		int textureSize = getTextureSize();
+		int textureSize = atres::getTextureSize();
 		april::Texture* texture = NULL;
 		if (this->_isAllowAlphaTextures() && april::rendersys->getCaps().textureFormats.has(april::Image::Format::Alpha))
 		{
@@ -179,19 +179,19 @@ namespace atres
 		{
 			return true;
 		}
-		int advance = 0;
+		float advance = 0.0f;
 		int leftOffset = 0;
 		int topOffset = 0;
-		int ascender = 0;
-		int descender = 0;
-		int bearingX = 0;
+		float ascender = 0.0f;
+		float descender = 0.0f;
+		float bearingX = 0.0f;
 		april::Image* image = this->_loadCharacterImage(charCode, initial, advance, leftOffset, topOffset, ascender, descender, bearingX);
 		if (image == NULL)
 		{
 			return false;
 		}
 		// this makes sure that there is no vertical overlap between characters
-		int lineOffset = (int)this->height - descender;
+		int lineOffset = hceil(this->height - descender);
 		int bearingY = -hmin(lineOffset - topOffset, 0);
 		int offsetY = hmax(lineOffset - topOffset, 0);
 		int charWidth = image->w + SAFE_SPACE * 2;
@@ -202,8 +202,8 @@ namespace atres
 		// character definition
 		CharacterDefinition* character = new CharacterDefinition();
 		character->rect.set((float)textureContainer->penX, (float)textureContainer->penY, (float)charWidth, (float)charHeight);
-		character->advance = (float)advance;
-		character->bearing.set((float)bearingX, (float)(lineOffset + ascender + bearingY));
+		character->advance = advance;
+		character->bearing.set(bearingX, lineOffset + ascender + bearingY);
 		character->offsetY = (float)offsetY;
 		this->characters[charCode] = character;
 		textureContainer->characters += charCode;
@@ -257,7 +257,7 @@ namespace atres
 		{
 			return true;
 		}
-		int advance = 0;
+		float advance = 0.0f;
 		april::Image* image = this->_loadIconImage(iconName, initial, advance);
 		if (image == NULL)
 		{
@@ -272,7 +272,7 @@ namespace atres
 		// icon definition
 		IconDefinition* icon = new IconDefinition();
 		icon->rect.set((float)textureContainer->penX, (float)textureContainer->penY, (float)iconWidth, (float)iconHeight);
-		icon->advance = (float)advance;
+		icon->advance = advance;
 		this->icons[iconName] = icon;
 		textureContainer->icons += iconName;
 		textureContainer->penX += iconWidth + CHARACTER_SPACE * 2;
@@ -372,7 +372,7 @@ namespace atres
 		return textureContainer;
 	}
 
-	april::Image* FontDynamic::_loadCharacterImage(unsigned int charCode, bool initial, int& advance, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX)
+	april::Image* FontDynamic::_loadCharacterImage(unsigned int charCode, bool initial, float& advance, int& leftOffset, int& topOffset, float& ascender, float& descender, float& bearingX)
 	{
 		return NULL;
 	}
@@ -384,12 +384,12 @@ namespace atres
 
 	april::Image* FontDynamic::_generateBorderCharacterImage(unsigned int charCode, float borderThickness)
 	{
-		int advance = 0;
+		float advance = 0;
 		int leftOffset = 0;
 		int topOffset = 0;
-		int ascender = 0;
-		int descender = 0;
-		int bearingX = 0;
+		float ascender = 0;
+		float descender = 0;
+		float bearingX = 0;
 		april::Image* characterImage = this->_loadCharacterImage(charCode, false, advance, leftOffset, topOffset, ascender, descender, bearingX);
 		if (characterImage == NULL)
 		{
@@ -423,7 +423,7 @@ namespace atres
 		return image;
 	}
 
-	april::Image* FontDynamic::_loadIconImage(chstr iconName, bool initial, int& advance)
+	april::Image* FontDynamic::_loadIconImage(chstr iconName, bool initial, float& advance)
 	{
 		return NULL;
 	}
@@ -435,7 +435,7 @@ namespace atres
 
 	april::Image* FontDynamic::_generateBorderIconImage(chstr iconName, float borderThickness)
 	{
-		int advance = 0;
+		float advance = 0.0f;
 		april::Image* iconImage = this->_loadIconImage(iconName, false, advance);
 		if (iconImage == NULL)
 		{

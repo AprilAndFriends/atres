@@ -23,8 +23,12 @@
 #include "atresttfUtil.h"
 #include "FontTtf.h"
 
-#define PTSIZE2INT(value) (int)(((value) + 63) >> 6)
+#define UNICODE_CHAR_SPACE 0x20
+#define UNICODE_CHAR_NON_BREAKING_SPACE 0xA0
+
+#define FLOAT2PTLONG(value) (long)((value) * 64)
 #define FLOAT2PTSIZE(value) (int)((value) * 64)
+#define PTSIZE2FLOAT(value) ((value) / 64.0f)
 
 namespace atresttf
 {
@@ -163,7 +167,7 @@ namespace atresttf
 		}
 		FT_Size_RequestRec request;
 		memset(&request, 0, sizeof(FT_Size_RequestRec));
-		request.height = (long)hround((double)this->height) << 6;
+		request.height = FLOAT2PTLONG(hround((double)this->height));
 		request.type = FT_SIZE_REQUEST_TYPE_REAL_DIM;
 		error = FT_Request_Size(face, &request);
 		if (error != 0)
@@ -180,7 +184,7 @@ namespace atresttf
 			FT_Done_Face(face);
 			return false;
 		}
-		this->internalDescender = -(float)PTSIZE2INT(face->size->metrics.descender);
+		this->internalDescender = -PTSIZE2FLOAT(face->size->metrics.descender);
 		if (!this->customDescender)
 		{
 			this->descender = this->internalDescender;
@@ -200,18 +204,18 @@ namespace atresttf
 		return true;
 	}
 
-	april::Image* FontTtf::_loadCharacterImage(unsigned int charCode, bool initial, int& advance, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX)
+	april::Image* FontTtf::_loadCharacterImage(unsigned int charCode, bool initial, float& advance, int& leftOffset, int& topOffset, float& ascender, float& descender, float& bearingX)
 	{
 		FT_Face face = atresttf::getFace(this);
 		unsigned long charIndex = charCode;
-		if (charIndex == 0xA0) // non-breaking space character should be treated just like a normal space when retrieving the glyph from the font
+		if (charIndex == UNICODE) // non-breaking space character should be treated just like a normal space when retrieving the glyph from the font
 		{
-			charIndex = 0x20;
+			charIndex = UNICODE_CHAR_SPACE;
 		}
 		unsigned int glyphIndex = FT_Get_Char_Index(face, charIndex);
 		if (glyphIndex == 0)
 		{
-			if (!initial && charCode >= 0x20)
+			if (!initial && charCode >= UNICODE_CHAR_SPACE)
 			{
 				hlog::debugf(logTag, "Character '0x%X' does not exist in: %s", charCode, this->fontFilename.cStr());
 			}
@@ -232,12 +236,12 @@ namespace atresttf
 				return NULL;
 			}
 		}
-		advance = PTSIZE2INT(face->glyph->advance.x);
+		advance = PTSIZE2FLOAT(face->glyph->advance.x);
 		leftOffset = face->glyph->bitmap_left;
 		topOffset = face->glyph->bitmap_top;
-		ascender = (int)(-PTSIZE2INT(face->size->metrics.ascender));
-		descender = (int)(-PTSIZE2INT(face->size->metrics.descender));
-		bearingX = PTSIZE2INT(face->glyph->metrics.horiBearingX);
+		ascender = -PTSIZE2FLOAT(face->size->metrics.ascender);
+		descender = -PTSIZE2FLOAT(face->size->metrics.descender);
+		bearingX = PTSIZE2FLOAT(face->glyph->metrics.horiBearingX);
 		return april::Image::create(face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer, april::Image::Format::Alpha);
 	}
 
@@ -245,14 +249,14 @@ namespace atresttf
 	{
 		FT_Face face = atresttf::getFace(this);
 		unsigned long charIndex = charCode;
-		if (charIndex == 0xA0) // non-breaking space character should be treated just like a normal space when retrieving the glyph from the font
+		if (charIndex == UNICODE_CHAR_NON_BREAKING_SPACE) // non-breaking space character should be treated just like a normal space when retrieving the glyph from the font
 		{
-			charIndex = 0x20;
+			charIndex = UNICODE_CHAR_SPACE;
 		}
 		unsigned int glyphIndex = FT_Get_Char_Index(face, charIndex);
 		if (glyphIndex == 0)
 		{
-			if (charCode >= 0x20)
+			if (charCode >= UNICODE_CHAR_SPACE)
 			{
 				hlog::debugf(logTag, "Border character '0x%X' does not exist in: %s", charCode, this->fontFilename.cStr());
 			}
@@ -315,6 +319,56 @@ namespace atresttf
 		}
 		FT_Done_Glyph(glyph);
 		return image;
+	}
+
+	float FontTtf::getKerning(unsigned int previousCode, unsigned int code)
+	{
+		if (previousCode == 0 || code == 0)
+		{
+			return 0.0f;
+		}
+		FT_Face face = atresttf::getFace(this);
+		if (!FT_HAS_KERNING(face))
+		{
+			return 0.0f;
+		}
+		std::pair<unsigned int, unsigned int> key;
+		if (this->kerningCache.hasKey(key))
+		{
+			return this->kerningCache[key];
+		}
+		unsigned long charIndex = code;
+		if (charIndex == UNICODE_CHAR_NON_BREAKING_SPACE) // non-breaking space character should be treated just like a normal space when retrieving the glyph from the font
+		{
+			charIndex = UNICODE_CHAR_SPACE;
+		}
+		unsigned int glyphIndex = FT_Get_Char_Index(face, charIndex);
+		if (glyphIndex == 0)
+		{
+			this->kerningCache[key] = 0.0f;
+			return this->kerningCache[key];
+		}
+		unsigned long previousCharInex = previousCode;
+		if (previousCharInex == UNICODE_CHAR_NON_BREAKING_SPACE) // non-breaking space character should be treated just like a normal space when retrieving the glyph from the font
+		{
+			previousCharInex = UNICODE_CHAR_SPACE;
+		}
+		unsigned int previousGlyphIndex = FT_Get_Char_Index(face, previousCharInex);
+		if (previousGlyphIndex == 0)
+		{
+			this->kerningCache[key] = 0.0f;
+			return this->kerningCache[key];
+		}
+		FT_Vector kerningVector;
+		FT_Error error = FT_Get_Kerning(face, previousGlyphIndex, glyphIndex, FT_KERNING_DEFAULT, &kerningVector);
+		if (error != 0)
+		{
+			hlog::errorf(logTag, "Could not get kerning for pair 0x%2X,0x%2X, error: 0x%2X", previousGlyphIndex, glyphIndex, error);
+			this->kerningCache[key] = 0.0f;
+			return this->kerningCache[key];
+		}
+		this->kerningCache[key] = PTSIZE2FLOAT(kerningVector.x);
+		return this->kerningCache[key];
 	}
 
 }

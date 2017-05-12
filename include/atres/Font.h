@@ -75,7 +75,8 @@ namespace atres
 		float getTextWidth(chstr text);
 		/// @note Not thread-safe!
 		int getTextCount(chstr text, float maxWidth);
-		
+		virtual float getKerning(unsigned int previousCode, unsigned int code);
+
 		/// @note Not thread-safe!
 		RenderRectangle makeRenderRectangle(cgrect rect, cgrect area, unsigned int charCode);
 		RenderRectangle makeBorderRenderRectangle(cgrect rect, cgrect area, unsigned int charCode, float borderThickness);

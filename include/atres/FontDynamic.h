@@ -71,10 +71,10 @@ namespace atres
 		bool _addBorderIconBitmap(chstr iconName, float borderThickness);
 		TextureContainer* _addBitmap(harray<TextureContainer*>& textureContainers, bool initial, april::Image* image, int bitmapWidth, int bitmapHeight, chstr symbol, int offsetX = 0, int offsetY = 0, int safeSpace = 0);
 
-		virtual april::Image* _loadCharacterImage(unsigned int charCode, bool initial, int& advance, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX);
+		virtual april::Image* _loadCharacterImage(unsigned int charCode, bool initial, float& advance, int& leftOffset, int& topOffset, float& ascender, float& descender, float& bearingX);
 		virtual april::Image* _loadBorderCharacterImage(unsigned int charCode, float borderThickness);
 		virtual april::Image* _generateBorderCharacterImage(unsigned int charCode, float borderThickness);
-		virtual april::Image* _loadIconImage(chstr iconName, bool initial, int& advance);
+		virtual april::Image* _loadIconImage(chstr iconName, bool initial, float& advance);
 		virtual april::Image* _loadBorderIconImage(chstr iconName, float borderThickness);
 		virtual april::Image* _generateBorderIconImage(chstr iconName, float borderThickness);
 

@@ -291,6 +291,11 @@ namespace atres
 		return NULL;
 	}
 
+	float Font::getKerning(unsigned int previousCode, unsigned int code)
+	{
+		return 0.0f;
+	}
+
 	harray<BorderTextureContainer*> Font::_getBorderTextureContainers(float borderThickness) const
 	{
 		harray<BorderTextureContainer*> result;

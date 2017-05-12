@@ -155,7 +155,8 @@ namespace atres
 		int spaces;
 		bool icon;
 		float advanceX;
-		harray<float> charWidths;
+		harray<float> charXs;
+		harray<float> charAdvanceXs;
 		harray<float> segmentWidths;
 
 		RenderWord();

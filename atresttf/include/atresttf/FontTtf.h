@@ -16,6 +16,7 @@
 #include <atres/FontDynamic.h>
 #include <atres/Utility.h>
 #include <hltypes/harray.h>
+#include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
 #include "atresttfExport.h"
@@ -40,17 +41,20 @@ namespace atresttf
 		HL_DEFINE_GET(hstr, fontFilename, FontFilename);
 		void setBorderMode(BorderMode value);
 
+		float getKerning(unsigned int previousCode, unsigned int code);
+
 	protected:
 		bool customDescender;
 		hstr fontFilename;
 		hstream fontStream;
 		bool loadBasicAscii;
+		hmap<std::pair<unsigned int, unsigned int>, float> kerningCache;
 
 		void _setInternalValues(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii);
 
 		bool _load();
 		
-		april::Image* _loadCharacterImage(unsigned int charCode, bool initial, int& advance, int& leftOffset, int& topOffset, int& ascender, int& descender, int& bearingX);
+		april::Image* _loadCharacterImage(unsigned int charCode, bool initial, float& advance, int& leftOffset, int& topOffset, float& ascender, float& descender, float& bearingX);
 		april::Image* _loadBorderCharacterImage(unsigned int charCode, float borderThickness);
 
 	};

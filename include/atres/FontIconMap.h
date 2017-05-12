@@ -42,7 +42,7 @@ namespace atres
 
 		bool _load();
 
-		april::Image* _loadIconImage(chstr iconName, bool initial, int& advance);
+		april::Image* _loadIconImage(chstr iconName, bool initial, float& advance);
 
 	};
 
