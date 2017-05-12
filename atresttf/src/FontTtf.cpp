@@ -208,7 +208,7 @@ namespace atresttf
 	{
 		FT_Face face = atresttf::getFace(this);
 		unsigned long charIndex = charCode;
-		if (charIndex == UNICODE) // non-breaking space character should be treated just like a normal space when retrieving the glyph from the font
+		if (charIndex == UNICODE_CHAR_NON_BREAKING_SPACE) // non-breaking space character should be treated just like a normal space when retrieving the glyph from the font
 		{
 			charIndex = UNICODE_CHAR_SPACE;
 		}
