@@ -2584,12 +2584,14 @@ namespace atres
 				float width = 0.0f;
 				harray<hstr> result;
 				std::ustring ustr;
+				int size = 0;
 				foreach (RenderWord, it, this->_lines[0].words)
 				{
 					if ((*it).rect.right() > maxWidth)
 					{
 						ustr = (*it).text.uStr();
-						for_itert (size_t, i, 0, ustr.size())
+						size = (int)ustr.size();
+						for_iter (i, 0, size)
 						{
 							if (width + (*it).segmentWidths[i] > maxWidth)
 							{

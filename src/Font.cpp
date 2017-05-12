@@ -315,6 +315,7 @@ namespace atres
 	static float _ax = 0.0f;
 	static float _aw = 0.0f;
 	static float _scale = 1.0f;
+	static int _size = 0;
 	static CharacterDefinition* _character = NULL;
 	static std::ustring _chars;
 
@@ -326,7 +327,8 @@ namespace atres
 		_aw = 0.0f;
 		_scale = this->getScale();
 		_chars = text.uStr();
-		for_itert (size_t, i, 0, _chars.size())
+		_size = (int)_chars.size();
+		for_iter (i, 0, _size)
 		{
 			_character = this->characters[_chars[i]];
 			if (_textX < -_character->bearing.x * _scale)
@@ -353,7 +355,8 @@ namespace atres
 		_aw = 0.0f;
 		_scale = this->getScale();
 		_chars = text.uStr();
-		for_itert (size_t, i, 0, _chars.size())
+		_size = (int)_chars.size();
+		for_iter (i, 0, _size)
 		{
 			_character = this->characters[_chars[i]];
 			if (_textX < -_character->bearing.x * _scale)
