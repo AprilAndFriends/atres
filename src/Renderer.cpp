@@ -675,6 +675,7 @@ namespace atres
 			float width = 0.0f;
 			float widthPerSpace = 0.0f;
 			float lineRight = 0.0f;
+			float offset = 0.0f;
 			harray<RenderWord> words;
 			for_iter (i, 0, lines.size() - 1)
 			{
@@ -682,7 +683,8 @@ namespace atres
 				{
 					if (lines[i].spaces > 0)
 					{
-						width = 0.0f;
+						offset = (lines[i].words.size() > 0 ? -lines[i].words.first().bearingX : 0.0f);
+						width = offset;
 						foreach (RenderWord, it2, lines[i].words)
 						{
 							if ((*it2).spaces == 0)
@@ -1572,6 +1574,7 @@ namespace atres
 							bearingX = charX + this->_iconFontBearingX * this->_scale;
 							if (bearingX < 0)
 							{
+								aw = (this->_icon->rect.w - charX) * this->_scale;
 								charX = 0.0f;
 								wordBearingX = hmin(wordBearingX, bearingX);
 								foreach (float, it, charXs)
@@ -1586,9 +1589,13 @@ namespace atres
 							else
 							{
 								charX = bearingX;
+								aw = this->_icon->rect.w * this->_scale;
 							}
 						}
-						aw = (this->_icon->rect.w + this->_iconFontBearingX) * this->_scale;
+						else
+						{
+							aw = (this->_icon->rect.w + this->_iconFontBearingX) * this->_scale;
+						}
 						addW = hmax(ax, aw);
 					}
 					previousWordWidth = wordWidth;
@@ -1642,6 +1649,7 @@ namespace atres
 						bearingX = charX + this->_character->bearing.x * this->_scale;
 						if (bearingX < 0)
 						{
+							aw = (this->_character->rect.w - charX + kerning) * this->_scale;
 							charX = 0.0f;
 							wordBearingX = hmin(wordBearingX, bearingX);
 							foreach (float, it, charXs)
@@ -1656,9 +1664,13 @@ namespace atres
 						else
 						{
 							charX = bearingX;
+							aw = (this->_character->rect.w + kerning) * this->_scale;
 						}
 					}
-					aw = (this->_character->rect.w + this->_character->bearing.x + kerning) * this->_scale;
+					else
+					{
+						aw = (this->_character->rect.w + this->_character->bearing.x + kerning) * this->_scale;
+					}
 					addW = hmax(ax, aw);
 				}
 				else
@@ -1711,13 +1723,17 @@ namespace atres
 			if (i > start)
 			{
 				word.text = (!icon ? text(start, i - start) : "");
-				word.rect.w = wordWidth;
-				word.advanceX = charX;
+				word.rect.w = wordWidth + wordBearingX;
+				word.advanceX = charX + wordBearingX;
 				word.bearingX = wordBearingX;
 				word.start = start;
 				word.count = (!icon ? i - start : 0);
 				word.spaces = (!icon && checkingSpaces ? i - start : 0);
 				word.icon = icon;
+				foreach (float, it, charXs)
+				{
+					(*it) += wordBearingX;
+				}
 				word.charXs = charXs;
 				word.charAdvanceXs = charAdvanceXs;
 				word.segmentWidths = segmentWidths;
@@ -1755,6 +1771,7 @@ namespace atres
 		bool untrimmed = horizontal.isUntrimmed();
 		float lineWidth = 0.0f;
 		float x = 0.0f;
+		float bearingX = 0.0f;
 		bool nextLine = false;
 		bool forcedNextLine = false;
 		bool addWord = false;
@@ -1776,7 +1793,7 @@ namespace atres
 			{
 				addWord = false;
 			}
-			else if (lineWidth + words[i].rect.w > rect.w && wrapped)
+			else if (hmax(lineWidth - words[i].bearingX, 0.0f) + words[i].rect.w > rect.w && wrapped)
 			{
 				if (this->_line.words.size() > 0)
 				{
@@ -1793,9 +1810,10 @@ namespace atres
 			if (addWord)
 			{
 				words[i].rect.y += this->_lines.size() * this->_lineHeight;
-				lineWidth += words[i].advanceX;
 				this->_line.words += words[i];
 				this->_line.count += words[i].count;
+				lineWidth = hmax(lineWidth, -words[i].bearingX);
+				lineWidth += words[i].advanceX;
 			}
 			if (nextLine)
 			{
@@ -1813,7 +1831,9 @@ namespace atres
 				}
 				if (this->_line.words.size() > 0)
 				{
-					x = this->_line.words.first().rect.x;
+					bearingX = this->_line.words.first().bearingX;
+					x = this->_line.words.first().rect.x - bearingX;
+					this->_line.advanceX = -bearingX;
 					foreach (RenderWord, it, this->_line.words)
 					{
 						this->_line.text += (*it).text;
@@ -1900,14 +1920,6 @@ namespace atres
 						this->_strikeThroughThickness = this->strikeThroughThickness * this->_textStrikeThroughThickness;
 						this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
 						area = this->_word.rect;
-						if (wordX + bearingX > 0.0f)
-						{
-							//area.x += bearingX;
-						}
-						else
-						{
-							//bearingX = 0.0f;
-						}
 						characterX = area.x + this->_word.charXs[index];
 						area.x += this->_word.charXs[index];
 						area.y += (this->_lineHeight - this->_height) * 0.5f + this->_iconFontOffsetY * this->_scale;
@@ -2047,18 +2059,8 @@ namespace atres
 							this->_strikeThroughThickness = this->strikeThroughThickness * this->_textStrikeThroughThickness;
 							this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
 							area = this->_word.rect;
-							if (wordX + bearingX > 0.0f)
-							{
-								//area.x += bearingX;
-							}
-							else
-							{
-								//area.x += bearingX;
-								//bearingX += wordX;
-								//bearingX = 0.0f;
-							}
-							characterX = area.x + this->_word.charXs[index];// +this->_word.bearingX;
-							area.x += this->_word.charXs[index];// +this->_word.bearingX;
+							characterX = area.x + this->_word.charXs[index];
+							area.x += this->_word.charXs[index];
 							area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale;
 							area.w = this->_character->rect.w * this->_scale;
 							area.h = this->_character->rect.h * this->_scale;
