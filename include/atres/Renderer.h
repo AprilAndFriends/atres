@@ -221,6 +221,7 @@ namespace atres
 		harray<RenderSequence> _borderSequences;
 		RenderSequence _borderSequence;
 		RenderRectangle _renderRect;
+		grect _liningRect;
 		harray<RenderLiningSequence> _textLiningSequences;
 		RenderLiningSequence _textStrikeThroughSequence;
 		RenderLiningSequence _textUnderlineSequence;

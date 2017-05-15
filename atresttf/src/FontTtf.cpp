@@ -134,8 +134,6 @@ namespace atresttf
 			this->lineHeight = this->height;
 		}
 		// libfreetype stuff
-		FT_Library library = atresttf::getLibrary();
-		FT_Face face = NULL;
 		if (this->fontStream.size() == 0)
 		{
 			this->fontStream.clear();
@@ -152,6 +150,8 @@ namespace atresttf
 				this->fontStream.writeRaw(file);
 			}
 		}
+		FT_Library library = atresttf::getLibrary();
+		FT_Face face = NULL;
 		FT_Error error = FT_New_Memory_Face(library, (unsigned char*)this->fontStream, (FT_Long)this->fontStream.size(), 0, &face);
 		if (error == FT_Err_Unknown_File_Format)
 		{
@@ -229,7 +229,7 @@ namespace atresttf
 		}
 		if (face->glyph->format != FT_GLYPH_FORMAT_BITMAP)
 		{
-			error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
+			error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_LIGHT);
 			if (error != 0)
 			{
 				hlog::error(logTag, "Could not render glyph from: " + this->fontFilename);
@@ -298,7 +298,7 @@ namespace atresttf
 			FT_Done_Glyph(glyph);
 			return NULL;
 		}
-		error = FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, NULL, true);
+		error = FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_LIGHT, NULL, true);
 		if (error != 0)
 		{
 			hlog::error(logTag, "Could not render bitmap: " + this->fontFilename);

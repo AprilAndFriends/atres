@@ -675,7 +675,6 @@ namespace atres
 			float width = 0.0f;
 			float widthPerSpace = 0.0f;
 			float lineRight = 0.0f;
-			float offset = 0.0f;
 			harray<RenderWord> words;
 			for_iter (i, 0, lines.size() - 1)
 			{
@@ -683,8 +682,15 @@ namespace atres
 				{
 					if (lines[i].spaces > 0)
 					{
-						offset = (lines[i].words.size() > 0 ? -lines[i].words.first().bearingX : 0.0f);
-						width = offset;
+						width = 0.0f;
+						foreach (RenderWord, it2, lines[i].words)
+						{
+							if ((*it2).spaces == 0)
+							{
+								width -= (*it2).bearingX;
+								break;
+							}
+						}
 						foreach (RenderWord, it2, lines[i].words)
 						{
 							if ((*it2).spaces == 0)
@@ -1883,25 +1889,18 @@ namespace atres
 		// helper variables
 		int byteSize = 0;
 		float characterX = 0.0f;
-		float advanceX = 0.0f;
-		float wordX = 0.0f;
-		float bearingX = 0.0f;
 		RenderRectangle currentRect;
 		grect area;
 		grect drawRect;
 		gvec2 rectSize;
-		grect liningRect;
 		int index = 0;
 		// basic text with borders, shadows and icons
 		for_iter (j, 0, this->_lines.size())
 		{
 			this->_line = this->_lines[j];
-			bearingX = 0.0f;
 			foreach (RenderWord, it, this->_line.words)
 			{
 				this->_word = (*it);
-				wordX = this->_word.rect.x - this->_line.rect.x;
-				bearingX += this->_word.bearingX;
 				index = 0;
 				if (this->_word.icon)
 				{
@@ -1920,15 +1919,14 @@ namespace atres
 						this->_strikeThroughThickness = this->strikeThroughThickness * this->_textStrikeThroughThickness;
 						this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
 						area = this->_word.rect;
-						characterX = area.x + this->_word.charXs[index];
 						area.x += this->_word.charXs[index];
+						characterX = area.x;
 						area.y += (this->_lineHeight - this->_height) * 0.5f + this->_iconFontOffsetY * this->_scale;
 						area.w = this->_icon->rect.w * this->_scale;
 						area.h = this->_icon->rect.h * this->_scale;
 						area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 						area.y += (this->_height - this->_icon->rect.h * this->_scale) * 0.5f;
 						drawRect = rect;
-						advanceX = this->_word.charXs[index] + this->_word.charAdvanceXs[index];
 						if (this->_iconFont != NULL)
 						{
 							this->_renderRect = this->_iconFont->makeRenderRectangle(drawRect, area, this->_iconName);
@@ -1990,23 +1988,23 @@ namespace atres
 								this->_updateLiningSequenceSwitch();
 								if (this->_strikeThroughActive)
 								{
-									liningRect.x = characterX;
-									liningRect.y = this->_word.rect.y + (this->_height - this->_strikeThroughThickness) * 0.5f + this->_strikeThroughOffset;
-									liningRect.w = advanceX;
-									liningRect.h = this->_strikeThroughThickness;
-									this->_textStrikeThroughSequence.addRectangle(liningRect);
+									this->_liningRect.x = characterX;
+									this->_liningRect.y = this->_word.rect.y + (this->_height - this->_strikeThroughThickness) * 0.5f + this->_strikeThroughOffset;
+									this->_liningRect.w = this->_word.charAdvanceXs[index];
+									this->_liningRect.h = this->_strikeThroughThickness;
+									this->_textStrikeThroughSequence.addRectangle(this->_liningRect);
 									switch (this->_effectMode)
 									{
 									case EFFECT_MODE_SHADOW: // shadow
-										liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
-										this->_shadowStrikeThroughSequence.addRectangle(liningRect);
+										this->_liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+										this->_shadowStrikeThroughSequence.addRectangle(this->_liningRect);
 										break;
 									case EFFECT_MODE_BORDER: // border
-										liningRect.x -= this->_borderThickness;
-										liningRect.y -= this->_borderThickness;
-										liningRect.w += this->_borderThickness * 2.0f;
-										liningRect.h += this->_borderThickness * 2.0f;
-										this->_borderStrikeThroughSequence.addRectangle(liningRect);
+										this->_liningRect.x -= this->_borderThickness;
+										this->_liningRect.y -= this->_borderThickness;
+										this->_liningRect.w += this->_borderThickness * 2.0f;
+										this->_liningRect.h += this->_borderThickness * 2.0f;
+										this->_borderStrikeThroughSequence.addRectangle(this->_liningRect);
 										break;
 									default:
 										break;
@@ -2014,23 +2012,23 @@ namespace atres
 								}
 								if (this->_underlineActive)
 								{
-									liningRect.x = characterX;
-									liningRect.y = this->_word.rect.y + this->_height + this->_underlineOffset;
-									liningRect.w = advanceX;
-									liningRect.h = this->_underlineThickness;
-									this->_textUnderlineSequence.addRectangle(liningRect);
+									this->_liningRect.x = characterX;
+									this->_liningRect.y = this->_word.rect.y + this->_height + this->_underlineOffset;
+									this->_liningRect.w = this->_word.charAdvanceXs[index];
+									this->_liningRect.h = this->_underlineThickness;
+									this->_textUnderlineSequence.addRectangle(this->_liningRect);
 									switch (this->_effectMode)
 									{
 									case EFFECT_MODE_SHADOW: // shadow
-										liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
-										this->_shadowUnderlineSequence.addRectangle(liningRect);
+										this->_liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+										this->_shadowUnderlineSequence.addRectangle(this->_liningRect);
 										break;
 									case EFFECT_MODE_BORDER: // border
-										liningRect.x -= this->_borderThickness;
-										liningRect.y -= this->_borderThickness;
-										liningRect.w += this->_borderThickness * 2.0f;
-										liningRect.h += this->_borderThickness * 2.0f;
-										this->_borderUnderlineSequence.addRectangle(liningRect);
+										this->_liningRect.x -= this->_borderThickness;
+										this->_liningRect.y -= this->_borderThickness;
+										this->_liningRect.w += this->_borderThickness * 2.0f;
+										this->_liningRect.h += this->_borderThickness * 2.0f;
+										this->_borderUnderlineSequence.addRectangle(this->_liningRect);
 										break;
 									default:
 										break;
@@ -2059,97 +2057,99 @@ namespace atres
 							this->_strikeThroughThickness = this->strikeThroughThickness * this->_textStrikeThroughThickness;
 							this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
 							area = this->_word.rect;
-							characterX = area.x + this->_word.charXs[index];
 							area.x += this->_word.charXs[index];
+							characterX = area.x;
 							area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale;
 							area.w = this->_character->rect.w * this->_scale;
 							area.h = this->_character->rect.h * this->_scale;
 							area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 							drawRect = rect;
-							advanceX = this->_word.charXs[index] + this->_word.charAdvanceXs[index];
-							// optimization, don't even render spaces
-							if (this->_font != NULL && this->_code != UNICODE_CHAR_SPACE && this->_code != UNICODE_CHAR_ZERO_WIDTH_SPACE)
+							// optimization, don't render spaces, but do render their strike-throughs and underlines
+							if (this->_font != NULL && (this->_code != UNICODE_CHAR_SPACE && this->_code != UNICODE_CHAR_ZERO_WIDTH_SPACE || this->_strikeThroughActive || this->_underlineActive))
 							{
 								this->_renderRect = this->_font->makeRenderRectangle(drawRect, area, this->_code);
 								if (this->_renderRect.src.w > 0.0f && this->_renderRect.src.h > 0.0f && this->_renderRect.dest.w > 0.0f && this->_renderRect.dest.h > 0.0f)
 								{
-									this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
-									this->_textSequence.addRenderRectangle(this->_renderRect);
-									switch (this->_effectMode)
+									if (this->_code != UNICODE_CHAR_SPACE && this->_code != UNICODE_CHAR_ZERO_WIDTH_SPACE)
 									{
-									case EFFECT_MODE_SHADOW: // shadow
-										this->_renderRect.dest += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
-										this->_shadowSequence.addRenderRectangle(this->_renderRect);
-										break;
-									case EFFECT_MODE_BORDER: // border
-										if (this->_font->getBorderMode() == Font::BorderMode::Software || !this->_font->hasBorderCharacter(this->_code, this->_borderFontThickness))
+										this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
+										this->_textSequence.addRenderRectangle(this->_renderRect);
+										switch (this->_effectMode)
 										{
-											currentRect = this->_renderRect;
-											this->_renderRect.dest = currentRect.dest + gvec2(-this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
-											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = currentRect.dest + gvec2(this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
-											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = currentRect.dest + gvec2(-this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
-											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = currentRect.dest + gvec2(this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
-											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = currentRect.dest + gvec2(0.0f, -this->_borderThickness);
-											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = currentRect.dest + gvec2(-this->_borderThickness, 0.0f);
-											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = currentRect.dest + gvec2(this->_borderThickness, 0.0f);
-											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_renderRect.dest = currentRect.dest + gvec2(0.0f, this->_borderThickness);
-											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_borderSequence.multiplyAlpha = true;
+										case EFFECT_MODE_SHADOW: // shadow
+											this->_renderRect.dest += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+											this->_shadowSequence.addRenderRectangle(this->_renderRect);
+											break;
+										case EFFECT_MODE_BORDER: // border
+											if (this->_font->getBorderMode() == Font::BorderMode::Software || !this->_font->hasBorderCharacter(this->_code, this->_borderFontThickness))
+											{
+												currentRect = this->_renderRect;
+												this->_renderRect.dest = currentRect.dest + gvec2(-this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
+												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_renderRect.dest = currentRect.dest + gvec2(this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
+												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_renderRect.dest = currentRect.dest + gvec2(-this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
+												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_renderRect.dest = currentRect.dest + gvec2(this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
+												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_renderRect.dest = currentRect.dest + gvec2(0.0f, -this->_borderThickness);
+												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_renderRect.dest = currentRect.dest + gvec2(-this->_borderThickness, 0.0f);
+												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_renderRect.dest = currentRect.dest + gvec2(this->_borderThickness, 0.0f);
+												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_renderRect.dest = currentRect.dest + gvec2(0.0f, this->_borderThickness);
+												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_borderSequence.multiplyAlpha = true;
+											}
+											else
+											{
+												this->_borderCharacter = this->_font->getBorderCharacter(this->_code, this->_borderFontThickness);
+												area = this->_word.rect;
+												rectSize = (this->_borderCharacter->rect.getSize() - this->_character->rect.getSize()) * 0.5f * this->_scale;
+												area.x += this->_word.charXs[index] - rectSize.x;
+												area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale - rectSize.y;
+												area.w = this->_borderCharacter->rect.w * this->_scale;
+												area.h = this->_borderCharacter->rect.h * this->_scale;
+												area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
+												drawRect.x -= rectSize.x;
+												drawRect.y -= rectSize.y;
+												drawRect.w += rectSize.x * 2.0f;
+												drawRect.h += rectSize.y * 2.0f;
+												this->_renderRect = this->_font->makeBorderRenderRectangle(drawRect, area, this->_code, this->_borderFontThickness);
+												this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
+												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_borderSequence.texture = this->_font->getBorderTexture(this->_code, this->_borderFontThickness);
+												this->_borderSequence.multiplyAlpha = false;
+											}
+											break;
+										default:
+											break;
 										}
-										else
-										{
-											this->_borderCharacter = this->_font->getBorderCharacter(this->_code, this->_borderFontThickness);
-											area = this->_word.rect;
-											rectSize = (this->_borderCharacter->rect.getSize() - this->_character->rect.getSize()) * 0.5f * this->_scale;
-											area.x += this->_word.charXs[index] - rectSize.x;
-											area.y += (this->_lineHeight - this->_height) * 0.5f + this->_character->offsetY * this->_scale - rectSize.y;
-											area.w = this->_borderCharacter->rect.w * this->_scale;
-											area.h = this->_borderCharacter->rect.h * this->_scale;
-											area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
-											drawRect.x -= rectSize.x;
-											drawRect.y -= rectSize.y;
-											drawRect.w += rectSize.x * 2.0f;
-											drawRect.h += rectSize.y * 2.0f;
-											this->_renderRect = this->_font->makeBorderRenderRectangle(drawRect, area, this->_code, this->_borderFontThickness);
-											this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
-											this->_borderSequence.addRenderRectangle(this->_renderRect);
-											this->_borderSequence.texture = this->_font->getBorderTexture(this->_code, this->_borderFontThickness);
-											this->_borderSequence.multiplyAlpha = false;
-										}
-										break;
-									default:
-										break;
 									}
 									this->_updateLiningSequenceSwitch();
 									if (this->_strikeThroughActive)
 									{
-										liningRect.x = characterX;
-										liningRect.y = this->_word.rect.y + (this->_height - this->_strikeThroughThickness) * 0.5f + this->_strikeThroughOffset;
-										liningRect.w = advanceX;
-										liningRect.h = this->_strikeThroughThickness;
-										liningRect.clip(rect);
-										if (liningRect.w > 0.0f && liningRect.h > 0.0f)
+										this->_liningRect.x = characterX;
+										this->_liningRect.y = this->_word.rect.y + (this->_height - this->_strikeThroughThickness) * 0.5f + this->_strikeThroughOffset;
+										this->_liningRect.w = this->_word.charAdvanceXs[index];
+										this->_liningRect.h = this->_strikeThroughThickness;
+										this->_liningRect.clip(rect);
+										if (this->_liningRect.w > 0.0f && this->_liningRect.h > 0.0f)
 										{
-											this->_textStrikeThroughSequence.addRectangle(liningRect);
+											this->_textStrikeThroughSequence.addRectangle(this->_liningRect);
 											switch (this->_effectMode)
 											{
 											case EFFECT_MODE_SHADOW: // shadow
-												liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
-												this->_shadowStrikeThroughSequence.addRectangle(liningRect);
+												this->_liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+												this->_shadowStrikeThroughSequence.addRectangle(this->_liningRect);
 												break;
 											case EFFECT_MODE_BORDER: // border
-												liningRect.x -= this->_borderThickness;
-												liningRect.y -= this->_borderThickness;
-												liningRect.w += this->_borderThickness * 2.0f;
-												liningRect.h += this->_borderThickness * 2.0f;
-												this->_borderStrikeThroughSequence.addRectangle(liningRect);
+												this->_liningRect.x -= this->_borderThickness;
+												this->_liningRect.y -= this->_borderThickness;
+												this->_liningRect.w += this->_borderThickness * 2.0f;
+												this->_liningRect.h += this->_borderThickness * 2.0f;
+												this->_borderStrikeThroughSequence.addRectangle(this->_liningRect);
 												break;
 											default:
 												break;
@@ -2158,26 +2158,26 @@ namespace atres
 									}
 									if (this->_underlineActive)
 									{
-										liningRect.x = characterX;
-										liningRect.y = this->_word.rect.y + this->_height + this->_underlineOffset;
-										liningRect.w = advanceX;
-										liningRect.h = this->_underlineThickness;
-										liningRect.clip(rect);
-										if (liningRect.w > 0.0f && liningRect.h > 0.0f)
+										this->_liningRect.x = characterX;
+										this->_liningRect.y = this->_word.rect.y + this->_height + this->_underlineOffset;
+										this->_liningRect.w = this->_word.charAdvanceXs[index];
+										this->_liningRect.h = this->_underlineThickness;
+										this->_liningRect.clip(rect);
+										if (this->_liningRect.w > 0.0f && this->_liningRect.h > 0.0f)
 										{
-											this->_textUnderlineSequence.addRectangle(liningRect);
+											this->_textUnderlineSequence.addRectangle(this->_liningRect);
 											switch (this->_effectMode)
 											{
 											case EFFECT_MODE_SHADOW: // shadow
-												liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
-												this->_shadowUnderlineSequence.addRectangle(liningRect);
+												this->_liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+												this->_shadowUnderlineSequence.addRectangle(this->_liningRect);
 												break;
 											case EFFECT_MODE_BORDER: // border
-												liningRect.x -= this->_borderThickness;
-												liningRect.y -= this->_borderThickness;
-												liningRect.w += this->_borderThickness * 2.0f;
-												liningRect.h += this->_borderThickness * 2.0f;
-												this->_borderUnderlineSequence.addRectangle(liningRect);
+												this->_liningRect.x -= this->_borderThickness;
+												this->_liningRect.y -= this->_borderThickness;
+												this->_liningRect.w += this->_borderThickness * 2.0f;
+												this->_liningRect.h += this->_borderThickness * 2.0f;
+												this->_borderUnderlineSequence.addRectangle(this->_liningRect);
 												break;
 											default:
 												break;
