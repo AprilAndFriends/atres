@@ -1675,7 +1675,8 @@ namespace atres
 					}
 					else
 					{
-						aw = (this->_character->rect.w + this->_character->bearing.x + kerning) * this->_scale;
+						charX += this->_character->bearing.x * this->_scale;
+						aw = (this->_character->rect.w + kerning) * this->_scale;
 					}
 					addW = hmax(ax, aw);
 				}
