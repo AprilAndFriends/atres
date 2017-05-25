@@ -1648,10 +1648,9 @@ namespace atres
 					{
 						kerning = this->_font->getKerning(previousCode, code);
 					}
-					ax = (this->_character->advance + kerning) * this->_scale;
+					ax = (this->_character->advance - this->_character->bearing.x + kerning) * this->_scale;
 					if (this->_character->bearing.x < 0.0f)
 					{
-						ax -= this->_character->bearing.x * this->_scale;
 						bearingX = charX + this->_character->bearing.x * this->_scale;
 						if (bearingX < 0)
 						{
