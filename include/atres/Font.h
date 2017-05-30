@@ -71,10 +71,6 @@ namespace atres
 		BorderCharacterDefinition* getBorderCharacter(unsigned int charCode, float borderThickness);
 		BorderIconDefinition* getBorderIcon(chstr iconName, float borderThickness);
 
-		/// @note Not thread-safe!
-		float getTextWidth(chstr text);
-		/// @note Not thread-safe!
-		int getTextCount(chstr text, float maxWidth);
 		virtual float getKerning(unsigned int previousCode, unsigned int code);
 
 		/// @note Not thread-safe!
