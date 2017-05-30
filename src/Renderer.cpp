@@ -1776,6 +1776,7 @@ namespace atres
 		bool wrapped = horizontal.isWrapped();
 		bool untrimmed = horizontal.isUntrimmed();
 		float lineWidth = 0.0f;
+		float currentLineWidth = 0.0f;
 		float x = 0.0f;
 		float bearingX = 0.0f;
 		bool nextLine = false;
@@ -1789,6 +1790,7 @@ namespace atres
 			nextLine = (i == words.size() - 1);
 			addWord = true;
 			forcedNextLine = false;
+			currentLineWidth = hmax(lineWidth, -words[i].bearingX);
 			if (words[i].text == "\n")
 			{
 				addWord = false;
@@ -1799,7 +1801,7 @@ namespace atres
 			{
 				addWord = false;
 			}
-			else if (hmax(lineWidth - words[i].bearingX, 0.0f) + words[i].rect.w > rect.w && wrapped)
+			else if (currentLineWidth + words[i].rect.w > rect.w && wrapped)
 			{
 				if (this->_line.words.size() > 0)
 				{
@@ -1818,7 +1820,7 @@ namespace atres
 				words[i].rect.y += this->_lines.size() * this->_lineHeight;
 				this->_line.words += words[i];
 				this->_line.count += words[i].count;
-				lineWidth = hmax(lineWidth, -words[i].bearingX);
+				lineWidth = currentLineWidth;
 				lineWidth += words[i].advanceX;
 			}
 			if (nextLine)
