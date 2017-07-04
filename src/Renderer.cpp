@@ -45,6 +45,7 @@
 		(code) == 0x2015 ||	/* long dash */ \
 		(code) == 0x2025 ||	/* ellipsis char */ \
 		(code) == 0x2026 ||	/* ellipsis char */ \
+		(code) == 0x2500 ||	/* box drawings light horizontal (looks like a dash) */ \
 		(code) == 0x3000 ||	/* ideographic space */ \
 		(code) == 0x3001 ||	/* ideographic comma */ \
 		(code) == 0x3002 ||	/* ideographic full stop/period */ \
