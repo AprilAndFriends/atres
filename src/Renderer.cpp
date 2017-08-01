@@ -43,6 +43,7 @@
 #define IS_PUNCTUATION_CHAR(code) \
 	( \
 		(code) == 0x2015 ||	/* long dash */ \
+		(code) == 0x201D ||	/* right double quotation mark */ \
 		(code) == 0x2025 ||	/* ellipsis char */ \
 		(code) == 0x2026 ||	/* ellipsis char */ \
 		(code) == 0x2500 ||	/* box drawings light horizontal (looks like a dash) */ \
@@ -66,6 +67,7 @@
 		(code) == 0xFF09 ||	/* fullwidth closing parenthesis */ \
 		(code) == 0xFF0C ||	/* fullwidth comma */ \
 		(code) == 0xFF1A ||	/* fullwidth colon */ \
+		(code) == 0xFF1B ||	/* fullwidth semicolon */ \
 		(code) == 0xFF1E ||	/* fullwidth greater-than sign */ \
 		(code) == 0xFF1F ||	/* fullwidth question mark */ \
 		(code) == 0xFF3D ||	/* fullwidth closing bracket */ \
