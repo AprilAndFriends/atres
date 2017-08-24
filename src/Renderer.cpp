@@ -683,7 +683,7 @@ namespace atres
 			{
 				if (!lines[i].terminated) // if line was not actually terminated with a \n
 				{
-					if (lines[i].spaces > 0)
+					if (this->useIdeographWords && lines[i].words.size() > 1 || lines[i].spaces > 0)
 					{
 						width = 0.0f;
 						foreach (RenderWord, it2, lines[i].words)
@@ -709,21 +709,35 @@ namespace atres
 								break;
 							}
 						}
-						widthPerSpace = (rect.w - width) / lines[i].spaces;
-						width = 0.0f;
 						lineRight = lines[i].rect.right();
 						words.clear();
-						foreach (RenderWord, it, lines[i].words)
+						if (this->useIdeographWords && lines[i].words.size() > 1)
 						{
-							if ((*it).spaces == 0)
+							widthPerSpace = (rect.w - width) / (lines[i].words.size() - 1);
+							width = -widthPerSpace;
+							foreach (RenderWord, it, lines[i].words)
 							{
+								width += widthPerSpace;
 								(*it).rect.x += hroundf(width);
 								words += (*it);
-								lineRight = (*it).rect.right();
 							}
-							else
+						}
+						else
+						{
+							widthPerSpace = (rect.w - width) / lines[i].spaces;
+							width = 0.0f;
+							foreach (RenderWord, it, lines[i].words)
 							{
-								width += (*it).spaces * (widthPerSpace - (*it).rect.w);
+								if ((*it).spaces == 0)
+								{
+									(*it).rect.x += hroundf(width);
+									words += (*it);
+									lineRight = (*it).rect.right();
+								}
+								else
+								{
+									width += (*it).spaces * (widthPerSpace - (*it).rect.w);
+								}
 							}
 						}
 						lines[i].words = words;
