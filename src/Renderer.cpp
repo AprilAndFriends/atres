@@ -394,24 +394,24 @@ namespace atres
 	
 	void Renderer::clearCache()
 	{
-		if (this->cacheText->size() > 0)
+		if (this->cacheText->getSize() > 0)
 		{
-			hlog::writef(logTag, "Clearing %d text cache entries...", this->cacheText->size());
+			hlog::writef(logTag, "Clearing %d text cache entries...", this->cacheText->getSize());
 			this->cacheText->clear();
 		}
-		if (this->cacheTextUnformatted->size() > 0)
+		if (this->cacheTextUnformatted->getSize() > 0)
 		{
-			hlog::writef(logTag, "Clearing %d unformatted text cache entries...", this->cacheTextUnformatted->size());
+			hlog::writef(logTag, "Clearing %d unformatted text cache entries...", this->cacheTextUnformatted->getSize());
 			this->cacheTextUnformatted->clear();
 		}
-		if (this->cacheLines->size() > 0)
+		if (this->cacheLines->getSize() > 0)
 		{
-			hlog::writef(logTag, "Clearing %d lines cache entries...", this->cacheLines->size());
+			hlog::writef(logTag, "Clearing %d lines cache entries...", this->cacheLines->getSize());
 			this->cacheLines->clear();
 		}
-		if (this->cacheLinesUnformatted->size() > 0)
+		if (this->cacheLinesUnformatted->getSize() > 0)
 		{
-			hlog::writef(logTag, "Clearing %d unformatted lines cache entries...", this->cacheLinesUnformatted->size());
+			hlog::writef(logTag, "Clearing %d unformatted lines cache entries...", this->cacheLinesUnformatted->getSize());
 			this->cacheLinesUnformatted->clear();
 		}
 	}

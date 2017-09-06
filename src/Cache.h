@@ -22,30 +22,36 @@
 
 namespace atres
 {
+	/// @brief Special object that caches calculated text entries.
 	/// @note The classes uses a hash value to store objects because it would require the implementation of the
-	/// comparison operators if the *Entry objects would be used as keys. This is simply an alternate way to handle
+	/// comparison operators if the Entry objects would be used as keys. This is simply an alternate way to handle
 	/// things. Even though it appears unnecessary and hacky, there is no better way.
 	template <typename T>
 	class Cache
 	{
+		/// @brief Alias for simpler code.
 		typedef typename std::vector<T>::iterator iterator_t;
+		/// @brief Alias for simpler code.
 		typedef typename std::list<T>::iterator list_iterator_t;
 	public:
+		/// @brief Constructor.
 		inline Cache()
 		{
 			this->maxSize = 1000;
 		}
-		
+		/// @brief Basic constructor.
 		inline ~Cache()
 		{
 		}
-		
+		/// @brief Sets max size for cache.
+		/// @param[in] value New max size.
 		inline void setMaxSize(int value)
 		{
 			this->maxSize = value;
 			this->update();
 		}
-		
+		/// @brief Adds a cache entry.
+		/// @param[in] entry The cache entry.
 		inline void add(T& entry)
 		{
 			unsigned int hash = entry.hash();
@@ -56,7 +62,9 @@ namespace atres
 			this->data[hash] += entry;
 			this->entries += this->data[hash].last();
 		}
-		
+		/// @brief Gets a cache entry.
+		/// @param[out] entry The output cache entry. Will only be filled with data if return is true.
+		/// @return True if entry could be found.
 		inline bool get(T& entry)
 		{
 			unsigned int hash = entry.hash();
@@ -74,7 +82,8 @@ namespace atres
 			}
 			return false;
 		}
-		
+		/// @brief Removes a cache entry.
+		/// @param[in] entry The cache entry.
 		inline void removeEntry(const T& entry)
 		{
 			unsigned int hash = entry.hash();
@@ -91,18 +100,19 @@ namespace atres
 				this->entries.remove(entry);
 			}
 		}
-		
+		/// @brief Clears cache.
 		inline void clear()
 		{
 			this->data.clear();
 			this->entries.clear();
 		}
-		
-		inline int size() const
+		/// @brief Gets the current size of the cache.
+		/// @return The current size of the cache.
+		inline int getSize() const
 		{
 			return this->data.size();
 		}
-		
+		/// @brief Updates all cache entries.
 		inline void update()
 		{
 			if (this->maxSize >= 0)
@@ -120,13 +130,16 @@ namespace atres
 		}
 		
 	protected:
+		/// @brief Max size of the cache.
 		int maxSize;
+		/// @brief The cache entries.
 		hmap<unsigned int, harray<T> > data;
-		hlist<T> entries; // hlist because add/remove has a constant complexity while harray would have to reorder/resize all elements
+		/// @brief A list of all hashes.
+		/// @note Using hlist because add/remove has a constant complexity while harray would have to reorder/resize all elements.
+		hlist<T> entries;
 		
 	};
 	
 }
-
 #endif
 

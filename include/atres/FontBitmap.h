@@ -21,20 +21,26 @@
 
 namespace atres
 {
+	/// @brief Special handler that loads font data from a bitmap.
 	class atresExport FontBitmap : public Font
 	{
 	public:
+		/// @brief Basic constructor.
+		/// @param[in] filename The filename of the bitmap font definition.
 		FontBitmap(chstr filename);
+		/// @brief Destructor.
 		~FontBitmap();
 
 	protected:
+		/// @brief The filename of the bitmap font definition.
 		hstr fontFilename;
 
+		/// @brief Loads the font definition.
+		/// @return True if successfully loaded.
 		bool _load();
 
 	};
 
 }
-
 #endif
 

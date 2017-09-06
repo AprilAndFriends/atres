@@ -56,7 +56,7 @@ namespace atres
 
 	bool FontDynamic::_isAllowAlphaTextures() const
 	{
-		return isAllowAlphaTextures();
+		return atres::isAllowAlphaTextures();
 	}
 
 	void FontDynamic::_tryCreateFirstTextureContainer()

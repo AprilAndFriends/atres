@@ -24,29 +24,54 @@ namespace atres
 	class atresExport FontIconMap : public FontDynamic
 	{
 	public:
+		/// @brief Basic constructor.
+		/// @param[in] fontDirectory Directory for the icons.
+		/// @param[in] name Font name.
+		/// @param[in] scale Font scale.
+		/// @param[in] bearingX Horizontal bearing.
+		/// @param[in] offsetY Vertical render offset from the baseline.
+		/// @param[in] spacing Spacing between icons.
+		/// @param[in] strikeThroughOffset Vertical offset of strike-through rendering.
+		/// @param[in] underlineOffset Vertical offset of underline rendering.
 		FontIconMap(chstr fontDirectory, chstr name, float scale, float bearingX = 0.0f, float offsetY = 0.0f, float spacing = 0.0f,
 			float strikeThroughOffset = 0.0f, float underlineOffset = 0.0f);
+		/// @brief Destructor.
 		~FontIconMap();
 
+		/// @brief Horizontal bearing.
 		HL_DEFINE_GET(float, bearingX, BearingX);
+		/// @brief Vertical render offset from the baseline.
 		HL_DEFINE_GET(float, offsetY, OffsetY);
+		/// @brief Spacing between icons.
 		HL_DEFINE_GET(float, spacing, Spacing);
 
 	protected:
+		/// @brief Directory for the icons.
 		hstr fontDirectory;
+		/// @brief Horizontal bearing.
 		float bearingX;
+		/// @brief Vertical render offset from the baseline.
 		float offsetY;
+		/// @brief Spacing between icons.
 		float spacing;
 
+		/// @brief Checks if alpha-textures can be used for this font.
+		/// @return True if alpha-textures can be used for this font.
 		bool _isAllowAlphaTextures() const;
 
+		/// @brief Loads the font definition.
+		/// @return True if successfully loaded.
 		bool _load();
 
+		/// @brief Checks if alpha-textures can be used for this font.
+		/// @param[in] iconName Name of the icon image to load.
+		/// @param[in] initial Whether this is the first attempt to write on the texture (used for internal optimization).
+		/// @param[out] advance The Horizontal advance value.
+		/// @return The loaded image.
 		april::Image* _loadIconImage(chstr iconName, bool initial, float& advance);
 
 	};
 
 }
-
 #endif
 

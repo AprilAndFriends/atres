@@ -29,7 +29,10 @@ namespace atres
 	class atresExport FontDynamic : public Font
 	{
 	public:
+		/// @brief Basic constructor.
+		/// @param[in] filename The filename of the bitmap font definition.
 		FontDynamic(chstr name);
+		/// @brief Destructor.
 		~FontDynamic();
 
 		void setBorderMode(BorderMode value);
@@ -74,6 +77,11 @@ namespace atres
 		virtual april::Image* _loadCharacterImage(unsigned int charCode, bool initial, float& advance, int& leftOffset, int& topOffset, float& ascender, float& descender, float& bearingX);
 		virtual april::Image* _loadBorderCharacterImage(unsigned int charCode, float borderThickness);
 		virtual april::Image* _generateBorderCharacterImage(unsigned int charCode, float borderThickness);
+		/// @brief Checks if alpha-textures can be used for this font.
+		/// @param[in] iconName Name of the icon image to load.
+		/// @param[in] initial Whether this is the first attempt to write on the texture (used for internal optimization).
+		/// @param[out] advance The Horizontal advance value.
+		/// @return The loaded image.
 		virtual april::Image* _loadIconImage(chstr iconName, bool initial, float& advance);
 		virtual april::Image* _loadBorderIconImage(chstr iconName, float borderThickness);
 		virtual april::Image* _generateBorderIconImage(chstr iconName, float borderThickness);

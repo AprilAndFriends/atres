@@ -20,16 +20,27 @@
 
 namespace atres
 {
+	/// @brief Used for logging display.
 	atresExport extern hstr logTag;
 
+	/// @brief Initializes ATReS.
 	atresFnExport void init();
+	/// @brief Destroys ATReS.
 	atresFnExport void destroy();
+	/// @brief Gets texture size for font textures.
+	/// @return The texture size.
 	atresFnExport int getTextureSize();
+	/// @brief Sets texture size for font textures.
+	/// @param[in] value The texture size.
 	atresFnExport void setTextureSize(int value);
+	/// @brief Gets whether font texture can use alpha-textures.
+	/// @return True if alpha-textures can be used.
 	atresFnExport bool isAllowAlphaTextures();
+	/// @brief Sets whether font texture can use alpha-textures.
+	/// @param[in] value Whether alpha-textures can be used.
+	/// @note Useful for VRAM conservation, but not supported on some GPU drivers (depending on platform).
 	atresFnExport void setAllowAlphaTextures(bool value);
 
 }
-
 #endif
 
