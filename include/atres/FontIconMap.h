@@ -21,6 +21,7 @@
 
 namespace atres
 {
+	/// @brief Font for icons.
 	class atresExport FontIconMap : public FontDynamic
 	{
 	public:
@@ -63,7 +64,7 @@ namespace atres
 		/// @return True if successfully loaded.
 		bool _load();
 
-		/// @brief Checks if alpha-textures can be used for this font.
+		/// @brief Loads an icon image.
 		/// @param[in] iconName Name of the icon image to load.
 		/// @param[in] initial Whether this is the first attempt to write on the texture (used for internal optimization).
 		/// @param[out] advance The Horizontal advance value.

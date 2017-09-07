@@ -89,7 +89,8 @@ namespace atres
 		/// @brief Gets the border rendering mode.
 		HL_DEFINE_GET(BorderMode, borderMode, BorderMode);
 		/// @brief Sets the border rendering mode.
-		virtual void setBorderMode(BorderMode value);
+		/// @param[in] value The border rendering mode.
+		virtual void setBorderMode(const BorderMode& value);
 		/// @brief Whether the font is loaded.
 		HL_DEFINE_IS(loaded, Loaded);
 		/// @brief Gets all character definitions.
@@ -156,53 +157,105 @@ namespace atres
 		BorderIconDefinition* getBorderIcon(chstr iconName, float borderThickness);
 
 		/// @brief Gets kerning between two char codes.
-		/// @param[in] previousCode Character unicode value of the preceding character.
-		/// @param[in] code Character unicode value.
+		/// @param[in] previousCharCode Character unicode value of the preceding character.
+		/// @param[in] charCode Character unicode value.
 		/// @return The kerning value.
-		virtual float getKerning(unsigned int previousCode, unsigned int code);
+		virtual float getKerning(unsigned int previousCharCode, unsigned int charCode);
 
-		/// @note Not thread-safe!
+		/// @brief Creates RenderRectangle definition for a character.
+		/// @param[in] rect Container rect for character (used for clipping).
+		/// @param[in] area Rect where text should be rendered.
+		/// @param[in] charCode Character unicode value.
+		/// @return The RenderRectangle definition.
 		RenderRectangle makeRenderRectangle(cgrect rect, cgrect area, unsigned int charCode);
+		/// @brief Creates RenderRectangle definition for a character.
+		/// @param[in] rect Container rect for character (used for clipping).
+		/// @param[in] area Rect where text should be rendered.
+		/// @param[in] charCode Character unicode value.
+		/// @param[in] borderThickness Thickness of the border.
+		/// @return The RenderRectangle definition.
 		RenderRectangle makeBorderRenderRectangle(cgrect rect, cgrect area, unsigned int charCode, float borderThickness);
+		/// @brief Creates RenderRectangle definition for an icon.
+		/// @param[in] rect Container rect for text (used for clipping).
+		/// @param[in] area Rect where text should be rendered.
+		/// @param[in] iconName Icon name.
+		/// @return The RenderRectangle definition.
 		RenderRectangle makeRenderRectangle(cgrect rect, cgrect area, chstr iconName);
+		/// @brief Creates RenderRectangle definition for an icon.
+		/// @param[in] rect Container rect for text (used for clipping).
+		/// @param[in] area Rect where text should be rendered.
+		/// @param[in] iconName Icon name.
+		/// @param[in] borderThickness Thickness of the border.
+		/// @return The RenderRectangle definition.
 		RenderRectangle makeBorderRenderRectangle(cgrect rect, cgrect area, chstr iconName, float borderThickness);
 
+		/// @brief The default border rendering mode for all fonts.
 		static BorderMode defaultBorderMode;
 
 	protected:
+		/// @brief Font name.
 		hstr name;
+		/// @brief Font internal height.
 		float height;
+		/// @brief Font scale.
 		float scale;
+		/// @brief Font base scale.
 		float baseScale;
+		/// @brief Font line height.
 		float lineHeight;
+		/// @brief Font descender.
 		float descender;
+		/// @brief Font intenr descender.
 		float internalDescender;
+		/// @brief Font vertical strike-through offset.
 		float strikeThroughOffset;
+		/// @brief Font vertical underline offset.
 		float underlineOffset;
+		/// @brief Whether font is loaded.
 		bool loaded;
-		bool nativeBorderSupported;
+		/// @brief Font border rendering mode.
 		BorderMode borderMode;
+		/// @brief All character definitions.
 		hmap<unsigned int, CharacterDefinition*> characters;
+		/// @brief All border character definitions.
 		hmap<unsigned int, harray<BorderCharacterDefinition*> > borderCharacters;
+		/// @brief All icon definitions.
 		hmap<hstr, IconDefinition*> icons;
+		/// @brief All border icon definitions.
 		hmap<hstr, harray<BorderIconDefinition*> > borderIcons;
+		/// @brief Texture containers for all loaded characters and icons.
 		harray<TextureContainer*> textureContainers;
+		/// @brief Texture containers for all loaded border characters and border icons.
 		harray<BorderTextureContainer*> borderTextureContainers;
 
+		/// @brief Gets the texture container for a given border thickness.
+		/// @param[in] borderThickness border thickness.
+		/// @return The texture container.
 		harray<BorderTextureContainer*> _getBorderTextureContainers(float borderThickness) const;
 
 		/// @brief Loads the font definition.
 		/// @return True if successfully loaded.
 		virtual bool _load();
 		
+		/// @brief Reads a basic parameter from an external font definition file.
+		/// @param[in] line A line in the definition.
+		/// @return True if reading and processing was successful.
 		bool _readBasicParameter(chstr line);
-		void _setBorderMode(BorderMode value);
+		/// @brief Sets the border rendering mode.
+		/// @param[in] value The border rendering mode.
+		/// @note This actually sets the border rendering mode.
+		/// @see setBorderMode()
+		void _setBorderMode(const BorderMode& value);
 
+		/// @brief Applies the cut-off to the rendering rect and area.
+		/// @param[in] rect Container rect for text (used for clipping).
+		/// @param[in] area Rect where text should be rendered.
+		/// @param[in] symbolRect Rect of symbol used.
+		/// @param[in] offsetY Vertical offset.
 		void _applyCutoff(cgrect rect, cgrect area, cgrect symbolRect, float offsetY = 0.0f) const;
 		
 	};
 
 }
-
 #endif
 

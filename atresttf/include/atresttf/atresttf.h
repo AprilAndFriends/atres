@@ -20,15 +20,24 @@
 
 namespace atresttf
 {
+	/// @brief Used for logging display.
 	atresttfExport extern hstr logTag;
 
+	/// @brief Initializes ATReSTTF.
 	atresttfFnExport void init();
+	/// @brief Destroys ATReSTTF.
 	atresttfFnExport void destroy();
+	/// @brief Gets a list of all installed system fonts.
+	/// @return List of all installed system fonts.
 	atresttfFnExport harray<hstr> getSystemFonts();
+	/// @brief Finds the filename of the font with the given font name.
+	/// @param[in] name Font name.
+	/// @return The filename of the font.
 	atresttfFnExport hstr findSystemFontFilename(chstr name);
+	/// @brief Gets the path where system fonts are installed.
+	/// @return The path where system fonts are installed.
 	atresttfFnExport hstr getSystemFontsPath();
 
-};
-
+}
 #endif
 

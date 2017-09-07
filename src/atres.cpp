@@ -45,7 +45,7 @@ namespace atres
 		return textureSize;
 	}
 
-	void setTextureSize(int value)
+	void setTextureSize(const int& value)
 	{
 		textureSize = value;
 	}
@@ -55,7 +55,7 @@ namespace atres
 		return allowAlphaTextures;
 	}
 
-	void setAllowAlphaTextures(bool value)
+	void setAllowAlphaTextures(const bool& value)
 	{
 		allowAlphaTextures = value;
 	}

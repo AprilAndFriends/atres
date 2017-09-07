@@ -33,7 +33,7 @@ namespace atres
 	Font::BorderMode Font::defaultBorderMode = Font::BorderMode::Software;
 
 	Font::Font(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f), lineHeight(0.0f), descender(0.0f), internalDescender(0.0f),
-		strikeThroughOffset(0.0f), underlineOffset(0.0f), loaded(false), nativeBorderSupported(false), borderMode(Font::defaultBorderMode)
+		strikeThroughOffset(0.0f), underlineOffset(0.0f), loaded(false), borderMode(Font::defaultBorderMode)
 	{
 		this->name = name;
 	}
@@ -168,7 +168,7 @@ namespace atres
 		return (this->underlineOffset * this->scale * this->baseScale);
 	}
 
-	void Font::setBorderMode(BorderMode value)
+	void Font::setBorderMode(const BorderMode& value)
 	{
 		if (value != BorderMode::Software)
 		{
@@ -178,7 +178,7 @@ namespace atres
 		this->_setBorderMode(value);
 	}
 
-	void Font::_setBorderMode(BorderMode value)
+	void Font::_setBorderMode(const BorderMode& value)
 	{
 		if (this->borderMode != value)
 		{
@@ -291,7 +291,7 @@ namespace atres
 		return NULL;
 	}
 
-	float Font::getKerning(unsigned int previousCode, unsigned int code)
+	float Font::getKerning(unsigned int previousCharCode, unsigned int charCode)
 	{
 		return 0.0f;
 	}

@@ -20,7 +20,7 @@
 
 namespace atres
 {
-	FontDynamic::StructuringImageContainer::StructuringImageContainer(april::Image* image, BorderMode borderMode, float borderThickness)
+	FontDynamic::StructuringImageContainer::StructuringImageContainer(april::Image* image, const BorderMode& borderMode, float borderThickness)
 	{
 		this->image = image;
 		this->borderMode = borderMode;
@@ -44,7 +44,7 @@ namespace atres
 		}
 	}
 
-	void FontDynamic::setBorderMode(BorderMode value)
+	void FontDynamic::setBorderMode(const BorderMode& value)
 	{
 		if (value == BorderMode::FontNative)
 		{
@@ -80,7 +80,7 @@ namespace atres
 		}
 	}
 
-	FontDynamic::StructuringImageContainer* FontDynamic::_findStructuringImageContainer(BorderMode borderMode, float borderThickness)
+	FontDynamic::StructuringImageContainer* FontDynamic::_findStructuringImageContainer(const BorderMode& borderMode, float borderThickness)
 	{
 		foreach (StructuringImageContainer*, it, this->structuringImageContainers)
 		{
@@ -94,7 +94,7 @@ namespace atres
 
 	april::Texture* FontDynamic::getTexture(unsigned int charCode)
 	{
-		if (!this->_addCharacterBitmap(charCode))
+		if (!this->_tryAddCharacterBitmap(charCode))
 		{
 			return NULL;
 		}
@@ -103,7 +103,7 @@ namespace atres
 
 	april::Texture* FontDynamic::getBorderTexture(unsigned int charCode, float borderThickness)
 	{
-		if (!this->_addBorderCharacterBitmap(charCode, borderThickness))
+		if (!this->_tryAddBorderCharacterBitmap(charCode, borderThickness))
 		{
 			return NULL;
 		}
@@ -112,7 +112,7 @@ namespace atres
 
 	april::Texture* FontDynamic::getTexture(chstr iconName)
 	{
-		if (!this->_addIconBitmap(iconName))
+		if (!this->_tryAddIconBitmap(iconName))
 		{
 			return NULL;
 		}
@@ -121,7 +121,7 @@ namespace atres
 
 	april::Texture* FontDynamic::getBorderTexture(chstr iconName, float borderThickness)
 	{
-		if (!this->_addBorderIconBitmap(iconName, borderThickness))
+		if (!this->_tryAddBorderIconBitmap(iconName, borderThickness))
 		{
 			return NULL;
 		}
@@ -130,25 +130,25 @@ namespace atres
 
 	bool FontDynamic::hasCharacter(unsigned int charCode)
 	{
-		this->_addCharacterBitmap(charCode);
+		this->_tryAddCharacterBitmap(charCode);
 		return Font::hasCharacter(charCode);
 	}
 
 	bool FontDynamic::hasBorderCharacter(unsigned int charCode, float borderThickness)
 	{
-		this->_addBorderCharacterBitmap(charCode, borderThickness);
+		this->_tryAddBorderCharacterBitmap(charCode, borderThickness);
 		return Font::hasBorderCharacter(charCode, borderThickness);
 	}
 
 	bool FontDynamic::hasIcon(chstr iconName)
 	{
-		this->_addIconBitmap(iconName);
+		this->_tryAddIconBitmap(iconName);
 		return Font::hasIcon(iconName);
 	}
 
 	bool FontDynamic::hasBorderIcon(chstr iconName, float borderThickness)
 	{
-		this->_addBorderIconBitmap(iconName, borderThickness);
+		this->_tryAddBorderIconBitmap(iconName, borderThickness);
 		return Font::hasBorderIcon(iconName, borderThickness);
 	}
 
@@ -173,7 +173,7 @@ namespace atres
 		return texture;
 	}
 
-	bool FontDynamic::_addCharacterBitmap(unsigned int charCode, bool initial)
+	bool FontDynamic::_tryAddCharacterBitmap(unsigned int charCode, bool initial)
 	{
 		if (this->characters.hasKey(charCode))
 		{
@@ -211,7 +211,7 @@ namespace atres
 		return true;
 	}
 
-	bool FontDynamic::_addBorderCharacterBitmap(unsigned int charCode, float borderThickness)
+	bool FontDynamic::_tryAddBorderCharacterBitmap(unsigned int charCode, float borderThickness)
 	{
 		if (Font::hasBorderCharacter(charCode, borderThickness)) // cannot use current class' implementation since it would cause recursion
 		{
@@ -251,7 +251,7 @@ namespace atres
 		return true;
 	}
 
-	bool FontDynamic::_addIconBitmap(chstr iconName, bool initial)
+	bool FontDynamic::_tryAddIconBitmap(chstr iconName, bool initial)
 	{
 		if (this->icons.hasKey(iconName))
 		{
@@ -279,7 +279,7 @@ namespace atres
 		return true;
 	}
 
-	bool FontDynamic::_addBorderIconBitmap(chstr iconName, float borderThickness)
+	bool FontDynamic::_tryAddBorderIconBitmap(chstr iconName, float borderThickness)
 	{
 		if (Font::hasBorderIcon(iconName, borderThickness)) // cannot use current class' implementation since it would cause recursion
 		{
@@ -319,7 +319,8 @@ namespace atres
 		return true;
 	}
 
-	TextureContainer* FontDynamic::_addBitmap(harray<TextureContainer*>& textureContainers, bool initial, april::Image* image, int bitmapWidth, int bitmapHeight, chstr symbol, int offsetX, int offsetY, int safeSpace)
+	TextureContainer* FontDynamic::_addBitmap(harray<TextureContainer*>& textureContainers, bool initial, april::Image* image, int usedWidth, int usedHeight, chstr symbol,
+		int offsetX, int offsetY, int safeSpace)
 	{
 		TextureContainer* textureContainer = NULL;
 		// create first texture
@@ -341,15 +342,15 @@ namespace atres
 		}
 		textureContainer->penX += offsetX;
 		// if icon bitmap width exceeds space, go into next line
-		if (textureContainer->penX + bitmapWidth + CHARACTER_SPACE * 2 > textureContainer->texture->getWidth())
+		if (textureContainer->penX + usedWidth + CHARACTER_SPACE * 2 > textureContainer->texture->getWidth())
 		{
 			textureContainer->penX = 0;
 			textureContainer->penY += textureContainer->rowHeight + CHARACTER_SPACE * 2;
-			textureContainer->rowHeight = bitmapHeight;
+			textureContainer->rowHeight = usedHeight;
 		}
 		else
 		{
-			textureContainer->rowHeight = hmax(textureContainer->rowHeight, bitmapHeight);
+			textureContainer->rowHeight = hmax(textureContainer->rowHeight, usedHeight);
 		}
 		if (textureContainer->penY + textureContainer->rowHeight + CHARACTER_SPACE * 2 > textureContainer->texture->getHeight())
 		{
@@ -469,7 +470,7 @@ namespace atres
 		return image;
 	}
 
-	FontDynamic::StructuringImageContainer* FontDynamic::_createStructuringImageContainer(BorderMode borderMode, float borderThickness)
+	FontDynamic::StructuringImageContainer* FontDynamic::_createStructuringImageContainer(const BorderMode& borderMode, float borderThickness)
 	{
 		StructuringImageContainer* structuringImageContainer = NULL;
 		int borderSize = hceil(borderThickness);

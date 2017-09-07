@@ -1,0 +1,44 @@
+[OPTIONS]
+Compatibility=1.1
+Full-text search=Yes
+Contents file=index.hhc
+Default Window=main
+Default topic=index.html
+Index file=index.hhk
+Language=0x409 English (United States)
+Title=ATReS TTF
+
+[WINDOWS]
+main="ATReS TTF","index.hhc","index.hhk","index.html","index.html",,,,,0x23520,,0x10387e,,,,,,,,0
+
+[FILES]
+atresttf_8h_source.html
+_font_ttf_8h_source.html
+atresttf_8h.html
+_font_ttf_8h.html
+classatresttf_1_1_font_ttf.html
+classatresttf_1_1_font_ttf-members.html
+dir_66aaf6bd7e95269262f5f29197f92bab.html
+dir_d44c64559bbebec7f509842c48db8b23.html
+index.html
+annotated.html
+classes.html
+hierarchy.html
+functions.html
+functions_func.html
+functions_vars.html
+files.html
+tab_a.png
+tab_b.png
+tab_h.png
+tab_s.png
+nav_h.png
+nav_f.png
+bc_s.png
+doxygen.png
+closed.png
+open.png
+bdwn.png
+sync_on.png
+sync_off.png
+classatresttf_1_1_font_ttf.png

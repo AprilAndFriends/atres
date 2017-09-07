@@ -106,7 +106,7 @@ namespace atresttf
 		}
 	}
 
-	void FontTtf::setBorderMode(BorderMode value)
+	void FontTtf::setBorderMode(const BorderMode& value)
 	{
 		this->_setBorderMode(value);
 	}
@@ -197,7 +197,7 @@ namespace atresttf
 			this->textureContainers.last()->texture->lock();
 			for_itert (unsigned int, code, 32, 128)
 			{
-				this->_addCharacterBitmap(code, true);
+				this->_tryAddCharacterBitmap(code, true);
 			}
 			this->textureContainers.last()->texture->unlock();
 		}
@@ -268,10 +268,9 @@ namespace atresttf
 			hlog::error(logTag, "Could not load glyph from: " + this->fontFilename);
 			return NULL;
 		}
-		if (face->glyph->format != FT_GLYPH_FORMAT_OUTLINE)
+		if (face->glyph->format != FT_GLYPH_FORMAT_OUTLINE) // native border actually not supported in this font
 		{
 			hlog::error(logTag, "Not an outline glyph: " + this->fontFilename);
-			this->nativeBorderSupported = false; // native border actually no supported
 			return NULL;
 		}
 		FT_Stroker stroker;
@@ -321,9 +320,9 @@ namespace atresttf
 		return image;
 	}
 
-	float FontTtf::getKerning(unsigned int previousCode, unsigned int code)
+	float FontTtf::getKerning(unsigned int previousCharCode, unsigned int charCode)
 	{
-		if (previousCode == 0 || code == 0)
+		if (previousCharCode == 0 || charCode == 0)
 		{
 			return 0.0f;
 		}
@@ -337,7 +336,7 @@ namespace atresttf
 		{
 			return this->kerningCache[key];
 		}
-		unsigned long charIndex = code;
+		unsigned long charIndex = charCode;
 		if (charIndex == UNICODE_CHAR_NON_BREAKING_SPACE) // non-breaking space character should be treated just like a normal space when retrieving the glyph from the font
 		{
 			charIndex = UNICODE_CHAR_SPACE;
@@ -348,7 +347,7 @@ namespace atresttf
 			this->kerningCache[key] = 0.0f;
 			return this->kerningCache[key];
 		}
-		unsigned long previousCharInex = previousCode;
+		unsigned long previousCharInex = previousCharCode;
 		if (previousCharInex == UNICODE_CHAR_NON_BREAKING_SPACE) // non-breaking space character should be treated just like a normal space when retrieving the glyph from the font
 		{
 			previousCharInex = UNICODE_CHAR_SPACE;
