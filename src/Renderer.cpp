@@ -2571,7 +2571,8 @@ namespace atres
 			if (this->_lines.size() > 0)
 			{
 				Font* font = this->getFont(fontName);
-				return (this->_lines.size() * font->getLineHeight() + font->getInternalDescender());
+				float lineHeight = font->getLineHeight();
+				return ((this->_lines.size() - 1) * lineHeight + hmax(lineHeight, font->getHeight()) + font->getInternalDescender());
 			}
 		}
 		return 0.0f;
