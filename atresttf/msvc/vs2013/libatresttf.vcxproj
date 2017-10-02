@@ -54,6 +54,7 @@
     <ProjectGuid>{BD643E5E-72FF-4004-BD69-31DC02E5D417}</ProjectGuid>
     <RootNamespace>atresttf</RootNamespace>
   </PropertyGroup>
+  <Import Project="..\..\..\..\hltypes\msvc\vs2013\props-generic\system.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="props\default.props" />
   <Import Project="..\..\..\..\hltypes\msvc\vs2013\props-generic\platform-$(Platform).props" />
