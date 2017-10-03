@@ -1540,6 +1540,7 @@ namespace atres
 		float ax = 0.0f;
 		float aw = 0.0f;
 		float charX = 0.0f;
+		float charHeight = 0.0f;
 		float addW = 0.0f;
 		float bearingX = 0.0f;
 		float previousWordWidth = 0.0f;
@@ -1555,6 +1556,7 @@ namespace atres
 		bool tooLong = false;
 		hstr iconName;
 		harray<float> charXs;
+		harray<float> charHeights;
 		harray<float> charAdvanceXs;
 		harray<float> segmentWidths;
 		word.rect.x = rect.x;
@@ -1566,6 +1568,7 @@ namespace atres
 			start = i;
 			chars = 0;
 			charX = 0.0f;
+			charHeight = 0.0f;
 			previousWordWidth = 0.0f;
 			wordWidth = 0.0f;
 			wordBearingX = 0.0f;
@@ -1620,6 +1623,7 @@ namespace atres
 							aw = (this->_icon->rect.w + this->_iconFontBearingX) * this->_scale;
 						}
 						addW = hmax(ax, aw);
+						charHeight = (this->_iconFontOffsetY + this->_icon->rect.h) * this->_scale;
 					}
 					previousWordWidth = wordWidth;
 					wordWidth = hmax(charX + addW, wordWidth);
@@ -1630,6 +1634,7 @@ namespace atres
 						break;
 					}
 					charXs += charX;
+					charHeights += charHeight;
 					charX += ax;
 					charAdvanceXs += ax;
 					segmentWidths += wordWidth;
@@ -1695,10 +1700,12 @@ namespace atres
 						aw = (this->_character->rect.w + kerning) * this->_scale;
 					}
 					addW = hmax(ax, aw);
+					charHeight = (this->_character->offsetY + this->_character->bearing.y + this->_character->rect.h) * this->_scale;
 				}
 				else
 				{
 					addW = this->_font->getHeight() * 0.5f;
+					charHeight = this->_font->getHeight();
 				}
 				previousWordWidth = wordWidth;
 				wordWidth = hmax(charX + addW, wordWidth);
@@ -1712,6 +1719,7 @@ namespace atres
 					break;
 				}
 				charXs += charX;
+				charHeights += charHeight;
 				charX += ax;
 				charAdvanceXs += ax;
 				segmentWidths += wordWidth;
@@ -1747,6 +1755,7 @@ namespace atres
 			{
 				word.text = (!icon ? text(start, i - start) : "");
 				word.rect.w = wordWidth + wordBearingX;
+				word.rect.h = hmax(this->_height, (charHeights.size() > 0 ? charHeights.max() : 0.0f));
 				word.advanceX = charX + wordBearingX;
 				word.bearingX = wordBearingX;
 				word.start = start;
@@ -1870,6 +1879,11 @@ namespace atres
 					this->_line.rect.w = this->_line.advanceX + hmax(this->_line.words.last().rect.w - this->_line.words.last().advanceX, 0.0f);
 				}
 				this->_line.rect.y = rect.y + this->_lines.size() * this->_lineHeight;
+				this->_line.rect.h = this->_lineHeight;
+				foreach (RenderWord, it, this->_line.words)
+				{
+					this->_line.rect.h = hmax(this->_line.rect.h, (*it).rect.h);
+				}
 				this->_line.terminated = forcedNextLine;
 				if (this->_line.words.size() > 0 || this->_line.terminated) // prevents empty lines with only spaces to be used
 				{
@@ -2572,7 +2586,7 @@ namespace atres
 			{
 				Font* font = this->getFont(fontName);
 				float lineHeight = font->getLineHeight();
-				return ((this->_lines.size() - 1) * lineHeight + hmax(lineHeight, font->getHeight()) + font->getInternalDescender());
+				return ((this->_lines.size() - 1) * lineHeight + hmax(hmax(lineHeight, font->getHeight()), this->_lines.last().rect.h));
 			}
 		}
 		return 0.0f;

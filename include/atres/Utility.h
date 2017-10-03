@@ -157,6 +157,7 @@ namespace atres
 		float advanceX;
 		float bearingX;
 		harray<float> charXs;
+		harray<float> charHeights;
 		harray<float> charAdvanceXs;
 		harray<float> segmentWidths;
 
