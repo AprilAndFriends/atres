@@ -16,7 +16,7 @@
 
 // don't change these anymore, these are the optimal settings proven through a variety of fonts
 #define SAFE_SPACE 2
-#define CHARACTER_SPACE 0
+#define CHARACTER_SPACE 2
 
 namespace atres
 {
