@@ -31,11 +31,17 @@ namespace atres
 	{
 	public:
 		/// @brief Basic constructor.
-		/// @param[in] filename The filename of the bitmap font definition.
+		/// @param[in] filename The filename of the font definition.
 		FontDynamic(chstr name);
+		/// @brief Constructor.
+		/// @param[in] filename The filename of the font definition.
+		/// @param[in] textureSize The filename texture size.
+		FontDynamic(chstr name, int textureSize);
 		/// @brief Destructor.
 		~FontDynamic();
 
+		/// @brief The texture size of the font.
+		HL_DEFINE_GET(int, textureSize, textureSize);
 		/// @brief Sets the border rendering mode.
 		/// @param[in] value The border rendering mode.
 		void setBorderMode(const BorderMode& value);
@@ -99,6 +105,8 @@ namespace atres
 
 		};
 
+		/// @brief Font texture size.
+		int textureSize;
 		/// @brief All structuring image containers.
 		harray<StructuringImageContainer*> structuringImageContainers;
 

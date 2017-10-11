@@ -50,11 +50,32 @@ namespace atresttf
 		/// @param[in] height Font height.
 		/// @param[in] scale Font scale.
 		/// @param[in] lineHeight Font line height.
+		/// @param[in] loadBasicAscii Whether to pre-load the basic ASCII range of characters.
+		/// @param[in] textureSize The filename texture size.
+		FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii, int textureSize);
+		/// @brief Constructor.
+		/// @param[in] fontFilename Font filename.
+		/// @param[in] name Font name.
+		/// @param[in] height Font height.
+		/// @param[in] scale Font scale.
+		/// @param[in] lineHeight Font line height.
 		/// @param[in] descender Font descender value.
 		/// @param[in] strikeThroughOffset Vertical offset for strike-through.
 		/// @param[in] underlineOffset Vertical offset for underline.
 		/// @param[in] loadBasicAscii Whether to pre-load the basic ASCII range of characters.
 		FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, bool loadBasicAscii);
+		/// @brief Constructor.
+		/// @param[in] fontFilename Font filename.
+		/// @param[in] name Font name.
+		/// @param[in] height Font height.
+		/// @param[in] scale Font scale.
+		/// @param[in] lineHeight Font line height.
+		/// @param[in] descender Font descender value.
+		/// @param[in] strikeThroughOffset Vertical offset for strike-through.
+		/// @param[in] underlineOffset Vertical offset for underline.
+		/// @param[in] loadBasicAscii Whether to pre-load the basic ASCII range of characters.
+		/// @param[in] textureSize The filename texture size.
+		FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, bool loadBasicAscii, int textureSize);
 		/// @brief Constructor.
 		/// @param[in] stream Font file data stream.
 		/// @param[in] name Font name.
@@ -69,11 +90,32 @@ namespace atresttf
 		/// @param[in] height Font height.
 		/// @param[in] scale Font scale.
 		/// @param[in] lineHeight Font line height.
+		/// @param[in] loadBasicAscii Whether to pre-load the basic ASCII range of characters.
+		/// @param[in] textureSize The filename texture size.
+		FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii, int textureSize);
+		/// @brief Constructor.
+		/// @param[in] stream Font file data stream.
+		/// @param[in] name Font name.
+		/// @param[in] height Font height.
+		/// @param[in] scale Font scale.
+		/// @param[in] lineHeight Font line height.
 		/// @param[in] descender Font descender value.
 		/// @param[in] strikeThroughOffset Vertical offset for strike-through.
 		/// @param[in] underlineOffset Vertical offset for underline.
 		/// @param[in] loadBasicAscii Whether to pre-load the basic ASCII range of characters.
 		FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, bool loadBasicAscii);
+		/// @brief Constructor.
+		/// @param[in] stream Font file data stream.
+		/// @param[in] name Font name.
+		/// @param[in] height Font height.
+		/// @param[in] scale Font scale.
+		/// @param[in] lineHeight Font line height.
+		/// @param[in] descender Font descender value.
+		/// @param[in] strikeThroughOffset Vertical offset for strike-through.
+		/// @param[in] underlineOffset Vertical offset for underline.
+		/// @param[in] loadBasicAscii Whether to pre-load the basic ASCII range of characters.
+		/// @param[in] textureSize The filename texture size.
+		FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, bool loadBasicAscii, int textureSize);
 		/// @brief Destructor.
 		~FontTtf();
 
@@ -109,8 +151,9 @@ namespace atresttf
 		/// @param[in] scale Font scale.
 		/// @param[in] lineHeight Font line height.
 		/// @param[in] loadBasicAscii Whether to pre-load the basic ASCII range of characters.
+		/// @param[in] textureSize The filename texture size.
 		/// @note This mostly exists, because constructors cannot call each other before C++11.
-		void _setInternalValues(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii);
+		void _setInternalValues(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii, int textureSize);
 
 		/// @brief Loads the font definition.
 		/// @return True if successfully loaded.

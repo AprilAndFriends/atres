@@ -48,33 +48,60 @@ namespace atresttf
 				{
 					this->fontFilename = hrdir::joinPath(path, line.replaced("File=", ""), false);
 				}
+				else if (line.startsWith("TextureSize="))
+				{
+					this->textureSize = (int)line.replaced("TextureSize=", "");
+				}
 			}
 		}
 	}
 
 	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii) : atres::FontDynamic(name)
 	{
-		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii);
+		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii, atres::getTextureSize());
 	}
 	
-	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, bool loadBasicAscii) : atres::FontDynamic(name)
+	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii, int textureSize) : atres::FontDynamic(name)
 	{
-		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii);
+		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii, textureSize);
+	}
+
+	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset,
+		float underlineOffset, bool loadBasicAscii) : atres::FontDynamic(name)
+	{
+		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii, atres::getTextureSize());
 		this->descender = descender;
 		this->customDescender = true;
 		this->strikeThroughOffset = strikeThroughOffset;
 		this->underlineOffset = underlineOffset;
 	}
 	
+	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset,
+		float underlineOffset, bool loadBasicAscii, int textureSize) : atres::FontDynamic(name)
+	{
+		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii, textureSize);
+		this->descender = descender;
+		this->customDescender = true;
+		this->strikeThroughOffset = strikeThroughOffset;
+		this->underlineOffset = underlineOffset;
+	}
+
 	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii) : atres::FontDynamic(name)
 	{
-		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
+		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii, atres::getTextureSize());
 		this->fontStream.writeRaw(stream);
 	}
 
-	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, bool loadBasicAscii) : atres::FontDynamic(name)
+	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii, int textureSize) : atres::FontDynamic(name)
 	{
-		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii);
+		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii, textureSize);
+		this->fontStream.writeRaw(stream);
+	}
+
+	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset,
+		float underlineOffset, bool loadBasicAscii) : atres::FontDynamic(name)
+	{
+		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii, atres::getTextureSize());
 		this->descender = descender;
 		this->customDescender = true;
 		this->strikeThroughOffset = strikeThroughOffset;
@@ -82,7 +109,18 @@ namespace atresttf
 		this->fontStream.writeRaw(stream);
 	}
 
-	void FontTtf::_setInternalValues(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii)
+	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset,
+		float underlineOffset, bool loadBasicAscii, int textureSize) : atres::FontDynamic(name)
+	{
+		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii, textureSize);
+		this->descender = descender;
+		this->customDescender = true;
+		this->strikeThroughOffset = strikeThroughOffset;
+		this->underlineOffset = underlineOffset;
+		this->fontStream.writeRaw(stream);
+	}
+
+	void FontTtf::_setInternalValues(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii, int textureSize)
 	{
 		this->fontFilename = fontFilename;
 		this->name = name;
@@ -95,6 +133,7 @@ namespace atresttf
 		this->internalDescender = 0.0f;
 		this->strikeThroughOffset = 0.0f;
 		this->underlineOffset = 0.0f;
+		this->textureSize = textureSize;
 		this->customDescender = false;
 	}
 

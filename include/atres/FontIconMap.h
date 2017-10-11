@@ -36,6 +36,18 @@ namespace atres
 		/// @param[in] underlineOffset Vertical offset of underline rendering.
 		FontIconMap(chstr fontDirectory, chstr name, float scale, float bearingX = 0.0f, float offsetY = 0.0f, float spacing = 0.0f,
 			float strikeThroughOffset = 0.0f, float underlineOffset = 0.0f);
+		/// @brief Constructor.
+		/// @param[in] fontDirectory Directory for the icons.
+		/// @param[in] name Font name.
+		/// @param[in] scale Font scale.
+		/// @param[in] bearingX Horizontal bearing.
+		/// @param[in] offsetY Vertical render offset from the baseline.
+		/// @param[in] spacing Spacing between icons.
+		/// @param[in] strikeThroughOffset Vertical offset of strike-through rendering.
+		/// @param[in] underlineOffset Vertical offset of underline rendering.
+		/// @param[in] textureSize The filename texture size.
+		FontIconMap(chstr fontDirectory, chstr name, float scale, float bearingX, float offsetY, float spacing,
+			float strikeThroughOffset, float underlineOffset, int textureSize);
 		/// @brief Destructor.
 		~FontIconMap();
 

@@ -32,6 +32,23 @@ namespace atres
 		this->underlineOffset = underlineOffset;
 	}
 
+	FontIconMap::FontIconMap(chstr fontDirectory, chstr name, float scale, float bearingX, float offsetY,
+		float spacing, float strikeThroughOffset, float underlineOffset, int textureSize) : FontDynamic(name)
+	{
+		this->fontDirectory = fontDirectory;
+		this->name = name;
+		this->height = 0.0f;
+		this->baseScale = scale;
+		this->scale = scale;
+		this->lineHeight = 0.0f;
+		this->bearingX = bearingX;
+		this->offsetY = offsetY;
+		this->spacing = spacing;
+		this->strikeThroughOffset = strikeThroughOffset;
+		this->underlineOffset = underlineOffset;
+		this->textureSize = textureSize;
+	}
+
 	FontIconMap::~FontIconMap()
 	{
 	}

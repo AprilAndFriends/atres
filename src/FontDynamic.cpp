@@ -34,6 +34,12 @@ namespace atres
 
 	FontDynamic::FontDynamic(chstr name) : Font(name)
 	{
+		this->textureSize = atres::getTextureSize();
+	}
+
+	FontDynamic::FontDynamic(chstr name, int textureSize) : Font(name)
+	{
+		this->textureSize = textureSize;
 	}
 
 	FontDynamic::~FontDynamic()
@@ -154,11 +160,10 @@ namespace atres
 
 	april::Texture* FontDynamic::_createTexture()
 	{
-		int textureSize = atres::getTextureSize();
 		april::Texture* texture = NULL;
 		if (this->_isAllowAlphaTextures() && april::rendersys->getCaps().textureFormats.has(april::Image::Format::Alpha))
 		{
-			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Clear, april::Image::Format::Alpha, april::Texture::Type::Managed);
+			texture = april::rendersys->createTexture(this->textureSize, this->textureSize, april::Color::Clear, april::Image::Format::Alpha, april::Texture::Type::Managed);
 			if (texture != NULL && !texture->isLoaded())
 			{
 				april::rendersys->destroyTexture(texture);
@@ -168,7 +173,7 @@ namespace atres
 		}
 		if (texture == NULL)
 		{
-			texture = april::rendersys->createTexture(textureSize, textureSize, april::Color::Blank, april::rendersys->getNativeTextureFormat(april::Image::Format::RGBA), april::Texture::Type::Managed);
+			texture = april::rendersys->createTexture(this->textureSize, this->textureSize, april::Color::Blank, april::rendersys->getNativeTextureFormat(april::Image::Format::RGBA), april::Texture::Type::Managed);
 		}
 		return texture;
 	}
