@@ -135,17 +135,17 @@ namespace atres
 
 		void clearCache();
 
-		DEPRECATED_ATTRIBUTE("Deprecated API. Use april::getSymbolicColor() instead.")
+		HL_DEPRECATED("Deprecated API. Use april::getSymbolicColor() instead.")
 			void addColor(chstr key, chstr value);
-		DEPRECATED_ATTRIBUTE("Deprecated API. Use isGlobalOffsets() instead.")
+		HL_DEPRECATED("Deprecated API. Use isGlobalOffsets() instead.")
 			bool getGlobalOffsets() { return this->isGlobalOffsets(); }
-		DEPRECATED_ATTRIBUTE("Deprecated API. Use isUseLegacyLineBreakParsing() instead.")
+		HL_DEPRECATED("Deprecated API. Use isUseLegacyLineBreakParsing() instead.")
 			bool getUseLegacyLineBreakParsing() { return this->isUseLegacyLineBreakParsing(); }
-		DEPRECATED_ATTRIBUTE("Deprecated API. Use isUseIdeographWords() instead.")
+		HL_DEPRECATED("Deprecated API. Use isUseIdeographWords() instead.")
 			bool getUseIdeographWords() { return this->isUseIdeographWords(); }
-		DEPRECATED_ATTRIBUTE("Deprecated API. Use getDefaultFontName() instead.")
+		HL_DEPRECATED("Deprecated API. Use getDefaultFontName() instead.")
 			hstr getDefaultFont() const { return this->getDefaultFontName(); }
-		DEPRECATED_ATTRIBUTE("Deprecated API. Use setDefaultFontName() instead.")
+		HL_DEPRECATED("Deprecated API. Use setDefaultFontName() instead.")
 			void setDefaultFont(chstr value) { this->setDefaultFontName(value); }
 
 	protected:
