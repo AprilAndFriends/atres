@@ -2586,7 +2586,7 @@ namespace atres
 			{
 				Font* font = this->getFont(fontName);
 				float lineHeight = font->getLineHeight();
-				return hmax((this->_lines.size() - 1) * lineHeight + hmax(lineHeight, font->getHeight()) + font->getInternalDescender(), this->_lines.last().rect.bottom());
+				return hmax((this->_lines.size() - 1) * lineHeight + hmax(lineHeight + font->getInternalDescender(), font->getHeight()), this->_lines.last().rect.bottom());
 			}
 		}
 		return 0.0f;
