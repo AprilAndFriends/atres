@@ -83,6 +83,14 @@ namespace atres
 		/// @return True if border icon is loaded.
 		bool hasBorderIcon(chstr iconName, float borderThickness);
 
+		/// @brief Loads basic ASCII range of characters.
+		/// @param[in] iconName Icon name.
+		/// @return True if icon is loaded.
+		void loadBasicAsciiCharacters();
+		/// @brief Loads basic ASCII range of border characters.
+		/// @param[in] borderThickness Thickness of the border.
+		void loadBasicAsciiBorderCharacters(float borderThickness);
+
 	protected:
 		/// @brief Helper class for structuring images when using a prerendered border rendering mode.
 		class StructuringImageContainer

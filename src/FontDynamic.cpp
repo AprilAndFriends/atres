@@ -158,6 +158,28 @@ namespace atres
 		return Font::hasBorderIcon(iconName, borderThickness);
 	}
 
+	void FontDynamic::loadBasicAsciiCharacters()
+	{
+		this->_tryCreateFirstTextureContainer();
+		this->textureContainers.last()->texture->lock();
+		for_itert (unsigned int, code, 32, 128)
+		{
+			this->_tryAddCharacterBitmap(code, true);
+		}
+		this->textureContainers.last()->texture->unlock();
+	}
+
+	void FontDynamic::loadBasicAsciiBorderCharacters(float borderThickness)
+	{
+		this->_tryCreateFirstBorderTextureContainer(borderThickness);
+		this->borderTextureContainers.last()->texture->lock();
+		for_itert (unsigned int, code, 32, 128)
+		{
+			this->_tryAddBorderCharacterBitmap(code, true);
+		}
+		this->borderTextureContainers.last()->texture->unlock();
+	}
+
 	april::Texture* FontDynamic::_createTexture()
 	{
 		april::Texture* texture = NULL;

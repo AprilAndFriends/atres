@@ -309,6 +309,14 @@ namespace atres
 		return result;
 	}
 
+	void Font::loadBasicAsciiCharacters()
+	{
+	}
+
+	void Font::loadBasicAsciiBorderCharacters(float borderThickness)
+	{
+	}
+
 	// using static definitions to avoid memory allocation for optimization, NOT THREAD-SAFE
 	static RenderRectangle _result;
 	static gvec2 _fullSize(1.0f, 1.0f);

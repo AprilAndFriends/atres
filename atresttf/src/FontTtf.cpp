@@ -232,13 +232,7 @@ namespace atresttf
 		// adding all base ASCII characters right away
 		if (this->loadBasicAscii)
 		{
-			this->_tryCreateFirstTextureContainer();
-			this->textureContainers.last()->texture->lock();
-			for_itert (unsigned int, code, 32, 128)
-			{
-				this->_tryAddCharacterBitmap(code, true);
-			}
-			this->textureContainers.last()->texture->unlock();
+			this->loadBasicAsciiCharacters();
 		}
 		return true;
 	}

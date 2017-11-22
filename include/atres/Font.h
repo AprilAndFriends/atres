@@ -189,6 +189,14 @@ namespace atres
 		/// @return The RenderRectangle definition.
 		RenderRectangle makeBorderRenderRectangle(cgrect rect, cgrect area, chstr iconName, float borderThickness);
 
+		/// @brief Loads basic ASCII range of characters.
+		/// @param[in] iconName Icon name.
+		/// @return True if icon is loaded.
+		virtual void loadBasicAsciiCharacters();
+		/// @brief Loads basic ASCII range of border characters.
+		/// @param[in] borderThickness Thickness of the border.
+		virtual void loadBasicAsciiBorderCharacters(float borderThickness);
+
 		/// @brief The default border rendering mode for all fonts.
 		static BorderMode defaultBorderMode;
 
