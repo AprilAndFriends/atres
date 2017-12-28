@@ -161,23 +161,19 @@ namespace atres
 	void FontDynamic::loadBasicAsciiCharacters()
 	{
 		this->_tryCreateFirstTextureContainer();
-		this->textureContainers.last()->texture->lock();
 		for_itert (unsigned int, code, 32, 128)
 		{
 			this->_tryAddCharacterBitmap(code, true);
 		}
-		this->textureContainers.last()->texture->unlock();
 	}
 
 	void FontDynamic::loadBasicAsciiBorderCharacters(float borderThickness)
 	{
 		this->_tryCreateFirstBorderTextureContainer(borderThickness);
-		this->borderTextureContainers.last()->texture->lock();
 		for_itert (unsigned int, code, 32, 128)
 		{
 			this->_tryAddBorderCharacterBitmap(code, true);
 		}
-		this->borderTextureContainers.last()->texture->unlock();
 	}
 
 	april::Texture* FontDynamic::_createTexture()
@@ -186,10 +182,8 @@ namespace atres
 		if (this->_isAllowAlphaTextures() && april::rendersys->getCaps().textureFormats.has(april::Image::Format::Alpha))
 		{
 			texture = april::rendersys->createTexture(this->textureSize, this->textureSize, april::Color::Clear, april::Image::Format::Alpha, april::Texture::Type::Managed);
-			if (texture != NULL && !texture->isLoaded())
+			if (texture == NULL)
 			{
-				april::rendersys->destroyTexture(texture);
-				texture = NULL;
 				hlog::warn(logTag, "Could not create alpha texture for font, trying an RGBA format.");
 			}
 		}
@@ -362,10 +356,6 @@ namespace atres
 		if (!textureContainer->texture->isLoaded()) // in case texture was unloaded, reload it here
 		{
 			textureContainer->texture->load();
-			if (initial) // and lock it if necessary
-			{
-				textureContainer->texture->lock();
-			}
 		}
 		textureContainer->penX += offsetX;
 		// if icon bitmap width exceeds space, go into next line
@@ -382,16 +372,8 @@ namespace atres
 		if (textureContainer->penY + textureContainer->rowHeight + CHARACTER_SPACE * 2 > textureContainer->texture->getHeight())
 		{
 			hlog::debugf(logTag, "Font '%s': %s does not fit, creating new texture.", this->name.cStr(), symbol.cStr());
-			if (initial)
-			{
-				textureContainer->texture->unlock();
-			}
 			textureContainer = textureContainer->createNew();
 			textureContainer->texture = this->_createTexture();
-			if (initial)
-			{
-				textureContainer->texture->lock();
-			}
 			textureContainers += textureContainer;
 			// if the icon's height is higher than the texture's height, this will obviously not work too well
 		}
