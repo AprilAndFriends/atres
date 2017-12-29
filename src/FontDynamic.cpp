@@ -181,7 +181,7 @@ namespace atres
 		april::Texture* texture = NULL;
 		if (this->_isAllowAlphaTextures() && april::rendersys->getCaps().textureFormats.has(april::Image::Format::Alpha))
 		{
-			texture = april::rendersys->createTexture(this->textureSize, this->textureSize, april::Color::Clear, april::Image::Format::Alpha, april::Texture::Type::Managed);
+			texture = april::rendersys->createTexture(this->textureSize, this->textureSize, april::Color::Clear, april::Image::Format::Alpha);
 			if (texture == NULL)
 			{
 				hlog::warn(logTag, "Could not create alpha texture for font, trying an RGBA format.");
@@ -189,7 +189,7 @@ namespace atres
 		}
 		if (texture == NULL)
 		{
-			texture = april::rendersys->createTexture(this->textureSize, this->textureSize, april::Color::Blank, april::rendersys->getNativeTextureFormat(april::Image::Format::RGBA), april::Texture::Type::Managed);
+			texture = april::rendersys->createTexture(this->textureSize, this->textureSize, april::Color::Blank, april::rendersys->getNativeTextureFormat(april::Image::Format::RGBA));
 		}
 		return texture;
 	}
@@ -353,10 +353,6 @@ namespace atres
 		}
 		// get texture
 		textureContainer = textureContainers.last();
-		if (!textureContainer->texture->isLoaded()) // in case texture was unloaded, reload it here
-		{
-			textureContainer->texture->load();
-		}
 		textureContainer->penX += offsetX;
 		// if icon bitmap width exceeds space, go into next line
 		if (textureContainer->penX + usedWidth + CHARACTER_SPACE * 2 > textureContainer->texture->getWidth())
