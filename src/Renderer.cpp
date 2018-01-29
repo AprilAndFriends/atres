@@ -2390,7 +2390,7 @@ namespace atres
 	{
 		foreach (RenderSequence, it, this->_cacheEntryText.value.textSequences)
 		{
-			if (!(*it).texture->isLoaded())
+			if (!(*it).texture->isUploaded())
 			{
 				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cacheText
 				return false;
@@ -2398,7 +2398,7 @@ namespace atres
 		}
 		foreach (RenderSequence, it, this->_cacheEntryText.value.shadowSequences)
 		{
-			if (!(*it).texture->isLoaded())
+			if (!(*it).texture->isUploaded())
 			{
 				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cacheText
 				return false;
@@ -2406,7 +2406,7 @@ namespace atres
 		}
 		foreach (RenderSequence, it, this->_cacheEntryText.value.borderSequences)
 		{
-			if (!(*it).texture->isLoaded())
+			if (!(*it).texture->isUploaded())
 			{
 				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cacheText
 				return false;
