@@ -42,9 +42,19 @@
 
 #define IS_PUNCTUATION_CHAR(code) \
 	( \
+		(code) == 0x21 ||	/* exclamation mark */ \
+		(code) == 0x29 ||	/* closing parenthesis */ \
+		(code) == 0x2C ||	/* comma */ \
+		(code) == 0x2D ||	/* dash */ \
+		(code) == 0x2E ||	/* full stop/period */ \
+		(code) == 0x3A ||	/* colon */ \
+		(code) == 0x3B ||	/* semicolon */ \
+		(code) == 0x3F ||	/* question mark */ \
+		(code) == 0x5D ||	/* closing bracket */ \
+		(code) == 0x5D ||	/* closing brace */ \
 		(code) == 0x2015 ||	/* long dash */ \
 		(code) == 0x201D ||	/* right double quotation mark */ \
-		(code) == 0x2025 ||	/* ellipsis char */ \
+		(code) == 0x2025 ||	/* two-dot leader char */ \
 		(code) == 0x2026 ||	/* ellipsis char */ \
 		(code) == 0x2500 ||	/* box drawings light horizontal (looks like a dash) */ \
 		(code) == 0x3000 ||	/* ideographic space */ \
@@ -2380,7 +2390,7 @@ namespace atres
 	{
 		foreach (RenderSequence, it, this->_cacheEntryText.value.textSequences)
 		{
-			if (!(*it).texture->isLoaded())
+			if (!(*it).texture->isUploaded())
 			{
 				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cacheText
 				return false;
@@ -2388,7 +2398,7 @@ namespace atres
 		}
 		foreach (RenderSequence, it, this->_cacheEntryText.value.shadowSequences)
 		{
-			if (!(*it).texture->isLoaded())
+			if (!(*it).texture->isUploaded())
 			{
 				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cacheText
 				return false;
@@ -2396,7 +2406,7 @@ namespace atres
 		}
 		foreach (RenderSequence, it, this->_cacheEntryText.value.borderSequences)
 		{
-			if (!(*it).texture->isLoaded())
+			if (!(*it).texture->isUploaded())
 			{
 				this->clearCache(); // font textures were deleted somewhere for some reason (e.g. Android's onPause), clear the cacheText
 				return false;
