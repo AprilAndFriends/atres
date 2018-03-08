@@ -24,7 +24,7 @@
 #define LOG_TAG "demo_simple"
 
 #include <april/april.h>
-#include <april/KeyboardDelegate.h>
+#include <april/KeyDelegate.h>
 #include <april/Keys.h>
 #include <april/main.h>
 #include <april/MouseDelegate.h>
@@ -71,7 +71,7 @@ grect textArea5(700.0f, 600.0f, 240.0f, 76.0f);
 grect textArea6(60.0f, 200.0f, 400.0f, 160.0f);
 april::Color backgroundColor = april::Color(0, 0, 0, 128);
 
-class KeyboardDelegate : public april::KeyboardDelegate
+class KeyDelegate : public april::KeyDelegate
 {
 public:
 	void onKeyDown(april::Key keyCode)
@@ -96,7 +96,7 @@ public:
 
 };
 
-static KeyboardDelegate* keyboardDelegate = NULL;
+static KeyDelegate* keyDelegate = NULL;
 
 class MouseDelegate : public april::MouseDelegate
 {
@@ -185,7 +185,7 @@ protected:
 
 UpdateDelegate* updateDelegate = NULL;
 
-void april_init(const harray<hstr>& args)
+void __aprilApplicationInit()
 {
 #ifdef __APPLE__
 	// On MacOSX, the current working directory is not set by
@@ -230,7 +230,7 @@ void april_init(const harray<hstr>& args)
 		CFRelease(url);
 	}
 #endif
-	keyboardDelegate = new KeyboardDelegate();
+	keyDelegate = new KeyDelegate();
 	mouseDelegate = new MouseDelegate();
 	updateDelegate = new UpdateDelegate();
 	updateDelegate->color = april::Color::White;
@@ -243,7 +243,7 @@ void april_init(const harray<hstr>& args)
 		april::createRenderSystem();
 		april::createWindow((int)drawRect.w, (int)drawRect.h, false, "demo_simple");
 		april::window->setUpdateDelegate(updateDelegate);
-		april::window->setKeyboardDelegate(keyboardDelegate);
+		april::window->setKeyDelegate(keyDelegate);
 		april::window->setMouseDelegate(mouseDelegate);
 		atres::init();
 #ifndef _ATRESTTF
@@ -271,7 +271,7 @@ void april_init(const harray<hstr>& args)
 	}
 }
 
-void april_destroy()
+void __aprilApplicationDestroy()
 {
 	try
 	{
@@ -280,8 +280,8 @@ void april_destroy()
 #endif
 		atres::destroy();
 		april::destroy();
-		delete keyboardDelegate;
-		keyboardDelegate = NULL;
+		delete keyDelegate;
+		keyDelegate = NULL;
 		delete mouseDelegate;
 		mouseDelegate = NULL;
 		delete updateDelegate;
