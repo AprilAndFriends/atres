@@ -12,21 +12,21 @@ file(
 
 add_library(demo_simple SHARED ${CppSrc})
 
-include_directories(AFTER "../../../include")
 include_directories(AFTER "../../../atresttf/include")
-include_directories(AFTER "../../../lib/freetype/include")
+include_directories(AFTER "../../../include")
 include_directories(AFTER "../../../../april/include")
 include_directories(AFTER "../../../../hltypes/include")
 include_directories(AFTER "../../../../gtypes/include")
+include_directories(AFTER "../../../lib/freetype/include")
 
+add_subdirectory("../../../atresttf/android-studio/lib" atresttf)
+add_subdirectory("../../lib" atres)
 add_subdirectory("../../../../april/android-studio/lib" april)
 add_subdirectory("../../../../hltypes/android-studio/lib" hltypes)
 add_subdirectory("../../../../gtypes/android-studio/lib" gtypes)
 add_subdirectory("../../../../april/lib/jpeg/android-studio/lib" jpeg)
 add_subdirectory("../../../../april/lib/png/android-studio/lib" png)
-add_subdirectory("../../../atresttf/android-studio/lib" atresttf)
 add_subdirectory("../../../lib/freetype/android-studio/lib" freetype)
-add_subdirectory("../../lib" atres)
 
 target_link_libraries(
 	demo_simple
