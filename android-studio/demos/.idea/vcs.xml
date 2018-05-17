@@ -2,5 +2,35 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../../april/lib/jpeg/android-studio/lib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../../april/lib/png/android-studio/lib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../atresttf/android-studio/lib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../atresttf/src" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../demos/media" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/android-studio/lib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/autofit" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/base" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/bdf" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/bzip2" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/cache" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/cff" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/cid" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/gxvalid" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/gzip" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/lzw" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/otvalid" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/pcf" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/pfr" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/psaux" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/pshinter" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/psnames" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/raster" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/sfnt" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/smooth" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/tools" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/truetype" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/type1" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/type42" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/freetype/src/winfonts" vcs="svn" />
   </component>
 </project>

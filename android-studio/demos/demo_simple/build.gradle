@@ -28,5 +28,7 @@ dependencies {
 	implementation project(":png")
 	implementation project(":april")
 	implementation project(":atres")
+	implementation project(":freetype")
+	implementation project(":atresttf")
 	implementation fileTree(include: ["*.jar"], dir: "libs")
 }

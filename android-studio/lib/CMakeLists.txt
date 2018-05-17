@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4.1)
 set(CMAKE_VERBOSE_MAKEFILE on)
 
-project(april)
+project(atres)
 
 include("../../../hltypes/android-studio/generic/cmake-preprocessors.txt")
 
@@ -11,9 +11,9 @@ file(
 	"../../src/*.cpp"
 )
 
-add_library(april STATIC ${CppSrc})
+add_library(atres STATIC ${CppSrc})
 
-include_directories(AFTER "../../include/aprilui")
+include_directories(AFTER "../../include/atres")
 include_directories(AFTER "../../src")
 include_directories(AFTER "../../../april/include")
 include_directories(AFTER "../../../hltypes/include")
@@ -24,4 +24,8 @@ include_directories(AFTER "../../../hltypes/lib/zlib")
 
 add_definitions(
 	-DATRES_EXPORTS
+)
+
+target_link_libraries(
+	atres
 )

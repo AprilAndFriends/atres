@@ -13,6 +13,8 @@ file(
 add_library(demo_simple SHARED ${CppSrc})
 
 include_directories(AFTER "../../../include")
+include_directories(AFTER "../../../atresttf/include")
+include_directories(AFTER "../../../lib/freetype/include")
 include_directories(AFTER "../../../../april/include")
 include_directories(AFTER "../../../../hltypes/include")
 include_directories(AFTER "../../../../gtypes/include")
@@ -20,25 +22,22 @@ include_directories(AFTER "../../../../gtypes/include")
 add_subdirectory("../../../../april/android-studio/lib" april)
 add_subdirectory("../../../../hltypes/android-studio/lib" hltypes)
 add_subdirectory("../../../../gtypes/android-studio/lib" gtypes)
-add_subdirectory("../../../lib/jpeg/android-studio/lib" jpeg)
-add_subdirectory("../../../lib/png/android-studio/lib" png)
+add_subdirectory("../../../../april/lib/jpeg/android-studio/lib" jpeg)
+add_subdirectory("../../../../april/lib/png/android-studio/lib" png)
+add_subdirectory("../../../atresttf/android-studio/lib" atresttf)
+add_subdirectory("../../../lib/freetype/android-studio/lib" freetype)
 add_subdirectory("../../lib" atres)
-
-find_library(liblog log)
-find_library(libz z)
-find_library(libc c)
-find_library(libdl dl)
-find_library(libandroid android)
-find_library(libGLESv2 GLESv2)
 
 target_link_libraries(
 	demo_simple
+	atresttf
 	atres
 	april
 	hltypes
 	gtypes
 	jpeg
 	png
+	freetype
 	${liblog}
 	${libz}
 	${libc}
