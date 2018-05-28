@@ -1036,7 +1036,7 @@ namespace atres
 					if (this->_currentTag.data.count(',') == 2)
 					{
 						this->_currentTag.data.split(',', this->_parameterString0, this->_parameterString1);
-						this->_textShadowOffset = april::hstrToGvec2(this->_parameterString1);
+						this->_textShadowOffset = april::hstrToGvec2f(this->_parameterString1);
 					}
 					else
 					{
@@ -1236,7 +1236,7 @@ namespace atres
 						if (this->_nextTag.data.count(',') == 2)
 						{
 							this->_nextTag.data.split(',', this->_parameterString0, this->_parameterString1);
-							this->_textShadowOffset = april::hstrToGvec2(this->_parameterString1);
+							this->_textShadowOffset = april::hstrToGvec2f(this->_parameterString1);
 						}
 						else
 						{
