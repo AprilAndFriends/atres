@@ -63,7 +63,7 @@ namespace atres
 	class atresExport RectDefinition
 	{
 	public:
-		grect rect;
+		grectf rect;
 
 		RectDefinition();
 		virtual ~RectDefinition();
@@ -83,7 +83,7 @@ namespace atres
 	class atresExport CharacterDefinition : public SymbolDefinition
 	{
 	public:
-		gvec2 bearing;
+		gvec2f bearing;
 		float offsetY;
 
 		CharacterDefinition();
@@ -107,8 +107,8 @@ namespace atres
 	class atresExport RenderRectangle
 	{
 	public:
-		grect src;
-		grect dest;
+		grectf src;
+		grectf dest;
 
 		RenderRectangle();
 		~RenderRectangle();
@@ -141,7 +141,7 @@ namespace atres
 		~RenderLiningSequence();
 
 		/// @note Not thread-safe!
-		void addRectangle(cgrect rect);
+		void addRectangle(cgrectf rect);
 
 	};
 
@@ -149,7 +149,7 @@ namespace atres
 	{
 	public:
 		hstr text;
-		grect rect;
+		grectf rect;
 		int start;
 		int count;
 		int spaces;
@@ -169,7 +169,7 @@ namespace atres
 	class atresExport RenderLining
 	{
 	public:
-		grect rect;
+		grectf rect;
 		int start;
 		int count;
 
@@ -182,7 +182,7 @@ namespace atres
 	{
 	public:
 		hstr text;
-		grect rect;
+		grectf rect;
 		int start;
 		int count;
 		int spaces;
@@ -276,16 +276,16 @@ namespace atres
 	public:
 		hstr text;
 		hstr fontName;
-		grect rect;
+		grectf rect;
 		Horizontal horizontal;
 		Vertical vertical;
 		april::Color color;
-		gvec2 offset;
+		gvec2f offset;
 
 		CacheEntryBasicText();
 		virtual ~CacheEntryBasicText();
 
-		void set(chstr text, chstr fontName, cgrect rect, Horizontal horizontal, Vertical vertical, const april::Color& color, cgvec2 offset);
+		void set(chstr text, chstr fontName, cgrectf rect, Horizontal horizontal, Vertical vertical, const april::Color& color, cgvec2f offset);
 		bool operator==(const CacheEntryBasicText& other) const;
 		bool operator!=(const CacheEntryBasicText& other) const;
 		unsigned int hash() const;
@@ -323,13 +323,13 @@ namespace atres
 	public:
 		hstr text;
 		hstr fontName;
-		gvec2 size;
+		gvec2f size;
 		RenderLine value;
 
 		CacheEntryLine();
 		~CacheEntryLine();
 
-		void set(chstr text, chstr fontName, cgvec2 size);
+		void set(chstr text, chstr fontName, cgvec2f size);
 		bool operator==(const CacheEntryLine& other) const;
 		bool operator!=(const CacheEntryLine& other) const;
 		unsigned int hash() const;

@@ -490,8 +490,8 @@ namespace atres
 			int index = borderSize + borderSize * size;
 			structuringImageContainer->image->data[index] = 255;
 			unsigned char value = 0;
-			gvec2 vector;
-			gvec2 range(borderThickness, 0.0f);
+			gvec2f vector;
+			gvec2f range(borderThickness, 0.0f);
 			for_iter (j, 0, borderSize + 1)
 			{
 				for_iter (i, j, borderSize + 1)

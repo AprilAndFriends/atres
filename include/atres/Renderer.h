@@ -37,8 +37,8 @@ namespace atres
 		Renderer();
 		~Renderer();
 
-		HL_DEFINE_GET(gvec2, shadowOffset, ShadowOffset);
-		void setShadowOffset(cgvec2 value);
+		HL_DEFINE_GET(gvec2f, shadowOffset, ShadowOffset);
+		void setShadowOffset(cgvec2f value);
 		HL_DEFINE_GET(april::Color, shadowColor, ShadowColor);
 		void setShadowColor(const april::Color& value);
 		HL_DEFINE_GET(float, borderThickness, BorderThickness);
@@ -78,27 +78,27 @@ namespace atres
 
 		void analyzeText(chstr fontName, chstr text);
 		hstr analyzeFormatting(chstr text, harray<FormatTag>& tags);
-		harray<RenderLine> removeOutOfBoundLines(const harray<RenderLine>& lines, cgrect rect);
-		void verticalCorrection(harray<RenderLine>& lines, cgrect rect, Vertical vertical, float x, float lineHeight, float descender, float internalDescender);
-		void horizontalCorrection(harray<RenderLine>& lines, cgrect rect, Horizontal horizontal, float y);
-		harray<RenderWord> createRenderWords(cgrect rect, chstr text, const harray<FormatTag>& tags);
-		harray<RenderLine> createRenderLines(cgrect rect, chstr text, const harray<FormatTag>& tags, Horizontal horizontal, Vertical vertical, cgvec2 offset = gvec2());
-		RenderText createRenderText(cgrect rect, chstr text, const harray<RenderLine>& lines, const harray<FormatTag>& tags);
+		harray<RenderLine> removeOutOfBoundLines(const harray<RenderLine>& lines, cgrectf rect);
+		void verticalCorrection(harray<RenderLine>& lines, cgrectf rect, Vertical vertical, float x, float lineHeight, float descender, float internalDescender);
+		void horizontalCorrection(harray<RenderLine>& lines, cgrectf rect, Horizontal horizontal, float y);
+		harray<RenderWord> createRenderWords(cgrectf rect, chstr text, const harray<FormatTag>& tags);
+		harray<RenderLine> createRenderLines(cgrectf rect, chstr text, const harray<FormatTag>& tags, Horizontal horizontal, Vertical vertical, cgvec2f offset = gvec2f());
+		RenderText createRenderText(cgrectf rect, chstr text, const harray<RenderLine>& lines, const harray<FormatTag>& tags);
 		harray<RenderSequence> optimizeSequences(harray<RenderSequence>& sequences);
 		harray<RenderLiningSequence> optimizeSequences(harray<RenderLiningSequence>& sequences);
 
-		void drawText(chstr fontName, cgrect rect, chstr text, Horizontal horizontal = Horizontal::Left,
-			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2 offset = gvec2());
-		void drawTextUnformatted(chstr fontName, cgrect rect, chstr text, Horizontal horizontal = Horizontal::Left,
-			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2 offset = gvec2());
-		void drawText(cgrect rect, chstr text, Horizontal horizontal = Horizontal::Left,
-			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2 offset = gvec2());
-		void drawTextUnformatted(cgrect rect, chstr text, Horizontal horizontal = Horizontal::Left,
-			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2 offset = gvec2());
-		harray<RenderLine> makeRenderLines(chstr fontName, cgrect rect, chstr text, Horizontal horizontal = Horizontal::Left,
-			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2 offset = gvec2());
-		harray<RenderLine> makeRenderLinesUnformatted(chstr fontName, cgrect rect, chstr text, Horizontal horizontal = Horizontal::Left,
-			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2 offset = gvec2());
+		void drawText(chstr fontName, cgrectf rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2f offset = gvec2f());
+		void drawTextUnformatted(chstr fontName, cgrectf rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2f offset = gvec2f());
+		void drawText(cgrectf rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2f offset = gvec2f());
+		void drawTextUnformatted(cgrectf rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2f offset = gvec2f());
+		harray<RenderLine> makeRenderLines(chstr fontName, cgrectf rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2f offset = gvec2f());
+		harray<RenderLine> makeRenderLinesUnformatted(chstr fontName, cgrectf rect, chstr text, Horizontal horizontal = Horizontal::Left,
+			Vertical vertical = Vertical::Center, const april::Color& color = april::Color::White, cgvec2f offset = gvec2f());
 
 		float getTextWidth(chstr fontName, chstr text);
 		float getTextWidth(chstr text);
@@ -151,7 +151,7 @@ namespace atres
 	protected:
 		hmap<hstr, Font*> fonts;
 		Font* defaultFont;
-		gvec2 shadowOffset;
+		gvec2f shadowOffset;
 		april::Color shadowColor;
 		float borderThickness;
 		float strikeThroughThickness;
@@ -214,8 +214,8 @@ namespace atres
 		float _iconFontOffsetY;
 		float _textScale;
 		float _scale;
-		gvec2 _shadowOffset;
-		gvec2 _textShadowOffset;
+		gvec2f _shadowOffset;
+		gvec2f _textShadowOffset;
 		float _borderThickness;
 		float _borderFontThickness;
 		float _textBorderThickness;
@@ -227,7 +227,7 @@ namespace atres
 		harray<RenderSequence> _borderSequences;
 		RenderSequence _borderSequence;
 		RenderRectangle _renderRect;
-		grect _liningRect;
+		grectf _liningRect;
 		harray<RenderLiningSequence> _textLiningSequences;
 		RenderLiningSequence _textStrikeThroughSequence;
 		RenderLiningSequence _textUnderlineSequence;

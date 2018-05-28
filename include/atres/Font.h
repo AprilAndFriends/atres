@@ -167,27 +167,27 @@ namespace atres
 		/// @param[in] area Rect where text should be rendered.
 		/// @param[in] charCode Character unicode value.
 		/// @return The RenderRectangle definition.
-		RenderRectangle makeRenderRectangle(cgrect rect, cgrect area, unsigned int charCode);
+		RenderRectangle makeRenderRectangle(cgrectf rect, cgrectf area, unsigned int charCode);
 		/// @brief Creates RenderRectangle definition for a character.
 		/// @param[in] rect Container rect for character (used for clipping).
 		/// @param[in] area Rect where text should be rendered.
 		/// @param[in] charCode Character unicode value.
 		/// @param[in] borderThickness Thickness of the border.
 		/// @return The RenderRectangle definition.
-		RenderRectangle makeBorderRenderRectangle(cgrect rect, cgrect area, unsigned int charCode, float borderThickness);
+		RenderRectangle makeBorderRenderRectangle(cgrectf rect, cgrectf area, unsigned int charCode, float borderThickness);
 		/// @brief Creates RenderRectangle definition for an icon.
 		/// @param[in] rect Container rect for text (used for clipping).
 		/// @param[in] area Rect where text should be rendered.
 		/// @param[in] iconName Icon name.
 		/// @return The RenderRectangle definition.
-		RenderRectangle makeRenderRectangle(cgrect rect, cgrect area, chstr iconName);
+		RenderRectangle makeRenderRectangle(cgrectf rect, cgrectf area, chstr iconName);
 		/// @brief Creates RenderRectangle definition for an icon.
 		/// @param[in] rect Container rect for text (used for clipping).
 		/// @param[in] area Rect where text should be rendered.
 		/// @param[in] iconName Icon name.
 		/// @param[in] borderThickness Thickness of the border.
 		/// @return The RenderRectangle definition.
-		RenderRectangle makeBorderRenderRectangle(cgrect rect, cgrect area, chstr iconName, float borderThickness);
+		RenderRectangle makeBorderRenderRectangle(cgrectf rect, cgrectf area, chstr iconName, float borderThickness);
 
 		/// @brief Loads basic ASCII range of characters.
 		/// @param[in] iconName Icon name.
@@ -260,7 +260,7 @@ namespace atres
 		/// @param[in] area Rect where text should be rendered.
 		/// @param[in] symbolRect Rect of symbol used.
 		/// @param[in] offsetY Vertical offset.
-		void _applyCutoff(cgrect rect, cgrect area, cgrect symbolRect, float offsetY = 0.0f) const;
+		void _applyCutoff(cgrectf rect, cgrectf area, cgrectf symbolRect, float offsetY = 0.0f) const;
 		
 	};
 

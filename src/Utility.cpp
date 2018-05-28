@@ -143,7 +143,7 @@ namespace atres
 	{
 	}
 
-	void RenderLiningSequence::addRectangle(cgrect rect)
+	void RenderLiningSequence::addRectangle(cgrectf rect)
 	{
 		_top = rect.top();
 		_bottom = rect.bottom();
@@ -249,7 +249,7 @@ namespace atres
 	{
 	}
 
-	void CacheEntryBasicText::set(chstr text, chstr fontName, cgrect rect, Horizontal horizontal, Vertical vertical, const april::Color& color, cgvec2 offset)
+	void CacheEntryBasicText::set(chstr text, chstr fontName, cgrectf rect, Horizontal horizontal, Vertical vertical, const april::Color& color, cgvec2f offset)
 	{
 		this->text = text;
 		this->fontName = fontName;
@@ -351,7 +351,7 @@ namespace atres
 	{
 	}
 
-	void CacheEntryLine::set(chstr text, chstr fontName, cgvec2 size)
+	void CacheEntryLine::set(chstr text, chstr fontName, cgvec2f size)
 	{
 		this->text = text;
 		this->fontName = fontName;

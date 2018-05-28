@@ -319,13 +319,13 @@ namespace atres
 
 	// using static definitions to avoid memory allocation for optimization, NOT THREAD-SAFE
 	static RenderRectangle _result;
-	static gvec2 _fullSize(1.0f, 1.0f);
-	static gvec2 _leftTop;
-	static gvec2 _rightBottom;
-	static gvec2 _textureInvertedSize;
+	static gvec2f _fullSize(1.0f, 1.0f);
+	static gvec2f _leftTop;
+	static gvec2f _rightBottom;
+	static gvec2f _textureInvertedSize;
 	static april::Texture* _texture = NULL;
 
-	void Font::_applyCutoff(cgrect rect, cgrect area, cgrect symbolRect, float offsetY) const
+	void Font::_applyCutoff(cgrectf rect, cgrectf area, cgrectf symbolRect, float offsetY) const
 	{
 		// vertical/horizontal cutoff of destination rectangle (using left/right/top/bottom semantics for consistency)
 		_leftTop.x = (area.left() < rect.left() ? (area.right() - rect.left()) / area.w : _fullSize.x);
@@ -341,7 +341,7 @@ namespace atres
 		_result.src.setSize((symbolRect.getSize() * (_leftTop + _rightBottom - _fullSize)) * _textureInvertedSize);
 	}
 
-	RenderRectangle Font::makeRenderRectangle(cgrect rect, cgrect area, unsigned int charCode)
+	RenderRectangle Font::makeRenderRectangle(cgrectf rect, cgrectf area, unsigned int charCode)
 	{
 		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
 		_result.dest = area;
@@ -355,7 +355,7 @@ namespace atres
 		return _result;
 	}
 
-	RenderRectangle Font::makeBorderRenderRectangle(cgrect rect, cgrect area, unsigned int charCode, float borderThickness)
+	RenderRectangle Font::makeBorderRenderRectangle(cgrectf rect, cgrectf area, unsigned int charCode, float borderThickness)
 	{
 		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
 		_result.dest = area;
@@ -369,7 +369,7 @@ namespace atres
 		return _result;
 	}
 
-	RenderRectangle Font::makeRenderRectangle(cgrect rect, cgrect area, chstr iconName)
+	RenderRectangle Font::makeRenderRectangle(cgrectf rect, cgrectf area, chstr iconName)
 	{
 		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
 		_result.dest = area;
@@ -383,7 +383,7 @@ namespace atres
 		return _result;
 	}
 
-	RenderRectangle Font::makeBorderRenderRectangle(cgrect rect, cgrect area, chstr iconName, float borderThickness)
+	RenderRectangle Font::makeBorderRenderRectangle(cgrectf rect, cgrectf area, chstr iconName, float borderThickness)
 	{
 		_result.src.set(0.0f, 0.0f, 0.0f, 0.0f);
 		_result.dest = area;
