@@ -34,8 +34,9 @@ namespace atres
 		/// @param[in] spacing Spacing between icons.
 		/// @param[in] strikeThroughOffset Vertical offset of strike-through rendering.
 		/// @param[in] underlineOffset Vertical offset of underline rendering.
+		/// @param[in] italicSkewRatio Height ratio of skewing for italic rendering.
 		FontIconMap(chstr fontDirectory, chstr name, float scale, float bearingX = 0.0f, float offsetY = 0.0f, float spacing = 0.0f,
-			float strikeThroughOffset = 0.0f, float underlineOffset = 0.0f);
+			float strikeThroughOffset = 0.0f, float underlineOffset = 0.0f, float italicSkewRatio = 0.3f);
 		/// @brief Constructor.
 		/// @param[in] fontDirectory Directory for the icons.
 		/// @param[in] name Font name.
@@ -46,8 +47,9 @@ namespace atres
 		/// @param[in] strikeThroughOffset Vertical offset of strike-through rendering.
 		/// @param[in] underlineOffset Vertical offset of underline rendering.
 		/// @param[in] textureSize The filename texture size.
+		/// @param[in] italicSkewRatio Height ratio of skewing for italic rendering.
 		FontIconMap(chstr fontDirectory, chstr name, float scale, float bearingX, float offsetY, float spacing,
-			float strikeThroughOffset, float underlineOffset, int textureSize);
+			float strikeThroughOffset, float underlineOffset, float italicSkewRatio, int textureSize);
 		/// @brief Destructor.
 		~FontIconMap();
 

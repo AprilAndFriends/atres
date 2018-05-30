@@ -16,6 +16,7 @@ t	- strike-through; parameter (optional): string with hex value for color in RGB
                       parameter (optional): strike-through thickness multiplier
 u	- underline; parameter (optional): string with hex value for color in RGB or RGBA
                  parameter (optional): underline thickness multiplier
+l	- italic
 c	- color change; parameter: string with hex value for color in RGB
 f	- font change; parameter: string of the font name definition including optional scale factor
 i	- icon; parameter: string of the icon font name definition including optional scale factor
@@ -32,6 +33,7 @@ The color of the word at the end is [c:00FF00]green[/c].
 Press [i:buttons]x_button[/i] to delete "C:\Windows\system32".
 This [u:FFFF00,2]underline[/u] is yellow and 2 pixels thick.
 This [t:,3]strike-through[/t] is 3 pixels thick, but uses the text color.
+[l]Italic[/l] text also [l]works[/l].
 
 
 Notes:
@@ -50,3 +52,5 @@ Notes:
 - Nesting "icon" tags is not allowed.
 - When using b and specifying only a border-thickness multiplier, the comma character "," is still
   mandatory.
+- When using [l] for italic, keep in mind that there is no way to insert non-italic text within
+  italic text.

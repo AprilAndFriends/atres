@@ -128,6 +128,7 @@ namespace atres
 		this->_internalDescender = 0.0f;
 		this->_strikeThroughOffset = 0.0f;
 		this->_underlineOffset = 0.0f;
+		this->_italicSkewRatio = 0.3f;
 		this->_fontScale = 1.0f;
 		this->_fontBaseScale = 1.0f;
 		this->_iconFontScale = 1.0f;
@@ -147,6 +148,7 @@ namespace atres
 		this->_underlineActive = false;
 		this->_underlineThickness = 1.0f;
 		this->_textUnderlineThickness = 1.0f;
+		this->_italicActive = false;
 		this->_alpha = -1;
 		// cache
 		this->cacheText = new Cache<CacheEntryText>();
@@ -387,11 +389,6 @@ namespace atres
 			}
 		}
 		return font;
-	}
-	
-	void Renderer::addColor(chstr key, chstr value)
-	{
-		april::addSymbolicColor(key, value);
 	}
 	
 	void Renderer::_updateCache()
@@ -785,6 +782,7 @@ namespace atres
 		this->_internalDescender = 0.0f;
 		this->_strikeThroughOffset = 0.0f;
 		this->_underlineOffset = 0.0f;
+		this->_italicSkewRatio = 0.3f;
 		this->_fontScale = 1.0f;
 		this->_fontBaseScale = 1.0f;
 		this->_iconFontScale = 1.0f;
@@ -803,6 +801,7 @@ namespace atres
 		this->_underlineActive = false;
 		this->_underlineThickness = 1.0f;
 		this->_textUnderlineThickness = 1.0f;
+		this->_italicActive = false;
 	}
 
 	void Renderer::_initializeRenderSequences()
@@ -842,6 +841,7 @@ namespace atres
 		this->_underlineActive = false;
 		this->_underlineThickness = 1.0f;
 		this->_textUnderlineThickness = 1.0f;
+		this->_italicActive = false;
 		this->_alpha = -1;
 	}
 
@@ -898,6 +898,7 @@ namespace atres
 						this->_internalDescender = this->_font->getInternalDescender();
 						this->_strikeThroughOffset = this->_font->getStrikeThroughOffset();
 						this->_underlineOffset = this->_font->getUnderlineOffset();
+						this->_italicSkewRatio = this->_font->getItalicSkewRatio();
 					}
 				}
 				else
@@ -933,6 +934,7 @@ namespace atres
 						this->_internalDescender = this->_iconFont->getInternalDescender();
 						this->_strikeThroughOffset = this->_iconFont->getStrikeThroughOffset();
 						this->_underlineOffset = this->_iconFont->getUnderlineOffset();
+						this->_italicSkewRatio = this->_iconFont->getItalicSkewRatio();
 					}
 					this->_fontName = this->_nextTag.data;
 					this->_fontIconName = this->_nextTag.consumedData;
@@ -1115,6 +1117,10 @@ namespace atres
 						this->_underlineColor.set(this->_hex);
 					}
 				}
+				else if (this->_currentTag.type == FormatTag::Type::Italic)
+				{
+					this->_italicActive = false;
+				}
 			}
 			else
 			{
@@ -1134,6 +1140,7 @@ namespace atres
 							this->_internalDescender = this->_font->getInternalDescender();
 							this->_strikeThroughOffset = this->_font->getStrikeThroughOffset();
 							this->_underlineOffset = this->_font->getUnderlineOffset();
+							this->_italicSkewRatio = this->_font->getItalicSkewRatio();
 						}
 					}
 					else
@@ -1169,6 +1176,7 @@ namespace atres
 							this->_internalDescender = this->_iconFont->getInternalDescender();
 							this->_strikeThroughOffset = this->_font->getStrikeThroughOffset();
 							this->_underlineOffset = this->_font->getUnderlineOffset();
+							this->_italicSkewRatio = this->_font->getItalicSkewRatio();
 						}
 						this->_fontName = this->_nextTag.data;
 						this->_fontIconName = this->_nextTag.consumedData;
@@ -1351,6 +1359,12 @@ namespace atres
 						{
 							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
+					}
+					else if (this->_nextTag.type == FormatTag::Type::Italic)
+					{
+						this->_currentTag.type = FormatTag::Type::Italic;
+						this->_stack += this->_currentTag;
+						this->_italicActive = true;
 					}
 				}
 				else if (this->_nextTag.type == FormatTag::Type::IgnoreFormatting)

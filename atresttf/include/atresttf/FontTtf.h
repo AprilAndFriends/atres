@@ -62,8 +62,9 @@ namespace atresttf
 		/// @param[in] descender Font descender value.
 		/// @param[in] strikeThroughOffset Vertical offset for strike-through.
 		/// @param[in] underlineOffset Vertical offset for underline.
+		/// @param[in] italicSkewRatio Height ratio of skewing for italic rendering.
 		/// @param[in] loadBasicAscii Whether to pre-load the basic ASCII range of characters.
-		FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, bool loadBasicAscii);
+		FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, float italicSkewRatio, bool loadBasicAscii);
 		/// @brief Constructor.
 		/// @param[in] fontFilename Font filename.
 		/// @param[in] name Font name.
@@ -73,9 +74,10 @@ namespace atresttf
 		/// @param[in] descender Font descender value.
 		/// @param[in] strikeThroughOffset Vertical offset for strike-through.
 		/// @param[in] underlineOffset Vertical offset for underline.
+		/// @param[in] italicSkewRatio Height ratio of skewing for italic rendering.
 		/// @param[in] loadBasicAscii Whether to pre-load the basic ASCII range of characters.
 		/// @param[in] textureSize The filename texture size.
-		FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, bool loadBasicAscii, int textureSize);
+		FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, float italicSkewRatio, bool loadBasicAscii, int textureSize);
 		/// @brief Constructor.
 		/// @param[in] stream Font file data stream.
 		/// @param[in] name Font name.
@@ -102,8 +104,9 @@ namespace atresttf
 		/// @param[in] descender Font descender value.
 		/// @param[in] strikeThroughOffset Vertical offset for strike-through.
 		/// @param[in] underlineOffset Vertical offset for underline.
+		/// @param[in] italicSkewRatio Height ratio of skewing for italic rendering.
 		/// @param[in] loadBasicAscii Whether to pre-load the basic ASCII range of characters.
-		FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, bool loadBasicAscii);
+		FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, float italicSkewRatio, bool loadBasicAscii);
 		/// @brief Constructor.
 		/// @param[in] stream Font file data stream.
 		/// @param[in] name Font name.
@@ -114,8 +117,9 @@ namespace atresttf
 		/// @param[in] strikeThroughOffset Vertical offset for strike-through.
 		/// @param[in] underlineOffset Vertical offset for underline.
 		/// @param[in] loadBasicAscii Whether to pre-load the basic ASCII range of characters.
+		/// @param[in] italicSkewRatio Height ratio of skewing for italic rendering.
 		/// @param[in] textureSize The filename texture size.
-		FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, bool loadBasicAscii, int textureSize);
+		FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset, float underlineOffset, float italicSkewRatio, bool loadBasicAscii, int textureSize);
 		/// @brief Destructor.
 		~FontTtf();
 

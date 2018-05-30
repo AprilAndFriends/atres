@@ -86,6 +86,8 @@ namespace atres
 		/// @brief Gets the vertical underline offset of the font.
 		/// @return The vertical underline offset of the font.
 		float getUnderlineOffset() const;
+		/// @brief The height ratio of skewing for italic rendering of the font.
+		HL_DEFINE_GET(float, italicSkewRatio, ItalicSkewRatio);
 		/// @brief Gets the border rendering mode.
 		HL_DEFINE_GET(BorderMode, borderMode, BorderMode);
 		/// @brief Sets the border rendering mode.
@@ -219,6 +221,8 @@ namespace atres
 		float strikeThroughOffset;
 		/// @brief Font vertical underline offset.
 		float underlineOffset;
+		/// @brief The height ratio of skewing for italic rendering.
+		float italicSkewRatio;
 		/// @brief Whether font is loaded.
 		bool loaded;
 		/// @brief Font border rendering mode.

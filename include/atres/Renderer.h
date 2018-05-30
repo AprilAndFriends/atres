@@ -135,19 +135,6 @@ namespace atres
 
 		void clearCache();
 
-		HL_DEPRECATED("Deprecated API. Use april::getSymbolicColor() instead.")
-			void addColor(chstr key, chstr value);
-		HL_DEPRECATED("Deprecated API. Use isGlobalOffsets() instead.")
-			bool getGlobalOffsets() { return this->isGlobalOffsets(); }
-		HL_DEPRECATED("Deprecated API. Use isUseLegacyLineBreakParsing() instead.")
-			bool getUseLegacyLineBreakParsing() { return this->isUseLegacyLineBreakParsing(); }
-		HL_DEPRECATED("Deprecated API. Use isUseIdeographWords() instead.")
-			bool getUseIdeographWords() { return this->isUseIdeographWords(); }
-		HL_DEPRECATED("Deprecated API. Use getDefaultFontName() instead.")
-			hstr getDefaultFont() const { return this->getDefaultFontName(); }
-		HL_DEPRECATED("Deprecated API. Use setDefaultFontName() instead.")
-			void setDefaultFont(chstr value) { this->setDefaultFontName(value); }
-
 	protected:
 		hmap<hstr, Font*> fonts;
 		Font* defaultFont;
@@ -207,6 +194,7 @@ namespace atres
 		float _internalDescender;
 		float _strikeThroughOffset;
 		float _underlineOffset;
+		float _italicSkewRatio;
 		float _fontScale;
 		float _fontBaseScale;
 		float _iconFontScale;
@@ -253,6 +241,7 @@ namespace atres
 		bool _underlineActive;
 		float _underlineThickness;
 		float _textUnderlineThickness;
+		bool _italicActive;
 		int _alpha;
 
 		harray<RenderLine> _lines;

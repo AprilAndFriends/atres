@@ -33,7 +33,7 @@ namespace atres
 	Font::BorderMode Font::defaultBorderMode = Font::BorderMode::Software;
 
 	Font::Font(chstr name) : height(0.0f), scale(1.0f), baseScale(1.0f), lineHeight(0.0f), descender(0.0f), internalDescender(0.0f),
-		strikeThroughOffset(0.0f), underlineOffset(0.0f), loaded(false), borderMode(Font::defaultBorderMode)
+		strikeThroughOffset(0.0f), underlineOffset(0.0f), italicSkewRatio(0.3f), loaded(false), borderMode(Font::defaultBorderMode)
 	{
 		this->name = name;
 	}
@@ -128,6 +128,11 @@ namespace atres
 		if (line.startsWith("UnderlineOffset="))
 		{
 			this->underlineOffset = (float)line.replaced("UnderlineOffset=", "");
+			return true;
+		}
+		if (line.startsWith("ItalicSkewRatio="))
+		{
+			this->underlineOffset = (float)line.replaced("ItalicSkewRatio=", "");
 			return true;
 		}
 		return false;
