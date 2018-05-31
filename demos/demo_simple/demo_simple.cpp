@@ -60,15 +60,15 @@
 #define TEXT_6 "This is [c:FFFF00][t:FF0000]a [b=007FFF,2]strike-[i:icon_font]blue[/i]-[c:00FF00]through[/c]\ntest[/b][/t] [t]an[/t][/c][t]d[/t] " \
 	"this[u:,4]\nis an [s=007FFF,2,2]under[c:FF0000]line[/c]\nte[/s]st[/u]."
 
-grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
-grect viewport(0.0f, 0.0f, 1024.0f, 768.0f);
-grect textArea0(60.0f, 24.0f, 640.0f, 64.0f);
-grect textArea1(70.0f, 144.0f, 864.0f, 32.0f);
-grect textArea2(120.0f, 400.0f, 600.0f, 128.0f);
-grect textArea3(80.0f, 550.0f, 360.0f, 184.0f);
-grect textArea4(768.0f, 200.0f, 160.0f, 384.0f);
-grect textArea5(700.0f, 600.0f, 240.0f, 76.0f);
-grect textArea6(60.0f, 200.0f, 400.0f, 160.0f);
+grectf drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+grectf viewport(0.0f, 0.0f, 1024.0f, 768.0f);
+grectf textArea0(60.0f, 24.0f, 640.0f, 64.0f);
+grectf textArea1(70.0f, 144.0f, 864.0f, 32.0f);
+grectf textArea2(120.0f, 400.0f, 600.0f, 128.0f);
+grectf textArea3(80.0f, 550.0f, 360.0f, 184.0f);
+grectf textArea4(768.0f, 200.0f, 160.0f, 384.0f);
+grectf textArea5(700.0f, 600.0f, 240.0f, 76.0f);
+grectf textArea6(60.0f, 200.0f, 400.0f, 160.0f);
 april::Color backgroundColor = april::Color(0, 0, 0, 128);
 
 class KeyDelegate : public april::KeyDelegate
@@ -101,7 +101,7 @@ static KeyDelegate* keyDelegate = NULL;
 class MouseDelegate : public april::MouseDelegate
 {
 public:
-	gvec2 offset;
+	gvec2f offset;
 
 	MouseDelegate() : april::MouseDelegate(), clicked(false)
 	{
@@ -136,7 +136,7 @@ public:
 
 protected:
 	bool clicked;
-	gvec2 position;
+	gvec2f position;
 
 };
 
