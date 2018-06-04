@@ -1661,7 +1661,7 @@ namespace atres
 						}
 						if (this->_italicActive)
 						{
-							aw += this->_icon->rect.h * this->_italicSkewRatio * this->_scale;
+							aw += this->_lineHeight * this->_italicSkewRatio;
 						}
 						addW = hmax(ax, aw);
 						charHeight = (this->_iconFontOffsetY + this->_icon->rect.h) * this->_scale;
@@ -1742,7 +1742,7 @@ namespace atres
 					}
 					if (this->_italicActive)
 					{
-						aw += this->_character->rect.h * this->_italicSkewRatio * this->_scale;
+						aw += this->_lineHeight * this->_italicSkewRatio;
 					}
 					addW = hmax(ax, aw);
 					charHeight = (this->_character->offsetY + this->_character->bearing.y + this->_character->rect.h) * this->_scale;
@@ -1997,7 +1997,6 @@ namespace atres
 						this->_borderFontThickness = this->_borderThickness;
 						this->_strikeThroughThickness = this->strikeThroughThickness * this->_textStrikeThroughThickness;
 						this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
-						italicSkewOffset = (this->_italicActive ? this->_lineHeight * this->_italicSkewRatio : 0.0f);
 						area = this->_word.rect;
 						area.x += this->_word.charXs[index];
 						characterX = area.x;
@@ -2006,6 +2005,7 @@ namespace atres
 						area.h = this->_icon->rect.h * this->_scale;
 						area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 						area.y += (this->_height - this->_icon->rect.h * this->_scale) * 0.5f;
+						italicSkewOffset = (this->_italicActive ? area.h * this->_italicSkewRatio : 0.0f);
 						drawRect = rect;
 						if (this->_iconFont != NULL)
 						{
@@ -2136,7 +2136,6 @@ namespace atres
 							this->_borderFontThickness = this->_borderThickness / this->_fontBaseScale;
 							this->_strikeThroughThickness = this->strikeThroughThickness * this->_textStrikeThroughThickness;
 							this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
-							italicSkewOffset = (this->_italicActive ? this->_lineHeight * this->_italicSkewRatio : 0.0f);
 							area = this->_word.rect;
 							area.x += this->_word.charXs[index];
 							characterX = area.x;
@@ -2145,6 +2144,7 @@ namespace atres
 							area.h = this->_character->rect.h * this->_scale;
 							area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 							drawRect = rect;
+							italicSkewOffset = (this->_italicActive ? area.h * this->_italicSkewRatio : 0.0f);
 							// optimization, don't render spaces, but do render their strike-throughs and underlines
 							if (this->_font != NULL && (this->_code != UNICODE_CHAR_SPACE && this->_code != UNICODE_CHAR_ZERO_WIDTH_SPACE || this->_strikeThroughActive || this->_underlineActive))
 							{
