@@ -127,7 +127,7 @@ namespace atres
 		~RenderSequence();
 
 		/// @note Not thread-safe!
-		void addRenderRectangle(const RenderRectangle& rect);
+		void addRenderRectangle(const RenderRectangle& rect, float italicSkewOffset);
 
 	};
 	

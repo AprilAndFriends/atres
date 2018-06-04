@@ -535,6 +535,9 @@ namespace atres
 				case 'u':
 					tag.type = FormatTag::Type::Underline;
 					break;
+				case 'l':
+					tag.type = FormatTag::Type::Italic;
+					break;
 				case '-': // ignore formattting from here on
 					tag.type = FormatTag::Type::IgnoreFormatting;
 					ignoreFormatting = true;
@@ -881,6 +884,10 @@ namespace atres
 				{
 					this->_textScale = this->_currentTag.data;
 				}
+				else if (this->_currentTag.type == FormatTag::Type::Italic)
+				{
+					this->_italicActive = false;
+				}
 			}
 			else if (this->_nextTag.type == FormatTag::Type::Font)
 			{
@@ -960,6 +967,12 @@ namespace atres
 				this->_currentTag.data = this->_textScale;
 				this->_stack += this->_currentTag;
 				this->_textScale = this->_nextTag.data;
+			}
+			else if (this->_nextTag.type == FormatTag::Type::Italic)
+			{
+				this->_currentTag.type = FormatTag::Type::Italic;
+				this->_stack += this->_currentTag;
+				this->_italicActive = true;
 			}
 			else
 			{
@@ -1360,12 +1373,12 @@ namespace atres
 							hlog::warnf(logTag, "Color '%s' does not exist!", this->_hex.cStr());
 						}
 					}
-					else if (this->_nextTag.type == FormatTag::Type::Italic)
-					{
-						this->_currentTag.type = FormatTag::Type::Italic;
-						this->_stack += this->_currentTag;
-						this->_italicActive = true;
-					}
+				}
+				else if (this->_nextTag.type == FormatTag::Type::Italic)
+				{
+					this->_currentTag.type = FormatTag::Type::Italic;
+					this->_stack += this->_currentTag;
+					this->_italicActive = true;
 				}
 				else if (this->_nextTag.type == FormatTag::Type::IgnoreFormatting)
 				{
@@ -1646,6 +1659,10 @@ namespace atres
 						{
 							aw = (this->_icon->rect.w + this->_iconFontBearingX) * this->_scale;
 						}
+						if (this->_italicActive)
+						{
+							aw += this->_icon->rect.h * this->_italicSkewRatio * this->_scale;
+						}
 						addW = hmax(ax, aw);
 						charHeight = (this->_iconFontOffsetY + this->_icon->rect.h) * this->_scale;
 					}
@@ -1722,6 +1739,10 @@ namespace atres
 					{
 						charX += this->_character->bearing.x * this->_scale;
 						aw = (this->_character->rect.w + kerning) * this->_scale;
+					}
+					if (this->_italicActive)
+					{
+						aw += this->_character->rect.h * this->_italicSkewRatio * this->_scale;
 					}
 					addW = hmax(ax, aw);
 					charHeight = (this->_character->offsetY + this->_character->bearing.y + this->_character->rect.h) * this->_scale;
@@ -1951,6 +1972,7 @@ namespace atres
 		grectf drawRect;
 		gvec2f rectSize;
 		int index = 0;
+		float italicSkewOffset = 0.0f;
 		// basic text with borders, shadows and icons
 		for_iter (j, 0, this->_lines.size())
 		{
@@ -1975,6 +1997,7 @@ namespace atres
 						this->_borderFontThickness = this->_borderThickness;
 						this->_strikeThroughThickness = this->strikeThroughThickness * this->_textStrikeThroughThickness;
 						this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
+						italicSkewOffset = (this->_italicActive ? this->_lineHeight * this->_italicSkewRatio : 0.0f);
 						area = this->_word.rect;
 						area.x += this->_word.charXs[index];
 						characterX = area.x;
@@ -1989,33 +2012,33 @@ namespace atres
 							this->_renderRect = this->_iconFont->makeRenderRectangle(drawRect, area, this->_iconName);
 							if (this->_renderRect.src.w > 0.0f && this->_renderRect.src.h > 0.0f && this->_renderRect.dest.w > 0.0f && this->_renderRect.dest.h > 0.0f)
 							{
-								this->_textSequence.addRenderRectangle(this->_renderRect);
+								this->_textSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 								switch (this->_effectMode)
 								{
 								case EFFECT_MODE_SHADOW: // shadow
 									this->_renderRect.dest += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
-									this->_shadowSequence.addRenderRectangle(this->_renderRect);
+									this->_shadowSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 									break;
 								case EFFECT_MODE_BORDER: // border
 									if (this->_iconFont->getBorderMode() == Font::BorderMode::Software || !this->_iconFont->hasBorderIcon(this->_iconName, this->_borderFontThickness))
 									{
 										currentRect = this->_renderRect;
 										this->_renderRect.dest = currentRect.dest + gvec2f(-this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
-										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 										this->_renderRect.dest = currentRect.dest + gvec2f(this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
-										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 										this->_renderRect.dest = currentRect.dest + gvec2f(-this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
-										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 										this->_renderRect.dest = currentRect.dest + gvec2f(this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
-										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 										this->_renderRect.dest = currentRect.dest + gvec2f(0.0f, -this->_borderThickness);
-										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 										this->_renderRect.dest = currentRect.dest + gvec2f(-this->_borderThickness, 0.0f);
-										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 										this->_renderRect.dest = currentRect.dest + gvec2f(this->_borderThickness, 0.0f);
-										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 										this->_renderRect.dest = currentRect.dest + gvec2f(0.0f, this->_borderThickness);
-										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 										this->_borderSequence.multiplyAlpha = true;
 									}
 									else
@@ -2034,7 +2057,7 @@ namespace atres
 										drawRect.w += rectSize.x * 2.0f;
 										drawRect.h += rectSize.y * 2.0f;
 										this->_renderRect = this->_iconFont->makeBorderRenderRectangle(drawRect, area, this->_iconName, this->_borderFontThickness);
-										this->_borderSequence.addRenderRectangle(this->_renderRect);
+										this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 										this->_borderSequence.texture = this->_iconFont->getBorderTexture(this->_iconName, this->_borderFontThickness);
 										this->_borderSequence.multiplyAlpha = false;
 									}
@@ -2113,6 +2136,7 @@ namespace atres
 							this->_borderFontThickness = this->_borderThickness / this->_fontBaseScale;
 							this->_strikeThroughThickness = this->strikeThroughThickness * this->_textStrikeThroughThickness;
 							this->_underlineThickness = this->underlineThickness * this->_textUnderlineThickness;
+							italicSkewOffset = (this->_italicActive ? this->_lineHeight * this->_italicSkewRatio : 0.0f);
 							area = this->_word.rect;
 							area.x += this->_word.charXs[index];
 							characterX = area.x;
@@ -2130,33 +2154,33 @@ namespace atres
 									if (this->_code != UNICODE_CHAR_SPACE && this->_code != UNICODE_CHAR_ZERO_WIDTH_SPACE)
 									{
 										this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
-										this->_textSequence.addRenderRectangle(this->_renderRect);
+										this->_textSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 										switch (this->_effectMode)
 										{
 										case EFFECT_MODE_SHADOW: // shadow
 											this->_renderRect.dest += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
-											this->_shadowSequence.addRenderRectangle(this->_renderRect);
+											this->_shadowSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 											break;
 										case EFFECT_MODE_BORDER: // border
 											if (this->_font->getBorderMode() == Font::BorderMode::Software || !this->_font->hasBorderCharacter(this->_code, this->_borderFontThickness))
 											{
 												currentRect = this->_renderRect;
 												this->_renderRect.dest = currentRect.dest + gvec2f(-this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
-												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 												this->_renderRect.dest = currentRect.dest + gvec2f(this->_borderThickness * sqrt05, -this->_borderThickness * sqrt05);
-												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 												this->_renderRect.dest = currentRect.dest + gvec2f(-this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
-												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 												this->_renderRect.dest = currentRect.dest + gvec2f(this->_borderThickness * sqrt05, this->_borderThickness * sqrt05);
-												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 												this->_renderRect.dest = currentRect.dest + gvec2f(0.0f, -this->_borderThickness);
-												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 												this->_renderRect.dest = currentRect.dest + gvec2f(-this->_borderThickness, 0.0f);
-												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 												this->_renderRect.dest = currentRect.dest + gvec2f(this->_borderThickness, 0.0f);
-												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 												this->_renderRect.dest = currentRect.dest + gvec2f(0.0f, this->_borderThickness);
-												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 												this->_borderSequence.multiplyAlpha = true;
 											}
 											else
@@ -2175,7 +2199,7 @@ namespace atres
 												drawRect.h += rectSize.y * 2.0f;
 												this->_renderRect = this->_font->makeBorderRenderRectangle(drawRect, area, this->_code, this->_borderFontThickness);
 												this->_renderRect.dest.y -= this->_character->bearing.y * this->_scale;
-												this->_borderSequence.addRenderRectangle(this->_renderRect);
+												this->_borderSequence.addRenderRectangle(this->_renderRect, italicSkewOffset);
 												this->_borderSequence.texture = this->_font->getBorderTexture(this->_code, this->_borderFontThickness);
 												this->_borderSequence.multiplyAlpha = false;
 											}

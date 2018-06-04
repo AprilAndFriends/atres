@@ -48,7 +48,7 @@
 #endif
 
 #define TEXT_0 "This is blasphemy.[i:icon_font]red[/i]"
-#define TEXT_1 "This is [i:icon_font]xmen[/i]madness."
+#define TEXT_1 "This is [i:icon_font]xmen[/i] [l]italic [i:icon_font]red[/i][/l] madness."
 #define TEXT_2 "No. [i:icon_font]neon[/i] This is Sparta!"
 #define TEXT_3 "This []]is] a [b=7F00FF][0]test [n]that[/n] [f:test]is[/f] [x=0.5]supp[/x]osed[/b] " \
 	"[b][c=fake]to[/c][/b]   [c=FFFFFF7F]show[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s]X_horz_formatting " \

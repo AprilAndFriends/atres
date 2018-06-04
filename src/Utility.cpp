@@ -122,7 +122,7 @@ namespace atres
 	{
 	}
 
-	void RenderSequence::addRenderRectangle(const RenderRectangle& rect)
+	void RenderSequence::addRenderRectangle(const RenderRectangle& rect, float italicSkewOffset)
 	{
 		_tVertices[0].x = _tVertices[2].x = _tVertices[4].x = rect.dest.left();
 		_tVertices[1].x = _tVertices[3].x = _tVertices[5].x = rect.dest.right();
@@ -132,6 +132,12 @@ namespace atres
 		_tVertices[1].u = _tVertices[3].u = _tVertices[5].u = rect.src.right();
 		_tVertices[0].v = _tVertices[1].v = _tVertices[3].v = rect.src.top();
 		_tVertices[2].v = _tVertices[4].v = _tVertices[5].v = rect.src.bottom();
+		if (italicSkewOffset > 0.0f)
+		{
+			_tVertices[0].x += italicSkewOffset;
+			_tVertices[1].x += italicSkewOffset;
+			_tVertices[3].x += italicSkewOffset;
+		}
 		this->vertices.add(_tVertices, 6);
 	}
 	
