@@ -146,9 +146,8 @@
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#ab88ef5390de9a8470cfec72cb31f3493"><param name="Name" value="_updateCache"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a74cbe48f7e88ef4ef9f9ec5e864d37b0"><param name="Name" value="_updateLiningSequenceSwitch"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a9211e810b98847093968e7edbbd7c79f"><param name="Name" value="addColor"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_render_lining_sequence.html#af74726d26056af6801495e0ee915e80a"><param name="Name" value="addRectangle"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_render_sequence.html#ac6679d89c89de49ed72155453b9be9cd"><param name="Name" value="addRenderRectangle"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_render_sequence.html#a3736a4ee53862f6a6300c175c7c2edad"><param name="Name" value="addRenderRectangle"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_symbol_definition.html#a691d123aed9d09be125dbd210fdcf2c2"><param name="Name" value="advance"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_symbol_definition.html#a691d123aed9d09be125dbd210fdcf2c2"><param name="Name" value="atres::CharacterDefinition"></OBJECT>
@@ -323,6 +322,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#a346638f51dff7a2ac61ad5ae3c73ca52"><param name="Name" value="HL_DEFINE_SET"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#ab689eaa01448995f1f5626c04205b944"><param name="Name" value="icons"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#af35fec4c6909e6512c34fcf5f49bbd99"><param name="Name" value="internalDescender"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#a81e9d4a95e53732b9f6079f746c564c0"><param name="Name" value="italicSkewRatio"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#ad38d4131c06d16d5c7802bdad94bc63f"><param name="Name" value="lineHeight"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#ae1105c8a9589d5ce498d727b448564a9"><param name="Name" value="load"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#ad2c2dd706e4298dc592cda9b9480a5a8"><param name="Name" value="loadBasicAsciiBorderCharacters"></OBJECT>
@@ -383,6 +383,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_bitmap.html#a346638f51dff7a2ac61ad5ae3c73ca52"><param name="Name" value="HL_DEFINE_SET"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_bitmap.html#ab689eaa01448995f1f5626c04205b944"><param name="Name" value="icons"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_bitmap.html#af35fec4c6909e6512c34fcf5f49bbd99"><param name="Name" value="internalDescender"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_bitmap.html#a81e9d4a95e53732b9f6079f746c564c0"><param name="Name" value="italicSkewRatio"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_bitmap.html#ad38d4131c06d16d5c7802bdad94bc63f"><param name="Name" value="lineHeight"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_bitmap.html#ae1105c8a9589d5ce498d727b448564a9"><param name="Name" value="load"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_bitmap.html#ad2c2dd706e4298dc592cda9b9480a5a8"><param name="Name" value="loadBasicAsciiBorderCharacters"></OBJECT>
@@ -468,6 +469,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_dynamic.html#a346638f51dff7a2ac61ad5ae3c73ca52"><param name="Name" value="HL_DEFINE_SET"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_dynamic.html#ab689eaa01448995f1f5626c04205b944"><param name="Name" value="icons"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_dynamic.html#af35fec4c6909e6512c34fcf5f49bbd99"><param name="Name" value="internalDescender"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_dynamic.html#a81e9d4a95e53732b9f6079f746c564c0"><param name="Name" value="italicSkewRatio"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_dynamic.html#ad38d4131c06d16d5c7802bdad94bc63f"><param name="Name" value="lineHeight"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_dynamic.html#ae1105c8a9589d5ce498d727b448564a9"><param name="Name" value="load"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_dynamic.html#a7f18624e0cc608eb58f1054fd4419e10"><param name="Name" value="loadBasicAsciiBorderCharacters"></OBJECT>
@@ -519,7 +521,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#ae309bef64b423e059e3374cdd715a733"><param name="Name" value="defaultBorderMode"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#a24e1022ab285d56d02ffe91ac1055496"><param name="Name" value="descender"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#a17baaa615227a0292bffa3d8b22148bd"><param name="Name" value="fontDirectory"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#aaf5d9f5b0e588057201688fd6eb09a4b"><param name="Name" value="FontIconMap"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#afead767936b0a9f1606b7333a974fe0b"><param name="Name" value="FontIconMap"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#ac1c4437966b05316b14a7244efbb1ecc"><param name="Name" value="getBorderCharacter"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#a207eb5ace01f90e341ded3043f8d288c"><param name="Name" value="getBorderCharacters"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#a8a32662a3cb698d0ad257f90dacbb1bb"><param name="Name" value="getBorderIcon"></OBJECT>
@@ -548,6 +550,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#a346638f51dff7a2ac61ad5ae3c73ca52"><param name="Name" value="HL_DEFINE_SET"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#ab689eaa01448995f1f5626c04205b944"><param name="Name" value="icons"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#af35fec4c6909e6512c34fcf5f49bbd99"><param name="Name" value="internalDescender"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#a81e9d4a95e53732b9f6079f746c564c0"><param name="Name" value="italicSkewRatio"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#ad38d4131c06d16d5c7802bdad94bc63f"><param name="Name" value="lineHeight"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#ae1105c8a9589d5ce498d727b448564a9"><param name="Name" value="load"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#a7f18624e0cc608eb58f1054fd4419e10"><param name="Name" value="loadBasicAsciiBorderCharacters"></OBJECT>
@@ -587,6 +590,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_format_tag_1_1_type.html#aae08f78b7cefaa7d57e298f4dad00cd2"><param name="Name" value="hasValueFor"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_format_tag_1_1_type.html#a9e24cc2274527d0460879ddcf375c1e2"><param name="Name" value="Icon"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_format_tag_1_1_type.html#a7ba9c6c19c7e7d95bce097bdf4846bbb"><param name="Name" value="IgnoreFormatting"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_format_tag_1_1_type.html#a3f8682e93239adfd24b981bf074b0fa0"><param name="Name" value="Italic"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_format_tag_1_1_type.html#a6205b1ead40582fcaba11c3f6294dea7"><param name="Name" value="next"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_format_tag_1_1_type.html#a086aa2f622a0c974a47d1189abf3e1e4"><param name="Name" value="NoEffect"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_format_tag_1_1_type.html#a3db9554ea20757422d74e35a79150dba"><param name="Name" value="operator!="></OBJECT>
@@ -666,7 +670,6 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#ab7d6a44911e244abcdbdc79deb3e1e11"><param name="Name" value="_processFormatTags"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#ab88ef5390de9a8470cfec72cb31f3493"><param name="Name" value="_updateCache"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a74cbe48f7e88ef4ef9f9ec5e864d37b0"><param name="Name" value="_updateLiningSequenceSwitch"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a9211e810b98847093968e7edbbd7c79f"><param name="Name" value="addColor"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a6a9a025a6eeae4752cf23422048ac08a"><param name="Name" value="analyzeFormatting"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#af10669456e9d2d804ed8c7b548cd90a8"><param name="Name" value="analyzeText"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#afc214dc85fe7ee2c61cf907ae11be10d"><param name="Name" value="borderColor"></OBJECT>
@@ -685,21 +688,17 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a80839c0b148b6a2f956ae3ef9c93e982"><param name="Name" value="drawText"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#aaca346256be13b2fb7a2ea77621e2392"><param name="Name" value="drawTextUnformatted"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#ab6144a05ea6e0f79084f25e6b83d926c"><param name="Name" value="fonts"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a986f5ccc43b8638c757fad745878a8ec"><param name="Name" value="getDefaultFont"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a819eed2c96bbb2f98432ece8b0c0a0f4"><param name="Name" value="getDefaultFontName"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#acc985bb3b5f0acaae5799707ca0f0e23"><param name="Name" value="getFittingText"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a0bc189ccbbce21428e8a9f12427c623b"><param name="Name" value="getFittingTextUnformatted"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a8b68d2f86884646291e1b1044bbfc84b"><param name="Name" value="getFont"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a172500bd1028ac8b4b604e6e73f9557b"><param name="Name" value="getFonts"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#afd61b52decbcbcacc6d9cf1f475120cb"><param name="Name" value="getGlobalOffsets"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a131b1d5310300685de3b866aac57d484"><param name="Name" value="getTextAdvanceX"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a8e3777b5f39743748791b252f91bd703"><param name="Name" value="getTextAdvanceXUnformatted"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a7013d85a86eeecfce0b01b631a6a40a9"><param name="Name" value="getTextHeight"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#ac217b2f4badedc9d4be0ee69c24f725a"><param name="Name" value="getTextHeightUnformatted"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a9eed9c3f2a18e71cd63a234130db61e4"><param name="Name" value="getTextWidth"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#ad05b623169f376ec431fe44e0e7546f9"><param name="Name" value="getTextWidthUnformatted"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a64cccad0de12887cd962666bde61e969"><param name="Name" value="getUseIdeographWords"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a37b1eecbd948327361033ab8df595eef"><param name="Name" value="getUseLegacyLineBreakParsing"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a10288a524eeec7d78a341b5e8578c709"><param name="Name" value="globalOffsets"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a8f82dd3f70cfc88899df0c46963ce2c2"><param name="Name" value="hasFont"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a8e8965b455b569d8e010d5cca6992e56"><param name="Name" value="HL_DEFINE_GET"></OBJECT>
@@ -716,7 +715,6 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#ad27544abbae64d7220fb4e252f33a3d5"><param name="Name" value="setBorderColor"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#ac3a68c1b4727bb4725966253a584b9e7"><param name="Name" value="setBorderThickness"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a8f8c9043d18f63e2729f494ed199f533"><param name="Name" value="setCacheSize"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a743dd7a51b9102108176bbd3b6b983d8"><param name="Name" value="setDefaultFont"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a9eca8363f5a4206b603b7c68f5a73521"><param name="Name" value="setDefaultFontName"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#ac44b7ea3d44ddbe73984ba8d5568d369"><param name="Name" value="setJustifiedDefault"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#ae696d786bb51694a34afa4b26ea58345"><param name="Name" value="setShadowColor"></OBJECT>
@@ -764,7 +762,7 @@
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_render_sequence.html"><param name="Name" value="atres::RenderSequence"></OBJECT>
   <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_render_sequence.html#ac6679d89c89de49ed72155453b9be9cd"><param name="Name" value="addRenderRectangle"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_render_sequence.html#a3736a4ee53862f6a6300c175c7c2edad"><param name="Name" value="addRenderRectangle"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_render_sequence.html#a3dd6fede000488a62a572a4fb6d8183b"><param name="Name" value="color"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_render_sequence.html#a30820adf5d4265469b43ee7006a32466"><param name="Name" value="multiplyAlpha"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_render_sequence.html#ad58edef4270b58cabac22070c1b39384"><param name="Name" value="texture"></OBJECT>
@@ -1006,7 +1004,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#a17baaa615227a0292bffa3d8b22148bd"><param name="Name" value="fontDirectory"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_dynamic.html#a62208702d9da29c2b1faca4595c46f7e"><param name="Name" value="FontDynamic"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_bitmap.html#a96cf68f5377c3fc221340a1ce210c9e6"><param name="Name" value="fontFilename"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#aaf5d9f5b0e588057201688fd6eb09a4b"><param name="Name" value="FontIconMap"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_icon_map.html#afead767936b0a9f1606b7333a974fe0b"><param name="Name" value="FontIconMap"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_cache_entry_basic_text.html#af1df761d2f699daab322d815b83bb803"><param name="Name" value="fontName"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_cache_entry_basic_text.html#af1df761d2f699daab322d815b83bb803"><param name="Name" value="atres::CacheEntryBasicText"></OBJECT>
@@ -1090,7 +1088,6 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#a999ac591fd2df5436b35142def6fc9d8"><param name="Name" value="atres::FontDynamic"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#a999ac591fd2df5436b35142def6fc9d8"><param name="Name" value="atres::FontIconMap"></OBJECT>
   </UL>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a986f5ccc43b8638c757fad745878a8ec"><param name="Name" value="getDefaultFont"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a819eed2c96bbb2f98432ece8b0c0a0f4"><param name="Name" value="getDefaultFontName"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#a117d71714e0dd7b0c160ee8009b6701b"><param name="Name" value="getDescender"></OBJECT>
   <UL>
@@ -1111,7 +1108,6 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a0bc189ccbbce21428e8a9f12427c623b"><param name="Name" value="getFittingTextUnformatted"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a8b68d2f86884646291e1b1044bbfc84b"><param name="Name" value="getFont"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a172500bd1028ac8b4b604e6e73f9557b"><param name="Name" value="getFonts"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#afd61b52decbcbcacc6d9cf1f475120cb"><param name="Name" value="getGlobalOffsets"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#a0331a40cce78545a41b362fd881dd545"><param name="Name" value="getHeight"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#a0331a40cce78545a41b362fd881dd545"><param name="Name" value="atres::Font"></OBJECT>
@@ -1189,8 +1185,6 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#ab8a1db6f48bd5d3eb967e21899d061b9"><param name="Name" value="atres::FontDynamic"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#ab8a1db6f48bd5d3eb967e21899d061b9"><param name="Name" value="atres::FontIconMap"></OBJECT>
   </UL>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a64cccad0de12887cd962666bde61e969"><param name="Name" value="getUseIdeographWords"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a37b1eecbd948327361033ab8df595eef"><param name="Name" value="getUseLegacyLineBreakParsing"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_1_1_border_mode.html#ad2f5b31f1b5cb18c49370c6f82abeebe"><param name="Name" value="getValues"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font_1_1_border_mode.html#ad2f5b31f1b5cb18c49370c6f82abeebe"><param name="Name" value="atres::Font::BorderMode"></OBJECT>
@@ -1326,6 +1320,14 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_horizontal.html#a21d5c3b2e7fbfc558de1585acc81dd01"><param name="Name" value="isRight"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_horizontal.html#af59592cbe365c7d5152ee132b61b0340"><param name="Name" value="isUntrimmed"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_horizontal.html#a0f19d37e063b05aac47d77a97e229119"><param name="Name" value="isWrapped"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_format_tag_1_1_type.html#a3f8682e93239adfd24b981bf074b0fa0"><param name="Name" value="Italic"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#a81e9d4a95e53732b9f6079f746c564c0"><param name="Name" value="italicSkewRatio"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#a81e9d4a95e53732b9f6079f746c564c0"><param name="Name" value="atres::Font"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#a81e9d4a95e53732b9f6079f746c564c0"><param name="Name" value="atres::FontBitmap"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#a81e9d4a95e53732b9f6079f746c564c0"><param name="Name" value="atres::FontDynamic"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_font.html#a81e9d4a95e53732b9f6079f746c564c0"><param name="Name" value="atres::FontIconMap"></OBJECT>
+  </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_horizontal.html#a418fc32daeec6aeb9b15964936e5e01a"><param name="Name" value="Justified"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a8fc5421ad2b0b6ef2f521b38a70f2b37"><param name="Name" value="justifiedDefault"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_horizontal.html#aed6ee0d9cd87c9dfb39ff047bda9e44a"><param name="Name" value="Left"></OBJECT>
@@ -1544,7 +1546,6 @@
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#ac3a68c1b4727bb4725966253a584b9e7"><param name="Name" value="setBorderThickness"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a8f8c9043d18f63e2729f494ed199f533"><param name="Name" value="setCacheSize"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a743dd7a51b9102108176bbd3b6b983d8"><param name="Name" value="setDefaultFont"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#a9eca8363f5a4206b603b7c68f5a73521"><param name="Name" value="setDefaultFontName"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#ac44b7ea3d44ddbe73984ba8d5568d369"><param name="Name" value="setJustifiedDefault"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classatres_1_1_renderer.html#ae696d786bb51694a34afa4b26ea58345"><param name="Name" value="setShadowColor"></OBJECT>
