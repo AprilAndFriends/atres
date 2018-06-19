@@ -6,16 +6,16 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#ifndef _ANDROID
-#ifndef _WINRT
-#define RESOURCE_PATH "../../demos/media/"
-#else
-#define RESOURCE_PATH "media/"
-#endif
+#ifndef __ANDROID__
+	#ifndef _WINRT
+		#define RESOURCE_PATH "../../demos/media/"
+	#else
+		#define RESOURCE_PATH "media/"
+	#endif
 #elif defined(__APPLE__)
-#define RESOURCE_PATH "media/"
+	#define RESOURCE_PATH "media/"
 #else
-#define RESOURCE_PATH "./"
+	#define RESOURCE_PATH "./"
 #endif
 
 //#define _ATRESTTF // uncomment for testing if needed
@@ -236,7 +236,7 @@ void __aprilApplicationInit()
 	updateDelegate->color = april::Color::White;
 	try
 	{
-#if defined(_ANDROID) || defined(_IOS)
+#if defined(__ANDROID__) || defined(_IOS)
 		drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
 		april::init(april::RenderSystemType::Default, april::WindowType::Default);

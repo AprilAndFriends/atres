@@ -159,7 +159,7 @@ namespace atresttf
 #else
 		return "/Library/Fonts";
 #endif
-#elif defined(_ANDROID)
+#elif defined(__ANDROID__)
 		return "/system/fonts";
 #elif defined(_UNIX)
 		return "/usr/share/fonts";
