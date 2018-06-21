@@ -32,7 +32,8 @@
 
 namespace atresttf
 {
-	FontTtf::FontTtf(chstr filename, bool loadBasicAscii) : atres::FontDynamic(filename)
+	FontTtf::FontTtf(chstr filename, bool loadBasicAscii) :
+		atres::FontDynamic(filename)
 	{
 		this->customDescender = false;
 		this->loadBasicAscii = loadBasicAscii;
@@ -56,18 +57,21 @@ namespace atresttf
 		}
 	}
 
-	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii) : atres::FontDynamic(name)
+	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii) :
+		atres::FontDynamic(name)
 	{
 		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii, atres::getTextureSize());
 	}
 	
-	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii, int textureSize) : atres::FontDynamic(name)
+	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii, int textureSize) :
+		atres::FontDynamic(name)
 	{
 		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii, textureSize);
 	}
 
 	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset,
-		float underlineOffset, float italicSkewRatio, bool loadBasicAscii) : atres::FontDynamic(name)
+		float underlineOffset, float italicSkewRatio, bool loadBasicAscii) :
+		atres::FontDynamic(name)
 	{
 		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii, atres::getTextureSize());
 		this->descender = descender;
@@ -78,7 +82,8 @@ namespace atresttf
 	}
 	
 	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset,
-		float underlineOffset, float italicSkewRatio, bool loadBasicAscii, int textureSize) : atres::FontDynamic(name)
+		float underlineOffset, float italicSkewRatio, bool loadBasicAscii, int textureSize) :
+		atres::FontDynamic(name)
 	{
 		this->_setInternalValues(fontFilename, name, height, scale, lineHeight, loadBasicAscii, textureSize);
 		this->descender = descender;
@@ -88,20 +93,23 @@ namespace atresttf
 		this->italicSkewRatio = italicSkewRatio;
 	}
 
-	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii) : atres::FontDynamic(name)
+	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii) :
+		atres::FontDynamic(name)
 	{
 		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii, atres::getTextureSize());
 		this->fontStream.writeRaw(stream);
 	}
 
-	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii, int textureSize) : atres::FontDynamic(name)
+	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii, int textureSize) :
+		atres::FontDynamic(name)
 	{
 		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii, textureSize);
 		this->fontStream.writeRaw(stream);
 	}
 
 	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset,
-		float underlineOffset, float italicSkewRatio, bool loadBasicAscii) : atres::FontDynamic(name)
+		float underlineOffset, float italicSkewRatio, bool loadBasicAscii) :
+		atres::FontDynamic(name)
 	{
 		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii, atres::getTextureSize());
 		this->descender = descender;
@@ -113,7 +121,8 @@ namespace atresttf
 	}
 
 	FontTtf::FontTtf(hstream& stream, chstr name, float height, float scale, float lineHeight, float descender, float strikeThroughOffset,
-		float underlineOffset, float italicSkewRatio, bool loadBasicAscii, int textureSize) : atres::FontDynamic(name)
+		float underlineOffset, float italicSkewRatio, bool loadBasicAscii, int textureSize) :
+		atres::FontDynamic(name)
 	{
 		this->_setInternalValues("", name, height, scale, lineHeight, loadBasicAscii, textureSize);
 		this->descender = descender;

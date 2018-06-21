@@ -103,8 +103,11 @@ namespace atres
 
 	Renderer* renderer = NULL;
 
-	Renderer::Renderer() : _characters(_dummyCharacters), _dummyCharacters(hmap<unsigned int, CharacterDefinition*>()),
-		_icons(_dummyIcons), _dummyIcons(hmap<hstr, IconDefinition*>())
+	Renderer::Renderer() :
+		_characters(_dummyCharacters),
+		_dummyCharacters(hmap<unsigned int, CharacterDefinition*>()),
+		_icons(_dummyIcons),
+		_dummyIcons(hmap<hstr, IconDefinition*>())
 	{
 		// init
 		this->shadowOffset.set(1.0f, 1.0f);

@@ -18,7 +18,8 @@
 
 namespace atres
 {
-	FontBitmap::FontBitmap(chstr filename) : Font(filename)
+	FontBitmap::FontBitmap(chstr filename) :
+		Font(filename)
 	{
 		this->fontFilename = filename;
 	}

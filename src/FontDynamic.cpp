@@ -32,12 +32,14 @@ namespace atres
 		delete this->image;
 	}
 
-	FontDynamic::FontDynamic(chstr name) : Font(name)
+	FontDynamic::FontDynamic(chstr name) :
+		Font(name)
 	{
 		this->textureSize = atres::getTextureSize();
 	}
 
-	FontDynamic::FontDynamic(chstr name, int textureSize) : Font(name)
+	FontDynamic::FontDynamic(chstr name, int textureSize) :
+		Font(name)
 	{
 		this->textureSize = textureSize;
 	}

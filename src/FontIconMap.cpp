@@ -17,7 +17,8 @@
 namespace atres
 {
 	FontIconMap::FontIconMap(chstr fontDirectory, chstr name, float scale, float bearingX, float offsetY,
-		float spacing, float strikeThroughOffset, float underlineOffset, float italicSkewRatio) : FontDynamic(name)
+		float spacing, float strikeThroughOffset, float underlineOffset, float italicSkewRatio) :
+		FontDynamic(name)
 	{
 		this->fontDirectory = fontDirectory;
 		this->name = name;
@@ -34,7 +35,8 @@ namespace atres
 	}
 
 	FontIconMap::FontIconMap(chstr fontDirectory, chstr name, float scale, float bearingX, float offsetY,
-		float spacing, float strikeThroughOffset, float underlineOffset, float italicSkewRatio, int textureSize) : FontDynamic(name)
+		float spacing, float strikeThroughOffset, float underlineOffset, float italicSkewRatio, int textureSize) :
+		FontDynamic(name)
 	{
 		this->fontDirectory = fontDirectory;
 		this->name = name;

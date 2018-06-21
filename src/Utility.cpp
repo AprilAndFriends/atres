@@ -81,7 +81,9 @@ namespace atres
 	{
 	}
 
-	SymbolDefinition::SymbolDefinition() : RectDefinition(), advance(0.0f)
+	SymbolDefinition::SymbolDefinition() :
+		RectDefinition(),
+		advance(0.0f)
 	{
 	}
 
@@ -89,7 +91,9 @@ namespace atres
 	{
 	}
 
-	CharacterDefinition::CharacterDefinition() : SymbolDefinition(), offsetY(0.0f)
+	CharacterDefinition::CharacterDefinition() :
+		SymbolDefinition(),
+		offsetY(0.0f)
 	{
 	}
 
@@ -97,7 +101,8 @@ namespace atres
 	{
 	}
 
-	BorderCharacterDefinition::BorderCharacterDefinition(float borderThickness) : RectDefinition()
+	BorderCharacterDefinition::BorderCharacterDefinition(float borderThickness) :
+		RectDefinition()
 	{
 		this->borderThickness = borderThickness;
 	}
@@ -114,7 +119,9 @@ namespace atres
 	{
 	}
 
-	RenderSequence::RenderSequence() : texture(NULL), multiplyAlpha(false)
+	RenderSequence::RenderSequence() :
+		texture(NULL),
+		multiplyAlpha(false)
 	{
 	}
 
@@ -167,7 +174,13 @@ namespace atres
 		}
 	}
 
-	RenderWord::RenderWord() : start(0), count(0), spaces(0), icon(false), advanceX(0.0f), bearingX(0.0f)
+	RenderWord::RenderWord() :
+		start(0),
+		count(0),
+		spaces(0),
+		icon(false),
+		advanceX(0.0f),
+		bearingX(0.0f)
 	{
 	}
 
@@ -175,7 +188,12 @@ namespace atres
 	{
 	}
 
-	RenderLine::RenderLine() : start(0), count(0), spaces(0), advanceX(0.0f), terminated(false)
+	RenderLine::RenderLine() :
+		start(0),
+		count(0),
+		spaces(0),
+		advanceX(0.0f),
+		terminated(false)
 	{
 	}
 	
@@ -209,7 +227,10 @@ namespace atres
 		HL_ENUM_DEFINE(FormatTag::Type, CloseConsume);
 	));
 
-	FormatTag::FormatTag() : type(Type::Escape), start(0), count(0)
+	FormatTag::FormatTag() :
+		type(Type::Escape),
+		start(0),
+		count(0)
 	{
 	}
 
@@ -217,7 +238,11 @@ namespace atres
 	{
 	}
 
-	TextureContainer::TextureContainer() : texture(NULL), penX(0), penY(0), rowHeight(0)
+	TextureContainer::TextureContainer() :
+		texture(NULL),
+		penX(0),
+		penY(0),
+		rowHeight(0)
 	{
 	}
 
@@ -234,7 +259,8 @@ namespace atres
 		return new TextureContainer();
 	}
 
-	BorderTextureContainer::BorderTextureContainer(float borderThickness) : TextureContainer()
+	BorderTextureContainer::BorderTextureContainer(float borderThickness) :
+		TextureContainer()
 	{
 		this->borderThickness = borderThickness;
 	}
@@ -248,7 +274,9 @@ namespace atres
 		return new BorderTextureContainer(this->borderThickness);
 	}
 
-	CacheEntryBasicText::CacheEntryBasicText() : horizontal(Horizontal::CenterWrapped), vertical(Vertical::Center)
+	CacheEntryBasicText::CacheEntryBasicText() :
+		horizontal(Horizontal::CenterWrapped),
+		vertical(Vertical::Center)
 	{
 	}
 
@@ -314,7 +342,8 @@ namespace atres
 		return result;
 	}
 
-	CacheEntryText::CacheEntryText() : CacheEntryBasicText()
+	CacheEntryText::CacheEntryText() :
+		CacheEntryBasicText()
 	{
 	}
 
@@ -332,7 +361,8 @@ namespace atres
 		return CacheEntryBasicText::operator!=(other);
 	}
 
-	CacheEntryLines::CacheEntryLines() : CacheEntryBasicText()
+	CacheEntryLines::CacheEntryLines() :
+		CacheEntryBasicText()
 	{
 	}
 
