@@ -5,7 +5,6 @@
       <PreprocessorDefinitions>ATRESTTF_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../../include/atresttf;../../../../hltypes/include;../../../../gtypes/include;../../../../april/include;../../../lib/freetype/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
-      <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>

@@ -5,7 +5,7 @@
       <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../../include;../../include/freetype;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
-      <DisableSpecificWarnings>4251;4001;4701;4703;4244;4245;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4001;4701;4703;4244;4245;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>
