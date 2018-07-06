@@ -1609,16 +1609,17 @@ namespace atres
 			chars = 0;
 			charX = 0.0f;
 			charHeight = 0.0f;
-			previousWordWidth = 0.0f;
 			wordWidth = 0.0f;
 			wordBearingX = 0.0f;
 			icon = false;
 			// checking a whole word
 			while (i < actualSize)
 			{
+#ifndef __clang_analyzer__
 				ax = 0.0f;
 				aw = 0.0f;
 				addW = 0.0f;
+#endif
 				previousCode = code;
 				code = text.firstUnicodeChar(i, &byteSize);
 				this->_checkFormatTags(text, i);
