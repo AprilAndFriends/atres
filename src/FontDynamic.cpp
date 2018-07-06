@@ -349,7 +349,7 @@ namespace atres
 		// create first texture
 		if (textureContainers.size() == 0)
 		{
-			textureContainer = textureContainer->createNew();
+			textureContainer = new TextureContainer();
 			textureContainer->texture = this->_createTexture();
 			textureContainers += textureContainer;
 		}
