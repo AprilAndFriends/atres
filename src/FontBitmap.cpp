@@ -97,13 +97,13 @@ namespace atres
 		int textureIndex = 0;
 		foreach (hstr, it, lines)
 		{
-			c = new CharacterDefinition();
-			c->bearing.x = 0.0f;
-			c->bearing.y = 0.0f;
-			c->advance = 0.0f;
 			data = (*it).split(" ", -1, true);
 			if (hbetweenII(data.size(), minAttribute, maxAttribute))
 			{
+				c = new CharacterDefinition();
+				c->bearing.x = 0.0f;
+				c->bearing.y = 0.0f;
+				c->advance = 0.0f;
 				code = (unsigned int)data.removeFirst();
 				if (multiTexture)
 				{
