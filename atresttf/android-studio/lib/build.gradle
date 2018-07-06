@@ -2,3 +2,24 @@ apply plugin: "com.android.library"
 apply from: "../../../../hltypes/android-studio/generic/default.gradle"
 apply from: "../../../../hltypes/android-studio/generic/native.gradle"
 apply from: "../../../../hltypes/android-studio/generic/cpp.gradle"
+
+android {
+	defaultConfig {
+		versionCode 5000
+		versionName "5.0.0"
+	}
+	externalNativeBuild {
+		cmake {
+			path "CMakeLists.txt"
+		}
+	}
+}
+
+dependencies {
+	implementation project(":hltypes")
+	implementation project(":gtypes")
+	implementation project(":april")
+	implementation project(":atres")
+	implementation project(":freetype")
+	implementation fileTree(include: ["*.jar"], dir: "libs")
+}

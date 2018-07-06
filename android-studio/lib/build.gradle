@@ -16,10 +16,8 @@ android {
 }
 
 dependencies {
-	implementation project(":april")
 	implementation project(":hltypes")
 	implementation project(":gtypes")
-	implementation project(":jpeg")
-	implementation project(":png")
+	implementation project(":april")
 	implementation fileTree(include: ["*.jar"], dir: "libs")
 }
