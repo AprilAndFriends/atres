@@ -14,7 +14,6 @@ file(
 add_library(atres STATIC ${CppSrc})
 
 include_directories(AFTER "../../include/atres")
-include_directories(AFTER "../../src")
 include_directories(AFTER "../../../april/include")
 include_directories(AFTER "../../../hltypes/include")
 include_directories(AFTER "../../../gtypes/include")

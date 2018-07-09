@@ -13,7 +13,6 @@ file(
 add_library(demo_simple SHARED ${CppSrc})
 
 include_directories(AFTER "../../../atresttf/include")
-include_directories(AFTER "../../../include")
 include_directories(AFTER "../../../../april/include")
 include_directories(AFTER "../../../../hltypes/include")
 include_directories(AFTER "../../../../gtypes/include")
