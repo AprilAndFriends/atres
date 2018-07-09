@@ -37,10 +37,5 @@ target_link_libraries(
 	jpeg
 	png
 	freetype
-	${liblog}
-	${libz}
-	${libc}
-	${libdl}
-	${libandroid}
-	${libGLESv2}
+	${SYSTEM_LIBS}
 )
