@@ -290,7 +290,10 @@ namespace atres
 	
 	void Renderer::registerFont(Font* font, bool allowDefault)
 	{
-		font->load();
+		if (april::window->isCreated()) // statement needed so unit testing doesn't get blocked by async waiting
+		{
+			font->load();
+		}
 		hstr name = font->getName();
 		hlog::write(logTag, "Registering font: " + name);
 		if (this->fonts.hasKey(name))
