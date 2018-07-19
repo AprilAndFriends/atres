@@ -1995,7 +1995,13 @@ namespace atres
 	
 	RenderText Renderer::createRenderText(cgrectf rect, chstr text, const harray<RenderLine>& lines, const harray<FormatTag>& tags)
 	{
-		this->analyzeText(tags.first().data, text); // by convention, the first tag is the font name
+		// by convention, the first tag is the font name
+		hstr firstFontName = tags.first().data.split(':').first();
+		if (firstFontName == "")
+		{
+			firstFontName = this->getDefaultFontName();
+		}
+		this->analyzeText(tags.first().data, text);
 		this->_initializeFormatTags(tags);
 		this->_initializeRenderSequences();
 		this->_initializeLineProcessing(lines);
@@ -2007,7 +2013,6 @@ namespace atres
 		grectf drawRect;
 		gvec2f rectSize;
 		int index = 0;
-		hstr firstFontName;
 		float italicSkewOffset = 0.0f;
 		// basic text with borders, shadows and icons
 		for_iter (j, 0, this->_lines.size())
@@ -2163,10 +2168,6 @@ namespace atres
 						this->_code = this->_word.text.firstUnicodeChar(i, &byteSize);
 						// checking first formatting tag changes
 						this->_processFormatTags(this->_word.text, i);
-						if (firstFontName == "")
-						{
-							firstFontName = this->_fontName.split(':').first();
-						}
 						// if character exists in current font
 						if (this->_characters.hasKey(this->_code) && !this->_hideActive)
 						{
