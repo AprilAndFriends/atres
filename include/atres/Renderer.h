@@ -200,6 +200,7 @@ namespace atres
 		float _iconFontScale;
 		float _iconFontBearingX;
 		float _iconFontOffsetY;
+		hmap<hstr, float> _iconFontCustomFontOffsets;
 		float _textScale;
 		float _scale;
 		gvec2f _shadowOffset;

@@ -966,6 +966,7 @@ namespace atres
 					this->_iconFontScale = this->_iconFont->getScale() * this->_fontScale / this->_fontBaseScale;
 					this->_iconFontBearingX = this->_iconFont->getBearingX();
 					this->_iconFontOffsetY = this->_iconFont->getOffsetY();
+					this->_iconFontCustomFontOffsets = this->_iconFont->getCustomFontOffsets();
 				}
 				else
 				{
@@ -1224,6 +1225,7 @@ namespace atres
 						this->_iconFontScale = this->_iconFont->getScale() * this->_fontScale / this->_fontBaseScale;
 						this->_iconFontBearingX = this->_iconFont->getBearingX();
 						this->_iconFontOffsetY = this->_iconFont->getOffsetY();
+						this->_iconFontCustomFontOffsets = this->_iconFont->getCustomFontOffsets();
 					}
 					else
 					{
@@ -2005,6 +2007,7 @@ namespace atres
 		grectf drawRect;
 		gvec2f rectSize;
 		int index = 0;
+		hstr firstFontName;
 		float italicSkewOffset = 0.0f;
 		// basic text with borders, shadows and icons
 		for_iter (j, 0, this->_lines.size())
@@ -2039,6 +2042,7 @@ namespace atres
 						area.h = this->_icon->rect.h * this->_scale;
 						area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 						area.y += (this->_height - this->_icon->rect.h * this->_scale) * 0.5f;
+						area.y += this->_iconFontCustomFontOffsets.tryGet(firstFontName, 0.0f) * this->_scale;
 						drawRect = rect;
 						if (this->_iconFont != NULL)
 						{
@@ -2085,6 +2089,7 @@ namespace atres
 										area.h = this->_borderIcon->rect.h * this->_scale;
 										area.y += this->_lineHeight * (1.0f - this->_textScale) * 0.5f;
 										area.y += (this->_height - this->_icon->rect.h * this->_scale) * 0.5f;
+										area.y += this->_iconFontCustomFontOffsets.tryGet(firstFontName, 0.0f) * this->_scale;
 										drawRect.x -= rectSize.x;
 										drawRect.y -= rectSize.y;
 										drawRect.w += rectSize.x * 2.0f;
@@ -2158,6 +2163,10 @@ namespace atres
 						this->_code = this->_word.text.firstUnicodeChar(i, &byteSize);
 						// checking first formatting tag changes
 						this->_processFormatTags(this->_word.text, i);
+						if (firstFontName == "")
+						{
+							firstFontName = this->_fontName.split(':').first();
+						}
 						// if character exists in current font
 						if (this->_characters.hasKey(this->_code) && !this->_hideActive)
 						{

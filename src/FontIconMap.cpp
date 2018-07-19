@@ -53,8 +53,9 @@ namespace atres
 		this->textureSize = textureSize;
 	}
 
-	FontIconMap::~FontIconMap()
+	void FontIconMap::addCustomFontOffset(chstr fontName, float offset)
 	{
+		this->customFontOffsets[fontName] = offset;
 	}
 
 	bool FontIconMap::_isAllowAlphaTextures() const

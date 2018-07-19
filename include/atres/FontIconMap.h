@@ -14,6 +14,7 @@
 #define ATRESTTF_FONT_ICON_MAP_H
 
 #include <hltypes/harray.h>
+#include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
 #include "atresExport.h"
@@ -25,6 +26,8 @@ namespace atres
 	class atresExport FontIconMap : public FontDynamic
 	{
 	public:
+		typedef hmap<hstr, float> FontOffset;
+
 		/// @brief Basic constructor.
 		/// @param[in] fontDirectory Directory for the icons.
 		/// @param[in] name Font name.
@@ -50,8 +53,6 @@ namespace atres
 		/// @param[in] italicSkewRatio Height ratio of skewing for italic rendering.
 		FontIconMap(chstr fontDirectory, chstr name, float scale, float bearingX, float offsetY, float spacing,
 			float strikeThroughOffset, float underlineOffset, float italicSkewRatio, int textureSize);
-		/// @brief Destructor.
-		~FontIconMap();
 
 		/// @brief Horizontal bearing.
 		HL_DEFINE_GET(float, bearingX, BearingX);
@@ -59,6 +60,13 @@ namespace atres
 		HL_DEFINE_GET(float, offsetY, OffsetY);
 		/// @brief Spacing between icons.
 		HL_DEFINE_GET(float, spacing, Spacing);
+		/// @brief Special offsets for fonts.
+		HL_DEFINE_GET(FontOffset, customFontOffsets, CustomFontOffsets);
+
+		/// @brief Add custom font offset.
+		/// @param[in] fontName The name of the font.
+		/// @param[in] offset The offset.
+		void addCustomFontOffset(chstr fontName, float offser);
 
 	protected:
 		/// @brief Directory for the icons.
@@ -69,6 +77,8 @@ namespace atres
 		float offsetY;
 		/// @brief Spacing between icons.
 		float spacing;
+		/// @brief Special offsets for fonts.
+		FontOffset customFontOffsets;
 
 		/// @brief Checks if alpha-textures can be used for this font.
 		/// @return True if alpha-textures can be used for this font.
