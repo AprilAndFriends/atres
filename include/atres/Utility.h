@@ -227,6 +227,7 @@ namespace atres
 			HL_ENUM_DECLARE(Type, StrikeThrough);
 			HL_ENUM_DECLARE(Type, Underline);
 			HL_ENUM_DECLARE(Type, Italic);
+			HL_ENUM_DECLARE(Type, Hide);
 			HL_ENUM_DECLARE(Type, IgnoreFormatting);
 			HL_ENUM_DECLARE(Type, Close);
 			HL_ENUM_DECLARE(Type, CloseConsume);

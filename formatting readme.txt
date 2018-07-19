@@ -17,6 +17,7 @@ t	- strike-through; parameter (optional): string with hex value for color in RGB
 u	- underline; parameter (optional): string with hex value for color in RGB or RGBA
                  parameter (optional): underline thickness multiplier
 l	- italic
+h	- hide
 c	- color change; parameter: string with hex value for color in RGB
 f	- font change; parameter: string of the font name definition including optional scale factor
 i	- icon; parameter: string of the icon font name definition including optional scale factor
@@ -34,6 +35,7 @@ Press [i:buttons]x_button[/i] to delete "C:\Windows\system32".
 This [u:FFFF00,2]underline[/u] is yellow and 2 pixels thick.
 This [t:,3]strike-through[/t] is 3 pixels thick, but uses the text color.
 [l]Italic[/l] text also [l]works[/l].
+This next piece of text has hi[h]d[/h]den char[h]act[/h]ers.
 
 
 Notes:

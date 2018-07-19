@@ -222,6 +222,7 @@ namespace atres
 		HL_ENUM_DEFINE(FormatTag::Type, StrikeThrough);
 		HL_ENUM_DEFINE(FormatTag::Type, Underline);
 		HL_ENUM_DEFINE(FormatTag::Type, Italic);
+		HL_ENUM_DEFINE(FormatTag::Type, Hide);
 		HL_ENUM_DEFINE(FormatTag::Type, IgnoreFormatting);
 		HL_ENUM_DEFINE(FormatTag::Type, Close);
 		HL_ENUM_DEFINE(FormatTag::Type, CloseConsume);

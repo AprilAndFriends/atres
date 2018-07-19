@@ -52,7 +52,7 @@
 #define TEXT_2 "No. [i:icon_font]neon[/i] This is Sparta!"
 #define TEXT_3 "This []]is] a [b=7F00FF][0]test [n]that[/n] [f:test]is[/f] [x=0.5]supp[/x]osed[/b] " \
 	"[b][c=fake]to[/c][/b]   [c=FFFFFF7F]show[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s]X_horz_formatting " \
-	"[c=00FF00]wrapped[/c][/s] [b][c=purple][i:icon_font]neon[/i][/c]w[c=purple][i:icon_font]neon[/i]rk[/c]s[/b] [f Arial:1.3]right[/f] [-][b]or[/b][/k] not."
+	"[c=00FF00]wrapped[/c][/s] [b][c=purple][i:icon_font]neon[/i][/c]w[c=purple][h][i:icon_font]neon[/i]rk[/h][/c]s[/b] [f Arial:1.3]right[/f] [-][b]or[/b][/k] not."
 #define TEXT_4 "Another [b][0]test [n]that[/n] [f:test]is[/f] [x=0.5]supp[/x]osed[/b] [b][c=fake]to[/c][/b] " \
 	"[c=FFFFFF7F]sh[i:icon_font]blue[/i][i:icon_font]orange[/i]w[/c] [f Arial:0.5][b]whe[/b]ther[/f] [s=00FF00]X_horz_formatting [c=00FF00]justified[/c][/s] " \
 	"[b]w[c=purple]ork[/c]s[/b] [f Arial:1.3]right[/f] or\nnot."

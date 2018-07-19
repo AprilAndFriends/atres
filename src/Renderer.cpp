@@ -152,6 +152,7 @@ namespace atres
 		this->_underlineThickness = 1.0f;
 		this->_textUnderlineThickness = 1.0f;
 		this->_italicActive = false;
+		this->_hideActive = false;
 		this->_alpha = -1;
 		// cache
 		this->cacheText = new Cache<CacheEntryText>();
@@ -544,6 +545,9 @@ namespace atres
 				case 'l':
 					tag.type = FormatTag::Type::Italic;
 					break;
+				case 'h':
+					tag.type = FormatTag::Type::Hide;
+					break;
 				case '-': // ignore formattting from here on
 					tag.type = FormatTag::Type::IgnoreFormatting;
 					ignoreFormatting = true;
@@ -811,6 +815,7 @@ namespace atres
 		this->_underlineThickness = 1.0f;
 		this->_textUnderlineThickness = 1.0f;
 		this->_italicActive = false;
+		this->_hideActive = false;
 	}
 
 	void Renderer::_initializeRenderSequences()
@@ -851,6 +856,7 @@ namespace atres
 		this->_underlineThickness = 1.0f;
 		this->_textUnderlineThickness = 1.0f;
 		this->_italicActive = false;
+		this->_hideActive = false;
 		this->_alpha = -1;
 	}
 
@@ -893,6 +899,10 @@ namespace atres
 				else if (this->_currentTag.type == FormatTag::Type::Italic)
 				{
 					this->_italicActive = false;
+				}
+				else if (this->_currentTag.type == FormatTag::Type::Hide)
+				{
+					this->_hideActive = false;
 				}
 			}
 			else if (this->_nextTag.type == FormatTag::Type::Font)
@@ -979,6 +989,12 @@ namespace atres
 				this->_currentTag.type = FormatTag::Type::Italic;
 				this->_stack += this->_currentTag;
 				this->_italicActive = true;
+			}
+			else if (this->_nextTag.type == FormatTag::Type::Hide)
+			{
+				this->_currentTag.type = FormatTag::Type::Hide;
+				this->_stack += this->_currentTag;
+				this->_hideActive = true;
 			}
 			else
 			{
@@ -1139,6 +1155,10 @@ namespace atres
 				else if (this->_currentTag.type == FormatTag::Type::Italic)
 				{
 					this->_italicActive = false;
+				}
+				else if (this->_currentTag.type == FormatTag::Type::Hide)
+				{
+					this->_hideActive = false;
 				}
 			}
 			else
@@ -1385,6 +1405,12 @@ namespace atres
 					this->_currentTag.type = FormatTag::Type::Italic;
 					this->_stack += this->_currentTag;
 					this->_italicActive = true;
+				}
+				else if (this->_nextTag.type == FormatTag::Type::Hide)
+				{
+					this->_currentTag.type = FormatTag::Type::Hide;
+					this->_stack += this->_currentTag;
+					this->_hideActive = true;
 				}
 				else if (this->_nextTag.type == FormatTag::Type::IgnoreFormatting)
 				{
@@ -1994,7 +2020,7 @@ namespace atres
 					this->_processFormatTags(this->_word.text, 0);
 					this->_iconName = this->_fontIconName;
 					// if icon exists in current font
-					if (this->_icons.hasKey(this->_iconName))
+					if (this->_icons.hasKey(this->_iconName) && !this->_hideActive)
 					{
 						// checking the particular character
 						this->_scale = this->_iconFontScale * this->_textScale;
@@ -2133,7 +2159,7 @@ namespace atres
 						// checking first formatting tag changes
 						this->_processFormatTags(this->_word.text, i);
 						// if character exists in current font
-						if (this->_characters.hasKey(this->_code))
+						if (this->_characters.hasKey(this->_code) && !this->_hideActive)
 						{
 							// checking the particular character
 							this->_scale = this->_fontScale * this->_textScale;

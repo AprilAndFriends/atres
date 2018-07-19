@@ -242,6 +242,7 @@ namespace atres
 		float _underlineThickness;
 		float _textUnderlineThickness;
 		bool _italicActive;
+		bool _hideActive;
 		int _alpha;
 
 		harray<RenderLine> _lines;
