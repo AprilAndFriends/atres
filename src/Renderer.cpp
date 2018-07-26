@@ -2115,22 +2115,26 @@ namespace atres
 									this->_liningRect.y = this->_word.rect.y + (this->_height - this->_strikeThroughThickness) * 0.5f + this->_strikeThroughOffset;
 									this->_liningRect.w = this->_word.charAdvanceXs[index];
 									this->_liningRect.h = this->_strikeThroughThickness;
-									this->_textStrikeThroughSequence.addRectangle(this->_liningRect);
-									switch (this->_effectMode)
+									this->_liningRect.clip(rect);
+									if (this->_liningRect.w > 0.0f && this->_liningRect.h > 0.0f)
 									{
-									case EFFECT_MODE_SHADOW: // shadow
-										this->_liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
-										this->_shadowStrikeThroughSequence.addRectangle(this->_liningRect);
-										break;
-									case EFFECT_MODE_BORDER: // border
-										this->_liningRect.x -= this->_borderThickness;
-										this->_liningRect.y -= this->_borderThickness;
-										this->_liningRect.w += this->_borderThickness * 2.0f;
-										this->_liningRect.h += this->_borderThickness * 2.0f;
-										this->_borderStrikeThroughSequence.addRectangle(this->_liningRect);
-										break;
-									default:
-										break;
+										this->_textStrikeThroughSequence.addRectangle(this->_liningRect);
+										switch (this->_effectMode)
+										{
+										case EFFECT_MODE_SHADOW: // shadow
+											this->_liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+											this->_shadowStrikeThroughSequence.addRectangle(this->_liningRect);
+											break;
+										case EFFECT_MODE_BORDER: // border
+											this->_liningRect.x -= this->_borderThickness;
+											this->_liningRect.y -= this->_borderThickness;
+											this->_liningRect.w += this->_borderThickness * 2.0f;
+											this->_liningRect.h += this->_borderThickness * 2.0f;
+											this->_borderStrikeThroughSequence.addRectangle(this->_liningRect);
+											break;
+										default:
+											break;
+										}
 									}
 								}
 								if (this->_underlineActive)
@@ -2139,22 +2143,26 @@ namespace atres
 									this->_liningRect.y = this->_word.rect.y + this->_height + this->_underlineOffset;
 									this->_liningRect.w = this->_word.charAdvanceXs[index];
 									this->_liningRect.h = this->_underlineThickness;
-									this->_textUnderlineSequence.addRectangle(this->_liningRect);
-									switch (this->_effectMode)
+									this->_liningRect.clip(rect);
+									if (this->_liningRect.w > 0.0f && this->_liningRect.h > 0.0f)
 									{
-									case EFFECT_MODE_SHADOW: // shadow
-										this->_liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
-										this->_shadowUnderlineSequence.addRectangle(this->_liningRect);
-										break;
-									case EFFECT_MODE_BORDER: // border
-										this->_liningRect.x -= this->_borderThickness;
-										this->_liningRect.y -= this->_borderThickness;
-										this->_liningRect.w += this->_borderThickness * 2.0f;
-										this->_liningRect.h += this->_borderThickness * 2.0f;
-										this->_borderUnderlineSequence.addRectangle(this->_liningRect);
-										break;
-									default:
-										break;
+										this->_textUnderlineSequence.addRectangle(this->_liningRect);
+										switch (this->_effectMode)
+										{
+										case EFFECT_MODE_SHADOW: // shadow
+											this->_liningRect += this->_shadowOffset * (this->globalOffsets ? 1.0f : this->_scale);
+											this->_shadowUnderlineSequence.addRectangle(this->_liningRect);
+											break;
+										case EFFECT_MODE_BORDER: // border
+											this->_liningRect.x -= this->_borderThickness;
+											this->_liningRect.y -= this->_borderThickness;
+											this->_liningRect.w += this->_borderThickness * 2.0f;
+											this->_liningRect.h += this->_borderThickness * 2.0f;
+											this->_borderUnderlineSequence.addRectangle(this->_liningRect);
+											break;
+										default:
+											break;
+										}
 									}
 								}
 							}
