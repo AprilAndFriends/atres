@@ -1415,11 +1415,8 @@
   TT_MulFix14_arm( FT_Int32  a,
                    FT_Int    b )
   {
-    FT_Int32  t, t2;
-
-
 #if defined( __CC_ARM ) || defined( __ARMCC__ )
-
+    FT_Int32  t, t2;
     __asm
     {
       smull t2, t,  b,  a           /* (lo=t2,hi=t) = a*b */
@@ -1432,7 +1429,7 @@
     }
 
 #elif defined( __GNUC__ )
-
+    FT_Int32  t, t2;
     __asm__ __volatile__ (
       "smull  %1, %2, %4, %3\n\t"       /* (lo=%1,hi=%2) = a*b */
       "mov    %0, %2, asr #31\n\t"      /* %0  = (hi >> 31) */
