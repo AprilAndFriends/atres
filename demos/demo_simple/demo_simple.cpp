@@ -7,7 +7,7 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifndef __ANDROID__
-	#ifndef _WINRT
+	#ifndef _UWP
 		#define RESOURCE_PATH "../../demos/media/"
 	#else
 		#define RESOURCE_PATH "media/"
