@@ -699,13 +699,14 @@ namespace atres
 			float widthPerSpace = 0.0f;
 			float lineRight = 0.0f;
 			harray<RenderWord> words;
-			for_iter (i, 0, lines.size() - 1)
+			for_iter (i, 0, lines.size() - 1) // last line is ignored
 			{
 				if (!lines[i].terminated) // if line was not actually terminated with a \n
 				{
-					if (this->useIdeographWords && lines[i].words.size() > 1 || lines[i].spaces > 0)
+					if (lines[i].words.size() > 1)
 					{
 						width = 0.0f;
+						words.clear();
 						foreach (RenderWord, it2, lines[i].words)
 						{
 							if ((*it2).spaces == 0)
@@ -716,10 +717,7 @@ namespace atres
 						}
 						foreach (RenderWord, it2, lines[i].words)
 						{
-							if ((*it2).spaces == 0)
-							{
-								width += (*it2).advanceX;
-							}
+							width += (*it2).advanceX;
 						}
 						foreach_r (RenderWord, it2, lines[i].words)
 						{
@@ -729,10 +727,9 @@ namespace atres
 								break;
 							}
 						}
-						lineRight = lines[i].rect.right();
-						words.clear();
-						if (this->useIdeographWords && lines[i].words.size() > 1)
+						if (this->useIdeographWords)
 						{
+							// when using ideograph words, spaces need to be included in the calculation
 							widthPerSpace = (rect.w - width) / (lines[i].words.size() - 1);
 							width = -widthPerSpace;
 							foreach (RenderWord, it, lines[i].words)
@@ -744,6 +741,8 @@ namespace atres
 						}
 						else
 						{
+							// normal rendering adjusts all space
+							lineRight = lines[i].rect.right();
 							widthPerSpace = (rect.w - width) / lines[i].spaces;
 							width = 0.0f;
 							foreach (RenderWord, it, lines[i].words)
@@ -756,12 +755,12 @@ namespace atres
 								}
 								else
 								{
-									width += (*it).spaces * (widthPerSpace - (*it).rect.w);
+									width += (*it).spaces * widthPerSpace;
 								}
 							}
+							lines[i].rect.w = lineRight - lines[i].rect.x;
 						}
 						lines[i].words = words;
-						lines[i].rect.w = lineRight - lines[i].rect.x;
 					}
 					else // no spaces, just force a centered horizontal alignment
 					{
