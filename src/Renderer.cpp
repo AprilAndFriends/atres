@@ -703,11 +703,14 @@ namespace atres
 			{
 				if (!lines[i].terminated) // if line was not actually terminated with a \n
 				{
-					if (lines[i].words.size() > 1)
+					if (lines[i].words.size() > 1 || lines[i].spaces > 0)
 					{
 						width = 0.0f;
-						words.clear();
 						foreach (RenderWord, it2, lines[i].words)
+						{
+							width += (*it2).advanceX;
+						}
+						foreach (RenderWord, it2, lines[i].words) // include first bearing
 						{
 							if ((*it2).spaces == 0)
 							{
@@ -715,11 +718,7 @@ namespace atres
 								break;
 							}
 						}
-						foreach (RenderWord, it2, lines[i].words)
-						{
-							width += (*it2).advanceX;
-						}
-						foreach_r (RenderWord, it2, lines[i].words)
+						foreach_r (RenderWord, it2, lines[i].words) // offset by difference of last word's width and advanceX so it's not cut off
 						{
 							if ((*it2).spaces == 0)
 							{
@@ -727,40 +726,25 @@ namespace atres
 								break;
 							}
 						}
-						if (this->useIdeographWords)
+						lineRight = lines[i].rect.right();
+						widthPerSpace = (rect.w - width) / lines[i].spaces;
+						width = 0.0f;
+						words.clear();
+						foreach (RenderWord, it, lines[i].words)
 						{
-							// when using ideograph words, spaces need to be included in the calculation
-							widthPerSpace = (rect.w - width) / (lines[i].words.size() - 1);
-							width = -widthPerSpace;
-							foreach (RenderWord, it, lines[i].words)
+							if ((*it).spaces == 0)
 							{
-								width += widthPerSpace;
 								(*it).rect.x += hroundf(width);
 								words += (*it);
+								lineRight = (*it).rect.right();
 							}
-						}
-						else
-						{
-							// normal rendering adjusts all space
-							lineRight = lines[i].rect.right();
-							widthPerSpace = (rect.w - width) / lines[i].spaces;
-							width = 0.0f;
-							foreach (RenderWord, it, lines[i].words)
+							else
 							{
-								if ((*it).spaces == 0)
-								{
-									(*it).rect.x += hroundf(width);
-									words += (*it);
-									lineRight = (*it).rect.right();
-								}
-								else
-								{
-									width += (*it).spaces * widthPerSpace;
-								}
+								width += (*it).spaces * widthPerSpace;
 							}
-							lines[i].rect.w = lineRight - lines[i].rect.x;
 						}
 						lines[i].words = words;
+						lines[i].rect.w = lineRight - lines[i].rect.x;
 					}
 					else // no spaces, just force a centered horizontal alignment
 					{
