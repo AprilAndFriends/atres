@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 
+#include <april/RenderSystem.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 #include <hltypes/hversion.h>
@@ -28,6 +29,11 @@ namespace atres
 	{
 		hlog::write(logTag, "Initializing Atres: " + version.toString());
 		atres::renderer = new Renderer();
+		// automatically disable alpha textures if render system reports that they aren't supported
+		if (!april::rendersys->getCaps().textureFormats.has(april::Image::Format::Alpha))
+		{
+			allowAlphaTextures = false;
+		}
 	}
 	
 	void destroy()
