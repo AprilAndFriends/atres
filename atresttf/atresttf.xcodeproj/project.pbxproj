@@ -31,14 +31,14 @@
 		D178E5041560F56C0026CCD0 /* hltypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5001560F56C0026CCD0 /* hltypes.framework */; };
 		D178E5061560F5860026CCD0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5051560F5860026CCD0 /* Foundation.framework */; };
 		D178E5091560F5AF0026CCD0 /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5081560F5AF0026CCD0 /* freetype.framework */; };
-		D178E50C1560F6DF0026CCD0 /* freetype.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5081560F5AF0026CCD0 /* freetype.framework */; };
-		D178E50D1560F6DF0026CCD0 /* Foundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5051560F5860026CCD0 /* Foundation.framework */; };
-		D178E50E1560F6DF0026CCD0 /* april.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E4FD1560F56C0026CCD0 /* april.framework */; };
-		D178E50F1560F6DF0026CCD0 /* atres.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E4FE1560F56C0026CCD0 /* atres.framework */; };
-		D178E5101560F6DF0026CCD0 /* gtypes.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E4FF1560F56C0026CCD0 /* gtypes.framework */; };
-		D178E5111560F6DF0026CCD0 /* hltypes.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5001560F56C0026CCD0 /* hltypes.framework */; };
-		D178E5121560F6EF0026CCD0 /* atresttf.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* atresttf.framework */; };
-		D178E5151560F72B0026CCD0 /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5131560F7250026CCD0 /* SDL.framework */; };
+		D178E50C1560F6DF0026CCD0 /* freetype.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5081560F5AF0026CCD0 /* freetype.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D178E50D1560F6DF0026CCD0 /* Foundation.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5051560F5860026CCD0 /* Foundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D178E50E1560F6DF0026CCD0 /* april.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E4FD1560F56C0026CCD0 /* april.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D178E50F1560F6DF0026CCD0 /* atres.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E4FE1560F56C0026CCD0 /* atres.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D178E5101560F6DF0026CCD0 /* gtypes.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E4FF1560F56C0026CCD0 /* gtypes.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D178E5111560F6DF0026CCD0 /* hltypes.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5001560F56C0026CCD0 /* hltypes.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D178E5121560F6EF0026CCD0 /* atresttf.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* atresttf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D178E5151560F72B0026CCD0 /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D178E5131560F7250026CCD0 /* SDL.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		D1F27B18177A2F7700E5C131 /* atresttf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C0515614BB2A0D005BD333 /* atresttf.cpp */; };
 		D1F27B1D177A2F7700E5C131 /* atresttf.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0515F14BB2A16005BD333 /* atresttf.h */; };
 		D1F27B1E177A2F7700E5C131 /* atresttfExport.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0516014BB2A16005BD333 /* atresttfExport.h */; };
@@ -364,7 +364,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1010;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "atresttf" */;
 			compatibilityVersion = "Xcode 3.2";
