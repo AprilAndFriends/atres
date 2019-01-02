@@ -21,5 +21,4 @@ dependencies {
 	implementation project(":april")
 	implementation project(":atres")
 	implementation project(":freetype")
-	api fileTree(include: ["*.jar"], dir: "libs")
 }
