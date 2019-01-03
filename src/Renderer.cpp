@@ -1057,7 +1057,7 @@ namespace atres
 					if (this->_currentTag.data.count(',') == 2)
 					{
 						this->_currentTag.data.split(',', this->_parameterString0, this->_parameterString1);
-						this->_textShadowOffset = april::hstrToGvec2f(this->_parameterString1);
+						this->_textShadowOffset = april::hstrToGvec2<float>(this->_parameterString1);
 					}
 					else
 					{
@@ -1258,7 +1258,7 @@ namespace atres
 				else if (this->_nextTag.type == FormatTag::Type::Shadow)
 				{
 					this->_currentTag.type = (this->_effectMode == EFFECT_MODE_BORDER ? FormatTag::Type::Border : (this->_effectMode == EFFECT_MODE_SHADOW ? FormatTag::Type::Shadow : FormatTag::Type::NoEffect));
-					this->_currentTag.data = this->_shadowColor.hex() + "," + april::gvec2fToHstr(this->_textShadowOffset);
+					this->_currentTag.data = this->_shadowColor.hex() + "," + april::gvec2ToHstr<float>(this->_textShadowOffset);
 					this->_stack += this->_currentTag;
 					this->_effectMode = EFFECT_MODE_SHADOW;
 					this->_shadowColor = this->shadowColor;
@@ -1268,7 +1268,7 @@ namespace atres
 						if (this->_nextTag.data.count(',') == 2)
 						{
 							this->_nextTag.data.split(',', this->_parameterString0, this->_parameterString1);
-							this->_textShadowOffset = april::hstrToGvec2f(this->_parameterString1);
+							this->_textShadowOffset = april::hstrToGvec2<float>(this->_parameterString1);
 						}
 						else
 						{
