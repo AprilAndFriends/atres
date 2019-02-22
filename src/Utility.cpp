@@ -87,17 +87,9 @@ namespace atres
 	{
 	}
 
-	SymbolDefinition::~SymbolDefinition()
-	{
-	}
-
 	CharacterDefinition::CharacterDefinition() :
 		SymbolDefinition(),
 		offsetY(0.0f)
-	{
-	}
-
-	CharacterDefinition::~CharacterDefinition()
 	{
 	}
 
@@ -107,25 +99,13 @@ namespace atres
 		this->borderThickness = borderThickness;
 	}
 
-	BorderCharacterDefinition::~BorderCharacterDefinition()
-	{
-	}
-
 	RenderRectangle::RenderRectangle()
-	{
-	}
-
-	RenderRectangle::~RenderRectangle()
 	{
 	}
 
 	RenderSequence::RenderSequence() :
 		texture(NULL),
 		multiplyAlpha(false)
-	{
-	}
-
-	RenderSequence::~RenderSequence()
 	{
 	}
 
@@ -149,10 +129,6 @@ namespace atres
 	}
 	
 	RenderLiningSequence::RenderLiningSequence()
-	{
-	}
-
-	RenderLiningSequence::~RenderLiningSequence()
 	{
 	}
 
@@ -184,10 +160,6 @@ namespace atres
 	{
 	}
 
-	RenderWord::~RenderWord()
-	{
-	}
-
 	RenderLine::RenderLine() :
 		start(0),
 		count(0),
@@ -197,15 +169,7 @@ namespace atres
 	{
 	}
 	
-	RenderLine::~RenderLine()
-	{
-	}
-
 	RenderText::RenderText()
-	{
-	}
-
-	RenderText::~RenderText()
 	{
 	}
 
@@ -232,10 +196,6 @@ namespace atres
 		type(Type::Escape),
 		start(0),
 		count(0)
-	{
-	}
-
-	FormatTag::~FormatTag()
 	{
 	}
 
@@ -266,10 +226,6 @@ namespace atres
 		this->borderThickness = borderThickness;
 	}
 
-	BorderTextureContainer::~BorderTextureContainer()
-	{
-	}
-
 	TextureContainer* BorderTextureContainer::createNew() const
 	{
 		return new BorderTextureContainer(this->borderThickness);
@@ -280,7 +236,7 @@ namespace atres
 		vertical(Vertical::Center)
 	{
 	}
-
+	
 	CacheEntryBasicText::~CacheEntryBasicText()
 	{
 	}
@@ -348,10 +304,6 @@ namespace atres
 	{
 	}
 
-	CacheEntryText::~CacheEntryText()
-	{
-	}
-
 	bool CacheEntryText::operator==(const CacheEntryText& other) const
 	{
 		return CacheEntryBasicText::operator==(other);
@@ -367,10 +319,6 @@ namespace atres
 	{
 	}
 
-	CacheEntryLines::~CacheEntryLines()
-	{
-	}
-
 	bool CacheEntryLines::operator==(const CacheEntryLines& other) const
 	{
 		return CacheEntryBasicText::operator==(other);
@@ -382,10 +330,6 @@ namespace atres
 	}
 
 	CacheEntryLine::CacheEntryLine()
-	{
-	}
-
-	CacheEntryLine::~CacheEntryLine()
 	{
 	}
 

@@ -24,10 +24,6 @@ namespace atres
 		this->fontFilename = filename;
 	}
 
-	FontBitmap::~FontBitmap()
-	{
-	}
-
 	bool FontBitmap::_load()
 	{
 		if (!Font::_load())

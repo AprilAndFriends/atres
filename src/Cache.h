@@ -39,10 +39,6 @@ namespace atres
 		{
 			this->maxSize = 1000;
 		}
-		/// @brief Basic constructor.
-		inline ~Cache()
-		{
-		}
 		/// @brief Sets max size for cache.
 		/// @param[in] value New max size.
 		inline void setMaxSize(int value)

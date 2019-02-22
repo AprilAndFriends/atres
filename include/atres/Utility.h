@@ -76,7 +76,6 @@ namespace atres
 		float advance;
 
 		SymbolDefinition();
-		~SymbolDefinition();
 
 	};
 
@@ -87,7 +86,6 @@ namespace atres
 		float offsetY;
 
 		CharacterDefinition();
-		~CharacterDefinition();
 
 	};
 
@@ -97,7 +95,6 @@ namespace atres
 		float borderThickness;
 
 		BorderCharacterDefinition(float borderThickness = 0.0f);
-		~BorderCharacterDefinition();
 
 	};
 
@@ -111,7 +108,6 @@ namespace atres
 		grectf dest;
 
 		RenderRectangle();
-		~RenderRectangle();
 
 	};
 	
@@ -124,7 +120,6 @@ namespace atres
 		harray<april::TexturedVertex> vertices;
 		
 		RenderSequence();
-		~RenderSequence();
 
 		/// @note Not thread-safe!
 		void addRenderRectangle(const RenderRectangle& rect, float italicSkewOffset);
@@ -138,7 +133,6 @@ namespace atres
 		harray<april::PlainVertex> vertices;
 
 		RenderLiningSequence();
-		~RenderLiningSequence();
 
 		/// @note Not thread-safe!
 		void addRectangle(cgrectf rect);
@@ -162,7 +156,6 @@ namespace atres
 		harray<float> segmentWidths;
 
 		RenderWord();
-		~RenderWord();
 
 	};
 	
@@ -174,7 +167,6 @@ namespace atres
 		int count;
 
 		RenderLining();
-		~RenderLining();
 
 	};
 
@@ -191,7 +183,6 @@ namespace atres
 		harray<RenderWord> words;
 		
 		RenderLine();
-		~RenderLine();
 
 	};
 	
@@ -207,7 +198,6 @@ namespace atres
 		harray<RenderLiningSequence> borderLiningSequences;
 
 		RenderText();
-		~RenderText();
 
 	};
 
@@ -240,7 +230,6 @@ namespace atres
 		int count;
 		
 		FormatTag();
-		~FormatTag();
 
 	};
 
@@ -267,7 +256,6 @@ namespace atres
 		float borderThickness;
 
 		BorderTextureContainer(float borderThickness);
-		~BorderTextureContainer();
 
 		TextureContainer* createNew() const;
 
@@ -300,7 +288,6 @@ namespace atres
 		RenderText value;
 
 		CacheEntryText();
-		~CacheEntryText();
 
 		bool operator==(const CacheEntryText& other) const;
 		bool operator!=(const CacheEntryText& other) const;
@@ -313,7 +300,6 @@ namespace atres
 		harray<RenderLine> value;
 
 		CacheEntryLines();
-		~CacheEntryLines();
 
 		bool operator==(const CacheEntryLines& other) const;
 		bool operator!=(const CacheEntryLines& other) const;
@@ -329,7 +315,6 @@ namespace atres
 		RenderLine value;
 
 		CacheEntryLine();
-		~CacheEntryLine();
 
 		void set(chstr text, chstr fontName, cgvec2f size);
 		bool operator==(const CacheEntryLine& other) const;

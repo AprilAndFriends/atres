@@ -28,8 +28,6 @@ namespace atres
 		/// @brief Basic constructor.
 		/// @param[in] filename The filename of the bitmap font definition.
 		FontBitmap(chstr filename);
-		/// @brief Destructor.
-		~FontBitmap();
 
 	protected:
 		/// @brief The filename of the bitmap font definition.
