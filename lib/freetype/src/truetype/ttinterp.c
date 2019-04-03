@@ -6426,7 +6426,7 @@
         CUR.zp0.org[point].x = TT_MulFix14( (FT_UInt32)distance,
                                             CUR.GS.freeVector.x );
       CUR.zp0.org[point].y = TT_MulFix14( (FT_UInt32)distance,
-                                          CUR.GS.freeVector.y ),
+                                          CUR.GS.freeVector.y );
       CUR.zp0.cur[point]   = CUR.zp0.org[point];
     }
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
