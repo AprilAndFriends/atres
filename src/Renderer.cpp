@@ -1796,7 +1796,11 @@ namespace atres
 						{
 							if (chars >= 2 && IS_PUNCTUATION_CHAR(code))
 							{
-								break;
+								unsigned int nextCode = text.firstUnicodeChar(i);
+								if (nextCode == UNICODE_CHAR_SPACE || nextCode == 0)
+								{
+									break;
+								}
 							}
 						}
 						else if (IS_IDEOGRAPH(code) || IS_PUNCTUATION_CHAR(code))
