@@ -43,7 +43,7 @@ def  usage():
     print("\nDocBeauty 0.1 Usage information\n")
     print("  docbeauty [options] file1 [file2 ...]\n")
     print("using the following options:\n")
-    print("  -h : print this page")
+    print("  -h : print(this page"))
     print("  -b : backup original files with the 'orig' extension")
     print("")
     print("  --backup : same as -b")
