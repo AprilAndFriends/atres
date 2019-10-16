@@ -5159,7 +5159,7 @@ def adobe_glyph_values():
   for line in lines:
     if line:
       fields = string.split( line, ';' )
-#     print fields[1] + ' - ' + fields[0]
+#     print(fields[1] + ' - ' + fields[0])
       subfields = string.split( fields[1], ' ' )
       if len( subfields ) == 1:
         glyphs.append( fields[0] )
@@ -5239,7 +5239,7 @@ def main():
   """main program body"""
 
   if len( sys.argv ) != 2:
-    print __doc__ % sys.argv[0]
+    print(__doc__ % sys.argv[0])
     sys.exit( 1 )
 
   file  = open( sys.argv[1], "w\n" )
