@@ -57,6 +57,31 @@ namespace atresttf
 		}
 	}
 
+	FontTtf::FontTtf(chstr filename, float qualityScale, bool loadBasicAscii) :
+		atres::FontDynamic(filename)
+	{
+		this->customDescender = false;
+		this->loadBasicAscii = loadBasicAscii;
+		hstr path = hrdir::baseDir(filename);
+		harray<hstr> lines = hresource::hread(filename).split("\n", -1, true);
+		hstr line;
+		while (lines.size() > 0)
+		{
+			line = lines.removeFirst();
+			if (!this->_readBasicParameter(line, qualityScale))
+			{
+				if (line.startsWith("File="))
+				{
+					this->fontFilename = hrdir::joinPath(path, line.replaced("File=", ""), false);
+				}
+				else if (line.startsWith("TextureSize="))
+				{
+					this->textureSize = (int)line.replaced("TextureSize=", "");
+				}
+			}
+		}
+	}
+
 	FontTtf::FontTtf(chstr fontFilename, chstr name, float height, float scale, float lineHeight, bool loadBasicAscii) :
 		atres::FontDynamic(name)
 	{

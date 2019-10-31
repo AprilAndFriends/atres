@@ -37,6 +37,11 @@ namespace atresttf
 		/// @param[in] loadBasicAscii Whether to pre-load the basic ASCII range of characters.
 		FontTtf(chstr filename, bool loadBasicAscii = true);
 		/// @brief Constructor.
+		/// @param[in] filename Filename of the font definition.
+		/// @param[in] qualityScale Scale to apply to all relevant parameters and inversely apply to scale in order to load the font in a higher resolution.
+		/// @param[in] loadBasicAscii Whether to pre-load the basic ASCII range of characters.
+		FontTtf(chstr filename, float qualityScale, bool loadBasicAscii = true);
+		/// @brief Constructor.
 		/// @param[in] fontFilename Font filename.
 		/// @param[in] name Font name.
 		/// @param[in] height Font height.

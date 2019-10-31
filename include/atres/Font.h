@@ -251,8 +251,9 @@ namespace atres
 		
 		/// @brief Reads a basic parameter from an external font definition file.
 		/// @param[in] line A line in the definition.
+		/// @param[in] qualityScale Scale to apply to all relevant parameters and inversely apply to scale in order to load the font in a higher resolution.
 		/// @return True if reading and processing was successful.
-		bool _readBasicParameter(chstr line);
+		bool _readBasicParameter(chstr line, float qualityScale = 1.0f);
 		/// @brief Sets the border rendering mode.
 		/// @param[in] value The border rendering mode.
 		/// @note This actually sets the border rendering mode.

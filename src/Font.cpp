@@ -103,7 +103,7 @@ namespace atres
 		return true;
 	}
 
-	bool Font::_readBasicParameter(chstr line)
+	bool Font::_readBasicParameter(chstr line, float qualityScale)
 	{
 		if (line.startsWith("Name="))
 		{
@@ -112,32 +112,32 @@ namespace atres
 		}
 		if (line.startsWith("Height="))
 		{
-			this->height = (float)line.replaced("Height=", "");
+			this->height = (float)line.replaced("Height=", "") * qualityScale;
 			return true;
 		}
 		if (line.startsWith("Scale="))
 		{
-			this->baseScale = (float)line.replaced("Scale=", "");
+			this->baseScale = (float)line.replaced("Scale=", "") / qualityScale;
 			return true;
 		}
 		if (line.startsWith("LineHeight="))
 		{
-			this->lineHeight = (float)line.replaced("LineHeight=", "");
+			this->lineHeight = (float)line.replaced("LineHeight=", "") * qualityScale;
 			return true;
 		}
 		if (line.startsWith("Descender="))
 		{
-			this->descender = (float)line.replaced("Descender=", "");
+			this->descender = (float)line.replaced("Descender=", "") * qualityScale;
 			return true;
 		}
 		if (line.startsWith("StrikeThroughOffset="))
 		{
-			this->strikeThroughOffset = (float)line.replaced("StrikeThroughOffset=", "");
+			this->strikeThroughOffset = (float)line.replaced("StrikeThroughOffset=", "") * qualityScale;
 			return true;
 		}
 		if (line.startsWith("UnderlineOffset="))
 		{
-			this->underlineOffset = (float)line.replaced("UnderlineOffset=", "");
+			this->underlineOffset = (float)line.replaced("UnderlineOffset=", "") * qualityScale;
 			return true;
 		}
 		if (line.startsWith("ItalicSkewRatio="))
